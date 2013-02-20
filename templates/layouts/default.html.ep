@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dorfmap v<%= $version %></title>
+	<meta charset="UTF-8">
+
+	<style type="text/css">
+
+	html {
+		font-family: Sans-Serif;
+	}
+
+	.overview {
+		background-image: url(/map.png);
+		width: 1277px;
+		height: 376px;
+		position: absolute;
+	}
+
+	.overview * {
+		overflow: hidden;
+	}
+
+	.overview .open {
+		background-color: green;
+	}
+
+	.overview .closed {
+		background-color: red;
+	}
+
+	.overview #outdoor {
+		position: absolute;
+		left: 0px;
+		top: 208px;
+		width: 32px;
+		height: 120px;
+	}
+
+	.overview #door {
+		position: absolute;
+		left: 33px;
+		top: 242px;
+		width: 5px;
+		height: 60px;
+	}
+
+	</style>
+</head>
+<body>
+
+<div class="content">
+%= content
+</div>
+
+</body>
+</html>

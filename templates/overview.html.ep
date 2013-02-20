@@ -1,0 +1,8 @@
+<div class="overview">
+<div id="outdoor">
+&nbsp;
+</div>
+<div id="door" class="<%= $door->{status} %>">
+&nbsp;
+</div>
+</div>
