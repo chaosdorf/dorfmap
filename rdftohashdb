@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use 5.014;
+
+use Data::Dumper;
+use RDF::Query;
+use RDF::Trine;
+use Storable qw(nstore);
+
+my $db;
+my $store = RDF::Trine::Store::Memory->new();
+my $model = RDF::Trine::Model->new($store);
+
+my $query_string =
+	'PREFIX cccd: <http://wiki.chaosdorf.de/Special:URIResolver/> '
+	. 'PREFIX prop: <http://wiki.chaosdorf.de/Special:URIResolver/Property-3A> '
+	. 'SELECT * WHERE { ?parent prop:Has_location ?child }';
+
+RDF::Trine::Parser->parse_url_into_model(
+	'https://wiki.chaosdorf.de/export.rdf', $model);
+
+for my $triplet (
+	RDF::Query->new( $query_string )->execute($model)) {
+	my $parent = $triplet->{parent}->uri_value;
+	my $child = $triplet->{child}->uri_value;
+	push( @{ $db->{ $parent } }, $child );
+}
+
+nstore($db, 'locations.db');
+
+our $VERSION = '0.01';
+
+__END__
+
+=head1 NAME
+
+=head1 SYNOPSIS
+
+=head1 VERSION
+
+=head1 DESCRIPTION
+
+=head1 OPTIONS
+
+=over
+
+=back
+
+=head1 EXIT STATUS
+
+=head1 CONFIGURATION
+
+None.
+
+=head1 DEPENDENCIES
+
+=over
+
+=back
+
+=head1 BUGS AND LIMITATIONS
+
+=head1 AUTHOR
+
+Copyright (C) 2013 by Daniel Friesel E<lt>derf@finalrewind.orgE<gt>
+
+=head1 LICENSE
+
+  0. You just DO WHAT THE FUCK YOU WANT TO.
