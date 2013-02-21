@@ -1,8 +1,36 @@
 <div class="overview">
-<div id="outdoor">
-&nbsp;
+<div id="bikeshed">
+	<div class="popup">
+		bikeshed
+	</div>
+</div>
+<div id="bookshelf">
+	<div class="popup">
+		<ul>
+		<li> <%== wikilink('Bookshelf') %> </li>
+		<li> <%== wikilink('Dashboard') %> </li>
+		</ul>
+	</div>
 </div>
 <div id="door" class="<%= $door->{status} %>">
-&nbsp;
+	<div class="popup">
+		Raumstatus: <%= $door->{status} %>
+	</div>
+</div>
+<div id="outdoor">
+	%== light_ro('outdoor')
+</div>
+<div id="schaufenster">
+	<div class="popup">
+		<ul>
+		<li> <%== wikilink('Host:Feedback') %> </li>
+		<li> <%== wikilink('Host:Lastlight') %> </li>
+		</ul>
+	</div>
+</div>
+<div id="treppe">
+	<div class="popup">
+		treppe
+	</div>
 </div>
 </div>

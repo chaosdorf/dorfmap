@@ -17,16 +17,40 @@
 		position: absolute;
 	}
 
-	.overview * {
-		overflow: hidden;
+	.overview > * {
+		/* overflow: hidden; */
+	}
+
+	.overview > * > .popup {
+		visibility: hidden;
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		z-index: 1;
+		border: 1px solid gray;
+		background-color: white;
+		opacity: .90;
+		min-width: 300px;
+	}
+	
+	.overview > *:hover > .popup,
+	.overview > * > .popup:hover {
+		visibility: visible;
+	}
+
+	.overview .popup a {
+		color: #000099;
+		text-decoration: none;
 	}
 
 	.overview .open {
 		background-color: green;
+		opacity: .50;
 	}
 
 	.overview .closed {
 		background-color: red;
+		opacity: .50;
 	}
 
 	.overview #outdoor {
@@ -43,6 +67,38 @@
 		top: 420px;
 		width: 8px;
 		height: 98px;
+	}
+
+	.overview #schaufenster {
+		position: absolute;
+		left: 0px;
+		top: 578px;
+		width: 71px;
+		height: 41px;
+	}
+
+	.overview #bikeshed {
+		position: absolute;
+		left: 295px;
+		top: 526px;
+		width: 137px;
+		height: 94px;
+	}
+
+	.overview #treppe {
+		position: absolute;
+		left: 295px;
+		top: 356px;
+		width: 137px;
+		height: 166px;
+	}
+
+	.overview #bookshelf {
+		position: absolute;
+		left: 888px;
+		top: 268px;
+		height: 109px;
+		width: 22px;
 	}
 
 	</style>

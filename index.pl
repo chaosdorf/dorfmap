@@ -21,6 +21,31 @@ sub overview {
 	return;
 }
 
+helper light_ro => sub {
+	my ($self, $light) = @_;
+
+	my $state = 0;
+
+	return sprintf('<img src="light_%s.png" class="light ro %s" title="%s" />',
+		$state ? 'on' : 'off',
+		$light, $light
+	);
+};
+
+helper wikilink => sub {
+	my ($self, $site) = @_;
+	my $name = $site;
+	my $image = undef;
+
+	if ($name =~ s{ ^ Host : }{}ox) {
+		$image = 'host.png';
+	}
+
+	return sprintf('%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
+		$image ? "<img src=\"$image\" />" : q{},
+		$site, $name);
+};
+
 get '/' => \&overview;
 
 app->config(
