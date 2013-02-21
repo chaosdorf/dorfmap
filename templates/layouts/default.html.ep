@@ -30,13 +30,20 @@
 		border: 1px solid gray;
 		background-color: white;
 		opacity: .90;
-		min-width: 300px;
+		min-width: 200px;
 	}
 	
 	.overview > *:hover > .popup,
 	.overview > * > .popup:hover {
 		visibility: visible;
 	}
+
+/*
+	.overview > *:hover {
+		background-color: gray;
+		opacity: .20;
+	}
+*/
 
 	.overview .popup a {
 		color: #000099;
@@ -53,12 +60,28 @@
 		opacity: .50;
 	}
 
-	.overview #outdoor {
+	.overview #bikeshed {
 		position: absolute;
-		left: 0px;
-		top: 358px;
-		width: 54px;
-		height: 207px;
+		left: 295px;
+		top: 526px;
+		width: 137px;
+		height: 94px;
+	}
+
+	.overview #bookshelf {
+		position: absolute;
+		left: 888px;
+		top: 268px;
+		height: 109px;
+		width: 22px;
+	}
+
+	.overview #clc1160 {
+		position: absolute;
+		left: 877px;
+		top: 48px;
+		width: 52px;
+		height: 63px;
 	}
 
 	.overview #door {
@@ -69,20 +92,20 @@
 		height: 98px;
 	}
 
+	.overview #outdoor {
+		position: absolute;
+		left: 0px;
+		top: 358px;
+		width: 54px;
+		height: 207px;
+	}
+
 	.overview #schaufenster {
 		position: absolute;
 		left: 0px;
 		top: 578px;
 		width: 71px;
 		height: 41px;
-	}
-
-	.overview #bikeshed {
-		position: absolute;
-		left: 295px;
-		top: 526px;
-		width: 137px;
-		height: 94px;
 	}
 
 	.overview #treppe {
@@ -93,12 +116,16 @@
 		height: 166px;
 	}
 
-	.overview #bookshelf {
+	img.outdoor {
 		position: absolute;
-		left: 888px;
-		top: 268px;
-		height: 109px;
-		width: 22px;
+		left: 9px;
+		top: 80px;
+	}
+
+	img.clc1160 {
+		position: absolute;
+		left: 10px;
+		top: 15px;
 	}
 
 	</style>
