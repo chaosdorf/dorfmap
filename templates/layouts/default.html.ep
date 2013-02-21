@@ -92,6 +92,14 @@
 		height: 98px;
 	}
 
+	.overview #kueche {
+		position: absolute;
+		left: 1068px;
+		top: 41px;
+		width: 239px;
+		height: 153px;
+	}
+
 	.overview #outdoor {
 		position: absolute;
 		left: 0px;

@@ -16,7 +16,7 @@ my $model = RDF::Trine::Model->new($store);
 my $query_string =
 	'PREFIX cccd: <http://wiki.chaosdorf.de/Special:URIResolver/> '
 	. 'PREFIX prop: <http://wiki.chaosdorf.de/Special:URIResolver/Property-3A> '
-	. 'SELECT * WHERE { ?parent prop:Has_location ?child }';
+	. 'SELECT * WHERE { ?child prop:Has_location ?parent }';
 
 RDF::Trine::Parser->parse_url_into_model(
 	'https://wiki.chaosdorf.de/export.rdf', $model);

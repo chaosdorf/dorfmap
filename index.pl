@@ -6,11 +6,15 @@ use 5.014;
 use utf8;
 
 use Mojolicious::Lite;
+use Storable qw(retrieve);
 
 our $VERSION = '0.00';
+my $locations = {};
 
 sub overview {
 	my ($self) = @_;
+
+	$locations = retrieve('locations.db') // {};
 
 	$self->render(
 		'overview',
@@ -38,6 +42,21 @@ helper light_ro => sub {
 		$imagemap{$state},
 		$light, $light
 	);
+};
+
+helper has_location => sub {
+	my ($self, $location) = @_;
+
+	my $ret = q{};
+	my $prefix = 'http://wiki.chaosdorf.de/Special:URIResolver/';
+
+	for my $item (@{ $locations->{"${prefix}${location}"} // [] } ) {
+		my ($name) = ($item =~ m{ ^ $prefix (.*) $ }x);
+		$ret .= sprintf("<li><a href=\"%s\">%s</a></li>\n",
+			$item, $name );
+	}
+
+	return $ret;
 };
 
 helper muninlink => sub {
