@@ -56,8 +56,12 @@
 	}
 
 	.overview .closed {
-		background-color: red;
+		background-color: black;
 		opacity: .50;
+	}
+
+	.overview .unknown {
+		background-color: red;
 	}
 
 	.overview #bikeshed {

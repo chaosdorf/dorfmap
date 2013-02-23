@@ -17,9 +17,9 @@
 <div id="clc1160">
 	%== light_ro('clc1160')
 </div>
-<div id="door" class="<%= $door->{status} %>">
+<div id="door" class="<%= door_status %>">
 	<div class="popup">
-		Raumstatus: <%= $door->{status} %>
+		Raumstatus: <%= door_status %>
 	</div>
 </div>
 <div id="hackcenter">
@@ -61,7 +61,7 @@
 	%== light_ro('outdoor')
 	<div class="popup">
 		%== muninlink('feedback', 'Licht außen')
-		: an von <%= $sunset %> bis <%= $sunrise %>
+		: an von <%= sunset %> bis <%= sunrise %>
 	</div>
 </div>
 <div id="schaufenster">

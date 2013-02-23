@@ -5,11 +5,18 @@ use warnings;
 use 5.014;
 use utf8;
 
+use File::Slurp qw(read_file);
 use Mojolicious::Lite;
 use Storable qw(retrieve);
 
 our $VERSION = '0.00';
 my $locations = {};
+
+sub slurp {
+	my ($file) = @_;
+
+	return read_file($file, err_mode => 'quiet');
+}
 
 sub overview {
 	my ($self) = @_;
@@ -19,27 +26,37 @@ sub overview {
 	$self->render(
 		'overview',
 		version => $VERSION,
-		door    => { status => 'closed' },
-		outdoor => { light_door => 1, },
-		sunrise => '12:34:56',
-		sunset  => '21:43:00',
 	);
 	return;
 }
 
+helper door_status => sub {
+	my ($self) = @_;
+
+	my $raw = slurp('/srv/www/door.status');
+	given ($raw) {
+		when (1) { return 'open' }
+		when (0) { return 'closed' }
+		default { return 'unknown' }
+	}
+};
+
 helper light_ro => sub {
 	my ($self, $light) = @_;
-
 	my $state = -1;
+	my $image = 'light.png';
 
-	my %imagemap = (
-		'-1' => 'light.png',
-		'0'  => 'light_off.png',
-		'1'  => 'light_on.png',
-	);
+	given ($light) {
+		when ('outdoor') { $state = slurp('/srv/www/light-door.status') }
+	}
+
+	given ($state) {
+		when ('1') { $image = 'light_on.png' }
+		when ('0') { $image = 'light_off.png' }
+	}
 
 	return sprintf('<img src="%s" class="light ro %s" title="%s" />',
-		$imagemap{$state},
+		$image,
 		$light, $light
 	);
 };
@@ -64,6 +81,14 @@ helper muninlink => sub {
 
 	return sprintf('<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
 		$plugin, $name // $plugin);
+};
+
+helper sunrise => sub {
+	return slurp('/srv/www/sunrise');
+};
+
+helper sunset => sub{
+	return slurp('/srv/www/sunset');
 };
 
 helper wikilink => sub {
