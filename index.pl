@@ -35,6 +35,7 @@ helper door_status => sub {
 	my ($self) = @_;
 
 	my $raw = slurp('/srv/www/door.status');
+	chomp($raw);
 	given ($raw) {
 		when ('open') { return 'open' }
 		when ('closed') { return 'closed' }
