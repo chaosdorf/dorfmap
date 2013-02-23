@@ -5,6 +5,7 @@ use warnings;
 use 5.014;
 use utf8;
 
+use Encode qw(decode);
 use File::Slurp qw(read_file);
 use Mojolicious::Lite;
 use Storable qw(retrieve);
@@ -69,6 +70,8 @@ helper has_location => sub {
 
 	for my $item (@{ $locations->{"${prefix}${location}"} // [] } ) {
 		my ($name) = ($item =~ m{ ^ $prefix (.*) $ }x);
+		$name =~ s{ - ( [0-9A-F] {2} ) }{ chr(hex($1)) }egx;
+		$name = decode('UTF-8', $name);
 		$ret .= sprintf("<li><a href=\"%s\">%s</a></li>\n",
 			$item, $name );
 	}
