@@ -97,7 +97,7 @@ helper sunset => sub{
 helper wifi => sub {
 	my ($self, $host, $label) = @_;
 	my $image = 'wifi_off.png';
-	my $state = slurp("/srv/www/${host}.png");
+	my $state = slurp("/srv/www/${host}.ping");
 
 	if ($state == 1) {
 		$image = 'wifi_on.png';
