@@ -12,6 +12,7 @@ use Storable qw(nstore);
 my $db;
 my $store = RDF::Trine::Store::Memory->new();
 my $model = RDF::Trine::Model->new($store);
+my $outfile = shift // 'locations.db';
 
 my $query_string =
 	'PREFIX cccd: <http://wiki.chaosdorf.de/Special:URIResolver/> '
@@ -28,7 +29,7 @@ for my $triplet (
 	push( @{ $db->{ $parent } }, $child );
 }
 
-nstore($db, 'locations.db');
+nstore($db, $outfile);
 
 our $VERSION = '0.01';
 
