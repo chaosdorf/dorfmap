@@ -92,12 +92,44 @@
 		height: 98px;
 	}
 
+	.overview #hackcenter {
+		position: absolute;
+		left: 437px;
+		top: 57px;
+		width: 477px;
+		height: 335px;
+	}
+
+	.overview #hinterzimmer {
+		position: absolute;
+		left: 1429px;
+		top: 41px;
+		width: 308px;
+		height: 194px;
+	}
+
 	.overview #kueche {
 		position: absolute;
 		left: 1068px;
 		top: 41px;
 		width: 239px;
 		height: 153px;
+	}
+
+	.overview #lounge {
+		position: absolute;
+		left: 44px;
+		top: 34px;
+		width: 390px;
+		height: 345px;
+	}
+
+	.overview #maschinenraum {
+		position: absolute;
+		left: 1752px;
+		top: 41px;
+		width: 443px;
+		height: 324px;
 	}
 
 	.overview #outdoor {
@@ -114,6 +146,30 @@
 		top: 578px;
 		width: 71px;
 		height: 41px;
+	}
+
+	.overview #schleuse {
+		position: absolute;
+		left: 71px;
+		top: 380px;
+		width: 185px;
+		height: 241px;
+	}
+
+	.overview #serverraum {
+		position: absolute;
+		left: 1232px;
+		top: 360px;
+		width: 72px;
+		height: 91px;
+	}
+
+	.overview #transporterraum {
+		position: absolute;
+		left: 1429px;
+		top: 250px;
+		width: 308px;
+		height: 115px;
 	}
 
 	.overview #treppe {
