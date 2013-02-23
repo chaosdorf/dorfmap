@@ -196,6 +196,42 @@
 		top: 15px;
 	}
 
+	img.freifunk {
+		position: absolute;
+		left: 420px;
+		top: 178px;
+	}
+
+	img.unifi {
+		position: absolute;
+		left: 420px;
+		top: 210px;
+	}
+
+	img.wlan-hinten {
+		position: absolute;
+		left: 1753px;
+		top: 135px;
+	}
+
+	img.donationprint {
+		position: absolute;
+		left: 70px;
+		top: 390px;
+	}
+
+	img.door {
+		position: absolute;
+		left: 35px;
+		top: 577px;
+	}
+
+	img.dashpi {
+		position: absolute;
+		left: 890px;
+		top: 270px;
+	}
+
 	</style>
 </head>
 <body>

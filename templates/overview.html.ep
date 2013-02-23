@@ -1,4 +1,7 @@
 <div class="overview">
+%== wifi('freifunk', 'Freifunk');
+%== wifi('unifi', 'chaosdorf');
+%== wifi('wlan-hinten', 'maschinenraum');
 <div id="bikeshed">
 	<div class="popup">
 		<ul>

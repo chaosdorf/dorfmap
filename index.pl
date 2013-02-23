@@ -94,6 +94,19 @@ helper sunset => sub{
 	return slurp('/srv/www/sunset');
 };
 
+helper wifi => sub {
+	my ($self, $host, $label) = @_;
+	my $image = 'wifi_off.png';
+	my $state = slurp("/srv/www/${host}.png");
+
+	if ($state == 1) {
+		$image = 'wifi_on.png';
+	}
+
+	return sprintf('<img src="%s" class="light ro %s" title="%s" />',
+		$image, $host, $label);
+};
+
 helper wikilink => sub {
 	my ($self, $site) = @_;
 	my $name = $site;
