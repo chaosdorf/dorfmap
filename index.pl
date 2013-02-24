@@ -87,6 +87,19 @@ helper muninlink => sub {
 		$plugin, $name // $plugin);
 };
 
+helper server => sub {
+	my ($self, $host, $label) = @_;
+	my $image = 'server_off.png';
+	my $state = slurp("/srv/www/${host}.ping");
+
+	if ($state == 1) {
+		$image = 'server_on.png';
+	}
+
+	return sprintf('<img src="%s" class="server %s" title="%s (%s)" />',
+		$image, $host, $host, $label);
+};
+
 helper sunrise => sub {
 	return slurp('/srv/www/sunrise');
 };
@@ -104,7 +117,7 @@ helper wifi => sub {
 		$image = 'wifi_on.png';
 	}
 
-	return sprintf('<img src="%s" class="light ro %s" title="%s" />',
+	return sprintf('<img src="%s" class="wifi ro %s" title="%s" />',
 		$image, $host, $label);
 };
 

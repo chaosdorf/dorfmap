@@ -1,4 +1,9 @@
 <div class="overview">
+%== server('dashpi', 'dashboard');
+%== server('lastlight', 'door');
+%== server('feedback', 'infodisplay');
+%== server('figurehead', 'gateway');
+%== server('hyperion', 'fileserver, mpd');
 %== wifi('freifunk', 'Freifunk');
 %== wifi('unifi', 'chaosdorf');
 %== wifi('wlan-hinten', 'maschinenraum');
