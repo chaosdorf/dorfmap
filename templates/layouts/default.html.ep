@@ -3,6 +3,8 @@
 <head>
 	<title>Dorfmap v<%= $version %></title>
 	<meta charset="UTF-8">
+	<meta http-equiv="refresh" content="60" />
+
 
 	<style type="text/css">
 
