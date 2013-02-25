@@ -1,0 +1,24 @@
+Bikeshed         295  526  432  620
+door:door         58  420   66  518
+Hackcenter       437   57  914  392
+Hinterzimmer    1429   41 1737  235
+Kitchen         1068   41 1307  194
+Laptop_Lounge     44   34  434  379
+Maschinenraum   1752   41 2195  365
+Schaufenster       0  578   71  619
+Schleuse          71  380  256  621
+Serverraum      1232  360 1304  451
+Transporterraum 1429  250 1737  365
+Treppe           295  356  432  522
+
+light_ro:lightclc1160     887   63
+light_ro:outdoor            9   438
+server:dashpi           883  340
+server:donationprint     70  390
+server:feedback          64  585
+server:figurehead      1232  400
+server:hyperion        1232  361
+server:lastlight         35  585
+wifi:freifunk         420  178
+wifi:unifi            420  210
+wifi:wlan-hinten     1753  135

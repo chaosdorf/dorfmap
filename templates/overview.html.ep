@@ -1,112 +1,12 @@
 <div class="overview">
-%== server('dashpi', 'dashboard');
-%== server('lastlight', 'door');
-%== server('feedback', 'infodisplay');
-%== server('figurehead', 'gateway');
-%== server('hyperion', 'fileserver, mpd');
-%== wifi('freifunk', 'Freifunk');
-%== wifi('unifi', 'chaosdorf');
-%== wifi('wlan-hinten', 'maschinenraum');
-<div id="bikeshed">
+% for my $location (keys %{$coordinates}) {
+%	my $type = $coordinates->{$location}->{type} // q{};
+<div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
+%==	statusimage($type, $location);
 	<div class="popup">
 		<ul>
-		%== has_location('Bikeshed')
+		%== has_location($location)
 		</ul>
 	</div>
 </div>
-<div id="bookshelf">
-	<div class="popup">
-		<ul>
-		<li> <%== wikilink('Bookshelf') %> </li>
-		<li> <%== wikilink('Dashboard') %> </li>
-		</ul>
-	</div>
-</div>
-<div id="clc1160">
-	%== light_ro('clc1160')
-</div>
-<div id="door" class="<%= door_status %>">
-	<div class="popup">
-		Raumstatus: <%= door_status %>
-	</div>
-</div>
-<div id="hackcenter">
-	<div class="popup">
-		<ul>
-		%== has_location('Hackcenter')
-		</ul>
-	</div>
-</div>
-<div id="hinterzimmer">
-	<div class="popup">
-		<ul>
-		%== has_location('Hinterzimmer')
-		</ul>
-	</div>
-</div>
-<div id="kueche">
-	<div class="popup">
-		<ul>
-		%== has_location('Kitchen')
-		</ul>
-	</div>
-</div>
-<div id="lounge">
-	<div class="popup">
-		<ul>
-		%== has_location('Laptop_Lounge')
-		</ul>
-	</div>
-</div>
-<div id="maschinenraum">
-	<div class="popup">
-		<ul>
-		%== has_location('Maschinenraum')
-		</ul>
-	</div>
-</div>
-<div id="outdoor">
-	%== light_ro('outdoor')
-	<div class="popup">
-		%== muninlink('feedback', 'Licht außen')
-		: an von <%= sunset %> bis <%= sunrise %>
-	</div>
-</div>
-<div id="schaufenster">
-	<div class="popup">
-		<ul>
-		%== has_location('Schaufenster')
-		<li> <%== wikilink('Host:Feedback') %> </li>
-		<li> <%== wikilink('Host:Lastlight') %> </li>
-		</ul>
-	</div>
-</div>
-<div id="schleuse">
-	<div class="popup">
-		<ul>
-		%== has_location('Schleuse')
-		</ul>
-	</div>
-</div>
-<div id="serverraum">
-	<div class="popup">
-		<ul>
-		%== has_location('Serverraum')
-		</ul>
-	</div>
-</div>
-<div id="transporterraum">
-	<div class="popup">
-		<ul>
-		%== has_location('Transporterraum')
-		</ul>
-	</div>
-</div>
-<div id="treppe">
-	<div class="popup">
-		<ul>
-		%== has_location('Treppe')
-		</ul>
-	</div>
-</div>
-</div>
+% }

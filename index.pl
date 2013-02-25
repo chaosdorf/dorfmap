@@ -12,11 +12,41 @@ use Storable qw(retrieve);
 
 our $VERSION = '0.00';
 my $locations = {};
+my $coordinates = {};
 
 sub slurp {
 	my ($file) = @_;
 
 	return read_file($file, err_mode => 'quiet');
+}
+
+sub load_coordinates {
+	my @lines = split(/\n/, slurp('coordinates'));
+
+	for my $line (@lines) {
+		my ($id, $left, $top, $right, $bottom) = split(/\s+/, $line);
+		my $type;
+
+		if (not $id) {
+			next;
+		}
+
+		if ($id =~ s{^([^:]+):}{}o) {
+			$type = $1;
+		}
+
+		# image areas don't specify right and bottom and are usually 32x32px
+		$right //= $left + 32;
+		$bottom //= $top + 32;
+
+		$coordinates->{$id} = {
+			x1 => $left,
+			y1 => $top,
+			x2 => $right - $left,
+			y2 => $bottom - $top,
+			type => $type
+		};
+	}
 }
 
 sub overview {
@@ -27,11 +57,12 @@ sub overview {
 	$self->render(
 		'overview',
 		version => $VERSION,
+		coordinates => $coordinates,
 	);
 	return;
 }
 
-helper door_status => sub {
+sub door_status {
 	my ($self) = @_;
 
 	my $raw = slurp('/srv/www/door.status');
@@ -41,9 +72,9 @@ helper door_status => sub {
 		when ('closed') { return 'closed' }
 		default { return 'unknown' }
 	}
-};
+}
 
-helper light_ro => sub {
+sub light_ro {
 	my ($self, $light) = @_;
 	my $state = -1;
 	my $image = 'light.png';
@@ -61,7 +92,7 @@ helper light_ro => sub {
 		$image,
 		$light, $light
 	);
-};
+}
 
 helper has_location => sub {
 	my ($self, $location) = @_;
@@ -80,14 +111,14 @@ helper has_location => sub {
 	return $ret;
 };
 
-helper muninlink => sub {
+sub muninlink {
 	my ($self, $plugin, $name) = @_;
 
 	return sprintf('<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
 		$plugin, $name // $plugin);
-};
+}
 
-helper server => sub {
+sub server {
 	my ($self, $host, $label) = @_;
 	my $image = 'server_off.png';
 	my $state = slurp("/srv/www/${host}.ping");
@@ -98,17 +129,17 @@ helper server => sub {
 
 	return sprintf('<img src="%s" class="server %s" title="%s (%s)" />',
 		$image, $host, $host, $label);
-};
+}
 
-helper sunrise => sub {
+sub sunrise {
 	return slurp('/srv/www/sunrise');
-};
+}
 
-helper sunset => sub{
+sub sunset {
 	return slurp('/srv/www/sunset');
-};
+}
 
-helper wifi => sub {
+sub wifi {
 	my ($self, $host, $label) = @_;
 	my $image = 'wifi_off.png';
 	my $state = slurp("/srv/www/${host}.ping");
@@ -119,9 +150,9 @@ helper wifi => sub {
 
 	return sprintf('<img src="%s" class="wifi ro %s" title="%s" />',
 		$image, $host, $label);
-};
+}
 
-helper wikilink => sub {
+sub wikilink {
 	my ($self, $site) = @_;
 	my $name = $site;
 	my $image = undef;
@@ -133,6 +164,28 @@ helper wikilink => sub {
 	return sprintf('%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
 		$image ? "<img src=\"$image\" />" : q{},
 		$site, $name);
+}
+
+helper statusclass => sub {
+	my ($self, $type, $location) = @_;
+
+	if ($type eq 'door') {
+		return door_status();
+	}
+
+	return q{};
+};
+
+helper statusimage => sub {
+	my ($self, $type, $location) = @_;
+
+	given ($type) {
+		when ('light_ro') { return light_ro($location, $location) }
+		when ('server') { return server($location, $location) }
+		when ('wifi') { return wifi($location, $location) }
+	}
+
+	return q{};
 };
 
 get '/' => \&overview;
@@ -146,4 +199,5 @@ app->config(
 );
 app->defaults( layout => 'default' );
 
+load_coordinates();
 app->start;
