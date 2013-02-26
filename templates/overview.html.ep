@@ -3,10 +3,12 @@
 %	my $type = $coordinates->{$location}->{type} // q{};
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
+<!--
 	<div class="popup">
 		<ul>
 		%== has_location($location)
 		</ul>
 	</div>
+-->
 </div>
 % }
