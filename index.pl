@@ -63,8 +63,6 @@ sub overview {
 }
 
 sub door_status {
-	my ($self) = @_;
-
 	my $raw = slurp('/srv/www/door.status');
 	chomp($raw);
 	given ($raw) {
@@ -75,7 +73,7 @@ sub door_status {
 }
 
 sub light_ro {
-	my ($self, $light) = @_;
+	my ($light) = @_;
 	my $state = -1;
 	my $image = 'light.png';
 
@@ -112,14 +110,14 @@ helper has_location => sub {
 };
 
 sub muninlink {
-	my ($self, $plugin, $name) = @_;
+	my ($plugin, $name) = @_;
 
 	return sprintf('<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
 		$plugin, $name // $plugin);
 }
 
 sub server {
-	my ($self, $host, $label) = @_;
+	my ($host, $label) = @_;
 	my $image = 'server_off.png';
 	my $state = slurp("/srv/www/${host}.ping");
 
@@ -140,7 +138,7 @@ sub sunset {
 }
 
 sub wifi {
-	my ($self, $host, $label) = @_;
+	my ($host, $label) = @_;
 	my $image = 'wifi_off.png';
 	my $state = slurp("/srv/www/${host}.ping");
 
@@ -153,7 +151,7 @@ sub wifi {
 }
 
 sub wikilink {
-	my ($self, $site) = @_;
+	my ($site) = @_;
 	my $name = $site;
 	my $image = undef;
 
