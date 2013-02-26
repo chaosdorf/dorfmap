@@ -11,8 +11,11 @@ Serverraum      1232  360 1304  451
 Transporterraum 1429  250 1737  365
 Treppe           295  356  432  522
 
-light_ro:lightclc1160     887   63
-light_ro:outdoor            9   438
+light_ro:hackcenter_w   686  280
+light_ro:lightclc1160   887   63
+light_ro:lounge_weiss   114   80
+light_ro:outdoor          9  438
+light_ro:roehre_blau    748   42
 server:dashpi           883  340
 server:donationprint     70  390
 server:feedback          64  585
