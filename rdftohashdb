@@ -10,26 +10,25 @@ use RDF::Trine;
 use Storable qw(nstore);
 
 my $db;
-my $store = RDF::Trine::Store::Memory->new();
-my $model = RDF::Trine::Model->new($store);
+my $store   = RDF::Trine::Store::Memory->new();
+my $model   = RDF::Trine::Model->new($store);
 my $outfile = shift // 'locations.db';
 
-my $query_string =
-	'PREFIX cccd: <http://wiki.chaosdorf.de/Special:URIResolver/> '
-	. 'PREFIX prop: <http://wiki.chaosdorf.de/Special:URIResolver/Property-3A> '
-	. 'SELECT * WHERE { ?child prop:Has_location ?parent }';
+my $query_string
+  = 'PREFIX cccd: <http://wiki.chaosdorf.de/Special:URIResolver/> '
+  . 'PREFIX prop: <http://wiki.chaosdorf.de/Special:URIResolver/Property-3A> '
+  . 'SELECT * WHERE { ?child prop:Has_location ?parent }';
 
 RDF::Trine::Parser->parse_url_into_model(
-	'https://wiki.chaosdorf.de/export.rdf', $model);
+	'https://wiki.chaosdorf.de/export.rdf', $model );
 
-for my $triplet (
-	RDF::Query->new( $query_string )->execute($model)) {
+for my $triplet ( RDF::Query->new($query_string)->execute($model) ) {
 	my $parent = $triplet->{parent}->uri_value;
-	my $child = $triplet->{child}->uri_value;
-	push( @{ $db->{ $parent } }, $child );
+	my $child  = $triplet->{child}->uri_value;
+	push( @{ $db->{$parent} }, $child );
 }
 
-nstore($db, $outfile);
+nstore( $db, $outfile );
 
 our $VERSION = '0.01';
 
