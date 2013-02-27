@@ -20,6 +20,12 @@ sub slurp {
 	return read_file($file, err_mode => 'quiet');
 }
 
+sub gpio {
+	my ($index) = @_;
+
+	return "/sys/class/gpio/gpio${index}/value";
+}
+
 sub load_coordinates {
 	my @lines = split(/\n/, slurp('coordinates'));
 
@@ -78,7 +84,7 @@ sub light_ro {
 	my $image = 'light.png';
 
 	given ($light) {
-		when ('outdoor') { $state = slurp('/srv/www/light-door.status') }
+		when ('outdoor') { $state = slurp(gpio(17)) }
 	}
 
 	given ($state) {
