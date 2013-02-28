@@ -121,6 +121,19 @@ sub muninlink {
 		$plugin, $name // $plugin );
 }
 
+sub printer {
+	my ( $host, $label ) = @_;
+	my $image = 'printer.png';
+	my $state = slurp("/srv/www/${host}.ping");
+
+	if ($state == 1) {
+		$image = 'printer_on.png';
+	}
+
+	return sprintf('<img src="%s" class="printer %s" title="%s (%s)" />',
+		$image, $host, $host, $label);
+}
+
 sub server {
 	my ( $host, $label ) = @_;
 	my $image = 'server_off.png';
@@ -186,6 +199,7 @@ helper statusimage => sub {
 
 	given ($type) {
 		when ('light_ro') { return light_ro( $location, $location ) }
+		when ('printer') { return printer($location, $location) }
 		when ('server') { return server( $location, $location ) }
 		when ('wifi') { return wifi( $location, $location ) }
 	}
