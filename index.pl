@@ -121,51 +121,12 @@ sub muninlink {
 		$plugin, $name // $plugin );
 }
 
-sub printer {
-	my ( $host, $label ) = @_;
-	my $image = 'printer.png';
-	my $state = slurp("/srv/www/${host}.ping");
-
-	if ($state == 1) {
-		$image = 'printer_on.png';
-	}
-
-	return sprintf('<img src="%s" class="printer %s" title="%s (%s)" />',
-		$image, $host, $host, $label);
-}
-
-sub server {
-	my ( $host, $label ) = @_;
-	my $image = 'server_off.png';
-	my $state = slurp("/srv/www/${host}.ping");
-
-	if ( $state == 1 ) {
-		$image = 'server_on.png';
-	}
-
-	return sprintf( '<img src="%s" class="server %s" title="%s (%s)" />',
-		$image, $host, $host, $label );
-}
-
 sub sunrise {
 	return slurp('/srv/www/sunrise');
 }
 
 sub sunset {
 	return slurp('/srv/www/sunset');
-}
-
-sub wifi {
-	my ( $host, $label ) = @_;
-	my $image = 'wifi_off.png';
-	my $state = slurp("/srv/www/${host}.ping");
-
-	if ( $state == 1 ) {
-		$image = 'wifi_on.png';
-	}
-
-	return sprintf( '<img src="%s" class="wifi ro %s" title="%s" />',
-		$image, $host, $label );
 }
 
 sub wikilink {
@@ -184,6 +145,19 @@ sub wikilink {
 	);
 }
 
+sub pingdevice {
+	my ($type, $host, $label) = @_;
+	my $image = "${type}_off.png";
+	my $state = slurp("/srv/www/${host}.ping");
+
+	if ($state == 1 ) {
+		$image = "${type}_on.png";
+	}
+
+	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
+		$image, $type, $host, $label);
+}
+
 helper statusclass => sub {
 	my ( $self, $type, $location ) = @_;
 
@@ -199,9 +173,8 @@ helper statusimage => sub {
 
 	given ($type) {
 		when ('light_ro') { return light_ro( $location, $location ) }
-		when ('printer') { return printer($location, $location) }
-		when ('server') { return server( $location, $location ) }
-		when ('wifi') { return wifi( $location, $location ) }
+		when ([qw[phone printer server wifi]]) {
+			return pingdevice($type, $location, $location) }
 	}
 
 	return q{};
