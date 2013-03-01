@@ -58,7 +58,9 @@ sub load_coordinates {
 sub overview {
 	my ($self) = @_;
 
-	$locations = retrieve('locations.db') // {};
+	if ( -e 'locations.db' ) {
+		$locations = retrieve('locations.db');
+	}
 
 	$self->render(
 		'overview',
