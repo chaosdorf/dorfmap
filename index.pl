@@ -88,7 +88,7 @@ sub light_ro {
 	given ($light) {
 		when ('logo')         { $state = slurp( gpio(24) ) }
 		when ('outdoor')      { $state = slurp( gpio(17) ) }
-		when ('schaufenster') { $state = slurp( gpio(25) ) }
+		when ('schaufenster') { $state = slurp( gpio(23) ) }
 	}
 
 	given ($state) {
