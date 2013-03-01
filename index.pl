@@ -84,7 +84,9 @@ sub light_ro {
 	my $image   = 'light.png';
 
 	given ($light) {
-		when ('outdoor') { $state = slurp( gpio(17) ) }
+		when ('logo')         { $state = slurp( gpio(11) ) }
+		when ('outdoor')      { $state = slurp( gpio(17) ) }
+		when ('schaufenster') { $state = slurp( gpio(7) ) }
 	}
 
 	given ($state) {
@@ -146,16 +148,16 @@ sub wikilink {
 }
 
 sub pingdevice {
-	my ($type, $host, $label) = @_;
+	my ( $type, $host, $label ) = @_;
 	my $image = "${type}_off.png";
 	my $state = slurp("/srv/www/${host}.ping");
 
-	if ($state == 1 ) {
+	if ( $state == 1 ) {
 		$image = "${type}_on.png";
 	}
 
 	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		$image, $type, $host, $label);
+		$image, $type, $host, $label );
 }
 
 helper statusclass => sub {
@@ -173,8 +175,9 @@ helper statusimage => sub {
 
 	given ($type) {
 		when ('light_ro') { return light_ro( $location, $location ) }
-		when ([qw[phone printer server wifi]]) {
-			return pingdevice($type, $location, $location) }
+		when ( [qw[phone printer server wifi]] ) {
+			return pingdevice( $type, $location, $location )
+		}
 	}
 
 	return q{};
