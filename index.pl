@@ -86,9 +86,9 @@ sub light_ro {
 	my $image   = 'light.png';
 
 	given ($light) {
-		when ('logo')         { $state = slurp( gpio(11) ) }
+		when ('logo')         { $state = slurp( gpio(24) ) }
 		when ('outdoor')      { $state = slurp( gpio(17) ) }
-		when ('schaufenster') { $state = slurp( gpio(7) ) }
+		when ('schaufenster') { $state = slurp( gpio(25) ) }
 	}
 
 	given ($state) {
