@@ -6,18 +6,25 @@ use 5.014;
 use utf8;
 
 use Encode qw(decode);
-use File::Slurp qw(read_file);
+use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
 use Storable qw(retrieve);
 
 our $VERSION = '0.00';
 my $locations   = {};
 my $coordinates = {};
+my $gpiomap     = {};
 
 sub slurp {
 	my ($file) = @_;
 
 	return read_file( $file, err_mode => 'quiet' );
+}
+
+sub spew {
+	my ( $file, $value ) = @_;
+
+	return write_file( $file, { err_mode => 'quiet' }, $value );
 }
 
 sub gpio {
@@ -31,14 +38,24 @@ sub load_coordinates {
 
 	for my $line (@lines) {
 		my ( $id, $left, $top, $right, $bottom ) = split( /\s+/, $line );
-		my $type;
+		my ( $type, $gpio );
 
 		if ( not $id ) {
 			next;
 		}
 
-		if ( $id =~ s{^([^:]+):}{}o ) {
+		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
 			$type = $1;
+		}
+		if ( $id =~ s{ : ( [^ : ]+ ) $ }{}ox ) {
+			my $control = $1;
+			if ( $control =~ m{ ^ gpio (\d+) $ }ox ) {
+				$gpio = $1;
+			}
+		}
+
+		if ($gpio) {
+			$gpiomap->{$id} = gpio($gpio);
 		}
 
 		# image areas don't specify right and bottom and are usually 32x32px
@@ -53,6 +70,7 @@ sub load_coordinates {
 			type => $type
 		};
 	}
+	return;
 }
 
 sub overview {
@@ -85,10 +103,8 @@ sub light_ro {
 	my $state   = -1;
 	my $image   = 'light.png';
 
-	given ($light) {
-		when ('logo')         { $state = slurp( gpio(24) ) }
-		when ('outdoor')      { $state = slurp( gpio(17) ) }
-		when ('schaufenster') { $state = slurp( gpio(23) ) }
+	if ( exists $gpiomap->{$light} ) {
+		$state = slurp( $gpiomap->{$light} );
 	}
 
 	given ($state) {

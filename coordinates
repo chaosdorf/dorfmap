@@ -14,11 +14,11 @@ Treppe           295  356  432  522
 light_ro:hackcenter_k   520   60
 light_ro:hackcenter_w   686  280
 light_ro:lightclc1160   887   63
-light_ro:logo           224  460
+light_ro:gpio24:logo        224  460
 light_ro:lounge_weiss   114   80
-light_ro:outdoor          9  438
+light_ro:gpio17:outdoor       9  438
 light_ro:roehre_blau    748   42
-light_ro:schaufenster     5  595
+light_ro:gpio23:schaufenster  5  595
 phone:phone              36   66
 printer:clc1160         842   60
 printer:hp2100          386   60
