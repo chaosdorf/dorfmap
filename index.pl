@@ -47,7 +47,7 @@ sub load_coordinates {
 		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
 			$type = $1;
 		}
-		if ( $id =~ s{ : ( [^ : ]+ ) $ }{}ox ) {
+		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
 			my $control = $1;
 			if ( $control =~ m{ ^ gpio (\d+) $ }ox ) {
 				$gpio = $1;
