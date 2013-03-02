@@ -88,6 +88,22 @@ sub overview {
 	return;
 }
 
+sub toggle {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	if ( exists $gpiomap->{$id} ) {
+		my $state = slurp( $gpiomap->{$id} );
+		spew( $gpiomap->{$id}, !$state );
+		$self->redirect_to('/');
+	}
+	else {
+		$self->redirect_to('/?error=nosuchfile');
+	}
+
+	return;
+}
+
 sub door_status {
 	my $raw = slurp('/srv/www/door.status');
 	chomp($raw);
@@ -98,10 +114,10 @@ sub door_status {
 	}
 }
 
-sub light_ro {
-	my ($light) = @_;
-	my $state   = -1;
-	my $image   = 'light.png';
+sub light {
+	my ( $light, $is_rw ) = @_;
+	my $state = -1;
+	my $image = 'light.png';
 
 	if ( exists $gpiomap->{$light} ) {
 		$state = slurp( $gpiomap->{$light} );
@@ -112,8 +128,20 @@ sub light_ro {
 		when ('0') { $image = 'light_off.png' }
 	}
 
-	return sprintf( '<img src="%s" class="light ro %s" title="%s" />',
+	my $ret = q{};
+
+	if ($is_rw) {
+		$ret .= sprintf( '<a href="/toggle/%s">', $light );
+	}
+
+	$ret .= sprintf( '<img src="%s" class="light ro %s" title="%s" />',
 		$image, $light, $light );
+
+	if ($is_rw) {
+		$ret .= sprintf('</a>');
+	}
+
+	return $ret;
 }
 
 helper has_location => sub {
@@ -192,7 +220,8 @@ helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
 	given ($type) {
-		when ('light_ro') { return light_ro( $location, $location ) }
+		when ('light_ro') { return light( $location, 0 ) }
+		when ('light')    { return light( $location, 1 ) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice( $type, $location, $location )
 		}
@@ -201,14 +230,15 @@ helper statusimage => sub {
 	return q{};
 };
 
-get '/' => \&overview;
+get '/'           => \&overview;
+get '/toggle/:id' => \&toggle;
 
 app->config(
 	hypnotoad => {
 		accept_interval => 0.2,
-		listen   => ['http://127.0.0.1:8081'],
-		pid_file => '/tmp/dorfmap.pid',
-		workers  => 2,
+		listen          => ['http://127.0.0.1:8081'],
+		pid_file        => '/tmp/dorfmap.pid',
+		workers         => 2,
 	},
 );
 app->defaults( layout => 'default' );
