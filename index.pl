@@ -205,6 +205,7 @@ get '/' => \&overview;
 
 app->config(
 	hypnotoad => {
+		accept_interval => 0.2,
 		listen   => ['http://127.0.0.1:8081'],
 		pid_file => '/tmp/dorfmap.pid',
 		workers  => 2,
