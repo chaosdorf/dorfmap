@@ -94,7 +94,8 @@ sub toggle {
 
 	if ( exists $gpiomap->{$id} ) {
 		my $state = slurp( $gpiomap->{$id} );
-		spew( $gpiomap->{$id}, !$state );
+		chomp $state;
+		spew( $gpiomap->{$id}, $state ^ 1);
 		$self->redirect_to('/');
 	}
 	else {
