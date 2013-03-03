@@ -116,13 +116,19 @@ sub action {
 	if ( exists $shortcuts->{$action} ) {
 		@errors = &{ $shortcuts->{$action} }($self);
 	}
-	$self->render(
-		'overview',
-		version     => $VERSION,
-		coordinates => $coordinates,
-		shortcuts   => [ sort keys %{$shortcuts} ],
-		errors      => \@errors,
-	);
+
+	if (@errors) {
+		$self->render(
+			'overview',
+			version     => $VERSION,
+			coordinates => $coordinates,
+			shortcuts   => [ sort keys %{$shortcuts} ],
+			errors      => \@errors,
+		);
+	}
+	else {
+		$self->redirect_to('/');
+	}
 	return;
 }
 
