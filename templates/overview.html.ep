@@ -1,3 +1,20 @@
+% if (@{$errors}) {
+<div class="errors">
+<ul>
+% for my $error (@{$errors}) {
+<li><%= $error %></li>
+% }
+</ul>
+</div>
+% }
+
+<div class="shortcuts">
+Shortcuts:
+% for my $shortcut (@{$shortcuts}) {
+<a href="/<%= $shortcut %>"><%= $shortcut %></a>
+% }
+</div>
+
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};

@@ -12,6 +12,27 @@
 		font-family: Sans-Serif;
 	}
 
+	.errors {
+		position: absolute;
+		left: 3em;
+		top: 3em;
+		right: 3em;
+		bottom: 3em;
+		background-color: white;
+		border: 2px solid black;
+		opacity: .90;
+		color: red;
+		z-index: 100;
+	}
+
+	.shortcuts a {
+		margin-left: 1em;
+		margin-right: 1em;
+		text-decoration: none;
+		text-transform: capitalize;
+		font-variant: small-caps;
+	}
+
 	.overview {
 		background-image: url(/map.png);
 		width: 2202px;

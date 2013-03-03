@@ -14,6 +14,7 @@ our $VERSION = '0.00';
 my $locations   = {};
 my $coordinates = {};
 my $gpiomap     = {};
+my $shortcuts   = {};
 
 sub slurp {
 	my ($file) = @_;
@@ -84,6 +85,8 @@ sub overview {
 		'overview',
 		version     => $VERSION,
 		coordinates => $coordinates,
+		shortcuts   => [ sort keys %{$shortcuts} ],
+		errors      => [],
 	);
 	return;
 }
@@ -95,13 +98,31 @@ sub toggle {
 	if ( exists $gpiomap->{$id} ) {
 		my $state = slurp( $gpiomap->{$id} );
 		chomp $state;
-		spew( $gpiomap->{$id}, $state ^ 1);
+		spew( $gpiomap->{$id}, $state ^ 1 );
 		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=nosuchfile');
 	}
 
+	return;
+}
+
+sub action {
+	my ($self) = @_;
+	my $action = $self->stash('action');
+	my @errors = ('no such action');
+
+	if ( exists $shortcuts->{$action} ) {
+		@errors = &{ $shortcuts->{$action} }($self);
+	}
+	$self->render(
+		'overview',
+		version     => $VERSION,
+		coordinates => $coordinates,
+		shortcuts   => [ sort keys %{$shortcuts} ],
+		errors      => \@errors,
+	);
 	return;
 }
 
@@ -231,7 +252,26 @@ helper statusimage => sub {
 	return q{};
 };
 
+$shortcuts->{shutdown} = sub {
+	my ($self) = @_;
+	my @errors;
+
+	for my $device ( keys %{$coordinates} ) {
+		my $type = $coordinates->{$device}->{type};
+
+		if ( $type eq 'printer' and slurp("/srv/www/${device}.png") == 1 ) {
+			push( @errors, "please turn off printer ${device}" );
+		}
+		if ( $type eq 'light' and exists $gpiomap->{$device} ) {
+			spew( $gpiomap->{$device}, 0 );
+		}
+	}
+
+	return @errors;
+};
+
 get '/'           => \&overview;
+get '/:action'    => \&action;
 get '/toggle/:id' => \&toggle;
 
 app->config(
