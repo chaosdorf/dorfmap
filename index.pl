@@ -16,6 +16,8 @@ my $coordinates = {};
 my $gpiomap     = {};
 my $shortcuts   = {};
 
+my $shutdownfile = '/tmp/is_shutdown';
+
 sub slurp {
 	my ($file) = @_;
 
@@ -94,6 +96,8 @@ sub overview {
 sub toggle {
 	my ($self) = @_;
 	my $id = $self->stash('id');
+
+	unlink($shutdownfile);
 
 	if ( exists $gpiomap->{$id} ) {
 		my $state = slurp( $gpiomap->{$id} );
@@ -261,6 +265,8 @@ helper statusimage => sub {
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 	my @errors;
+
+	spew($shutdownfile, q{});
 
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
