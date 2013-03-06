@@ -262,6 +262,16 @@ helper statusimage => sub {
 	return q{};
 };
 
+$shortcuts->{freitag} = sub {
+	my ($self) = @_;
+
+	spew($gpiomap->{lightclc1160}, 1);
+	spew($gpiomap->{hackcenter_w}, 1);
+	spew($gpiomap->{hackcenter_blau}, 1);
+
+	return;
+}
+
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 	my @errors;
