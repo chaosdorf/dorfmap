@@ -265,6 +265,8 @@ helper statusimage => sub {
 $shortcuts->{freitag} = sub {
 	my ($self) = @_;
 
+	unlink($shutdownfile);
+
 	spew($gpiomap->{lightclc1160}, 1);
 	spew($gpiomap->{hackcenter_w}, 1);
 	spew($gpiomap->{hackcenter_blau}, 1);
