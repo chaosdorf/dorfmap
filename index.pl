@@ -270,7 +270,7 @@ $shortcuts->{freitag} = sub {
 	spew($gpiomap->{hackcenter_blau}, 1);
 
 	return;
-}
+};
 
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
