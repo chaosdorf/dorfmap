@@ -20,6 +20,7 @@ light_ro:lounge_weiss         114   80
 light_ro:gpio17:outdoor         9  438
 light:gpio27:roehre_blau             748   42
 light_ro:gpio24:schaufenster    5  595
+light:gpio22:hackcenter_blau  686  350
 
 phone:phone              46   32
 printer:clc1160         842   60
