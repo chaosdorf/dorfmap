@@ -12,9 +12,9 @@ Transporterraum 1429  250 1737  365
 Treppe           295  356  432  522
 
 light_ro:hackcenter_k            520   60
-light_ro:hackcenter_w      686  280
+light_ro:gpio23:hackcenter_w      686  280
 light:gpio3:lightclc1160     887   63
-light_ro:logo          224  460
+light_ro:gpio25:logo          224  460
 light_ro:lounge_rgb         5  110
 light_ro:lounge_weiss         114   80
 light_ro:gpio17:outdoor         9  438
