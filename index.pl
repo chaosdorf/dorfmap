@@ -267,9 +267,9 @@ $shortcuts->{freitag} = sub {
 
 	unlink($shutdownfile);
 
-	spew($gpiomap->{lightclc1160}, 1);
-	spew($gpiomap->{hackcenter_w}, 1);
-	spew($gpiomap->{hackcenter_blau}, 1);
+	spew( $gpiomap->{lightclc1160},    1 );
+	spew( $gpiomap->{hackcenter_w},    1 );
+	spew( $gpiomap->{hackcenter_blau}, 1 );
 
 	return;
 };
@@ -278,7 +278,7 @@ $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 	my @errors;
 
-	spew($shutdownfile, q{});
+	spew( $shutdownfile, q{} );
 
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
@@ -292,6 +292,12 @@ $shortcuts->{shutdown} = sub {
 	}
 
 	return @errors;
+};
+
+$shortcuts->{unshutdown} = sub {
+	my ($self) = @_;
+
+	unlink($shutdownfile);
 };
 
 get '/'           => \&overview;
