@@ -31,7 +31,7 @@ server:donationprint     70  390
 server:feedback          64  585
 server:figurehead      1232  400
 server:hyperion        1232  361
-server:lastlight         35  585
+server:door              35  585
 wifi:freifunk           420  178
 wifi:unifi              420  210
 wifi:wlan-hinten       1753  135
