@@ -298,6 +298,8 @@ $shortcuts->{unshutdown} = sub {
 	my ($self) = @_;
 
 	unlink($shutdownfile);
+
+	return;
 };
 
 get '/'           => \&overview;
