@@ -113,6 +113,7 @@ sub toggle {
 		else {
 			system('amp_on');
 		}
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=nosuchfile');
