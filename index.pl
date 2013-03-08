@@ -320,6 +320,7 @@ $shortcuts->{shutdown} = sub {
 	}
 
 	system(qw(ssh private@door));
+	system('amp_off');
 
 	if ( $? != 0 ) {
 		push( @errors, "private\@door returned $?: $!" );
