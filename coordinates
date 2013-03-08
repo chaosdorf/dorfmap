@@ -22,6 +22,7 @@ light:gpio27:roehre_blau             748   42
 light_ro:gpio24:schaufenster    5  595
 light:gpio22:hackcenter_blau  686  350
 
+amp:amp                1270  361
 phone:phone              46   32
 printer:clc1160         842   60
 printer:hp2100          386   60
