@@ -291,6 +291,12 @@ $shortcuts->{shutdown} = sub {
 		}
 	}
 
+	system(qw(ssh private@door));
+
+	if ( $? != 0 ) {
+		push( @errors, "private\@door returned $?: $!" );
+	}
+
 	return @errors;
 };
 
