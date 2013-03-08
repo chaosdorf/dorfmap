@@ -105,6 +105,15 @@ sub toggle {
 		spew( $gpiomap->{$id}, $state ^ 1 );
 		$self->redirect_to('/');
 	}
+	elsif ( $id eq 'amp' ) {
+		my $state = slurp('/srv/www/amp.status');
+		if ( $state == 1 ) {
+			system('amp_off');
+		}
+		else {
+			system('amp_on');
+		}
+	}
 	else {
 		$self->redirect_to('/?error=nosuchfile');
 	}
@@ -143,12 +152,14 @@ sub amp {
 	if ( $state == 1 ) {
 		$image = 'amp_on.png';
 	}
-	elsif ($state == 0) {
+	elsif ( $state == 0 ) {
 		$image = 'amp_off.png';
 	}
 
-	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		$image, 'amp', 'amp', 'amp');
+	return
+	  sprintf(
+'<a href="/toggle/amp"><img src="%s" class="%s ro %s" title="%s" /></a>',
+		$image, 'amp', 'amp', 'amp' );
 }
 
 sub door_status {
@@ -267,7 +278,7 @@ helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
 	given ($type) {
-		when ('amp')      { return amp()                 }
+		when ('amp')      { return amp() }
 		when ('light_ro') { return light( $location, 0 ) }
 		when ('light')    { return light( $location, 1 ) }
 		when ( [qw[phone printer server wifi]] ) {
