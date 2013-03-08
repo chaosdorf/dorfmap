@@ -18,6 +18,7 @@ Shortcuts:
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};
+%	if ($type ne q{}) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
 <!--
@@ -28,4 +29,5 @@ Shortcuts:
 	</div>
 -->
 </div>
+% }
 % }
