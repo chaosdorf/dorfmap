@@ -158,8 +158,8 @@ sub amp {
 
 	return
 	  sprintf(
-'<a href="/toggle/amp"><img src="%s" class="%s ro %s" title="%s" /></a>',
-		$image, 'amp', 'amp', 'amp' );
+		'<a href="/toggle/amp"><img src="%s" class="%s" title="%s" /></a>',
+		$image, 'amp', 'amp' );
 }
 
 sub door_status {
