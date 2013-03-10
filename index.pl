@@ -346,6 +346,42 @@ get '/get/:id' => sub {
 	return;
 };
 
+get '/list/all' => sub {
+	my ($self) = @_;
+	my $devices = {};
+
+	for my $id ( keys %{$coordinates} ) {
+		$devices->{$id}->{type} = $coordinates->{$id}->{type};
+		$devices->{$id}->{is_readable} = exists $gpiomap->{$id} ? 1 : 0;
+		$devices->{$id}->{is_writable}
+		  = ( exists $gpiomap->{$id} and $devices->{$id}->{type} !~ m{_ro$} )
+		  ? 1
+		  : 0;
+		$devices->{$id}->{status}
+		  = exists $gpiomap->{$id} ? slurp( $gpiomap->{$id} ) * 1 : -1;
+	}
+
+	$self->respond_to(
+		json => { json => $devices },
+		txt  => {
+			text => join(
+				"\n",
+				map {
+					join( "\t",
+						$_,
+						@{ $devices->{$_} }
+						  {qw[type status is_readables is_writable]} )
+				} keys %{$devices}
+			)
+		},
+		any => {
+			data   => 'not acceptables. use json or txt',
+			status => 406
+		},
+	);
+	return;
+};
+
 get '/list/readables' => sub {
 	my ($self) = @_;
 
@@ -355,7 +391,26 @@ get '/list/readables' => sub {
 		json => { json => { devices => \@readables } },
 		txt => { text => join( "\n", @readables ) },
 		any => {
-			data   => 'invalid request',
+			data   => 'not acceptable. use json or txt',
+			status => 406
+		},
+	);
+
+	return;
+};
+
+get '/list/writables' => sub {
+	my ($self) = @_;
+
+	my @writables
+	  = grep { exists $gpiomap->{$_} and $coordinates->{$_}->{type} !~ m{_ro$} }
+	  keys %{$coordinates};
+
+	$self->respond_to(
+		json => { json => { devices => \@writables } },
+		txt => { text => join( "\n", @writables ) },
+		any => {
+			data   => 'not acceptable. use json or txt.',
 			status => 406
 		},
 	);
@@ -419,25 +474,6 @@ get '/on/:id' => sub {
 		data   => q{},
 		states => 204
 	);
-	return;
-};
-
-get '/list/writables' => sub {
-	my ($self) = @_;
-
-	my @writables
-	  = grep { exists $gpiomap->{$_} and $coordinates->{$_}->{type} !~ m{_ro$} }
-	  keys %{$coordinates};
-
-	$self->respond_to(
-		json => { json => { devices => \@writables } },
-		txt => { text => join( "\n", @writables ) },
-		any => {
-			data   => 'invalid request',
-			status => 406
-		},
-	);
-
 	return;
 };
 
