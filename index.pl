@@ -40,7 +40,7 @@ sub gpio {
 
 #}}}
 
-sub load_coordinates { #{{{
+sub load_coordinates {    #{{{
 	my @lines = split( /\n/, slurp('coordinates') );
 
 	for my $line (@lines) {
@@ -78,7 +78,7 @@ sub load_coordinates { #{{{
 		};
 	}
 	return;
-} #}}}
+}    #}}}
 
 #{{{ other helpers
 
@@ -284,7 +284,7 @@ helper statusimage => sub {
 #}}}
 #{{{ Routes
 
-get '/'           => sub {
+get '/' => sub {
 	my ($self) = @_;
 
 	if ( -e 'locations.db' ) {
@@ -301,7 +301,7 @@ get '/'           => sub {
 	return;
 };
 
-get '/:action'    => sub {
+get '/:action' => sub {
 	my ($self) = @_;
 	my $action = $self->stash('action');
 	my @errors = ('no such action');
@@ -327,19 +327,40 @@ get '/:action'    => sub {
 
 get '/get/:id' => sub {
 	my ($self) = @_;
-	my $id = $self->stash('id');
-	my $state = -1;
+	my $id     = $self->stash('id');
+	my $state  = -1;
 
-	if (exists $gpiomap->{$id} ) {
-		$state = slurp($gpiomap->{$id});
+	if ( exists $gpiomap->{$id} ) {
+		$state = slurp( $gpiomap->{$id} );
 	}
 
 	$self->respond_to(
-		json => {json => {status => $state}},
-		txt => {text => "${state}\n"},
-		any => {data => $state, status => 406},
+		json => { json => { status => $state } },
+		txt  => { text => "${state}\n" },
+		any  => {
+			data   => $state,
+			status => 406
+		},
 	);
 
+	return;
+};
+
+get '/list/readables' => sub {
+	my ($self) = @_;
+
+	my @readables = grep { exists $gpiomap->{$_} } keys %{$coordinates};
+
+	$self->respond_to(
+		json => { json => { devices => \@readables } },
+		txt => { text => join( "\n", @readables ) },
+		any => {
+			data   => 'invalid request',
+			status => 406
+		},
+	);
+
+	return;
 };
 
 get '/toggle/:id' => sub {
@@ -371,16 +392,18 @@ get '/toggle/:id' => sub {
 	return;
 };
 
-
 get '/off/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	if (exists $gpiomap->{$id}) {
-		spew($gpiomap->{$id}, 0);
+	if ( exists $gpiomap->{$id} ) {
+		spew( $gpiomap->{$id}, 0 );
 	}
 
-	$self->render(data => q{}, status => 204);
+	$self->render(
+		data   => q{},
+		status => 204
+	);
 	return;
 };
 
@@ -388,13 +411,36 @@ get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	if (exists $gpiomap->{$id}) {
-		spew($gpiomap->{$id}, 1);
+	if ( exists $gpiomap->{$id} ) {
+		spew( $gpiomap->{$id}, 1 );
 	}
 
-	$self->render(data => q{}, states => 204);
+	$self->render(
+		data   => q{},
+		states => 204
+	);
 	return;
 };
+
+get '/list/writables' => sub {
+	my ($self) = @_;
+
+	my @writables
+	  = grep { exists $gpiomap->{$_} and $coordinates->{$_}->{type} !~ m{_ro$} }
+	  keys %{$coordinates};
+
+	$self->respond_to(
+		json => { json => { devices => \@writables } },
+		txt => { text => join( "\n", @writables ) },
+		any => {
+			data   => 'invalid request',
+			status => 406
+		},
+	);
+
+	return;
+};
+
 #}}}
 
 app->config(
