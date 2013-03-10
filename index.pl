@@ -325,6 +325,23 @@ get '/:action'    => sub {
 	return;
 };
 
+get '/get/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+	my $state = -1;
+
+	if (exists $gpiomap->{$id} ) {
+		$state = slurp($gpiomap->{$id});
+	}
+
+	$self->respond_to(
+		json => {json => {status => $state}},
+		txt => {text => "${state}\n"},
+		any => {data => $state, status => 406},
+	);
+
+};
+
 get '/toggle/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
@@ -351,6 +368,31 @@ get '/toggle/:id' => sub {
 		$self->redirect_to('/?error=nosuchfile');
 	}
 
+	return;
+};
+
+
+get '/off/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	if (exists $gpiomap->{$id}) {
+		spew($gpiomap->{$id}, 0);
+	}
+
+	$self->render(data => q{}, status => 204);
+	return;
+};
+
+get '/on/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	if (exists $gpiomap->{$id}) {
+		spew($gpiomap->{$id}, 1);
+	}
+
+	$self->render(data => q{}, states => 204);
 	return;
 };
 #}}}
