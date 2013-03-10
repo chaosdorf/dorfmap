@@ -18,6 +18,8 @@ my $shortcuts   = {};
 
 my $shutdownfile = '/tmp/is_shutdown';
 
+#{{{ primitive helpers
+
 sub slurp {
 	my ($file) = @_;
 
@@ -36,7 +38,9 @@ sub gpio {
 	return "/sys/class/gpio/gpio${index}/value";
 }
 
-sub load_coordinates {
+#}}}
+
+sub load_coordinates { #{{{
 	my @lines = split( /\n/, slurp('coordinates') );
 
 	for my $line (@lines) {
@@ -74,77 +78,9 @@ sub load_coordinates {
 		};
 	}
 	return;
-}
+} #}}}
 
-sub overview {
-	my ($self) = @_;
-
-	if ( -e 'locations.db' ) {
-		$locations = retrieve('locations.db');
-	}
-
-	$self->render(
-		'overview',
-		version     => $VERSION,
-		coordinates => $coordinates,
-		shortcuts   => [ sort keys %{$shortcuts} ],
-		errors      => [],
-	);
-	return;
-}
-
-sub toggle {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	unlink($shutdownfile);
-
-	if ( exists $gpiomap->{$id} ) {
-		my $state = slurp( $gpiomap->{$id} );
-		chomp $state;
-		spew( $gpiomap->{$id}, $state ^ 1 );
-		$self->redirect_to('/');
-	}
-	elsif ( $id eq 'amp' ) {
-		my $state = slurp('/srv/www/amp.status');
-		if ( $state == 1 ) {
-			system('amp_off');
-		}
-		else {
-			system('amp_on');
-		}
-		$self->redirect_to('/');
-	}
-	else {
-		$self->redirect_to('/?error=nosuchfile');
-	}
-
-	return;
-}
-
-sub action {
-	my ($self) = @_;
-	my $action = $self->stash('action');
-	my @errors = ('no such action');
-
-	if ( exists $shortcuts->{$action} ) {
-		@errors = &{ $shortcuts->{$action} }($self);
-	}
-
-	if (@errors) {
-		$self->render(
-			'overview',
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => [ sort keys %{$shortcuts} ],
-			errors      => \@errors,
-		);
-	}
-	else {
-		$self->redirect_to('/');
-	}
-	return;
-}
+#{{{ other helpers
 
 sub amp {
 	my $image = 'amp.png';
@@ -203,22 +139,6 @@ sub light {
 	return $ret;
 }
 
-helper has_location => sub {
-	my ( $self, $location ) = @_;
-
-	my $ret    = q{};
-	my $prefix = 'http://wiki.chaosdorf.de/Special:URIResolver/';
-
-	for my $item ( @{ $locations->{"${prefix}${location}"} // [] } ) {
-		my ($name) = ( $item =~ m{ ^ $prefix (.*) $ }x );
-		$name =~ s{ - ( [0-9A-F] {2} ) }{ chr(hex($1)) }egx;
-		$name = decode( 'UTF-8', $name );
-		$ret .= sprintf( "<li><a href=\"%s\">%s</a></li>\n", $item, $name );
-	}
-
-	return $ret;
-};
-
 sub muninlink {
 	my ( $plugin, $name ) = @_;
 
@@ -226,6 +146,19 @@ sub muninlink {
 	  sprintf(
 '<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
 		$plugin, $name // $plugin );
+}
+
+sub pingdevice {
+	my ( $type, $host, $label ) = @_;
+	my $image = "${type}_off.png";
+	my $state = slurp("/srv/www/${host}.ping");
+
+	if ( $state == 1 ) {
+		$image = "${type}_on.png";
+	}
+
+	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
+		$image, $type, $host, $label );
 }
 
 sub sunrise {
@@ -252,43 +185,9 @@ sub wikilink {
 	);
 }
 
-sub pingdevice {
-	my ( $type, $host, $label ) = @_;
-	my $image = "${type}_off.png";
-	my $state = slurp("/srv/www/${host}.ping");
+#}}}
 
-	if ( $state == 1 ) {
-		$image = "${type}_on.png";
-	}
-
-	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		$image, $type, $host, $label );
-}
-
-helper statusclass => sub {
-	my ( $self, $type, $location ) = @_;
-
-	if ( $type eq 'door' ) {
-		return door_status();
-	}
-
-	return q{};
-};
-
-helper statusimage => sub {
-	my ( $self, $type, $location ) = @_;
-
-	given ($type) {
-		when ('amp')      { return amp() }
-		when ('light_ro') { return light( $location, 0 ) }
-		when ('light')    { return light( $location, 1 ) }
-		when ( [qw[phone printer server wifi]] ) {
-			return pingdevice( $type, $location, $location )
-		}
-	}
-
-	return q{};
-};
+#{{{ Shortcuts
 
 $shortcuts->{freitag} = sub {
 	my ($self) = @_;
@@ -337,9 +236,124 @@ $shortcuts->{unshutdown} = sub {
 	return;
 };
 
-get '/'           => \&overview;
-get '/:action'    => \&action;
-get '/toggle/:id' => \&toggle;
+#}}}
+
+#{{{ Helpers
+
+helper has_location => sub {
+	my ( $self, $location ) = @_;
+
+	my $ret    = q{};
+	my $prefix = 'http://wiki.chaosdorf.de/Special:URIResolver/';
+
+	for my $item ( @{ $locations->{"${prefix}${location}"} // [] } ) {
+		my ($name) = ( $item =~ m{ ^ $prefix (.*) $ }x );
+		$name =~ s{ - ( [0-9A-F] {2} ) }{ chr(hex($1)) }egx;
+		$name = decode( 'UTF-8', $name );
+		$ret .= sprintf( "<li><a href=\"%s\">%s</a></li>\n", $item, $name );
+	}
+
+	return $ret;
+};
+
+helper statusclass => sub {
+	my ( $self, $type, $location ) = @_;
+
+	if ( $type eq 'door' ) {
+		return door_status();
+	}
+
+	return q{};
+};
+
+helper statusimage => sub {
+	my ( $self, $type, $location ) = @_;
+
+	given ($type) {
+		when ('amp')      { return amp() }
+		when ('light_ro') { return light( $location, 0 ) }
+		when ('light')    { return light( $location, 1 ) }
+		when ( [qw[phone printer server wifi]] ) {
+			return pingdevice( $type, $location, $location )
+		}
+	}
+
+	return q{};
+};
+
+#}}}
+#{{{ Routes
+
+get '/'           => sub {
+	my ($self) = @_;
+
+	if ( -e 'locations.db' ) {
+		$locations = retrieve('locations.db');
+	}
+
+	$self->render(
+		'overview',
+		version     => $VERSION,
+		coordinates => $coordinates,
+		shortcuts   => [ sort keys %{$shortcuts} ],
+		errors      => [],
+	);
+	return;
+};
+
+get '/:action'    => sub {
+	my ($self) = @_;
+	my $action = $self->stash('action');
+	my @errors = ('no such action');
+
+	if ( exists $shortcuts->{$action} ) {
+		@errors = &{ $shortcuts->{$action} }($self);
+	}
+
+	if (@errors) {
+		$self->render(
+			'overview',
+			version     => $VERSION,
+			coordinates => $coordinates,
+			shortcuts   => [ sort keys %{$shortcuts} ],
+			errors      => \@errors,
+		);
+	}
+	else {
+		$self->redirect_to('/');
+	}
+	return;
+};
+
+get '/toggle/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	unlink($shutdownfile);
+
+	if ( exists $gpiomap->{$id} ) {
+		my $state = slurp( $gpiomap->{$id} );
+		chomp $state;
+		spew( $gpiomap->{$id}, $state ^ 1 );
+		$self->redirect_to('/');
+	}
+	elsif ( $id eq 'amp' ) {
+		my $state = slurp('/srv/www/amp.status');
+		if ( $state == 1 ) {
+			system('amp_off');
+		}
+		else {
+			system('amp_on');
+		}
+		$self->redirect_to('/');
+	}
+	else {
+		$self->redirect_to('/?error=nosuchfile');
+	}
+
+	return;
+};
+#}}}
 
 app->config(
 	hypnotoad => {
