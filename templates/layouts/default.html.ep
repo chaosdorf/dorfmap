@@ -16,12 +16,14 @@
 		position: absolute;
 		top: 0.5em;
 		right: 1em;
-		font-variant: small-caps;
+		font-family: Monospace;
 		color: #666666;
 	}
 
 	div.about a {
 		color: #000066;
+		font-family: Sans-Serif;
+		font-variant: small-caps;
 		text-decoration: none;
 	}
 
