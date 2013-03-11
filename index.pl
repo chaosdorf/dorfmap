@@ -5,7 +5,6 @@ use warnings;
 use 5.014;
 use utf8;
 
-use Cache::File;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
@@ -18,11 +17,6 @@ my $gpiomap     = {};
 my $shortcuts   = {};
 
 my $shutdownfile = '/tmp/is_shutdown';
-
-my $cache = Cache::File->new(
-	cache_root      => '/tmp/dorfmap-cache',
-	default_expires => '120 sec',
-);
 
 #{{{ primitive helpers
 
@@ -42,19 +36,6 @@ sub gpio {
 	my ($index) = @_;
 
 	return "/sys/class/gpio/gpio${index}/value";
-}
-
-sub ping_host {
-	my ($host) = @_;
-
-	if ( $cache->exists($host) ) {
-		return $cache->get($host);
-	}
-
-	system( qw(ping -n -c 1), $host );
-	my $result = ( $? == 0 ) ? 1 : 0;
-	$cache->set( $host, $result );
-	return $result;
 }
 
 #}}}
@@ -191,7 +172,7 @@ sub pingdevice_image {
 sub pingdevice_status {
 	my ($host) = @_;
 
-	return ping_host($host);
+	return slurp("/srv/www/${host}.ping") || 0;
 }
 
 sub pingdevice {
