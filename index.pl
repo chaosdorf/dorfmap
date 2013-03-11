@@ -103,7 +103,7 @@ sub load_coordinates {    #{{{
 
 sub amp_image {
 	my $image = 'amp.png';
-	my $state = slurp('/srv/www/amp.status');
+	my $state = amp_status();
 
 	if ( $state == 1 ) {
 		$image = 'amp_on.png';
@@ -115,6 +115,10 @@ sub amp_image {
 	return $image;
 }
 
+sub amp_status {
+	return slurp('/srv/www/amp.status') // -1;
+}
+
 sub amp {
 	return
 	  sprintf(
@@ -124,12 +128,8 @@ sub amp {
 
 sub light_image {
 	my ($light) = @_;
-	my $state   = -1;
+	my $state   = light_status($light);
 	my $image   = 'light.png';
-
-	if ( exists $gpiomap->{$light} ) {
-		$state = slurp( $gpiomap->{$light} );
-	}
 
 	given ($state) {
 		when ('1') { $image = 'light_on.png' }
@@ -137,6 +137,15 @@ sub light_image {
 	}
 
 	return $image;
+}
+
+sub light_status {
+	my ($light) = @_;
+
+	if ( exists $gpiomap->{$light} ) {
+		return slurp( $gpiomap->{$light} ) // -1;
+	}
+	return -1;
 }
 
 sub light {
@@ -170,7 +179,7 @@ sub muninlink {
 sub pingdevice_image {
 	my ( $type, $host ) = @_;
 	my $image = "${type}_off.png";
-	my $state = ping_host($host);
+	my $state = pingdevice_status($host);
 
 	if ( $state == 1 ) {
 		$image = "${type}_on.png";
@@ -179,11 +188,32 @@ sub pingdevice_image {
 	return $image;
 }
 
+sub pingdevice_status {
+	my ($host) = @_;
+
+	return ping_host($host);
+}
+
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
 		"/get/${host}.png", $type, $host, $label );
+}
+
+sub status_number {
+	my ($id) = @_;
+	my $type = $coordinates->{$id}->{type};
+
+	given ($type) {
+		when ('amp') { return amp_status() }
+		when ( [qw[light light_ro]] ) { return light_status($id) }
+		when ( [qw[phone printer server wifi]] ) {
+			return pingdevice_status($id)
+		}
+	}
+
+	return -1;
 }
 
 sub status_image {
@@ -367,19 +397,14 @@ get '/:action' => sub {
 
 get '/get/:id' => sub {
 	my ($self) = @_;
-	my $id     = $self->stash('id');
-	my $state  = -1;
-
-	if ( exists $gpiomap->{$id} ) {
-		$state = slurp( $gpiomap->{$id} );
-	}
+	my $id = $self->stash('id');
 
 	$self->respond_to(
-		json => { json => { status => $state } },
-		txt  => { text => "${state}\n" },
+		json => { json => { status => status_number($id) } },
+		txt  => { text => status_number($id) . "\n" },
 		png => sub { $self->render_static( status_image($id) ) },
 		any => {
-			data   => $state,
+			data   => status_number($id),
 			status => 406
 		},
 	);
@@ -398,8 +423,7 @@ get '/list/all' => sub {
 		  = ( exists $gpiomap->{$id} and $devices->{$id}->{type} !~ m{_ro$} )
 		  ? 1
 		  : 0;
-		$devices->{$id}->{status}
-		  = exists $gpiomap->{$id} ? slurp( $gpiomap->{$id} ) * 1 : -1;
+		$devices->{$id}->{status} = status_number($id);
 	}
 
 	$self->respond_to(
