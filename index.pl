@@ -104,7 +104,7 @@ sub amp {
 	return
 	  sprintf(
 		'<a href="/toggle/amp"><img src="%s" class="%s" title="%s" /></a>',
-		'/get/amp.png', 'amp', 'amp' );
+		amp_image, 'amp', 'amp' );
 }
 
 sub light_image {
@@ -139,7 +139,7 @@ sub light {
 	}
 
 	$ret .= sprintf( '<img src="%s" class="light ro %s" title="%s" />',
-		"/get/${light}.png", $light, $light );
+		light_image($light), $light, $light );
 
 	if ($is_rw) {
 		$ret .= sprintf('</a>');
@@ -179,7 +179,7 @@ sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		"/get/${host}.png", $type, $host, $label );
+		pingdevice_image($type, $host), $type, $host, $label );
 }
 
 sub status_number {
@@ -311,7 +311,7 @@ helper statusclass => sub {
 	my ( $self, $type, $location ) = @_;
 
 	if ( $type eq 'door' ) {
-		return $self->ua->get('http://door/status')->res->body || 'unknown';
+		return slurp('/srv/www/doorstatus') || 'unknown';
 	}
 
 	return q{};
