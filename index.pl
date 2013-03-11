@@ -20,8 +20,8 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 
 my $cache = Cache::File->new(
-cache_root => '/tmp/dorfmap-cache',
-default_expires => '120 sec',
+	cache_root      => '/tmp/dorfmap-cache',
+	default_expires => '120 sec',
 );
 
 #{{{ primitive helpers
@@ -47,13 +47,13 @@ sub gpio {
 sub ping_host {
 	my ($host) = @_;
 
-	if ($cache->exists($host)) {
+	if ( $cache->exists($host) ) {
 		return $cache->get($host);
 	}
 
-	system(qw(ping -n -c 1), $host);
-	my $result = ($? == 0) ? 1 : 0;
-	$cache->set($host, $result);
+	system( qw(ping -n -c 1), $host );
+	my $result = ( $? == 0 ) ? 1 : 0;
+	$cache->set( $host, $result );
 	return $result;
 }
 
@@ -101,7 +101,7 @@ sub load_coordinates {    #{{{
 
 #{{{ other helpers
 
-sub amp {
+sub amp_image {
 	my $image = 'amp.png';
 	my $state = slurp('/srv/www/amp.status');
 
@@ -112,16 +112,20 @@ sub amp {
 		$image = 'amp_off.png';
 	}
 
+	return $image;
+}
+
+sub amp {
 	return
 	  sprintf(
 		'<a href="/toggle/amp"><img src="%s" class="%s" title="%s" /></a>',
-		$image, 'amp', 'amp' );
+		'/get/amp.png', 'amp', 'amp' );
 }
 
-sub light {
-	my ( $light, $is_rw ) = @_;
-	my $state = -1;
-	my $image = 'light.png';
+sub light_image {
+	my ($light) = @_;
+	my $state   = -1;
+	my $image   = 'light.png';
 
 	if ( exists $gpiomap->{$light} ) {
 		$state = slurp( $gpiomap->{$light} );
@@ -132,6 +136,12 @@ sub light {
 		when ('0') { $image = 'light_off.png' }
 	}
 
+	return $image;
+}
+
+sub light {
+	my ( $light, $is_rw ) = @_;
+
 	my $ret = q{};
 
 	if ($is_rw) {
@@ -139,7 +149,7 @@ sub light {
 	}
 
 	$ret .= sprintf( '<img src="%s" class="light ro %s" title="%s" />',
-		$image, $light, $light );
+		"/get/${light}.png", $light, $light );
 
 	if ($is_rw) {
 		$ret .= sprintf('</a>');
@@ -157,8 +167,8 @@ sub muninlink {
 		$plugin, $name // $plugin );
 }
 
-sub pingdevice {
-	my ( $type, $host, $label ) = @_;
+sub pingdevice_image {
+	my ( $type, $host ) = @_;
 	my $image = "${type}_off.png";
 	my $state = ping_host($host);
 
@@ -166,8 +176,29 @@ sub pingdevice {
 		$image = "${type}_on.png";
 	}
 
+	return $image;
+}
+
+sub pingdevice {
+	my ( $type, $host, $label ) = @_;
+
 	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		$image, $type, $host, $label );
+		"/get/${host}.png", $type, $host, $label );
+}
+
+sub status_image {
+	my ($id) = @_;
+	my $type = $coordinates->{$id}->{type};
+
+	given ($type) {
+		when ('amp') { return amp_image() }
+		when ( [qw[light light_ro]] ) { return light_image($id) }
+		when ( [qw[phone printer server wifi]] ) {
+			return pingdevice_image( $type, $id )
+		}
+	}
+
+	return q{};
 }
 
 sub sunrise {
@@ -346,7 +377,8 @@ get '/get/:id' => sub {
 	$self->respond_to(
 		json => { json => { status => $state } },
 		txt  => { text => "${state}\n" },
-		any  => {
+		png => sub { $self->render_static( status_image($id) ) },
+		any => {
 			data   => $state,
 			status => 406
 		},
