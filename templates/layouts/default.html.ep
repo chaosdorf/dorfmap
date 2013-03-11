@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Dorfmap v<%= $version %></title>
+	<title>dorfmap v<%= $version %></title>
 	<meta charset="UTF-8">
 	<meta http-equiv="refresh" content="60" />
 
@@ -10,6 +10,19 @@
 
 	html {
 		font-family: Sans-Serif;
+	}
+
+	div.about {
+		position: absolute;
+		top: 0.5em;
+		right: 1em;
+		font-variant: small-caps;
+		color: #666666;
+	}
+
+	div.about a {
+		color: #000066;
+		text-decoration: none;
 	}
 
 	.errors {
@@ -102,6 +115,12 @@
 	</style>
 </head>
 <body>
+
+<div class="about">
+<a href="https://github.com/derf/dorfmap">dorfmap</a> v<%= $version %><br/>
+<a href="https://wiki.chaosdorf.de/Lichtsteuerung">about</a> —
+<a href="https://wiki.chaosdorf.de/Lichtsteuerung#API">API</a>
+</div>
 
 <div class="content">
 %= content
