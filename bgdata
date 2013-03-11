@@ -42,9 +42,9 @@ while (sleep(120)) {
 		}
 	}
 
-	$ua->get('http://door/status');
-	if ($ua->is_success) {
-		write_file('/srv/www/doorstatus', $ua->decoded_content);
+	my $res = $ua->get('http://door/status');
+	if ($res->is_success) {
+		write_file('/srv/www/doorstatus', $res->decoded_content);
 	}
 	else {
 		write_file('/srv/www/doorstatus', -1);
