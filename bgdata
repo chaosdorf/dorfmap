@@ -6,6 +6,7 @@ use 5.010;
 
 use App::Daemon qw(daemonize);
 use File::Slurp qw(read_file write_file);
+use LWP::UserAgent;
 
 $App::Daemon::as_user = 'www-data';
 $App::Daemon::logfile = '/tmp/dorfmap-bgdata.log';
@@ -13,6 +14,9 @@ $App::Daemon::logfile = '/tmp/dorfmap-bgdata.log';
 daemonize();
 
 our $VERSION = '0.01';
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(2);
 
 my $re_pingdev = qr{
 	(?: phone | printer | server | wifi )
@@ -36,6 +40,14 @@ while (sleep(120)) {
 		if ($line =~ $re_pingdev) {
 			ping_host($+{host});
 		}
+	}
+
+	$ua->get('http://door/status');
+	if ($ua->is_success) {
+		write_file('/srv/www/doorstatus', $ua->decoded_content);
+	}
+	else {
+		write_file('/srv/www/doorstatus', -1);
 	}
 
 }
