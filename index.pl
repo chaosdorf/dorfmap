@@ -5,6 +5,7 @@ use warnings;
 use 5.014;
 use utf8;
 
+use Cache::File;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
@@ -17,6 +18,11 @@ my $gpiomap     = {};
 my $shortcuts   = {};
 
 my $shutdownfile = '/tmp/is_shutdown';
+
+my $cache = Cache::File->new(
+cache_root => '/tmp/dorfmap-cache',
+default_expires => '120 sec',
+);
 
 #{{{ primitive helpers
 
@@ -36,6 +42,19 @@ sub gpio {
 	my ($index) = @_;
 
 	return "/sys/class/gpio/gpio${index}/value";
+}
+
+sub ping_host {
+	my ($host) = @_;
+
+	if ($cache->exists($host)) {
+		return $cache->get($host);
+	}
+
+	system(qw(ping -n -c 1), $host);
+	my $result = ($? == 0) ? 1 : 0;
+	$cache->set($host, $result);
+	return $result;
 }
 
 #}}}
@@ -99,16 +118,6 @@ sub amp {
 		$image, 'amp', 'amp' );
 }
 
-sub door_status {
-	my $raw = slurp('/srv/www/door.status');
-	chomp($raw);
-	given ($raw) {
-		when ('open')   { return 'open' }
-		when ('closed') { return 'closed' }
-		default         { return 'unknown' }
-	}
-}
-
 sub light {
 	my ( $light, $is_rw ) = @_;
 	my $state = -1;
@@ -151,7 +160,7 @@ sub muninlink {
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 	my $image = "${type}_off.png";
-	my $state = slurp("/srv/www/${host}.ping");
+	my $state = ping_host($host);
 
 	if ( $state == 1 ) {
 		$image = "${type}_on.png";
@@ -260,7 +269,7 @@ helper statusclass => sub {
 	my ( $self, $type, $location ) = @_;
 
 	if ( $type eq 'door' ) {
-		return door_status();
+		return $self->ua->get('http://door/status')->res->body || 'unknown';
 	}
 
 	return q{};
