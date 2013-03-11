@@ -43,6 +43,9 @@ __END__
 
 =head1 DESCRIPTION
 
+Reads serial bits from stdin, separated by newlines. Least Significan Bit
+first.
+
 =head1 OPTIONS
 
 =over
