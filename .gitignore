@@ -7,3 +7,11 @@
 *.map
 *.sym
 obj/
+
+blib/
+_build
+Build
+MANIFEST
+MANIFEST.bak
+MANIFEST.SKIP
+MANIFEST.SKIP.bak
