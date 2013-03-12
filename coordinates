@@ -17,7 +17,7 @@ light_ro:hackcenter_k            520   60
 light:gpio4:hackcenter_w      686  280
 light:gpio3:lightclc1160     887   63
 light_ro:gpio2:logo          224  460
-light_ro:lounge_rgb         5  110
+light:donationprint1/4:lounge_rgb         5  110
 light_ro:lounge_weiss         114   80
 light_ro:gpio17:outdoor         9  438
 light:gpio27:roehre_blau             748   42

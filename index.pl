@@ -14,6 +14,7 @@ our $VERSION = qx{git describe --dirty} || '0.01';
 my $locations   = {};
 my $coordinates = {};
 my $gpiomap     = {};
+my $remotemap   = {};
 my $shortcuts   = {};
 
 my $shutdownfile = '/tmp/is_shutdown';
@@ -38,6 +39,13 @@ sub gpio {
 	return "/sys/class/gpio/gpio${index}/value";
 }
 
+sub set_remote {
+	my ( $path, $value ) = @_;
+
+	spew( $path, "${value}\n" );
+	system('avrshift-donationprint');
+}
+
 #}}}
 
 sub load_coordinates {    #{{{
@@ -45,7 +53,7 @@ sub load_coordinates {    #{{{
 
 	for my $line (@lines) {
 		my ( $id, $left, $top, $right, $bottom ) = split( /\s+/, $line );
-		my ( $type, $gpio );
+		my $type;
 
 		if ( not $id ) {
 			next;
@@ -57,12 +65,11 @@ sub load_coordinates {    #{{{
 		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
 			my $control = $1;
 			if ( $control =~ m{ ^ gpio (\d+) $ }ox ) {
-				$gpio = $1;
+				$gpiomap->{$id} = gpio($1);
 			}
-		}
-
-		if ($gpio) {
-			$gpiomap->{$id} = gpio($gpio);
+			elsif ( $control =~ m{ ^ donationprint }ox ) {
+				$remotemap->{$id} = "/tmp/${control}";
+			}
 		}
 
 		# image areas don't specify right and bottom and are usually 32x32px
@@ -126,6 +133,9 @@ sub light_status {
 	if ( exists $gpiomap->{$light} ) {
 		return slurp( $gpiomap->{$light} ) // -1;
 	}
+	if ( exists $remotemap->{$light} ) {
+		return slurp( $remotemap->{$light} ) // -1;
+	}
 	return -1;
 }
 
@@ -178,8 +188,11 @@ sub pingdevice_status {
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
-	return sprintf( '<img src="%s" class="%s ro %s" title="%s" />',
-		pingdevice_image($type, $host), $type, $host, $label );
+	return sprintf(
+		'<img src="%s" class="%s ro %s" title="%s" />',
+		pingdevice_image( $type, $host ),
+		$type, $host, $label
+	);
 }
 
 sub status_number {
@@ -313,8 +326,8 @@ helper statusclass => sub {
 	if ( $type eq 'door' ) {
 		return slurp('/srv/www/doorstatus') || 'unknown';
 	}
-	if ($type eq 'shutdown') {
-		return (-e '/tmp/is_shutdown') ? 'shutdownyes' : 'shutdownno';
+	if ( $type eq 'shutdown' ) {
+		return ( -e '/tmp/is_shutdown' ) ? 'shutdownyes' : 'shutdownno';
 	}
 
 	return q{};
@@ -336,10 +349,11 @@ helper statusimage => sub {
 };
 
 helper statustext => sub {
-	my ($self, $type, $location) = @_;
+	my ( $self, $type, $location ) = @_;
 
-	if ($type eq 'shutdown') {
-		return sprintf('Shutdown: %s', (-e '/tmp/is_shutdown') ? 'Yes' : 'No');
+	if ( $type eq 'shutdown' ) {
+		return
+		  sprintf( 'Shutdown: %s', ( -e '/tmp/is_shutdown' ) ? 'Yes' : 'No' );
 	}
 	return q{};
 };
@@ -489,6 +503,13 @@ get '/toggle/:id' => sub {
 		spew( $gpiomap->{$id}, $state ^ 1 );
 		$self->redirect_to('/');
 	}
+	elsif ( exists $remotemap->{$id} ) {
+		my $state = slurp( $remotemap->{$id} );
+		chomp $state;
+		set_remote( $remotemap->{$id}, $state ^ 1 );
+		$self->redirect_to('/');
+	}
+
 	elsif ( $id eq 'amp' ) {
 		my $state = slurp('/srv/www/amp.status');
 		if ( $state == 1 ) {
@@ -513,6 +534,9 @@ get '/off/:id' => sub {
 	if ( exists $gpiomap->{$id} ) {
 		spew( $gpiomap->{$id}, 0 );
 	}
+	elsif ( exists $remotemap->{$id} ) {
+		set_remote( $remotemap->{$id}, 0 );
+	}
 
 	$self->render(
 		data   => q{},
@@ -527,6 +551,9 @@ get '/on/:id' => sub {
 
 	if ( exists $gpiomap->{$id} ) {
 		spew( $gpiomap->{$id}, 1 );
+	}
+	elsif ( exists $remotemap->{$id} ) {
+		set_remote( $remotemap->{$id}, 1 );
 	}
 
 	$self->render(
