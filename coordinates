@@ -11,6 +11,8 @@ Serverraum      1232  360 1304  451
 Transporterraum 1429  250 1737  365
 Treppe           295  356  432  522
 
+shutdown:shutdown 450 406 600 430
+
 light_ro:hackcenter_k            520   60
 light:gpio4:hackcenter_w      686  280
 light:gpio3:lightclc1160     887   63

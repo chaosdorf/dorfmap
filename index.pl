@@ -313,6 +313,9 @@ helper statusclass => sub {
 	if ( $type eq 'door' ) {
 		return slurp('/srv/www/doorstatus') || 'unknown';
 	}
+	if ($type eq 'shutdown') {
+		return (-e '/tmp/is_shutdown') ? 'shutdownyes' : 'shutdownno';
+	}
 
 	return q{};
 };
@@ -332,7 +335,17 @@ helper statusimage => sub {
 	return q{};
 };
 
+helper statustext => sub {
+	my ($self, $type, $location) = @_;
+
+	if ($type eq 'shutdown') {
+		return sprintf('Shutdown: %s', (-e '/tmp/is_shutdown') ? 'Yes' : 'No');
+	}
+	return q{};
+};
+
 #}}}
+
 #{{{ Routes
 
 get '/' => sub {

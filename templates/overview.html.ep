@@ -21,6 +21,7 @@ Shortcuts:
 %	if ($type ne q{}) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
+%==	statustext($type, $location);
 <!--
 	<div class="popup">
 		<ul>

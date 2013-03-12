@@ -102,6 +102,21 @@
 		background-color: red;
 	}
 
+	.overview #shutdown {
+		font-size: 120%;
+		font-weight: bold;
+	}
+
+	.overview .shutdownyes {
+		color: white;
+		background-color: blue;
+	}
+
+	.overview .shutdownno {
+		color: white;
+		background-color: gray;
+	}
+
 % for my $location (keys %{$coordinates}) {
 %    my %coord = %{$coordinates->{$location}};
 	.overview #<%= $location %> {
