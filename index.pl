@@ -280,8 +280,8 @@ $shortcuts->{shutdown} = sub {
 		if ( $type eq 'light' and exists $gpiomap->{$device} ) {
 			spew( $gpiomap->{$device}, 0 );
 		}
-		if ( exists $remotemap->{$devic} ) {
-			set_remote( $remotmap->{$device}, 0 );
+		if ( exists $remotemap->{$device} ) {
+			set_remote( $remotemap->{$device}, 0 );
 		}
 	}
 
