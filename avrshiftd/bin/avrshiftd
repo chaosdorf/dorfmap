@@ -32,6 +32,7 @@ while ( my $line = <STDIN> ) {
 
 sda(1);
 scl(0);
+sda(0);
 
 __END__
 
