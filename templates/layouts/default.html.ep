@@ -102,17 +102,16 @@
 		background-color: red;
 	}
 
-	.overview #shutdown {
+	.overview span.shutdownyes {
 		font-size: 120%;
 		font-weight: bold;
-	}
-
-	.overview .shutdownyes {
 		color: white;
 		background-color: blue;
 	}
 
-	.overview .shutdownno {
+	.overview span.shutdownno {
+		font-size: 120%;
+		font-weight: bold;
 		color: white;
 		background-color: gray;
 	}

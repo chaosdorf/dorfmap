@@ -114,6 +114,25 @@ sub amp {
 		amp_image, 'amp', 'amp' );
 }
 
+sub infotext {
+	my $buf;
+
+	my $is_shutdown = ( -e '/tmp/is_shutdown' );
+
+	$buf .= sprintf(
+		'<span class="shutdown%s">Shutdown: %s</span><br/>',
+		$is_shutdown ? 'yes' : 'no',
+		$is_shutdown ? 'Yes' : 'No',
+	);
+
+	if ( $is_shutdown and slurp( $gpiomap->{outdoor} ) == 1 ) {
+		$buf
+		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
+	}
+
+	return $buf;
+}
+
 sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
@@ -329,9 +348,6 @@ helper statusclass => sub {
 	if ( $type eq 'door' ) {
 		return slurp('/srv/www/doorstatus') || 'unknown';
 	}
-	if ( $type eq 'shutdown' ) {
-		return ( -e '/tmp/is_shutdown' ) ? 'shutdownyes' : 'shutdownno';
-	}
 
 	return q{};
 };
@@ -354,9 +370,8 @@ helper statusimage => sub {
 helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
-	if ( $type eq 'shutdown' ) {
-		return
-		  sprintf( 'Shutdown: %s', ( -e '/tmp/is_shutdown' ) ? 'Yes' : 'No' );
+	if ( $type eq 'infoarea' ) {
+		return infotext();
 	}
 	return q{};
 };
