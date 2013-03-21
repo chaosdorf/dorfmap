@@ -52,7 +52,7 @@ sub load_coordinates {    #{{{
 	my @lines = split( /\n/, slurp('coordinates') );
 
 	for my $line (@lines) {
-		my ( $id, $left, $top, $right, $bottom ) = split( /\s+/, $line );
+		my ( $id, $left, $top, $right, $bottom, @text ) = split( /\s+/, $line );
 		my $type;
 
 		if ( not $id ) {
@@ -73,15 +73,16 @@ sub load_coordinates {    #{{{
 		}
 
 		# image areas don't specify right and bottom and are usually 32x32px
-		$right  //= $left + 32;
-		$bottom //= $top + 32;
+		$right  ||= $left + 32;
+		$bottom ||= $top + 32;
 
 		$coordinates->{$id} = {
 			x1   => $left,
 			y1   => $top,
 			x2   => $right - $left,
 			y2   => $bottom - $top,
-			type => $type
+			type => $type,
+			text => decode('UTF-8', join(' ', @text)),
 		};
 	}
 	return;
@@ -167,7 +168,7 @@ sub light {
 		$ret .= sprintf( '<a href="/toggle/%s">', $light );
 	}
 
-	$ret .= sprintf( '<img src="%s" class="light ro %s" title="%s" />',
+	$ret .= sprintf( '<img src="%s" class="light ro %s" />',
 		light_image($light), $light, $light );
 
 	if ($is_rw) {
@@ -367,7 +368,7 @@ helper statustext => sub {
 	if ( $type eq 'infoarea' ) {
 		return infotext();
 	}
-	return q{};
+	return $coordinates->{$location}->{text};
 };
 
 #}}}

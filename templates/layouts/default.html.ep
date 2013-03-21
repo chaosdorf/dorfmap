@@ -62,8 +62,8 @@
 	.overview > * > .popup {
 		visibility: hidden;
 		position: absolute;
-		top: 10px;
-		left: 10px;
+		top: 0px;
+		left: 30px;
 		z-index: 1;
 		border: 1px solid gray;
 		background-color: white;

@@ -21,7 +21,14 @@ Shortcuts:
 %	if ($type ne q{}) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
+%	if ($type eq 'infoarea') {
 %==	statustext($type, $location);
+% 	}
+% 	elsif (statustext($type, $location)) {
+<div class="popup">
+%== statustext($type, $location);
+</div>
+%	}
 <!--
 	<div class="popup">
 		<ul>
