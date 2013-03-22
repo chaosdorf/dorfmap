@@ -5,6 +5,9 @@ use warnings;
 use 5.014;
 use utf8;
 
+use Astro::Sunrise;
+use DateTime;
+use DateTime::Duration;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
@@ -44,7 +47,12 @@ sub set_remote {
 	my ( $path, $value ) = @_;
 
 	spew( $path, "${value}\n" );
-	system('avrshift-donationprint');
+	if ( $path =~ m{ donationprint } ) {
+		system('avrshift-donationprint');
+	}
+	elsif ( $path =~ m{ feedback } ) {
+		system('avrshift-feedback');
+	}
 }
 
 #}}}
@@ -68,7 +76,7 @@ sub load_coordinates {    #{{{
 			if ( $control =~ m{ ^ gpio (\d+) $ }ox ) {
 				$gpiomap->{$id} = gpio($1);
 			}
-			elsif ( $control =~ m{ ^ donationprint }ox ) {
+			elsif ( $control =~ m{ ^ ( donationprint | feedback ) }ox ) {
 				$remotemap->{$id} = "/tmp/${control}";
 			}
 		}
@@ -251,12 +259,37 @@ sub status_image {
 	return q{};
 }
 
-sub sunrise {
-	return slurp('/srv/www/sunrise');
-}
+sub sunrisetext {
 
-sub sunset {
-	return slurp('/srv/www/sunset');
+	my $now = DateTime->now( time_zone => 'Europe/Berlin' );
+	my $delta = DateTime::Duration->new( minutes => 20 );
+
+	my ( $rise_str, $set_str )
+	  = sunrise( $now->year, $now->month, $now->day, 6.47, 51.14,
+		$now->offset / 3600,
+		$now->is_dst );
+
+	my ( $rise_h, $rise_m ) = ( $rise_str =~ m{(..):(..)} );
+	my ( $set_h,  $set_m )  = ( $set_str  =~ m{(..):(..)} );
+
+	my $sunrise = $now->clone->set(
+		hour   => $rise_h,
+		minute => $rise_m
+	);
+	my $sunset = $now->clone->set(
+		hour   => $set_h,
+		minute => $set_m
+	);
+
+	$sunrise->add_duration($delta);
+	$sunset->subtract_duration($delta);
+
+	return sprintf(
+		'Aktiv von %s bis %s %s',
+		$sunset->hms, $sunrise->hms,
+		( -e $automaticfile ) ? q{} : '(Automatik deaktiviert)',
+	);
+
 }
 
 sub wikilink {
@@ -374,6 +407,9 @@ helper statustext => sub {
 
 	if ( $type eq 'infoarea' ) {
 		return infotext();
+	}
+	if ( $location eq 'outdoor' ) {
+		return $coordinates->{$location}->{text} . '<br/>' . sunrisetext();
 	}
 	return $coordinates->{$location}->{text};
 };

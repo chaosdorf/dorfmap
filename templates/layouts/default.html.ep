@@ -68,7 +68,7 @@
 		border: 1px solid gray;
 		background-color: white;
 		opacity: .90;
-		min-width: 200px;
+		min-width: 300px;
 	}
 	
 	.overview > *:hover > .popup,
