@@ -17,7 +17,8 @@ my $gpiomap     = {};
 my $remotemap   = {};
 my $shortcuts   = {};
 
-my $shutdownfile = '/tmp/is_shutdown';
+my $automaticfile = '/tmp/automatic_light';
+my $shutdownfile  = '/tmp/is_shutdown';
 
 #{{{ primitive helpers
 
@@ -82,7 +83,7 @@ sub load_coordinates {    #{{{
 			x2   => $right - $left,
 			y2   => $bottom - $top,
 			type => $type,
-			text => decode('UTF-8', join(' ', @text)),
+			text => decode( 'UTF-8', join( ' ', @text ) ),
 		};
 	}
 	return;
@@ -138,10 +139,10 @@ sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
 	my $image   = 'light.png';
-	my $suffix = q{};
+	my $suffix  = q{};
 
-	if ($coordinates->{$light}->{type} eq 'light_au') {
-		$suffix = ( -e '/tmp/automatic_light' ) ? '_auto' : '_noauto';
+	if ( $coordinates->{$light}->{type} eq 'light_au' ) {
+		$suffix = ( -e $automaticfile ) ? '_auto' : '_noauto';
 	}
 
 	given ($state) {
@@ -514,7 +515,17 @@ get '/toggle/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	unlink($shutdownfile);
+	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+		if ( -e $automaticfile ) {
+			unlink($automaticfile);
+		}
+		else {
+			spew( $automaticfile, q{} );
+		}
+	}
+	else {
+		unlink($shutdownfile);
+	}
 
 	if ( exists $gpiomap->{$id} ) {
 		my $state = slurp( $gpiomap->{$id} );
