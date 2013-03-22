@@ -47,10 +47,10 @@ sub set_remote {
 	my ( $path, $value ) = @_;
 
 	spew( $path, "${value}\n" );
-	if ( $path =~ m{ donationprint } ) {
+	if ( $path =~ m{ donationprint }x ) {
 		system('avrshift-donationprint');
 	}
-	elsif ( $path =~ m{ feedback } ) {
+	elsif ( $path =~ m{ feedback }x ) {
 		system('avrshift-feedback');
 	}
 }
