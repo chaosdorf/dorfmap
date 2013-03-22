@@ -138,10 +138,15 @@ sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
 	my $image   = 'light.png';
+	my $suffix = q{};
+
+	if ($coordinates->{$light}->{type} eq 'light_au') {
+		$suffix = ( -e '/tmp/automatic_light' ) ? '_auto' : '_noauto';
+	}
 
 	given ($state) {
-		when ('1') { $image = 'light_on.png' }
-		when ('0') { $image = 'light_off.png' }
+		when ('1') { $image = "light_on${suffix}.png" }
+		when ('0') { $image = "light_off${suffix}.png" }
 	}
 
 	return $image;
@@ -221,7 +226,7 @@ sub status_number {
 
 	given ($type) {
 		when ('amp') { return amp_status() }
-		when ( [qw[light light_ro]] ) { return light_status($id) }
+		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_status($id)
 		}
@@ -236,7 +241,7 @@ sub status_image {
 
 	given ($type) {
 		when ('amp') { return amp_image() }
-		when ( [qw[light light_ro]] ) { return light_image($id) }
+		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_image( $type, $id )
 		}
@@ -352,8 +357,9 @@ helper statusimage => sub {
 
 	given ($type) {
 		when ('amp')      { return amp() }
-		when ('light_ro') { return light( $location, 0 ) }
 		when ('light')    { return light( $location, 1 ) }
+		when ('light_au') { return light( $location, 2 ) }
+		when ('light_ro') { return light( $location, 0 ) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice( $type, $location, $location )
 		}

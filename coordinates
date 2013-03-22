@@ -19,7 +19,7 @@ light:gpio3:lightclc1160     887   63  0 0 Lampe im eMac-Gehäuse
 light_ro:gpio2:logo          224  460  0 0 LED-Leiste über Chaosdorflogo
 light:donationprint1/4:lounge_rgb         5  110 0 0 RGB-LED-Streifen
 light_ro:lounge_weiss         114   80 0 0 Weiße LED über Tisch
-light_ro:gpio17:outdoor         9  438 0 0 Röhre über Tür, außen
+light_au:gpio17:outdoor         9  438 0 0 Röhre über Tür, außen
 light:gpio27:roehre_blau             748   42 0 0 Blaue Röhre
 light_ro:gpio24:schaufenster    5  595 0 0 LEDs im Schaufenster
 light:gpio22:hackcenter_blau  686  350 0 0 Blauer LED-Streifen am Kabelkanal
