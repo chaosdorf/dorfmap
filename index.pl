@@ -522,7 +522,7 @@ get '/toggle/:id' => sub {
 		else {
 			spew( $automaticfile, q{} );
 		}
-		if (slurp($giomap->{$id}) == 0) {
+		if ( slurp( $gpiomap->{$id} ) == 0 ) {
 			$self->redirect_to('/');
 			return;
 		}
