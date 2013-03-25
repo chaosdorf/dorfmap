@@ -140,6 +140,14 @@ sub infotext {
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
 
+	if ( -e '/tmp/online_guests' ) {
+		$buf .= sprintf(
+			'<span class="onlinegueststext">Online guest IPs</span>'
+			  . '<span class="onlineguests">%d</span><br/>',
+			slurp('/tmp/online_guests')
+		);
+	}
+
 	return $buf;
 }
 

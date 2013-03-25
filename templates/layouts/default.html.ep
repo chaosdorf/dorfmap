@@ -116,6 +116,15 @@
 		background-color: gray;
 	}
 
+	.overview span.onlineguests {
+		font-size: 120%;
+		font-weight: bold;
+	}
+
+	.overview span.onlinegueststext:after {
+		content: ": ";
+	}
+
 % for my $location (keys %{$coordinates}) {
 %    my %coord = %{$coordinates->{$location}};
 	.overview #<%= $location %> {
