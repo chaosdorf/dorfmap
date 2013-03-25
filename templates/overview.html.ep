@@ -11,7 +11,7 @@
 <div class="shortcuts">
 Shortcuts:
 % for my $shortcut (@{$shortcuts}) {
-<a href="/<%= $shortcut %>"><%= $shortcut %></a>
+<a href="/action/<%= $shortcut %>"><%= $shortcut %></a>
 % }
 </div>
 

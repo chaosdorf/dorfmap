@@ -120,7 +120,7 @@ sub amp_status {
 sub amp {
 	return
 	  sprintf(
-		'<a href="/toggle/amp"><img src="%s" class="%s" title="%s" /></a>',
+		'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" /></a>',
 		amp_image, 'amp', 'amp' );
 }
 
@@ -182,7 +182,7 @@ sub light {
 		$ret .= sprintf( '<a href="/toggle/%s">', $light );
 	}
 
-	$ret .= sprintf( '<img src="%s" class="light ro %s" />',
+	$ret .= sprintf( '<img src="/%s" class="light ro %s" />',
 		light_image($light), $light, $light );
 
 	if ($is_rw) {
@@ -223,7 +223,7 @@ sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	return sprintf(
-		'<img src="%s" class="%s ro %s" title="%s" />',
+		'<img src="/%s" class="%s ro %s" title="%s" />',
 		pingdevice_image( $type, $host ),
 		$type, $host, $label
 	);
@@ -303,7 +303,7 @@ sub wikilink {
 
 	return sprintf(
 		'%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
-		$image ? "<img src=\"$image\" />" : q{},
+		$image ? "<img src=\"/$image\" />" : q{},
 		$site, $name
 	);
 }
@@ -316,6 +316,8 @@ $shortcuts->{makeprivate} = sub {
 	my ($self) = @_;
 
 	system(qw(ssh private@door));
+
+	return $?;
 };
 
 $shortcuts->{shutdown} = sub {
@@ -435,7 +437,7 @@ get '/' => sub {
 	return;
 };
 
-get '/:action' => sub {
+get '/action/:action' => sub {
 	my ($self) = @_;
 	my $action = $self->stash('action');
 	my @errors = ('no such action');
@@ -545,6 +547,19 @@ get '/list/writables' => sub {
 	);
 
 	return;
+};
+
+post '/set' => sub {
+	my ($self) = @_;
+
+	if ( $self->param('online_guests') ) {
+		spew( '/tmp/online_guests', $self->param('online_guests') );
+	}
+
+	$self->render(
+		data   => q{},
+		status => 204
+	);
 };
 
 get '/toggle/:id' => sub {
