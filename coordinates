@@ -14,15 +14,17 @@ Treppe           295  356  432  522
 infoarea:infoarea 450 406 900 600
 
 light_ro:hackcenter_k            520   60 0 0
-light:feedback1/4:hackcenter_w      686  280 0 0 Weiße LEDs über der Tischreihe
-light:feedback1/3:lightclc1160     887   63  0 0 Lampe im eMac-Gehäuse
 light_ro:gpio2:logo          224  460  0 0 LED-Leiste über Chaosdorflogo
 light:donationprint1/4:lounge_rgb         5  110 0 0 RGB-LED-Streifen
 light_ro:lounge_weiss         114   80 0 0 Weiße LED über Tisch
 light_au:gpio17:outdoor         9  438 0 0 Röhre über Tür, außen
 light:feedback1/2:roehre_blau             748   42 0 0 Blaue Röhre
 light_ro:gpio24:schaufenster    5  595 0 0 LEDs im Schaufenster
+light:feedback1/3:lightclc1160     887   63  0 0 Lampe im eMac-Gehäuse
+light:feedback1/4:hackcenter_w      686  280 0 0 Weiße LEDs über der Tischreihe
+light:feedback1/5:hackcenter_spots 700 180 0 0 LED-Spots über Stoff
 light:feedback1/6:hackcenter_blau  686  350 0 0 Blauer LED-Streifen am Kabelkanal
+light:feedback1/7:hackcenter_roehre 750 180 0 0 2x weiße Röhre über Stoff
 
 amp:amp                1270  361
 phone:phone              46   32
