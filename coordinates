@@ -13,7 +13,6 @@ Treppe           295  356  432  522
 
 infoarea:infoarea 450 406 900 600
 
-light_ro:hackcenter_k            520   60 0 0
 light_ro:gpio2:logo          224  460  0 0 LED-Leiste über Chaosdorflogo
 light:donationprint1/4:lounge_rgb         5  110 0 0 RGB-LED-Streifen
 light_ro:lounge_weiss         114   80 0 0 Weiße LED über Tisch
