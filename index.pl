@@ -13,7 +13,7 @@ use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
 use Storable qw(retrieve);
 
-our $VERSION = qx{git describe --dirty} || '0.02';
+our $VERSION = qx{git describe --dirty} || '0.03';
 my $locations   = {};
 my $coordinates = {};
 my $gpiomap     = {};
