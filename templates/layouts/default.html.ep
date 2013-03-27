@@ -121,6 +121,11 @@
 		font-weight: bold;
 	}
 
+	.overview .rtext {
+		font-size: 110%;
+		font-weight: bold;
+	}
+
 	.overview span.onlinegueststext:after {
 		content: ": ";
 	}

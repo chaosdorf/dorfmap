@@ -21,10 +21,10 @@ Shortcuts:
 %	if ($type ne q{}) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
-%	if ($type eq 'infoarea') {
+%	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
-% 	}
-% 	elsif (statustext($type, $location)) {
+%	}
+%	elsif (statustext($type, $location)) {
 <div class="popup">
 %== statustext($type, $location);
 </div>

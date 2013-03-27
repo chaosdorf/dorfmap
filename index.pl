@@ -392,6 +392,9 @@ helper statusclass => sub {
 	if ( $type eq 'door' ) {
 		return slurp('/srv/www/doorstatus') || 'unknown';
 	}
+	if ( $type eq 'rtext' ) {
+		return 'rtext';
+	}
 
 	return q{};
 };
@@ -415,6 +418,9 @@ helper statusimage => sub {
 helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
+	if ( $type eq 'rtext' ) {
+		return slurp("/tmp/${location}");
+	}
 	if ( $type eq 'infoarea' ) {
 		return infotext();
 	}
@@ -560,8 +566,12 @@ get '/list/writables' => sub {
 post '/set' => sub {
 	my ($self) = @_;
 
-	if ( $self->param('online_guests') ) {
-		spew( '/tmp/online_guests', $self->param('online_guests') );
+	for my $key ( keys %{$coordinates} ) {
+		if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
+			and $self->param($key) )
+		{
+			spew( "/tmp/${key}", $self->param($key) );
+		}
 	}
 
 	$self->render(
