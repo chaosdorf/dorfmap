@@ -18,7 +18,7 @@ Shortcuts:
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};
-%	if ($type ne q{}) {
+%	if ($type ne q{} and ($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0)) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
 %	if ($type ~~ [qw[infoarea rtext]]) {
