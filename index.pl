@@ -28,7 +28,11 @@ my $shutdownfile  = '/tmp/is_shutdown';
 sub slurp {
 	my ($file) = @_;
 
-	return read_file( $file, err_mode => 'quiet' );
+	my $content = read_file( $file, err_mode => 'quiet' );
+	if (defined $content) {
+		chomp $content;
+	}
+	return $content;
 }
 
 sub spew {
