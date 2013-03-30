@@ -29,7 +29,7 @@ sub slurp {
 	my ($file) = @_;
 
 	my $content = read_file( $file, err_mode => 'quiet' );
-	if (defined $content) {
+	if ( defined $content ) {
 		chomp $content;
 	}
 	return $content;
@@ -477,6 +477,19 @@ get '/action/:action' => sub {
 		$self->redirect_to('/');
 	}
 	return;
+};
+
+get '/blinkencontrol/:device' => sub {
+	my ($self) = @_;
+	my $device = $self->stash('device');
+
+	$self->render(
+		'blinkencontrol',
+		coordinates => {},
+		device      => $device,
+		errors      => [],
+		version     => $VERSION
+	);
 };
 
 get '/get/:id' => sub {

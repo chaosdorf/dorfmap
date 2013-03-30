@@ -1,0 +1,22 @@
+% if (@{$errors}) {
+<div class="errors">
+<ul>
+% for my $error (@{$errors}) {
+<li><%= $error %></li>
+% }
+</ul>
+</div>
+% }
+
+<div class="blinkencontrol">
+%= form_for "/blinkencontrol/$device" => begin
+<table>
+<tr><th>red</th><td> <%= range_field red => 0, min => 0, max => 255 %></td></tr>
+<tr><th>green</th><td> <%= range_field green => 255, min => 0, max => 255 %></td></tr>
+<tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255 %></td></tr>
+</table>
+<%= check_box 'rgbfade' => 1 %> fade RGB<br/>
+<%= check_box 'randomfade' => 1 %> fade random<br/>
+%= submit_button 'Apply';
+%= end
+</div> <!-- blinkencontrol -->
