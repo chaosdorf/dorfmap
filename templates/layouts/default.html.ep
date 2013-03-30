@@ -142,6 +142,13 @@
 
 % }
 
+	#rgbcolor {
+		font-size: 120%;
+		height: 3em;
+		width: 12em;
+		text-align: center;
+	}
+
 	</style>
 </head>
 <body>

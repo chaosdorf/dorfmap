@@ -8,15 +8,53 @@
 </div>
 % }
 
+% my $red = param('red') // 0;
+% my $green = param('green') // 255;
+% my $blue = param('blue') // 255;
+
+%= javascript begin
+
+var red = <%= $red %>;
+var green = <%= $green %>;
+var blue = <%= $blue %>;
+
+function updatered(newred) {
+	red = newred;
+	updatecolor();
+}
+
+function updategreen(newgreen) {
+	green = newgreen;
+	updatecolor();
+}
+
+function updateblue(newblue) {
+	blue = newblue;
+	updatecolor();
+}
+
+function updatecolor() {
+	document.getElementById("rgbcolor").innerHTML = red + ", " + green + ", " + blue;
+	document.getElementById("rgbcolor").style.backgroundColor = "rgb(" + red + "," + green + "," + blue + ")";
+}
+
+%= end
+
 <div class="blinkencontrol">
+<div id="rgbcolor"></div>
 %= form_for "/blinkencontrol/$device" => begin
 <table>
-<tr><th>red</th><td> <%= range_field red => 0, min => 0, max => 255 %></td></tr>
-<tr><th>green</th><td> <%= range_field green => 255, min => 0, max => 255 %></td></tr>
-<tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255 %></td></tr>
+<tr><th>red</th><td> <%= range_field red => 0, min => 0, max => 255, onchange => 'updatered(this.value)' %></td></tr>
+<tr><th>green</th><td> <%= range_field green => 255, min => 0, max => 255, onchange => 'updategreen(this.value)' %></td></tr>
+<tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255, onchange => 'updateblue(this.value)' %></td></tr>
 </table>
 <%= check_box 'rgbfade' => 1 %> fade RGB<br/>
 <%= check_box 'randomfade' => 1 %> fade random<br/>
 %= submit_button 'Apply';
 %= end
 </div> <!-- blinkencontrol -->
+
+
+%= javascript begin
+updatecolor();
+%= end
