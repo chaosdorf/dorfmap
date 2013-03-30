@@ -493,6 +493,11 @@ get '/blinkencontrol/:device' => sub {
 		spew( '/tmp/donationprint2/blue',  "${blue}\n" );
 		system('blinkencontrol-donationprint');
 	}
+	else {
+		$self->param( red   => slurp('/tmp/donationprint2/red') );
+		$self->param( green => slurp('/tmp/donationprint2/green') );
+		$self->param( blue  => slurp('/tmp/donationprint2/blue') );
+	}
 
 	$self->render(
 		'blinkencontrol',
