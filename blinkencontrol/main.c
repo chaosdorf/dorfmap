@@ -81,9 +81,9 @@ int main (void)
 	TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM10);
 	TCCR1B = _BV(WGM12) | _BV(CS00);
 
-	OCR0A = 127;
-	OCR1A = 127;
-	OCR1B = 127;
+	OCR0A = 1;
+	OCR1A = 1;
+	OCR1B = 1;
 
 	sei();
 
@@ -111,9 +111,27 @@ ISR(INT0_vect)
 	}
 	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
-		OCR0A = red;
-		OCR1A = green;
-		OCR1B = blue;
+		if (red) {
+			TCCR0A |= _BV(COM0A1);
+			OCR0A = red;
+		}
+		else {
+			TCCR0A &= ~_BV(COM0A1);
+		}
+		if (green) {
+			TCCR1A |= _BV(COM1A1);
+			OCR1A = green;
+		}
+		else {
+			TCCR1A &= ~_BV(COM1A1);
+		}
+		if (blue) {
+			TCCR1A |= _BV(COM1B1);
+			OCR1B = blue;
+		}
+		else {
+			TCCR1A &= ~_BV(COM1B1);
+		}
 	}
 }
 
