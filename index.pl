@@ -483,6 +483,17 @@ get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
 
+	my $red   = $self->param('red');
+	my $green = $self->param('green');
+	my $blue  = $self->param('blue');
+
+	if ( defined $red and defined $green and defined $blue ) {
+		spew( '/tmp/donationprint2/red',   "${red}\n" );
+		spew( '/tmp/donationprint2/green', "${green}\n" );
+		spew( '/tmp/donationprint2/blue',  "${blue}\n" );
+		system('blinkencontrol-donationprint');
+	}
+
 	$self->render(
 		'blinkencontrol',
 		coordinates => {},
