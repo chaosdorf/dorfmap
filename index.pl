@@ -451,6 +451,7 @@ get '/' => sub {
 		coordinates => $coordinates,
 		shortcuts   => [ sort keys %{$shortcuts} ],
 		errors      => [],
+		refresh     => 1,
 	);
 	return;
 };
@@ -471,6 +472,7 @@ get '/action/:action' => sub {
 			coordinates => $coordinates,
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => \@errors,
+			refresh     => 0,
 		);
 	}
 	else {
@@ -483,15 +485,17 @@ get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
 
-	my $red   = $self->param('red');
-	my $green = $self->param('green');
-	my $blue  = $self->param('blue');
+	my $red     = $self->param('red');
+	my $green   = $self->param('green');
+	my $blue    = $self->param('blue');
+	my $refresh = 1;
 
 	if ( defined $red and defined $green and defined $blue ) {
 		spew( '/tmp/donationprint2/red',   "${red}\n" );
 		spew( '/tmp/donationprint2/green', "${green}\n" );
 		spew( '/tmp/donationprint2/blue',  "${blue}\n" );
 		system('blinkencontrol-donationprint');
+		$refresh = 0;
 	}
 	else {
 		$self->param( red   => slurp('/tmp/donationprint2/red') );
@@ -504,7 +508,8 @@ get '/blinkencontrol/:device' => sub {
 		coordinates => {},
 		device      => $device,
 		errors      => [],
-		version     => $VERSION
+		version     => $VERSION,
+		refresh     => $refresh,
 	);
 };
 
