@@ -41,6 +41,20 @@ function updatecolor() {
 %= end
 
 <div class="blinkencontrol">
+
+<div class="presets">
+
+% for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 2556],
+%	[255, 255, 0], [0, 255, 255], [255, 0, 255],
+%	[255, 255, 255], [0, 0, 0]) {
+<a class="preset" style="background-color: rgb(<%= join(', ', @{$preset}) %>)"
+href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>">&nbsp;</a>
+% }
+
+<div style="clear: both"> </div>
+
+</div> <!-- presets -->
+
 <div id="rgbcolor"></div>
 %= form_for "/blinkencontrol/$device" => begin
 <table>

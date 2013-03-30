@@ -48,6 +48,14 @@
 		font-variant: small-caps;
 	}
 
+	.blinkencontrol .presets a {
+		display: block;
+		float: left;
+		width: 1em;
+		height: 1em;
+		text-decoration: none;
+	}
+
 	.overview {
 		background-image: url(/map.png);
 		width: 2202px;
