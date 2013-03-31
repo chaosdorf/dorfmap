@@ -147,7 +147,7 @@ sub blinkenlight_status {
 	if ( exists $remotemap->{$light} ) {
 		return 'rgb('
 		  . join( ',',
-			map { slurp( $remotemap->{$light} . "/$_" ) } (qw(red green blue)) )
+			map { slurp( $remotemap->{$light} . "/$_" ) } (qw(mode red green blue)) )
 		  . ')';
 	}
 	return -1;
