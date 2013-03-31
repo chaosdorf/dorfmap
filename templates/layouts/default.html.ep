@@ -53,9 +53,16 @@
 	.blinkencontrol .presets a {
 		display: block;
 		float: left;
-		width: 1em;
-		height: 1em;
+		width: 3em;
+		height: 3em;
 		text-decoration: none;
+	}
+
+	#rgbcolor {
+		font-size: 120%;
+		height: 6em;
+		width: 20em;
+		text-align: center;
 	}
 
 	.overview {
@@ -151,13 +158,6 @@
 	}
 
 % }
-
-	#rgbcolor {
-		font-size: 120%;
-		height: 3em;
-		width: 12em;
-		text-align: center;
-	}
 
 	</style>
 </head>
