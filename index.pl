@@ -581,7 +581,7 @@ get '/blinkencontrol/:device' => sub {
 		$self->param( red    => slurp("${controlpath}/red") );
 		$self->param( green  => slurp("${controlpath}/green") );
 		$self->param( blue   => slurp("${controlpath}/blue") );
-		$self->param( speed  => $mode & 0x1f );
+		$self->param( speed  => 31 - ( $mode & 0x1f ) );
 		$self->param( opmode => $opmodes[ ( $mode & 0xe0 ) >> 5 ] );
 	}
 
