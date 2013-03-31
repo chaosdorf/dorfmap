@@ -128,6 +128,19 @@ sub amp {
 		amp_image, 'amp', 'amp' );
 }
 
+sub blinkenlight {
+	my ($light) = @_;
+
+	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
+
+	$ret .= sprintf( '<img src="/blinkenlight.png" class="blinklight %s" />',
+		$light );
+
+	$ret .= '</a>';
+
+	return $ret;
+}
+
 sub blinkenlight_status {
 	my ($light) = @_;
 
@@ -420,10 +433,11 @@ helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
 	given ($type) {
-		when ('amp')      { return amp() }
-		when ('light')    { return light( $location, 1 ) }
-		when ('light_au') { return light( $location, 2 ) }
-		when ('light_ro') { return light( $location, 0 ) }
+		when ('amp')          { return amp() }
+		when ('blinkenlight') { return blinkenlight($location) }
+		when ('light')        { return light( $location, 1 ) }
+		when ('light_au')     { return light( $location, 2 ) }
+		when ('light_ro')     { return light( $location, 0 ) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice( $type, $location, $location )
 		}

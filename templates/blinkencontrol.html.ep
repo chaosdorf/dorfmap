@@ -42,6 +42,8 @@ function updatecolor() {
 
 <div class="blinkencontrol">
 
+<a class="backlink" href="/">← back</a>
+
 <div class="presets">
 
 % for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 2556],
