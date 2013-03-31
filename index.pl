@@ -373,6 +373,14 @@ $shortcuts->{shutdown} = sub {
 		elsif ( $type eq 'light' and exists $gpiomap->{$device} ) {
 			spew( $gpiomap->{$device}, 0 );
 		}
+		elsif ( $type eq 'blinkenlight' ) {
+			my $path = $remotemap->{$device};
+			spew( "${path}/mode",  "0\n" );
+			spew( "${path}/red",   "0\n" );
+			spew( "${path}/green", "0\n" );
+			spew( "${path}/blue",  "0\n" );
+			system('blinkencontrol-donationprint');
+		}
 		elsif ( exists $remotemap->{$device} ) {
 			set_remote( $remotemap->{$device}, 0 );
 		}
