@@ -515,9 +515,28 @@ get '/blinkencontrol/:device' => sub {
 	my $red     = $self->param('red');
 	my $green   = $self->param('green');
 	my $blue    = $self->param('blue');
+	my $speed   = $self->param('speed');
+	my $opmode  = $self->param('opmode');
+	my $rawmode = 0;
 	my $refresh = 1;
 
 	my $controlpath = $remotemap->{$device};
+
+	my @opmodes
+	  = (qw(steady blinkrgb blinkrand undef fadeonoff fadergb faderand undef));
+
+	if ($opmode) {
+		for my $i ( 0 .. $#opmodes ) {
+			if ( $opmode eq $opmodes[$i] ) {
+				$rawmode = $i << 5;
+				last;
+			}
+		}
+	}
+
+	if ( defined $speed ) {
+		$rawmode |= ( 31 - $speed );
+	}
 
 	if ( not $controlpath ) {
 		$self->render(
@@ -531,7 +550,15 @@ get '/blinkencontrol/:device' => sub {
 		return;
 	}
 
-	if ( defined $red and defined $green and defined $blue ) {
+	if ( defined $red and defined $green and defined $blue and defined $opmode )
+	{
+		if ( $opmode ne 'steady' ) {
+			$red = $green = $blue = 0;
+			$self->param( red   => 0 );
+			$self->param( green => 0 );
+			$self->param( blue  => 0 );
+		}
+		spew( "${controlpath}/mode",  "${rawmode}\n" );
 		spew( "${controlpath}/red",   "${red}\n" );
 		spew( "${controlpath}/green", "${green}\n" );
 		spew( "${controlpath}/blue",  "${blue}\n" );
@@ -541,9 +568,13 @@ get '/blinkencontrol/:device' => sub {
 		$refresh = 0;
 	}
 	else {
-		$self->param( red   => slurp("${controlpath}/red") );
-		$self->param( green => slurp("${controlpath}/green") );
-		$self->param( blue  => slurp("${controlpath}/blue") );
+		my $mode = slurp("${controlpath}/mode") // 0;
+
+		$self->param( red    => slurp("${controlpath}/red") );
+		$self->param( green  => slurp("${controlpath}/green") );
+		$self->param( blue   => slurp("${controlpath}/blue") );
+		$self->param( speed  => $mode & 0x1f );
+		$self->param( opmode => $opmodes[ ( $mode & 0xe0 ) >> 5 ] );
 	}
 
 	$self->render(

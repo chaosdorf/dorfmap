@@ -18,7 +18,7 @@
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
 #define OM_M_MODE  ( _BV(7) | _BV(6) | _BV(5) )
-#define OM_M_SPEED ( _BV(0) | _BV(1) | _BV(2) | _BV(3) )
+#define OM_M_SPEED ( _BV(0) | _BV(1) | _BV(2) | _BV(3) | _BV(4) )
 
 #define OM_MODE_STEADY    (     0  |     0  |     0  )
 #define OM_MODE_BLINKRGB  (     0  |     0  | _BV(5) )

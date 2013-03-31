@@ -50,7 +50,7 @@ function updatecolor() {
 %	[255, 255, 0], [0, 255, 255], [255, 0, 255],
 %	[255, 255, 255], [0, 0, 0]) {
 <a class="preset" style="background-color: rgb(<%= join(', ', @{$preset}) %>)"
-href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>">&nbsp;</a>
+href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>&amp;opmode=steady">&nbsp;</a>
 % }
 
 <div style="clear: both"> </div>
@@ -63,9 +63,14 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 <tr><th>red</th><td> <%= range_field red => 0, min => 0, max => 255, onchange => 'updatered(this.value)' %></td></tr>
 <tr><th>green</th><td> <%= range_field green => 255, min => 0, max => 255, onchange => 'updategreen(this.value)' %></td></tr>
 <tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255, onchange => 'updateblue(this.value)' %></td></tr>
+<tr><th>speed</th><td> <%= range_field speed => 16, min => 0, max => 31 %></td></tr>
 </table>
-<%= check_box 'rgbfade' => 1 %> fade RGB<br/>
-<%= check_box 'randomfade' => 1 %> fade random<br/>
+<%= radio_button opmode => 'steady' %> steady<br/>
+<%= radio_button opmode => 'blinkrgb' %> RGB (hard transition)<br/>
+<%= radio_button opmode => 'blinkrand' %> random (hard transition)<br/>
+<!-- <%= radio_button opmode => 'fadeonoff' %> fade on/off<br/> -->
+<%= radio_button opmode => 'fadergb' %> RGB (fading)<br/>
+<%= radio_button opmode => 'faderand' %> random (fading)<br/>
 %= submit_button 'Apply';
 %= end
 </div> <!-- blinkencontrol -->
