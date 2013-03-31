@@ -18,7 +18,7 @@ rtext:temp_serverraum 1265 400
 rtext:online_guests      0   0
 
 light_ro:gpio2:logo          224  460  0 0 LED-Leiste über Chaosdorflogo
-light:blinkencontrol:lounge_rgb         5  110 0 0 RGB-LED-Streifen
+blinkenlight:donationprint2:lounge_rgb         5  110 0 0 RGB-LED-Streifen
 light:donationprint1/9:lounge_weiss         114   80 0 0 Weiße LED über Tisch
 light_au:gpio17:outdoor         9  438 0 0 Röhre über Tür, außen
 light:feedback1/2:roehre_blau             748   42 0 0 Blaue Röhre

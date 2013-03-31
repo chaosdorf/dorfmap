@@ -128,6 +128,18 @@ sub amp {
 		amp_image, 'amp', 'amp' );
 }
 
+sub blinkenlight_status {
+	my ($light) = @_;
+
+	if ( exists $remotemap->{$light} ) {
+		return 'rgb('
+		  . join( ',',
+			map { slurp( $remotemap->{$light} . "/$_" ) } (qw(red green blue)) )
+		  . ')';
+	}
+	return -1;
+}
+
 sub infotext {
 	my $buf;
 
@@ -246,7 +258,8 @@ sub status_number {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp') { return amp_status() }
+		when ('amp')          { return amp_status() }
+		when ('blinkenlight') { return blinkenlight_status($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_status($id)
@@ -344,10 +357,10 @@ $shortcuts->{shutdown} = sub {
 		if ( $type eq 'printer' and slurp("/srv/www/${device}.png") == 1 ) {
 			push( @errors, "please turn off printer ${device}" );
 		}
-		if ( $type eq 'light' and exists $gpiomap->{$device} ) {
+		elsif ( $type eq 'light' and exists $gpiomap->{$device} ) {
 			spew( $gpiomap->{$device}, 0 );
 		}
-		if ( exists $remotemap->{$device} ) {
+		elsif ( exists $remotemap->{$device} ) {
 			set_remote( $remotemap->{$device}, 0 );
 		}
 	}
@@ -490,17 +503,33 @@ get '/blinkencontrol/:device' => sub {
 	my $blue    = $self->param('blue');
 	my $refresh = 1;
 
+	my $controlpath = $remotemap->{$device};
+
+	if ( not $controlpath ) {
+		$self->render(
+			'overview',
+			version     => $VERSION,
+			coordinates => $coordinates,
+			shortcuts   => [ sort keys %{$shortcuts} ],
+			errors      => ['no such device'],
+			refresh     => 0,
+		);
+		return;
+	}
+
 	if ( defined $red and defined $green and defined $blue ) {
-		spew( '/tmp/donationprint2/red',   "${red}\n" );
-		spew( '/tmp/donationprint2/green', "${green}\n" );
-		spew( '/tmp/donationprint2/blue',  "${blue}\n" );
-		system('blinkencontrol-donationprint');
+		spew( "${controlpath}/red",   "${red}\n" );
+		spew( "${controlpath}/green", "${green}\n" );
+		spew( "${controlpath}/blue",  "${blue}\n" );
+		if ( $controlpath =~ m{ donationprint }ox ) {
+			system('blinkencontrol-donationprint');
+		}
 		$refresh = 0;
 	}
 	else {
-		$self->param( red   => slurp('/tmp/donationprint2/red') );
-		$self->param( green => slurp('/tmp/donationprint2/green') );
-		$self->param( blue  => slurp('/tmp/donationprint2/blue') );
+		$self->param( red   => slurp("${controlpath}/red") );
+		$self->param( green => slurp("${controlpath}/green") );
+		$self->param( blue  => slurp("${controlpath}/blue") );
 	}
 
 	$self->render(
@@ -640,13 +669,11 @@ get '/toggle/:id' => sub {
 
 	if ( exists $gpiomap->{$id} ) {
 		my $state = slurp( $gpiomap->{$id} );
-		chomp $state;
 		spew( $gpiomap->{$id}, $state ^ 1 );
 		$self->redirect_to('/');
 	}
 	elsif ( exists $remotemap->{$id} ) {
 		my $state = slurp( $remotemap->{$id} );
-		chomp $state;
 		set_remote( $remotemap->{$id}, $state ^ 1 );
 		$self->redirect_to('/');
 	}
