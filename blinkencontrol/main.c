@@ -222,9 +222,9 @@ ISR(TIMER0_OVF_vect)
 				apply_pwm();
 				break;
 			case OM_MODE_BLINKRAND:
-				red = pwmtable[ rand() % 32 ];
-				green = pwmtable[ rand() % 32 ];
-				blue = pwmtable[ rand() % 32 ];
+				red = pwmtable[ rand() / 8];
+				green = pwmtable[ rand() / 8 ];
+				blue = pwmtable[ rand() / 8 ];
 				apply_pwm();
 				break;
 			case OM_MODE_FADEONOFF:
@@ -246,9 +246,9 @@ ISR(TIMER0_OVF_vect)
 					want_blue = 0;
 				break;
 			case OM_MODE_FADERAND:
-				want_red = pwmtable[ rand() % 32 ];
-				want_green = pwmtable[ rand() % 32 ];
-				want_blue = pwmtable[ rand() % 32 ];
+				want_red = pwmtable[ rand() / 8 ];
+				want_green = pwmtable[ rand() / 8 ];
+				want_blue = pwmtable[ rand() / 8 ];
 				break;
 		}
 	}
