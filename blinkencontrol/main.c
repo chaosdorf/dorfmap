@@ -1,6 +1,6 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <math.h>
+#include <avr/pgmspace.h>
 #include <stdlib.h>
 
 #define STATUSLED ( _BV( PD1 ) )
@@ -42,6 +42,11 @@ volatile uint8_t sstep = 0;
 volatile uint8_t fstep = 0;
 
 volatile enum { FADE_UP = 0, FADE_DOWN = 1 } fadedir = FADE_DOWN;
+
+const uint8_t pwmtable[32] PROGMEM = {
+	0, 1, 2, 2, 2, 3, 3, 4, 5, 6, 7, 8, 10, 11, 13, 16, 19, 23,
+	27, 32, 38, 45, 54, 64, 76, 91, 108, 128, 152, 181, 215, 255
+};
 
 static inline void statusled_on(void)
 {
@@ -217,9 +222,9 @@ ISR(TIMER0_OVF_vect)
 				apply_pwm();
 				break;
 			case OM_MODE_BLINKRAND:
-				red = rand();
-				green = rand();
-				blue = rand();
+				red = pwmtable[ rand() % 32 ];
+				green = pwmtable[ rand() % 32 ];
+				blue = pwmtable[ rand() % 32 ];
 				apply_pwm();
 				break;
 			case OM_MODE_FADEONOFF:
@@ -241,9 +246,9 @@ ISR(TIMER0_OVF_vect)
 					want_blue = 0;
 				break;
 			case OM_MODE_FADERAND:
-				want_red = rand();
-				want_green = rand();
-				want_blue = rand();
+				want_red = pwmtable[ rand() % 32 ];
+				want_green = pwmtable[ rand() % 32 ];
+				want_blue = pwmtable[ rand() % 32 ];
 				break;
 		}
 	}
