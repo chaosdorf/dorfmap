@@ -23,6 +23,7 @@
 #define OM_MODE_STEADY    (     0  |     0  |     0  )
 #define OM_MODE_BLINKRGB  (     0  |     0  | _BV(5) )
 #define OM_MODE_BLINKRAND (     0  | _BV(6) |     0  )
+#define OM_MODE_FADEANY   ( _BV(7) |     0  |     0  )
 #define OM_MODE_FADEONOFF ( _BV(7) |     0  |     0  )
 #define OM_MODE_FADERGB   ( _BV(7) |     0  | _BV(5) )
 #define OM_MODE_FADERAND  ( _BV(7) | _BV(6) |     0  )
@@ -177,7 +178,8 @@ ISR(TIMER0_OVF_vect)
 		sstep++;
 	}
 
-	if (fstep == ( (opmode & OM_M_SPEED) + 1 ) ) {
+	if (( fstep == ( (opmode & OM_M_SPEED) + 1 ) )
+			&& (opmode & OM_MODE_FADEANY ) ) {
 		fstep = 0;
 		if (want_red > red)
 			red++;
