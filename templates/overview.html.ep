@@ -5,7 +5,7 @@
 <li><%= $error %></li>
 % }
 </ul>
-</div>
+</div> <!-- errors -->
 % }
 
 <div class="shortcuts">
@@ -13,7 +13,7 @@ Shortcuts:
 % for my $shortcut (@{$shortcuts}) {
 <a href="/action/<%= $shortcut %>"><%= $shortcut %></a>
 % }
-</div>
+</div> <!-- shortcuts -->
 
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
@@ -27,7 +27,7 @@ Shortcuts:
 %	elsif (statustext($type, $location)) {
 <div class="popup">
 %== statustext($type, $location);
-</div>
+</div> <!-- popup -->
 %	}
 <!--
 	<div class="popup">
@@ -36,6 +36,7 @@ Shortcuts:
 		</ul>
 	</div>
 -->
-</div>
+</div> <!-- location -->
 % }
 % }
+</div> <!-- overview -->

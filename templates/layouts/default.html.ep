@@ -182,7 +182,7 @@ v<%= $version %>
 
 <div class="content">
 %= content
-</div>
+</div> <!-- content -->
 
 </body>
 </html>

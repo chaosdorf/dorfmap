@@ -124,7 +124,7 @@ sub amp_status {
 sub amp {
 	return
 	  sprintf(
-		'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" /></a>',
+		'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		amp_image, 'amp', 'amp' );
 }
 
@@ -133,8 +133,8 @@ sub blinkenlight {
 
 	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
 
-	$ret .= sprintf( '<img src="/blinkenlight.png" class="blinklight %s" />',
-		$light );
+	$ret .= sprintf( '<img src="/blinkenlight.png" class="blinklight %s" alt="%s" />',
+		$light, $light );
 
 	$ret .= '</a>';
 
@@ -219,8 +219,8 @@ sub light {
 		$ret .= sprintf( '<a href="/toggle/%s">', $light );
 	}
 
-	$ret .= sprintf( '<img src="/%s" class="light ro %s" />',
-		light_image($light), $light, $light );
+	$ret .= sprintf( '<img src="/%s" class="light ro %s" alt="%s" />',
+		light_image($light), $light, $light, $light );
 
 	if ($is_rw) {
 		$ret .= sprintf('</a>');
@@ -260,9 +260,9 @@ sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	return sprintf(
-		'<img src="/%s" class="%s ro %s" title="%s" />',
+		'<img src="/%s" class="%s ro %s" title="%s" alt="%s" />',
 		pingdevice_image( $type, $host ),
-		$type, $host, $label
+		$type, $host, $label, $host
 	);
 }
 
@@ -341,7 +341,7 @@ sub wikilink {
 
 	return sprintf(
 		'%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
-		$image ? "<img src=\"/$image\" />" : q{},
+		$image ? "<img src=\"/$image\" alt=\"wl\" />" : q{},
 		$site, $name
 	);
 }
