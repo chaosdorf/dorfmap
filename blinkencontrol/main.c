@@ -8,6 +8,10 @@
 #define PGREEN ( _BV( PB3 ) )  /* OC1A */
 #define PRED   ( _BV( PB2 ) )  /* OC0A */
 
+#define OBLUE  ( OCR1B )
+#define OGREEN ( OCR1A )
+#define ORED   ( OCR0A )
+
 /*
  * PD2 and PD3 are inverted (optokoppler to gnd and internal pull-ups)
  */
@@ -122,27 +126,20 @@ int main (void)
 
 static void apply_pwm(void)
 {
-	if (red) {
+	if (OCR0A)
 		TCCR0A |= _BV(COM0A1);
-		OCR0A = red;
-	}
-	else {
+	else
 		TCCR0A &= ~_BV(COM0A1);
-	}
-	if (green) {
+
+	if (OCR1A)
 		TCCR1A |= _BV(COM1A1);
-		OCR1A = green;
-	}
-	else {
+	else
 		TCCR1A &= ~_BV(COM1A1);
-	}
-	if (blue) {
+
+	if (OCR1B)
 		TCCR1A |= _BV(COM1B1);
-		OCR1B = blue;
-	}
-	else {
+	else
 		TCCR1A &= ~_BV(COM1B1);
-	}
 }
 
 ISR(INT0_vect)
@@ -163,11 +160,17 @@ ISR(INT0_vect)
 	}
 	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
-		want_red = red;
-		want_green = green;
-		want_blue = blue;
-		apply_pwm();
-		step = fstep = sstep = 0;
+
+		if (opmode & OM_MODE_FADEANY) {
+			step = fstep = sstep = 0;
+		}
+		else {
+			ORED   = red;
+			OGREEN = green;
+			OBLUE  = blue;
+			apply_pwm();
+		}
+
 		TIMSK |= _BV(TOIE0);
 	}
 }
@@ -186,18 +189,18 @@ ISR(TIMER0_OVF_vect)
 	if (( fstep == ( (opmode & OM_M_SPEED) + 1 ) )
 			&& (opmode & OM_MODE_FADEANY ) ) {
 		fstep = 0;
-		if (want_red > red)
-			red++;
-		else if (want_red < red)
-			red--;
-		if (want_green > green)
-			green++;
-		else if (want_green < green)
-			green--;
-		if (want_blue > blue)
-			blue++;
-		else if (want_blue < blue)
-			blue--;
+		if (want_red > ORED)
+			ORED++;
+		else if (want_red < ORED)
+			ORED--;
+		if (want_green > OGREEN)
+			OGREEN++;
+		else if (want_green < OGREEN)
+			OGREEN--;
+		if (want_blue > OBLUE)
+			OBLUE++;
+		else if (want_blue < OBLUE)
+			OBLUE--;
 		apply_pwm();
 	}
 
@@ -205,26 +208,26 @@ ISR(TIMER0_OVF_vect)
 		sstep = 0;
 		switch (opmode & OM_M_MODE) {
 			case OM_MODE_BLINKRGB:
-				if (!red && !green && !blue)
-					red = 255;
-				else if (!blue && red && !green)
-					green = 255;
-				else if (red && green)
-					red = 0;
-				else if (green && !blue)
-					blue = 255;
-				else if (green && blue)
-					green = 0;
-				else if (blue && !red)
-					red = 255;
-				else if (blue && red)
-					blue = 0;
+				if (!ORED && !OGREEN && !OBLUE)
+					ORED = 255;
+				else if (!OBLUE && ORED && !OGREEN)
+					OGREEN = 255;
+				else if (ORED && OGREEN)
+					ORED = 0;
+				else if (OGREEN && !OBLUE)
+					OBLUE = 255;
+				else if (OGREEN && OBLUE)
+					OGREEN = 0;
+				else if (OBLUE && !ORED)
+					ORED = 255;
+				else if (OBLUE && ORED)
+					OBLUE = 0;
 				apply_pwm();
 				break;
 			case OM_MODE_BLINKRAND:
-				red = pwmtable[ rand() / 8];
-				green = pwmtable[ rand() / 8 ];
-				blue = pwmtable[ rand() / 8 ];
+				ORED   = pwmtable[ rand() / 8];
+				OGREEN = pwmtable[ rand() / 8 ];
+				OBLUE  = pwmtable[ rand() / 8 ];
 				apply_pwm();
 				break;
 			case OM_MODE_FADEONOFF:
