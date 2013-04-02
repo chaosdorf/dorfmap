@@ -32,7 +32,7 @@ light:feedback1/7:hackcenter_roehre 750 180 0 0 2x weiße Röhre über Stoff
 amp:amp                1270  361
 phone:phone              46   32
 printer:clc1160         842   60
-printer:hp2100          386   60
+printer:donationprint1/4:hp2100          386   60
 printer:hp4500          420   60
 server:dashpi           883  340
 server:donationprint     70  390

@@ -124,7 +124,7 @@ sub amp_status {
 sub amp {
 	return
 	  sprintf(
-		'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		amp_image, 'amp', 'amp' );
 }
 
@@ -133,7 +133,9 @@ sub blinkenlight {
 
 	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
 
-	$ret .= sprintf( '<img src="/blinkenlight.png" class="blinklight %s" alt="%s" />',
+	$ret
+	  .= sprintf(
+		'<img src="/blinkenlight.png" class="blinklight %s" alt="%s" />',
 		$light, $light );
 
 	$ret .= '</a>';
@@ -253,16 +255,26 @@ sub pingdevice_image {
 sub pingdevice_status {
 	my ($host) = @_;
 
+	if ( exists $gpiomap->{$host} ) {
+		return slurp( $gpiomap->{$host} );
+	}
+	if ( exists $remotemap->{$host} ) {
+		return slurp( $remotemap->{$host} );
+	}
 	return slurp("/srv/www/${host}.ping") || 0;
 }
 
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
+	my $is_rw = ( exists $gpiomap->{$host} || exists $remotemap->{$host} )
+	  && pingdevice_status($host) == 0;
+
 	return sprintf(
-		'<img src="/%s" class="%s ro %s" title="%s" alt="%s" />',
+		'%s<img src="/%s" class="%s ro %s" title="%s" alt="%s" />%s',
+		$is_rw ? "<a href=\"/toggle/${host}\">" : q{},
 		pingdevice_image( $type, $host ),
-		$type, $host, $label, $host
+		$type, $host, $label, $host, $is_rw ? '</a>' : q{},
 	);
 }
 
@@ -367,10 +379,7 @@ $shortcuts->{shutdown} = sub {
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
 
-		if ( $type eq 'printer' and slurp("/srv/www/${device}.png") == 1 ) {
-			push( @errors, "please turn off printer ${device}" );
-		}
-		elsif ( $type eq 'light' and exists $gpiomap->{$device} ) {
+		if ( $type eq 'light' and exists $gpiomap->{$device} ) {
 			spew( $gpiomap->{$device}, 0 );
 		}
 		elsif ( $type eq 'blinkenlight' ) {
@@ -383,6 +392,9 @@ $shortcuts->{shutdown} = sub {
 		}
 		elsif ( exists $remotemap->{$device} ) {
 			set_remote( $remotemap->{$device}, 0 );
+		}
+		elsif ( $type eq 'printer' and slurp("/srv/www/${device}.ping") == 1 ) {
+			push( @errors, "please turn off printer ${device}" );
 		}
 	}
 
@@ -727,7 +739,9 @@ get '/toggle/:id' => sub {
 	}
 	elsif ( exists $remotemap->{$id} ) {
 		my $state = slurp( $remotemap->{$id} );
-		set_remote( $remotemap->{$id}, $state ^ 1 );
+		if ( not( $coordinates->{$id}->{type} eq 'printer' and $state == 1 ) ) {
+			set_remote( $remotemap->{$id}, $state ^ 1 );
+		}
 		$self->redirect_to('/');
 	}
 
