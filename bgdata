@@ -21,6 +21,7 @@ $ua->timeout(2);
 
 my $re_pingdev = qr{
 	(?: phone | printer | server | wifi )
+	(: [^:\t\s]+ )?
 	:
 	(?<host> [^:\t\s]+ )
 }x;
