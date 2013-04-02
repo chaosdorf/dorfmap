@@ -739,9 +739,14 @@ get '/toggle/:id' => sub {
 	}
 	elsif ( exists $remotemap->{$id} ) {
 		my $state = slurp( $remotemap->{$id} );
-		if ( not( $coordinates->{$id}->{type} eq 'printer' and $state == 1 ) ) {
+
+		if ( $coordinates->{$id}->{type} eq 'printer' ) {
+			set_remote( $remotemap->{$id}, 1 );
+		}
+		else {
 			set_remote( $remotemap->{$id}, $state ^ 1 );
 		}
+
 		$self->redirect_to('/');
 	}
 
