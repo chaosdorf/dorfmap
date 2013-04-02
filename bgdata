@@ -5,6 +5,7 @@ use warnings;
 use 5.010;
 
 use App::Daemon qw(daemonize);
+use DateTime;
 use File::Slurp qw(read_file write_file);
 use LWP::UserAgent;
 
@@ -24,30 +25,58 @@ my $re_pingdev = qr{
 	(?<host> [^:\t\s]+ )
 }x;
 
+my @printers = ('/tmp/donationprint1/4');
+
+sub slurp {
+	my ($file) = @_;
+
+	my $content = read_file( $file, err_mode => 'quiet' );
+	if ( defined $content ) {
+		chomp $content;
+	}
+	return $content;
+}
+
+sub spew {
+	my ( $file, $value ) = @_;
+
+	return write_file( $file, { err_mode => 'quiet' }, $value );
+}
+
 sub ping_host {
 	my ($host) = @_;
 
-	system( qw( ping -n -c 1 -W 1 ), $host);
+	system( qw( ping -n -c 1 -W 1 ), $host );
 
-	write_file("/srv/www/${host}.ping", ($? == 0) ? '1' : '0');
+	write_file( "/srv/www/${host}.ping", ( $? == 0 ) ? '1' : '0' );
 
 	return;
 }
 
-while (sleep(120)) {
+while ( sleep(120) ) {
 
-	for my $line (read_file('coordinates')) {
-		if ($line =~ $re_pingdev) {
-			ping_host($+{host});
+	for my $printer (@printers) {
+		if ( -e $printer and slurp($printer) == 1 ) {
+			my $now = DateTime->now( time_zone => 'Europe/Berlin' )->epoch;
+			my $modified = ( stat($printer) )[9];
+			if ( ( $now - $modified ) > ( 20 * 60 ) ) {
+				spew( $printer, "0\n" );
+			}
+		}
+	}
+
+	for my $line ( read_file('coordinates') ) {
+		if ( $line =~ $re_pingdev ) {
+			ping_host( $+{host} );
 		}
 	}
 
 	my $res = $ua->get('http://door/status');
-	if ($res->is_success) {
-		write_file('/srv/www/doorstatus', $res->decoded_content);
+	if ( $res->is_success ) {
+		write_file( '/srv/www/doorstatus', $res->decoded_content );
 	}
 	else {
-		write_file('/srv/www/doorstatus', -1);
+		write_file( '/srv/www/doorstatus', -1 );
 	}
 
 }
