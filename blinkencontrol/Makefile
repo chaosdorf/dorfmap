@@ -4,9 +4,10 @@ AVRDUDE_PROGRAMMER ?= usbasp
 AVRCC ?= avr-gcc
 AVRFLASH ?= avrdude
 AVRNM ?= avr-nm
+AVROBJCOPY ?= avr-objcopy
 AVROBJDUMP ?= avr-objdump
 
-CFLAGS += -c -mmcu=attiny2313 -DF_CPU=20000000UL
+CFLAGS += -mmcu=attiny2313 -DF_CPU=20000000UL
 # CFLAGS += -gdwarf-2
 CFLAGS += -I. -std=gnu99 -Os -Wall -Wextra -pedantic
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
@@ -16,8 +17,15 @@ AVRFLAGS += -U lfuse:w:0xff:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
 AVRFLAGS += -U flash:w:main.hex
 # AVRFLAGS += -U eeprom:w:main.eep
 
+%.hex: %.elf
+	${AVROBJCOPY} -O ihex -R .eeprom $< $@
+
+%.eep: %.elf
+	${AVROBJCOPY} -j .eeprom --set-section-flags=.eeprom="alloc,load" \
+	--change-section-lma .eeprom=0 -O ihex $< $@
+
 main.elf: main.c
-	${AVRCC} ${CFLAGS} -o $@ ${@:.elf=.c}
+	${AVRCC} ${CFLAGS} -o $@ ${@:.elf=.c} -Wl,-Map=main.map,--cref
 
 program: main.hex main.eep
 	${AVRFLASH} -p ${MCU} -c ${AVRDUDE_PROGRAMMER} ${AVRFLAGS}
