@@ -572,12 +572,6 @@ get '/blinkencontrol/:device' => sub {
 
 	if ( defined $red and defined $green and defined $blue and defined $opmode )
 	{
-		if ( $opmode ne 'steady' ) {
-			$red = $green = $blue = 0;
-			$self->param( red   => 0 );
-			$self->param( green => 0 );
-			$self->param( blue  => 0 );
-		}
 		spew( "${controlpath}/mode",  "${rawmode}\n" );
 		spew( "${controlpath}/red",   "${red}\n" );
 		spew( "${controlpath}/green", "${green}\n" );
