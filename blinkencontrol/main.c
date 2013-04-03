@@ -24,13 +24,15 @@
 #define OM_M_MODE  ( _BV(7) | _BV(6) | _BV(5) )
 #define OM_M_SPEED ( _BV(0) | _BV(1) | _BV(2) | _BV(3) | _BV(4) )
 
-#define OM_MODE_STEADY    (     0  |     0  |     0  )
-#define OM_MODE_BLINKRGB  (     0  |     0  | _BV(5) )
-#define OM_MODE_BLINKRAND (     0  | _BV(6) |     0  )
-#define OM_MODE_FADEANY   ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADEONOFF ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADERGB   ( _BV(7) |     0  | _BV(5) )
-#define OM_MODE_FADERAND  ( _BV(7) | _BV(6) |     0  )
+#define OM_MODE_STEADY     (     0  |     0  |     0  )
+#define OM_MODE_BLINKRGB   (     0  |     0  | _BV(5) )
+#define OM_MODE_BLINKRAND  (     0  | _BV(6) |     0  )
+#define OM_MODE_BLINKONOFF (     0  | _BV(6) | _BV(5) )
+#define OM_MODE_FADEANY    ( _BV(7) |     0  |     0  )
+#define OM_MODE_FADEONOFF  ( _BV(7) |     0  |     0  )
+#define OM_MODE_FADERGB    ( _BV(7) |     0  | _BV(5) )
+#define OM_MODE_FADERAND   ( _BV(7) | _BV(6) |     0  )
+#define OM_MODE_FADETODO   ( _BV(7) | _BV(6) | _BV(5) )
 
 volatile uint8_t opmode = 0;
 volatile uint8_t red = 0;
@@ -209,6 +211,17 @@ ISR(TIMER0_OVF_vect)
 				ORED   = pwmtable[ rand() / 8];
 				OGREEN = pwmtable[ rand() / 8 ];
 				OBLUE  = pwmtable[ rand() / 8 ];
+				apply_pwm();
+				break;
+			case OM_MODE_BLINKONOFF:
+				if (red == ORED) {
+					ORED = OGREEN = OBLUE = 0;
+				}
+				else {
+					ORED = red;
+					OGREEN = green;
+					OBLUE = blue;
+				}
 				apply_pwm();
 				break;
 			case OM_MODE_FADEONOFF:

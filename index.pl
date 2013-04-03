@@ -543,7 +543,9 @@ get '/blinkencontrol/:device' => sub {
 	my $controlpath = $remotemap->{$device};
 
 	my @opmodes
-	  = (qw(steady blinkrgb blinkrand undef fadeonoff fadergb faderand undef));
+	  = (
+		qw(steady blinkrgb blinkrand blinkonoff fadeonoff fadergb faderand undef)
+	  );
 
 	if ($opmode) {
 		for my $i ( 0 .. $#opmodes ) {
