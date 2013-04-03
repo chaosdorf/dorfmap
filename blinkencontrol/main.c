@@ -189,9 +189,7 @@ ISR(TIMER0_OVF_vect)
 		sstep = 0;
 		switch (opmode & OM_M_MODE) {
 			case OM_MODE_BLINKRGB:
-				if (!ORED && !OGREEN && !OBLUE)
-					ORED = 255;
-				else if (!OBLUE && ORED && !OGREEN)
+				if (!OBLUE && ORED && !OGREEN)
 					OGREEN = 255;
 				else if (ORED && OGREEN)
 					ORED = 0;
@@ -203,6 +201,8 @@ ISR(TIMER0_OVF_vect)
 					ORED = 255;
 				else if (OBLUE && ORED)
 					OBLUE = 0;
+				else
+					ORED = 255;
 				apply_pwm();
 				break;
 			case OM_MODE_BLINKRAND:
@@ -223,9 +223,7 @@ ISR(TIMER0_OVF_vect)
 				apply_pwm();
 				break;
 			case OM_MODE_FADERGB:
-				if (!want_red && !want_green && !want_blue)
-					want_red = 255;
-				else if (!want_blue && want_red && !want_green)
+				if (!want_blue && want_red && !want_green)
 					want_green = 255;
 				else if (want_red && want_green)
 					want_red = 0;
@@ -237,6 +235,8 @@ ISR(TIMER0_OVF_vect)
 					want_red = 255;
 				else if (want_blue && want_red)
 					want_blue = 0;
+				else
+					want_red = 255;
 				break;
 			case OM_MODE_FADERAND:
 				want_red = pwmtable[ rand() / 8 ];
