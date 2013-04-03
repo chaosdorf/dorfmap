@@ -45,8 +45,6 @@ volatile uint16_t step = 0;
 volatile uint8_t sstep = 0;
 volatile uint8_t fstep = 0;
 
-volatile enum { FADE_UP = 0, FADE_DOWN = 1 } fadedir = FADE_DOWN;
-
 const uint8_t pwmtable[32] PROGMEM = {
 	0, 1, 2, 2, 2, 3, 3, 4, 5, 6, 7, 8, 10, 11, 13, 16, 19, 23,
 	27, 32, 38, 45, 54, 64, 76, 91, 108, 128, 152, 181, 215, 255
@@ -64,9 +62,6 @@ static inline void statusled_off(void)
 
 int main (void)
 {
-
-	uint32_t i;
-
 	/* watchdog reset after ~4 seconds */
 	MCUSR &= ~_BV(WDRF);
 	WDTCSR = _BV(WDCE) | _BV(WDE);
@@ -77,26 +72,12 @@ int main (void)
 	DDRB = PRED | PGREEN | PBLUE;
 	DDRD = _BV(DDD1);
 
-	PORTD |= _BV(PD2) | _BV(PD3);
+	PORTD = _BV(PD2) | _BV(PD3);
 
 	statusled_on();
 
-	MCUCR |= _BV(ISC00);
-	GIMSK |= _BV(INT0);
-
-	PORTB = PRED;
-	for (i = 0; i < 0xfffff; i++)
-		asm("nop");
-
-	PORTB = PGREEN;
-	for (i = 0; i < 0xfffff; i++)
-		asm("nop");
-
-	PORTB = PBLUE;
-	for (i = 0; i < 0xfffff; i++)
-		asm("nop");
-
-	PORTB = 0;
+	MCUCR = _BV(ISC00);
+	GIMSK = _BV(INT0);
 
 	/* Fast PWM on OC0A, interrupt on overflow*/
 	TCCR0A = _BV(COM0A1) | _BV(WGM01) | _BV(WGM00);
@@ -107,9 +88,9 @@ int main (void)
 	TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM10);
 	TCCR1B = _BV(WGM12) | _BV(CS00);
 
-	OCR0A = 1;
-	OCR1A = 1;
-	OCR1B = 1;
+	OCR0A = 0;
+	OCR1A = 0;
+	OCR1B = 0;
 
 	sei();
 
@@ -231,6 +212,15 @@ ISR(TIMER0_OVF_vect)
 				apply_pwm();
 				break;
 			case OM_MODE_FADEONOFF:
+				if (red == ORED) {
+					want_red = want_green = want_blue = 0;
+				}
+				else {
+					want_red = red;
+					want_green = green;
+					want_blue = blue;
+				}
+				apply_pwm();
 				break;
 			case OM_MODE_FADERGB:
 				if (!want_red && !want_green && !want_blue)
@@ -260,6 +250,4 @@ ISR(TIMER0_OVF_vect)
 		statusled_on();
 	else
 		statusled_off();
-
-	TIMSK |= _BV(TOIE0);
 }
