@@ -267,15 +267,21 @@ sub pingdevice_status {
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
-	my $is_rw = ( exists $gpiomap->{$host} || exists $remotemap->{$host} )
-	  && pingdevice_status($host) == 0;
+	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
+		return sprintf(
+'<a href="/on/%s"><img src="/%s" class="%s ro %s" title="%s" alt="%s" /></a>',
+			$host, pingdevice_image( $type, $host ),
+			$type, $host, $label, $host
+		);
+	}
+	else {
+		return sprintf(
+			'<img src="/%s" class="%s ro %s" title="%s" alt="%s" />',
+			pingdevice_image( $type, $host ),
+			$type, $host, $label, $host,
+		);
+	}
 
-	return sprintf(
-		'%s<img src="/%s" class="%s ro %s" title="%s" alt="%s" />%s',
-		$is_rw ? "<a href=\"/toggle/${host}\">" : q{},
-		pingdevice_image( $type, $host ),
-		$type, $host, $label, $host, $is_rw ? '</a>' : q{},
-	);
 }
 
 sub status_number {
@@ -792,10 +798,7 @@ get '/on/:id' => sub {
 		set_remote( $remotemap->{$id}, 1 );
 	}
 
-	$self->render(
-		data   => q{},
-		states => 204
-	);
+	$self->redirect_to('/');
 	return;
 };
 
