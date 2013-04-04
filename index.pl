@@ -186,15 +186,20 @@ sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
 	my $image   = 'light.png';
+	my $prefix  = 'light';
 	my $suffix  = q{};
 
 	if ( $coordinates->{$light}->{type} eq 'light_au' ) {
 		$suffix = ( -e $automaticfile ) ? '_auto' : '_noauto';
 	}
 
+	if ( -e "public/${light}_on.png" and -e "public/${light}_off.png" ) {
+		$prefix = $light;
+	}
+
 	given ($state) {
-		when ('1') { $image = "light_on${suffix}.png" }
-		when ('0') { $image = "light_off${suffix}.png" }
+		when ('1') { $image = "${prefix}_on${suffix}.png" }
+		when ('0') { $image = "${prefix}_off${suffix}.png" }
 	}
 
 	return $image;
