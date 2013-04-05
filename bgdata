@@ -20,10 +20,9 @@ my $ua = LWP::UserAgent->new;
 $ua->timeout(2);
 
 my $re_pingdev = qr{
-	(?: phone | printer | server | wifi )
-	(: [^:\t\s]+ )?
-	:
-	(?<host> [^:\t\s]+ )
+	^
+	(?<host> [^\s]+ )
+	.* type = (?: phone | printer | server | wifi )
 }x;
 
 my @printers = ('/tmp/donationprint1/4');
