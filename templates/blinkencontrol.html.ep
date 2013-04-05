@@ -46,7 +46,7 @@ function updatecolor() {
 
 <div class="presets">
 
-% for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 2556],
+% for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 255],
 %	[255, 255, 0], [0, 255, 255], [255, 0, 255],
 %	[255, 255, 255], [0, 0, 0]) {
 <a class="preset" style="background-color: rgb(<%= join(', ', @{$preset}) %>)"

@@ -67,24 +67,13 @@ sub load_coordinates {    #{{{
 	my @lines = split( /\n/, slurp('coordinates') );
 
 	for my $line (@lines) {
-		my ( $id, $left, $top, $right, $bottom, @text ) = split( /\s+/, $line );
+		my ( $id, $left, $top, $right, $bottom, $controlpath, @rest )
+		  = split( /\s+/, $line );
+		my @text;
 		my $type;
 
 		if ( not $id ) {
 			next;
-		}
-
-		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
-			$type = $1;
-		}
-		if ( $id =~ s{ ^ ( [^ : ]+ ) : }{}ox ) {
-			my $control = $1;
-			if ( $control =~ m{ ^ gpio (\d+) $ }ox ) {
-				$gpiomap->{$id} = gpio($1);
-			}
-			elsif ( $control =~ m{ ^ ( donationprint | feedback ) }ox ) {
-				$remotemap->{$id} = "/tmp/${control}";
-			}
 		}
 
 		# image areas don't specify right and bottom and are usually 32x32px
@@ -92,13 +81,30 @@ sub load_coordinates {    #{{{
 		$bottom ||= $top + 32;
 
 		$coordinates->{$id} = {
-			x1   => $left,
-			y1   => $top,
-			x2   => $right - $left,
-			y2   => $bottom - $top,
-			type => $type,
-			text => decode( 'UTF-8', join( ' ', @text ) ),
+			x1 => $left,
+			y1 => $top,
+			x2 => $right - $left,
+			y2 => $bottom - $top,
 		};
+
+		for my $elem (@rest) {
+			if ( $elem =~ m{ ^ (?<key> [^=]+ ) = (?<value> .+ ) $ }ox ) {
+				$coordinates->{$id}->{ $+{key} } = $+{value};
+			}
+			else {
+				push( @text, $elem );
+			}
+		}
+
+		$coordinates->{$id}->{text} = decode( 'UTF-8', join( ' ', @text ) );
+
+		$controlpath //= q{};
+		if ( $controlpath =~ m{ ^ gpio (\d+) $ }ox ) {
+			$gpiomap->{$id} = gpio($1);
+		}
+		elsif ( $controlpath =~ m{ ^ ( donationprint | feedback ) }ox ) {
+			$remotemap->{$id} = "/tmp/${controlpath}";
+		}
 	}
 	return;
 }    #}}}

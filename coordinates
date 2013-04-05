@@ -1,46 +1,50 @@
-Bikeshed         295  526  432  620
-door:dorfdoor     58  420   66  518
-Hackcenter       437   57  914  392
-Hinterzimmer    1429   41 1737  235
-Kitchen         1068   41 1307  194
-Laptop_Lounge     44   34  434  379
-Maschinenraum   1752   41 2195  365
-Schaufenster       0  578   71  619
-Schleuse          71  380  256  621
-Serverraum      1232  360 1304  451
-Transporterraum 1429  250 1737  365
-Treppe           295  356  432  522
+Bikeshed              295  526  432  620 none
+dorfdoor               58  420   66  518 none                 type=door
+Hackcenter            437   57  914  392 none
+Hinterzimmer         1429   41 1737  235 none
+Kitchen              1068   41 1307  194 none
+Laptop_Lounge          44   34  434  379 none
+Maschinenraum        1752   41 2195  365 none
+Schaufenster            0  578   71  619 none
+Schleuse               71  380  256  621 none
+Serverraum           1232  360 1304  451 none
+Transporterraum      1429  250 1737  365 none
+Treppe                295  356  432  522 none
 
-infoarea:infoarea 450 406 900 600
+infoarea              450  406  900  600 none                 type=infoarea
 
-rtext:temp_hackcenter  840 350
-rtext:temp_serverraum 1265 400
-rtext:online_guests      0   0
+temp_hackcenter       840  350    0    0 none                 type=rtext
+temp_serverraum      1265  400    0    0 none                 type=rtext
+online_guests           0    0    0    0 none                 type=rtext
 
-light_ro:gpio2:logo          224  460  0 0 LED-Leiste über Chaosdorflogo
-light:gpio27:treppe_w        350  525  0 0 Kaltweiße LEDs
-blinkenlight:donationprint2:lounge_rgb         5  110 0 0 RGB-LED-Streifen
-light:donationprint1/9:lounge_weiss         114   80 0 0 Weiße LED über Tisch
-light_au:gpio17:outdoor         9  438 0 0 Röhre über Tür, außen
-light:feedback1/2:roehre_blau             748   42 0 0 Blaue Röhre
-light_ro:gpio24:schaufenster    5  595 0 0 LEDs im Schaufenster
-light:feedback1/3:lightclc1160     887   63  0 0 Lampe im eMac-Gehäuse
-light:feedback1/4:hackcenter_w      686  280 0 0 Weiße LEDs über der Tischreihe
-light:feedback1/5:hackcenter_spots 700 180 0 0 LED-Spots über Stoff
-light:feedback1/6:hackcenter_blau  535 355 894 408 Blauer LED-Streifen am Kabelkanal
-light:feedback1/7:hackcenter_roehre 600 180 0 0 6x weiße Röhre (Putzbeleuchtung)
+logo                  224  460    0    0 gpio2                type=light_ro     LED-Leiste über Chaosdorflogo
+treppe_w              350  525    0    0 gpio27               type=light        Kaltweiße LEDs
+lounge_rgb              5  110    0    0 donationprint2       type=blinkenlight RGB-LED-Streifen
+lounge_weiss          114   80    0    0 donationprint1/9     type=light        Weiße LED über Tisch
+outdoor                 9  438    0    0 gpio17               type=light_au     Röhre über Tür, außen
+roehre_blau           748   42    0    0 feedback1/2          type=light        Blaue Röhre
+schaufenster            5  595    0    0 gpio24               type=light_ro     LEDs im Schaufenster
+lightclc1160          887   63    0    0 feedback1/3          type=light        Lampe im eMac-Gehäuse
+hackcenter_w          686  280    0    0 feedback1/4          type=light        Weiße LEDs über der Tischreihe
+hackcenter_spots      700  180    0    0 feedback1/5          type=light        LED-Spots über Stoff
+hackcenter_blau       535  355  894  408 feedback1/6          type=light        Blauer LED-Streifen am Kabelkanal
+hackcenter_roehre     600  180    0    0 feedback1/7          type=light        6x weiße Röhre (Putzbeleuchtung)
 
-amp:amp                1270  361
-phone:phone              46   32
-printer:clc1160         842   60
-printer:donationprint1/4:hp2100          386   60
-printer:hp4500          420   60
-server:dashpi           883  340
-server:donationprint     70  390
-server:feedback          64  585
-server:figurehead      1232  400
-server:hyperion        1232  361
-server:door              35  585
-wifi:freifunk           420  178
-wifi:unifi              420  210
-wifi:wlan-hinten       1753  135
+amp                  1270  361    0    0 none                 type=amp
+
+phone                  46   32    0    0 none                 type=phone
+
+clc1160               842   60    0    0 none                 type=printer
+hp2100                386   60    0    0 donationprint1/4     type=printer
+hp4500                420   60    0    0 none                 type=printer
+
+dashpi                883  340    0    0 none                 type=server
+donationprint          70  390    0    0 none                 type=server
+feedback               64  585    0    0 none                 type=server
+figurehead           1232  400    0    0 none                 type=server
+hyperion             1232  361    0    0 none                 type=server
+door                   35  585    0    0 none                 type=server
+
+freifunk              420  178    0    0 none                 type=wifi
+unifi                 420  210    0    0 none                 type=wifi
+wlan-hinten          1753  135    0    0 none                 type=wifi
