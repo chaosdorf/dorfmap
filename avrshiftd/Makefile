@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 CFLAGS = -pedantic -Wall -Wextra -O2
-TARGETS = blinkencontrold
+TARGETS = avrshiftd
 
 all: ${TARGETS}
 
@@ -9,7 +9,7 @@ all: ${TARGETS}
 	strip $@
 
 install: ${TARGETS}
-	install -m 755 blinkencontrold ${PREFIX}/bin/blinkencontrold
+	install -m 755 avrshiftd ${PREFIX}/bin/avrshiftd
 
 clean:
 	rm -f ${TARGETS}
