@@ -18,8 +18,9 @@ Shortcuts:
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};
-%	if ($type ne q{} and ($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0)) {
+%	if ($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
+% if ($type ne q{} and $layer eq 'control') {
 %==	statusimage($type, $location);
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
@@ -29,13 +30,14 @@ Shortcuts:
 %== statustext($type, $location);
 </div> <!-- popup -->
 %	}
-<!--
+% }
+% elsif ($layer eq 'wiki') {
 	<div class="popup">
 		<ul>
 		%== has_location($location)
 		</ul>
 	</div>
--->
+% }
 </div> <!-- location -->
 % }
 % }

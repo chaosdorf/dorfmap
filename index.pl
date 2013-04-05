@@ -248,7 +248,7 @@ sub muninlink {
 sub pingdevice_image {
 	my ( $type, $host ) = @_;
 	my $image = "${type}_off.png";
-	my $state = pingdevice_status($host);
+	my $state = pingdevice_status($host) // -1;
 
 	if ( $state == 1 ) {
 		$image = "${type}_on.png";
@@ -498,6 +498,7 @@ helper statustext => sub {
 
 get '/' => sub {
 	my ($self) = @_;
+	my $layer = $self->param('layer') // 'control';
 
 	if ( -e 'locations.db' ) {
 		$locations = retrieve('locations.db');
@@ -510,6 +511,7 @@ get '/' => sub {
 		shortcuts   => [ sort keys %{$shortcuts} ],
 		errors      => [],
 		refresh     => 1,
+		layer       => $layer,
 	);
 	return;
 };
@@ -517,6 +519,7 @@ get '/' => sub {
 get '/action/:action' => sub {
 	my ($self) = @_;
 	my $action = $self->stash('action');
+	my $layer = $self->param('layer') // 'control';
 	my @errors = ('no such action');
 
 	if ( exists $shortcuts->{$action} ) {
@@ -531,6 +534,7 @@ get '/action/:action' => sub {
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => \@errors,
 			refresh     => 0,
+			layer       => $layer,
 		);
 	}
 	else {
@@ -542,6 +546,7 @@ get '/action/:action' => sub {
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
+	my $layer = $self->param('layer') // 'control';
 
 	my $red     = $self->param('red');
 	my $green   = $self->param('green');
@@ -579,6 +584,7 @@ get '/blinkencontrol/:device' => sub {
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => ['no such device'],
 			refresh     => 0,
+			layer       => $layer,
 		);
 		return;
 	}
