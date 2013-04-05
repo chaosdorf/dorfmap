@@ -8,17 +8,42 @@
 </div> <!-- errors -->
 % }
 
-<div class="shortcuts">
-Shortcuts:
+<div class="dropdown">
+<div class="dropdownheader">
+Actions
+</div>
+<div class="dropdownmenu">
 % for my $shortcut (@{$shortcuts}) {
 <a href="/action/<%= $shortcut %>"><%= $shortcut %></a>
 % }
-</div> <!-- shortcuts -->
+</div> <!-- dropdownmenu -->
+</div> <!-- dropdown -->
+
+<div class="dropdown">
+<div class="dropdownheader">
+Presets
+</div>
+<div class="dropdownmenu">
+</div> <!-- dropdownmenu -->
+</div> <!-- dropdown -->
+
+<div class="dropdown">
+<div class="dropdownheader">
+Layers
+</div>
+<div class="dropdownmenu">
+% for my $l (@{$layers}) {
+<a href="/?layer=<%= $l %>"><%= $l %></a>
+% }
+</div> <!-- dropdownmenu -->
+</div> <!-- dropdown -->
 
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};
-%	if ($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0) {
+%	if (
+%	($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0)
+%	and (($type ne q{} and $layer eq 'control') or ($type eq q{} and $layer eq 'wiki'))) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 % if ($type ne q{} and $layer eq 'control') {
 %==	statusimage($type, $location);

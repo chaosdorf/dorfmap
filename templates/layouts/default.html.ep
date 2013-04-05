@@ -42,6 +42,40 @@
 		z-index: 100;
 	}
 
+	.dropdown {
+		display: inline-block;
+	}
+
+	.dropdownheader {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+
+	.dropdownheader:after {
+		content: " ↓";
+	}
+
+	.dropdown > .dropdownmenu {
+		visibility: hidden;
+		position: absolute;
+		top: 1.5em;
+		z-index: 1;
+
+		background-color: white;
+		border: 1px solid black;
+		padding: 0.3em;
+		padding-left: 2em;
+	}
+
+	.dropdown:hover > .dropdownmenu,
+	.dropdown > .dropdownmenu:hover {
+		visibility: visible;
+	}
+
+	.dropdownmenu a {
+		display: list-item;
+	}
+
 	.shortcuts a {
 		margin-left: 1em;
 		margin-right: 1em;

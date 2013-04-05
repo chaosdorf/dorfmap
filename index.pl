@@ -23,6 +23,8 @@ my $shortcuts   = {};
 my $automaticfile = '/tmp/automatic_light';
 my $shutdownfile  = '/tmp/is_shutdown';
 
+my @layers = qw(control wiki);
+
 #{{{ primitive helpers
 
 sub slurp {
@@ -512,6 +514,7 @@ get '/' => sub {
 		errors      => [],
 		refresh     => 1,
 		layer       => $layer,
+		layers      => \@layers,
 	);
 	return;
 };
@@ -535,6 +538,7 @@ get '/action/:action' => sub {
 			errors      => \@errors,
 			refresh     => 0,
 			layer       => $layer,
+			layers      => \@layers,
 		);
 	}
 	else {
@@ -585,6 +589,7 @@ get '/blinkencontrol/:device' => sub {
 			errors      => ['no such device'],
 			refresh     => 0,
 			layer       => $layer,
+			layers      => \@layers,
 		);
 		return;
 	}
