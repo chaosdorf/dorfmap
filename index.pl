@@ -11,12 +11,13 @@ use DateTime::Duration;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
 use Mojolicious::Lite;
-use Storable qw(retrieve);
+use Storable qw(retrieve lock_nstore lock_retrieve);
 
 our $VERSION = qx{git describe --dirty} || '0.03';
 my $locations   = {};
 my $coordinates = {};
 my $gpiomap     = {};
+my $presets     = {};
 my $remotemap   = {};
 my $shortcuts   = {};
 
@@ -538,6 +539,10 @@ get '/' => sub {
 	my ($self) = @_;
 	my $layer = $self->param('layer') // 'control';
 
+	if ( -e 'presets.db' ) {
+		$presets = lock_retrieve('presets.db');
+	}
+
 	if ( -e 'locations.db' ) {
 		$locations = retrieve('locations.db');
 	}
@@ -548,6 +553,7 @@ get '/' => sub {
 		coordinates => $coordinates,
 		shortcuts   => [ sort keys %{$shortcuts} ],
 		errors      => [],
+		presets     => [ keys %{$presets} ],
 		refresh     => 1,
 		layer       => $layer,
 		layers      => \@layers,
@@ -572,6 +578,7 @@ get '/action/:action' => sub {
 			coordinates => $coordinates,
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => \@errors,
+			presets     => [ keys %{$presets} ],
 			refresh     => 0,
 			layer       => $layer,
 			layers      => \@layers,
@@ -623,6 +630,7 @@ get '/blinkencontrol/:device' => sub {
 			coordinates => $coordinates,
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => ['no such device'],
+			presets     => [ keys %{$presets} ],
 			refresh     => 0,
 			layer       => $layer,
 			layers      => \@layers,
@@ -744,6 +752,48 @@ get '/list/writables' => sub {
 			data   => 'not acceptable. use json or txt.',
 			status => 406
 		},
+	);
+
+	return;
+};
+
+get '/presets' => sub {
+	my ($self) = @_;
+	my $name = $self->param('name');
+
+	if ( -e 'presets.db' ) {
+		$presets = lock_retrieve('presets.db');
+	}
+
+	if ( $self->param('save') == 1 ) {
+		for my $id ( keys %{$coordinates} ) {
+			if ( $self->param($id) ) {
+				$presets->{$name}->{$id} = $self->param($id);
+			}
+		}
+		lock_nstore( $presets, 'presets.db' );
+	}
+
+	my @toggles;
+	for my $id ( keys %{$coordinates} ) {
+		if ( $coordinates->{$id}->{type} eq 'light' ) {
+			push( @toggles, $id );
+			if ( defined $name and exists $presets->{$name}->{$id} ) {
+				$self->param( $id => $presets->{$name}->{$id} );
+			}
+			else {
+				$self->param( $id => status_number($id) );
+			}
+		}
+	}
+
+	$self->render(
+		'presets',
+		coordinates => {},
+		errors      => [],
+		toggles     => \@toggles,
+		version     => $VERSION,
+		refresh     => 0,
 	);
 
 	return;

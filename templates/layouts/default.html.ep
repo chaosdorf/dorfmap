@@ -84,6 +84,10 @@
 		border-bottom: 1px solid gray;
 	}
 
+	.presetmgr td {
+		text-align: right;
+	}
+
 	.shortcuts a {
 		margin-left: 1em;
 		margin-right: 1em;

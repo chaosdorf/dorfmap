@@ -1,0 +1,32 @@
+% if (@{$errors}) {
+<div class="errors">
+<ul>
+% for my $error (@{$errors}) {
+<li><%= $error %></li>
+% }
+</ul>
+</div>
+% }
+
+<div class="presetmgr">
+
+<a class="backlink" href="/">← back</a>
+
+%= form_for "/presets" => begin
+%= hidden_field save => 1
+%= text_field 'name'
+<table>
+<tr><th>device</th><th title="don't care">*</th><th>off</th><th>off</th></tr>
+% for my $id ( @{$toggles} ) {
+<tr>
+<td> <%= $id %> </td>
+<td> <%= radio_button $id => -1 %> </td>
+<td> <%= radio_button $id => 0 %> </td>
+<td> <%= radio_button $id => 1 %> </td>
+</tr>
+% }
+</table>
+%= submit_button 'Add'
+%= end
+
+</div> <!-- presetmgr -->

@@ -24,6 +24,9 @@ Actions
 Presets
 </div>
 <div class="dropdownmenu">
+% for my $preset (@{$presets}) {
+<a href="/"><%= $preset %></a>
+% }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
 
