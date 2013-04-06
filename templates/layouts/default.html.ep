@@ -88,6 +88,12 @@
 		text-align: right;
 	}
 
+	.presetlist {
+		float: left;
+		height: 100%;
+		padding-right: 5em;
+	}
+
 	.shortcuts a {
 		margin-left: 1em;
 		margin-right: 1em;

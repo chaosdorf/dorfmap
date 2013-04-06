@@ -12,9 +12,26 @@
 
 <a class="backlink" href="/">← back</a>
 
+<div class="presetlist">
+<ul>
+% for my $preset (@{$presets}) {
+% if (length($preset)) {
+<li>
+<a href="/presets?name=<%= $preset %>"><%= $preset %></a>
+(
+<a href="/presets?name=<%= $preset %>&amp;action=delete">X</a>
+)
+</li>
+% }
+% }
+</ul>
+</div> <!-- presetlist -->
+
+<div class="presetform">
 %= form_for "/presets" => begin
 %= hidden_field save => 1
 %= text_field 'name'
+%= submit_button 'Add'
 <table>
 <tr><th>device</th><th title="don't care">*</th><th>off</th><th>off</th></tr>
 % for my $id ( @{$toggles} ) {
@@ -26,7 +43,8 @@
 </tr>
 % }
 </table>
-%= submit_button 'Add'
 %= end
+
+</div> <!-- presetform -->
 
 </div> <!-- presetmgr -->
