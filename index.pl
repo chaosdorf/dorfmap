@@ -190,6 +190,36 @@ sub infotext {
 	return $buf;
 }
 
+sub json_status {
+	my ($id) = @_;
+
+	my @opmodes
+	  = (
+		qw(steady blinkrgb blinkrand blinkonoff fadeonoff fadergb faderand undef)
+	  );
+
+	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
+		my $controlpath = $remotemap->{$id};
+		my $red         = slurp("${controlpath}/red") // 0;
+		my $green       = slurp("${controlpath}/green") // 0;
+		my $blue        = slurp("${controlpath}/blue") // 0;
+		my $mode        = slurp("${controlpath}/mode") // 0;
+
+		my $speed = 31 - ( $mode & 0x1f );
+		my $opmode = $opmodes[ ( $mode & 0xe0 ) >> 5 ];
+
+		return {
+			red    => $red,
+			green  => $green,
+			blue   => $blue,
+			opmode => $opmode,
+			speed  => $speed
+		};
+	}
+
+	return { status => status_number($id) };
+}
+
 sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
@@ -636,10 +666,10 @@ get '/get/:id' => sub {
 	my $id = $self->stash('id');
 
 	$self->respond_to(
-		json => { json => { status => status_number($id) } },
+		json => { json => json_status($id) },
 		txt  => { text => status_number($id) . "\n" },
-		png => sub { $self->render_static( status_image($id) ) },
-		any => {
+		png  => sub    { $self->render_static( status_image($id) ) },
+		any  => {
 			data   => status_number($id),
 			status => 406
 		},
