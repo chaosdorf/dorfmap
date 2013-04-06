@@ -20,7 +20,7 @@
 	}
 
 	div.about {
-		position: absolute;
+		position: fixed;
 		top: 0.5em;
 		right: 1em;
 		font-family: Monospace;

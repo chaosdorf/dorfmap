@@ -8,6 +8,7 @@
 </div> <!-- errors -->
 % }
 
+<div class="dropdowncontainer">
 <div class="dropdown">
 <div class="dropdownheader">
 Actions
@@ -40,6 +41,7 @@ Layers
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
+</div> <!-- dropdowncontainer -->
 
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
