@@ -25,6 +25,8 @@
 		right: 1em;
 		font-family: Monospace;
 		color: #666666;
+		background-color: white;
+		z-index: 10;
 	}
 
 	div.about a {
