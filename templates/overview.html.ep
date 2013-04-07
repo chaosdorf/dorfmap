@@ -27,9 +27,7 @@ Presets
 <div class="dropdownmenu">
 <a href="/presets">manage</a>
 % for my $preset (@{$presets}) {
-% if (length($preset)) {
 <a href="/"><%= $preset %></a>
-% }
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->

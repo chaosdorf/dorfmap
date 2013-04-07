@@ -757,7 +757,7 @@ get '/list/writables' => sub {
 	return;
 };
 
-get '/presets' => sub {
+any '/presets' => sub {
 	my ($self) = @_;
 	my $action = $self->param('action') // q{};
 	my $name   = $self->param('name')   // q{};
@@ -767,10 +767,17 @@ get '/presets' => sub {
 		$presets = lock_retrieve('presets.db');
 	}
 
-	if ($save) {
+	if ( $save and length($name) ) {
 		for my $id ( keys %{$coordinates} ) {
-			if ( $self->param($id) ) {
-				$presets->{$name}->{$id} = $self->param($id);
+			if (    $coordinates->{$id}->{type}
+				and $coordinates->{$id}->{type} eq 'light' )
+			{
+				if ( $self->param($id) ~~ [ -1, 0, 1 ] ) {
+					$presets->{$name}->{$id} = $self->param($id);
+				}
+				else {
+					$presets->{$name}->{$id} = -1;
+				}
 			}
 		}
 		lock_nstore( $presets, 'presets.db' );
@@ -785,7 +792,9 @@ get '/presets' => sub {
 
 	my @toggles;
 	for my $id ( keys %{$coordinates} ) {
-		if ( $coordinates->{$id}->{type} eq 'light' ) {
+		if (    $coordinates->{$id}->{type}
+			and $coordinates->{$id}->{type} eq 'light' )
+		{
 			push( @toggles, $id );
 			if ( $name and exists $presets->{$name}->{$id} ) {
 				$self->param( $id => $presets->{$name}->{$id} );
