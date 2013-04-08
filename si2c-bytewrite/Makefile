@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 CFLAGS = -pedantic -Wall -Wextra -O2
-TARGETS = avrshiftd
+TARGETS = si2c-bytewrite
 
 all: ${TARGETS}
 
@@ -9,7 +9,7 @@ all: ${TARGETS}
 	strip $@
 
 install: ${TARGETS}
-	install -m 755 avrshiftd ${PREFIX}/bin/avrshiftd
+	install -m 755 si2c-bytewrite ${PREFIX}/bin/si2c-bytewrite
 
 clean:
 	rm -f ${TARGETS}

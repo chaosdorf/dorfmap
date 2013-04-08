@@ -8,5 +8,5 @@
 *.sym
 obj/
 
-avrshiftd/avrshiftd
-blinkencontrold/blinkencontrold
+si2c-bitwrite/si2c-bitwrite
+si2c-bytewrite/si2c-bytewrite
