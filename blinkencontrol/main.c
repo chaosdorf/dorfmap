@@ -21,23 +21,26 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
+#define MYADDRESS (0x0001)
+
 #define OM_M_MODE  ( _BV(7) | _BV(6) | _BV(5) )
 #define OM_M_SPEED ( _BV(0) | _BV(1) | _BV(2) | _BV(3) | _BV(4) )
 
-#define OM_MODE_STEADY     (     0  |     0  |     0  )
-#define OM_MODE_BLINKRGB   (     0  |     0  | _BV(5) )
-#define OM_MODE_BLINKRAND  (     0  | _BV(6) |     0  )
-#define OM_MODE_BLINKONOFF (     0  | _BV(6) | _BV(5) )
-#define OM_MODE_FADEANY    ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADEONOFF  ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADERGB    ( _BV(7) |     0  | _BV(5) )
-#define OM_MODE_FADERAND   ( _BV(7) | _BV(6) |     0  )
-#define OM_MODE_FADETODO   ( _BV(7) | _BV(6) | _BV(5) )
+#define OM_MODE_STEADY        (     0  |     0  |     0  )
+#define OM_MODE_BLINKRGB      (     0  |     0  | _BV(5) )
+#define OM_MODE_BLINKRAND     (     0  | _BV(6) |     0  )
+#define OM_MODE_BLINKONOFF    (     0  | _BV(6) | _BV(5) )
+#define OM_MODE_FADEANY       ( _BV(7) |     0  |     0  )
+#define OM_MODE_FADETOSTEADY  ( _BV(7) |     0  |     0  )
+#define OM_MODE_FADERGB       ( _BV(7) |     0  | _BV(5) )
+#define OM_MODE_FADERAND      ( _BV(7) | _BV(6) |     0  )
+#define OM_MODE_FADEONOFF     ( _BV(7) | _BV(6) | _BV(5) )
 
 volatile uint8_t opmode = 0;
 volatile uint8_t red = 0;
 volatile uint8_t green = 0;
 volatile uint8_t blue = 0;
+volatile uint16_t address;
 
 volatile uint8_t want_red = 0;
 volatile uint8_t want_green = 0;
@@ -131,17 +134,18 @@ ISR(INT0_vect)
 	TIMSK &= ~_BV(TOIE0);
 	if (CLOCK_HI) {
 		// rising clock: read data
-		opmode = (opmode << 1) | (red   >> 7);
-		red    = (red    << 1) | (green >> 7);
-		green  = (green  << 1) | (blue  >> 7);
-		blue   = (blue   << 1) | DATA_BIT;
+		opmode  = (opmode  << 1) | (red   >> 7);
+		red     = (red     << 1) | (green >> 7);
+		green   = (green   << 1) | (blue  >> 7);
+		blue    = (blue    << 1) | (address >> 15);
+		address = (address << 1) | DATA_BIT;
 
 		if (DATA_BIT != 0)
 			statusled_on();
 		else
 			statusled_off();
 	}
-	else if (DATA_HI) {
+	else if (DATA_HI && (address == MYADDRESS)) {
 		// falling clock, data is high: end of transmission
 
 		if (opmode & OM_MODE_FADEANY) {
