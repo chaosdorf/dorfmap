@@ -14,8 +14,11 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-volatile unsigned char status_hi = 0;
-volatile unsigned char status_lo = 0;
+#define MYADDRESS (0x0001)
+
+volatile uint8_t status_hi = 0;
+volatile uint8_t status_lo = 0;
+volatile uint16_t address;
 
 static inline void statusled_on(void)
 {
@@ -33,9 +36,6 @@ int main (void)
 	MCUSR &= ~_BV(WDRF);
 	WDTCSR = _BV(WDCE) | _BV(WDE);
 	WDTCSR = _BV(WDE) | _BV(WDP3);
-
-	CLKPR = _BV(CLKPCE);
-	CLKPR = 0;
 
 	ACSR |= _BV(ACD);
 
@@ -70,13 +70,14 @@ ISR(INT0_vect)
 	if (CLOCK_HI) {
 		// rising clock: read data
 		status_hi = (status_hi << 1) | (status_lo >> 7);
-		status_lo = (status_lo << 1) | DATA_BIT;
+		status_lo = (status_lo << 1) | (address >> 15);
+		address = (address << 1) | DATA_BIT;
 		if (DATA_BIT != 0)
 			statusled_on();
 		else
 			statusled_off();
 	}
-	else if (DATA_HI) {
+	else if (DATA_HI && (address == MYADDRESS)) {
 		// falling clock, data is high: end of transmission
 		PORTD =
 			( (status_lo & _BV(0)) << 0 ) | // PD0 -> OUT00
@@ -86,12 +87,11 @@ ISR(INT0_vect)
 			( (status_lo & _BV(3)) << 2 ) | // PD5 -> OUT03
 			( (status_lo & _BV(4)) << 2 );  // PD6 -> OUT04
 
-		// fix PB2 <-> PB3 (mis-soldered)
 		PORTB =
 			( (status_lo & _BV(5)) >> 5 ) | // PB0 -> OUT05
 			( (status_lo & _BV(6)) >> 5 ) | // PB1 -> OUT06
-			( (status_lo & _BV(7)) >> 4 ) | // PB3 -> OUT07
-			( (status_hi & _BV(0)) << 2 ) | // PB2 -> OUT08
+			( (status_lo & _BV(7)) >> 5 ) | // PB2 -> OUT07
+			( (status_hi & _BV(0)) << 3 ) | // PB3 -> OUT08
 			( (status_hi & _BV(1)) << 3 ) | // PB4 -> OUT09
 			( (status_hi & _BV(2)) << 3 ) | // PB5 -> OUT10
 			( (status_hi & _BV(3)) << 3 ) | // PB6 -> OUT11
