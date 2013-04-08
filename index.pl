@@ -607,7 +607,7 @@ get '/blinkencontrol/:device' => sub {
 
 	my @opmodes
 	  = (
-		qw(steady blinkrgb blinkrand blinkonoff fadeonoff fadergb faderand undef)
+		qw(steady blinkrgb blinkrand blinkonoff fadetosteady fadergb faderand fadeonoff)
 	  );
 
 	if ($opmode) {

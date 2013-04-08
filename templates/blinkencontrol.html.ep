@@ -69,9 +69,10 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 <%= radio_button opmode => 'blinkrgb' %> RGB (hard transition)<br/>
 <%= radio_button opmode => 'blinkrand' %> random (hard transition)<br/>
 <%= radio_button opmode => 'blinkonoff' %> blink on/off<br/>
-<%= radio_button opmode => 'fadeonoff' %> fade on/off<br/>
+<%= radio_button opmode => 'fadetosteady' %> fade to new color<br/>
 <%= radio_button opmode => 'fadergb' %> RGB (fading)<br/>
 <%= radio_button opmode => 'faderand' %> random (fading)<br/>
+<%= radio_button opmode => 'fadeonoff' %> fade on/off<br/>
 %= submit_button 'Apply';
 %= end
 </div> <!-- blinkencontrol -->
