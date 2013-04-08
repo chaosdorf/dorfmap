@@ -767,6 +767,8 @@ any '/presets' => sub {
 		$presets = lock_retrieve('presets.db');
 	}
 
+	$name =~ tr{[0-9a-zA-Z ]}{}cd;
+
 	if ( $save and length($name) ) {
 		for my $id ( keys %{$coordinates} ) {
 			if (    $coordinates->{$id}->{type}
