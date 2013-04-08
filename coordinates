@@ -26,8 +26,8 @@ roehre_blau           748   42    0    0 feedback1/2          type=light        
 schaufenster            5  595    0    0 gpio24               type=light_ro     LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3          type=light        Lampe im eMac-Gehäuse
 hackcenter_w          686  280    0    0 feedback1/4          type=light        Weiße LEDs über der Tischreihe
-hackcenter_spots      700  180    0    0 feedback1/5          type=light        LED-Spots über Stoff
-hackcenter_blau       535  355  894  408 feedback1/6          type=light        Blauer LED-Streifen am Kabelkanal
+hackcenter_blau       535  355  894  408 feedback1/5          type=light        Blauer LED-Streifen am Kabelkanal
+hackcenter_spots      700  180    0    0 feedback1/6          type=light        LED-Spots über Stoff
 hackcenter_roehre     600  180    0    0 feedback1/7          type=light        6x weiße Röhre (Putzbeleuchtung)
 
 amp                  1270  361    0    0 none                 type=amp
