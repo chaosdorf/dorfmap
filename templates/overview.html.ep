@@ -27,7 +27,7 @@ Presets
 <div class="dropdownmenu">
 <a href="/presets">manage</a>
 % for my $preset (@{$presets}) {
-<a href="/"><%= $preset %></a>
+<a href="/presets/apply/<%= $preset %>"><%= $preset %></a>
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->

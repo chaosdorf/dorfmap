@@ -782,6 +782,7 @@ any '/presets' => sub {
 				}
 			}
 		}
+		$presets->{$name}->{timestamp} = time();
 		lock_nstore( $presets, 'presets.db' );
 	}
 
@@ -817,6 +818,31 @@ any '/presets' => sub {
 		refresh     => 0,
 	);
 
+	return;
+};
+
+get '/presets/apply/:name' => sub {
+	my ($self) = @_;
+	my $name = $self->stash('name');
+
+	if ( -e 'presets.db' ) {
+		$presets = lock_retrieve('presets.db');
+	}
+
+	for my $id ( keys %{$coordinates} ) {
+		if ( exists $presets->{$name}->{$id}
+			and $presets->{$name}->{$id} != -1 )
+		{
+			if ( exists $gpiomap->{$id} ) {
+				spew( $gpiomap->{$id}, $presets->{$name}->{$id} );
+			}
+			elsif ( exists $remotemap->{$id} ) {
+				set_remote( $remotemap->{$id}, $presets->{$name}->{$id} );
+			}
+		}
+	}
+
+	$self->redirect_to('/');
 	return;
 };
 
