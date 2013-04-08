@@ -260,6 +260,11 @@ ISR(TIMER0_OVF_vect)
 				want_green = pwmtable[ rand() / 8 ];
 				want_blue = pwmtable[ rand() / 8 ];
 				break;
+			case OM_MODE_FADETOSTEADY:
+				want_red = red;
+				want_green = green;
+				want_blue = blue;
+				break;
 		}
 	}
 
