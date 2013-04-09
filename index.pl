@@ -25,6 +25,7 @@ my $automaticfile = '/tmp/automatic_light';
 my $shutdownfile  = '/tmp/is_shutdown';
 
 my @layers = qw(control wiki);
+my @sortedpresets;
 
 #{{{ primitive helpers
 
@@ -109,6 +110,28 @@ sub load_coordinates {    #{{{
 	}
 	return;
 }    #}}}
+
+#{{{ presets
+
+sub load_presets {
+	if ( -e 'presets.db' ) {
+		$presets = lock_retrieve('presets.db');
+
+		@sortedpresets = reverse
+		  sort { $presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp} }
+		  ( keys %{$presets} );
+	}
+
+	return;
+}
+
+sub save_presets {
+	lock_nstore( $presets, 'presets.db' );
+
+	return;
+}
+
+#}}}
 
 #{{{ other helpers
 
@@ -539,9 +562,7 @@ get '/' => sub {
 	my ($self) = @_;
 	my $layer = $self->param('layer') // 'control';
 
-	if ( -e 'presets.db' ) {
-		$presets = lock_retrieve('presets.db');
-	}
+	load_presets();
 
 	if ( -e 'locations.db' ) {
 		$locations = retrieve('locations.db');
@@ -553,7 +574,7 @@ get '/' => sub {
 		coordinates => $coordinates,
 		shortcuts   => [ sort keys %{$shortcuts} ],
 		errors      => [],
-		presets     => [ keys %{$presets} ],
+		presets     => \@sortedpresets,
 		refresh     => 1,
 		layer       => $layer,
 		layers      => \@layers,
@@ -578,7 +599,7 @@ get '/action/:action' => sub {
 			coordinates => $coordinates,
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => \@errors,
-			presets     => [ keys %{$presets} ],
+			presets     => \@sortedpresets,
 			refresh     => 0,
 			layer       => $layer,
 			layers      => \@layers,
@@ -630,7 +651,7 @@ get '/blinkencontrol/:device' => sub {
 			coordinates => $coordinates,
 			shortcuts   => [ sort keys %{$shortcuts} ],
 			errors      => ['no such device'],
-			presets     => [ keys %{$presets} ],
+			presets     => \@sortedpresets,
 			refresh     => 0,
 			layer       => $layer,
 			layers      => \@layers,
@@ -763,9 +784,7 @@ any '/presets' => sub {
 	my $name   = $self->param('name')   // q{};
 	my $save   = $self->param('save')   // 0;
 
-	if ( -e 'presets.db' ) {
-		$presets = lock_retrieve('presets.db');
-	}
+	load_presets();
 
 	$name =~ tr{[0-9a-zA-Z ]}{}cd;
 
@@ -783,12 +802,13 @@ any '/presets' => sub {
 			}
 		}
 		$presets->{$name}->{timestamp} = time();
-		lock_nstore( $presets, 'presets.db' );
+		save_presets();
+		load_presets();
 	}
 
 	if ( $action eq 'delete' and $name ) {
 		delete $presets->{$name};
-		lock_nstore( $presets, 'presets.db' );
+		save_presets();
 		$self->redirect_to('/presets');
 		return;
 	}
@@ -812,7 +832,7 @@ any '/presets' => sub {
 		'presets',
 		coordinates => {},
 		errors      => [],
-		presets     => [ keys %{$presets} ],
+		presets     => \@sortedpresets,
 		toggles     => \@toggles,
 		version     => $VERSION,
 		refresh     => 0,
@@ -825,8 +845,11 @@ get '/presets/apply/:name' => sub {
 	my ($self) = @_;
 	my $name = $self->stash('name');
 
-	if ( -e 'presets.db' ) {
-		$presets = lock_retrieve('presets.db');
+	load_presets();
+
+	if ( exists $presets->{$name}->{timestamp} ) {
+		$presets->{$name}->{timestamp} = time();
+		save_presets();
 	}
 
 	for my $id ( keys %{$coordinates} ) {
