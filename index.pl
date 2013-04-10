@@ -389,8 +389,7 @@ sub sunrisetext {
 
 	my ( $rise_str, $set_str )
 	  = sunrise( $now->year, $now->month, $now->day, 6.47, 51.14,
-		$now->offset / 3600,
-		$now->is_dst );
+		$now->offset / 3600, 0);
 
 	my ( $rise_h, $rise_m ) = ( $rise_str =~ m{(..):(..)} );
 	my ( $set_h,  $set_m )  = ( $set_str  =~ m{(..):(..)} );
