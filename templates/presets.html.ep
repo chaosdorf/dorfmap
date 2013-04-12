@@ -13,16 +13,23 @@
 <a class="backlink" href="/">← back</a>
 
 <div class="presetlist">
-<ul>
+<table>
+<tr><th>preset</th><th>last used</th><th>delete?</th></tr>
 % for my $preset (@{$presets}) {
-<li>
+<tr>
+<td>
 <a href="/presets?name=<%= $preset %>"><%= $preset %></a>
-(
+</td>
+<td>
+% my $dt = DateTime->from_epoch( epoch => $presetdata->{$preset}->{timestamp} );
+%= $dt->ymd
+</td>
+<td>
 <a href="/presets?name=<%= $preset %>&amp;action=delete">X</a>
-)
-</li>
+</td>
+</tr>
 % }
-</ul>
+</table>
 </div> <!-- presetlist -->
 
 <div class="presetform">

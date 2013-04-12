@@ -831,6 +831,7 @@ any '/presets' => sub {
 		'presets',
 		coordinates => {},
 		errors      => [],
+		presetdata  => $presets,
 		presets     => \@sortedpresets,
 		toggles     => \@toggles,
 		version     => $VERSION,
