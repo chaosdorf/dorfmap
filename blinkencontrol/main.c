@@ -36,10 +36,10 @@
 #define OM_MODE_FADERAND      ( _BV(7) | _BV(6) |     0  )
 #define OM_MODE_FADEONOFF     ( _BV(7) | _BV(6) | _BV(5) )
 
-volatile uint8_t opmode = 0;
-volatile uint8_t red = 0;
-volatile uint8_t green = 0;
-volatile uint8_t blue = 0;
+volatile uint8_t opmode = 0, rcvopmode = 0;
+volatile uint8_t red = 0, rcvred = 0;
+volatile uint8_t green = 0, rcvgreen = 0;
+volatile uint8_t blue = 0, rcvblue = 0;
 volatile uint16_t address;
 
 volatile uint8_t want_red = 0;
@@ -134,28 +134,35 @@ ISR(INT0_vect)
 	TIMSK &= ~_BV(TOIE0);
 	if (CLOCK_HI) {
 		// rising clock: read data
-		opmode  = (opmode  << 1) | (red   >> 7);
-		red     = (red     << 1) | (green >> 7);
-		green   = (green   << 1) | (blue  >> 7);
-		blue    = (blue    << 1) | (address >> 15);
-		address = (address << 1) | DATA_BIT;
+		rcvopmode  = (rcvopmode  << 1) | (rcvred   >> 7);
+		rcvred     = (rcvred     << 1) | (rcvgreen >> 7);
+		rcvgreen   = (rcvgreen   << 1) | (rcvblue  >> 7);
+		rcvblue    = (rcvblue    << 1) | (address  >> 15);
+		address    = (address    << 1) | DATA_BIT;
 
 		if (DATA_BIT != 0)
 			statusled_on();
 		else
 			statusled_off();
 	}
-	else if (DATA_HI && (address == MYADDRESS)) {
+	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
+		if (address == MYADDRESS) {
 
-		if (opmode & OM_MODE_FADEANY) {
-			step = fstep = sstep = 0;
-		}
-		else {
-			ORED   = red;
-			OGREEN = green;
-			OBLUE  = blue;
-			apply_pwm();
+			opmode = rcvopmode;
+			red = rcvred;
+			green = rcvgreen;
+			blue = rcvblue;
+
+			if (opmode & OM_MODE_FADEANY) {
+				step = fstep = sstep = 0;
+			}
+			else {
+				ORED   = red;
+				OGREEN = green;
+				OBLUE  = blue;
+				apply_pwm();
+			}
 		}
 
 		TIMSK |= _BV(TOIE0);
