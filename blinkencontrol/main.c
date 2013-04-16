@@ -55,16 +55,6 @@ const uint8_t pwmtable[32] PROGMEM = {
 	27, 32, 38, 45, 54, 64, 76, 91, 108, 128, 152, 181, 215, 255
 };
 
-static inline void statusled_on(void)
-{
-	PORTD |= STATUSLED;
-}
-
-static inline void statusled_off(void)
-{
-	PORTD &= ~STATUSLED;
-}
-
 int main (void)
 {
 	/* watchdog reset after ~4 seconds */
@@ -78,8 +68,6 @@ int main (void)
 	DDRD = _BV(DDD1);
 
 	PORTD = _BV(PD2) | _BV(PD3);
-
-	statusled_on();
 
 	MCUCR = _BV(ISC00);
 	GIMSK = _BV(INT0);
@@ -98,8 +86,6 @@ int main (void)
 	OCR1B = 0;
 
 	sei();
-
-	statusled_off();
 
 	while (1) {
 		MCUCR |= _BV(SE);
@@ -140,10 +126,12 @@ ISR(INT0_vect)
 		rcvblue    = (rcvblue    << 1) | (address  >> 15);
 		address    = (address    << 1) | DATA_BIT;
 
-		if (DATA_BIT != 0)
-			statusled_on();
+#ifdef DEBUG
+		if (DATA_BIT)
+			PORTD = _BV(PD2) | _BV(PD3) | STATUSLED;
 		else
-			statusled_off();
+			PORTD = _BV(PD2) | _BV(PD3);
+#endif
 	}
 	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
@@ -274,9 +262,10 @@ ISR(TIMER0_OVF_vect)
 				break;
 		}
 	}
-
+#ifdef DEBUG
 	if (DATA_BIT)
-		statusled_on();
+		PORTD = _BV(PD2) | _BV(PD3) | STATUSLED;
 	else
-		statusled_off();
+		PORTD = _BV(PD2) | _BV(PD3);
+#endif
 }
