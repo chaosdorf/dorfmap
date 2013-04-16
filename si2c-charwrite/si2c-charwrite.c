@@ -5,9 +5,9 @@
 #include <unistd.h>
 #include <inttypes.h>
 
-#define BUFSIZE 64
-
-// starting at 32
+/*
+ * starting at 32
+ */
 static const uint8_t firstseg[] = {
 	0x00, // space
 	0x88, // !
@@ -138,11 +138,12 @@ static unsigned char firsttofourth(unsigned char byte)
 
 int main(int argc, char **argv)
 {
-	unsigned char input;
+	int input;
 	unsigned char charoffset = 0;
-	unsigned char buf[4];
+	unsigned char buf[32];
+	unsigned char hasdot[32];
 
-	int sdapin = 0, sclpin = 0, addrhi = 0, addrlo = 0;
+	int sdapin = 0, sclpin = 0, addrhi = 0, addrlo = 0, i;
 
 	if (argc < 2)
 		errx(1, "usage: si2c-charwrite <sdapin> <sclpin>");
@@ -155,30 +156,49 @@ int main(int argc, char **argv)
 	snprintf(sdastr, 64, "/sys/class/gpio/gpio%d/value", sdapin);
 	snprintf(sclstr, 64, "/sys/class/gpio/gpio%d/value", sclpin);
 
+	for (i = 0; i < 32; i++)
+		hasdot[i] = 0;
+
 	while ((input = getc(stdin)) != EOF) {
 		if (input == '\n') {
-			writebyte(firsttofourth(firstseg[buf[3]]));
-			writebyte(firsttosecond(firstseg[buf[1]]));
-			writebyte(firstseg[buf[0]]);
-			writebyte(firsttothird(firstseg[buf[2]]));
+			for (i = charoffset; i < 32; i++) {
+				buf[i] = buf[i - charoffset];
+				hasdot[i] = hasdot[i - charoffset];
+			}
+			for (i = 0; i < 8; i++) {
+				writebyte(firsttofourth(firstseg[buf[3 + (4 * i)]] | hasdot[3 + (4 * i)] ));
+				writebyte(firsttosecond(firstseg[buf[1 + (4 * i)]] | hasdot[1 + (4 * i)] ));
+				writebyte(firstseg[buf[0 + (4 * i)] | hasdot[0 + (4 * i)] ]);
+				writebyte(firsttothird(firstseg[buf[2 + (4 * i)]] | hasdot[2 + (4 * i)] ));
+			}
 			writebyte(addrhi);
 			writebyte(addrlo);
 			writepin(sdastr, 1);
 			writepin(sclstr, 0);
 			writepin(sdastr, 0);
 			charoffset = 0;
+
+			for (i = 0; i < 32; i++)
+				hasdot[i] = 0;
+
 		}
 		else if (input >= 0x20) {
 
-			if (input > 0x5a)
-				input -= 32;
-			if (input > 0x5a)
-				input = 0x20;
+			if (input == '.' && charoffset && buf[charoffset - 1] != '.') {
+				hasdot[charoffset - 1] = 0x10;
+			}
+			else {
 
-			input -= 0x20;
+				if (input > 0x5a)
+					input -= 32;
+				if (input > 0x5a)
+					input = 0x20;
 
-			buf[charoffset] = input;
-			charoffset = (charoffset + 1) % 4;
+				input -= 0x20;
+
+				buf[charoffset] = input;
+				charoffset = (charoffset + 1) % 32;
+			}
 
 		}
 	}

@@ -13,14 +13,16 @@
 
 #define MYADDRESS (0x0003)
 
-volatile uint8_t rcvbuf[4];
-volatile uint8_t dispbuf[4] = { 1, 2, 4, 8 };
+volatile uint8_t rcvbuf[32];
+volatile uint8_t dispbuf[32];
 
 volatile uint16_t address;
 
 int main (void)
 {
 	uint8_t i;
+	uint16_t blnkstep = 0;
+	uint8_t switchbuf[4];
 
 	/* watchdog reset after ~4 seconds */
 	MCUSR &= ~_BV(WDRF);
@@ -41,6 +43,17 @@ int main (void)
 	sei();
 
 	while (1) {
+
+		if (++blnkstep == 16384) {
+			for (i = 0; i < 4; i++)
+				switchbuf[i] = dispbuf[i];
+			for (i = 4; i < 32; i++)
+				dispbuf[i - 4] = dispbuf[i];
+			for (i = 28; i < 32; i++)
+				dispbuf[i] = switchbuf[i - 28];
+			blnkstep = 0;
+		}
+
 		PORTB = 0xff;
 		PORTD = _BV(PD0) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[0];
