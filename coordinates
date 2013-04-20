@@ -17,7 +17,7 @@ temp_hackcenter       840  350    0    0 none                 type=rtext
 temp_serverraum      1265  400    0    0 none                 type=rtext
 online_guests           0    0    0    0 none                 type=rtext
 
-logo                  224  460    0    0 gpio2                type=light_ro     LED-Leiste über Chaosdorflogo
+logo                  224  460    0    0 gpio2                type=light_au     LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 gpio27               type=light        Kaltweiße LEDs
 lounge_rgb              5  110    0    0 donationprint2       type=blinkenlight RGB-LED-Streifen
 lounge_weiss          114   80    0    0 donationprint1/9     type=light        Weiße LED über Tisch
