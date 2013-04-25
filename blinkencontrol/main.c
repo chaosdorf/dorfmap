@@ -36,11 +36,10 @@
 #define OM_MODE_FADERAND      ( _BV(7) | _BV(6) |     0  )
 #define OM_MODE_FADEONOFF     ( _BV(7) | _BV(6) | _BV(5) )
 
-volatile uint8_t opmode = 0, rcvopmode = 0;
-volatile uint8_t red = 0, rcvred = 0;
-volatile uint8_t green = 0, rcvgreen = 0;
-volatile uint8_t blue = 0, rcvblue = 0;
-volatile uint16_t address;
+volatile uint8_t opmode = 0;
+volatile uint8_t red = 0;
+volatile uint8_t green = 0;
+volatile uint8_t blue = 0;
 
 volatile uint8_t want_red = 0;
 volatile uint8_t want_green = 0;
@@ -116,8 +115,14 @@ static void apply_pwm(void)
 
 ISR(INT0_vect)
 {
+	static uint16_t address;
+	static uint8_t rcvopmode = 0;
+	static uint8_t rcvred = 0;
+	static uint8_t rcvgreen = 0;
+	static uint8_t rcvblue = 0;
+
 	// disable fading etc. during receive
-	TIMSK &= ~_BV(TOIE0);
+	TIMSK = 0;
 	if (CLOCK_HI) {
 		// rising clock: read data
 		rcvopmode  = (rcvopmode  << 1) | (rcvred   >> 7);
@@ -153,7 +158,7 @@ ISR(INT0_vect)
 			}
 		}
 
-		TIMSK |= _BV(TOIE0);
+		TIMSK = _BV(TOIE0);
 	}
 }
 
@@ -207,7 +212,7 @@ ISR(TIMER0_OVF_vect)
 				apply_pwm();
 				break;
 			case OM_MODE_BLINKRAND:
-				ORED   = pwmtable[ rand() / 8];
+				ORED   = pwmtable[ rand() / 8 ];
 				OGREEN = pwmtable[ rand() / 8 ];
 				OBLUE  = pwmtable[ rand() / 8 ];
 				apply_pwm();
