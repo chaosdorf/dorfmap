@@ -61,7 +61,7 @@ while ( sleep(120) ) {
 			my $modified = ( stat($printer) )[9];
 			if ( ( $now - $modified ) > ( 20 * 60 ) ) {
 				spew( $printer, "0\n" );
-				system('avrshift-donationprint');
+				system('/usr/local/bin/avrshift-donationprint');
 			}
 		}
 	}
