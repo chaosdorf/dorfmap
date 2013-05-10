@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <inttypes.h>
 
+#include "../semop/semctl.c"
+
 /*
  * starting at 32
  */
@@ -159,7 +161,10 @@ int main(int argc, char **argv)
 	for (i = 0; i < 32; i++)
 		hasdot[i] = 0;
 
+	sem_init(12);
+
 	while ((input = getc(stdin)) != EOF) {
+		sem_enter();
 		if (input == '\n') {
 			for (i = charoffset; i < 32; i++) {
 				buf[i] = buf[i - charoffset];
@@ -201,10 +206,13 @@ int main(int argc, char **argv)
 			}
 
 		}
+		sem_leave();
 	}
 
+	sem_enter();
 	writepin(sdastr, 1);
 	writepin(sclstr, 0);
 	writepin(sdastr, 0);
+	sem_leave();
 	return 0;
 }
