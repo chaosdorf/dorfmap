@@ -210,11 +210,5 @@ int main(int argc, char **argv)
 
 		}
 	}
-
-	sem_enter();
-	writepin(sdastr, 1);
-	writepin(sclstr, 0);
-	writepin(sdastr, 0);
-	sem_leave();
 	return 0;
 }
