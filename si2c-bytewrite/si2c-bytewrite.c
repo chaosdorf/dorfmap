@@ -15,6 +15,8 @@ void writepin(char *pinstr, char val)
 {
 	FILE *fh;
 
+	printf(">>> %s %d\n", pinstr, val);
+
 	fh = fopen(pinstr, "w");
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
@@ -23,11 +25,11 @@ void writepin(char *pinstr, char val)
 
 void push_data(short int *buf, unsigned char buf_pos)
 {
-	short int i;
+	short int i, byte;
 	short int number;
 	sem_enter();
-	for (i = 0; i < buf_pos; i++) {
-		number = buf[buf_pos];
+	for (byte = 0; byte < buf_pos; byte++) {
+		number = buf[byte];
 		if ((number >= 0) && (number <= 255)) {
 			for (i = 7; i >= 0; i--) {
 				writepin(sdastr, 0);

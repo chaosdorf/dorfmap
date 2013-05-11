@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 	for (i = 0; i < buf_pos; i++) {
 		writepin(sdastr, 0);
 		writepin(sclstr, 0);
-		writepin(sdastr, number);
+		writepin(sdastr, buf[i]);
 		writepin(sclstr, 1);
 	}
 	writepin(sdastr, 1);
