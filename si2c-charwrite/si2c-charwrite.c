@@ -164,12 +164,13 @@ int main(int argc, char **argv)
 	sem_init(12);
 
 	while ((input = getc(stdin)) != EOF) {
-		sem_enter();
 		if (input == '\n') {
 			for (i = charoffset; i < 32; i++) {
 				buf[i] = buf[i - charoffset];
 				hasdot[i] = hasdot[i - charoffset];
 			}
+
+			sem_enter();
 			for (i = 0; i < 8; i++) {
 				writebyte(firsttofourth(firstseg[buf[3 + (4 * i)]] | hasdot[3 + (4 * i)] ));
 				writebyte(firsttosecond(firstseg[buf[1 + (4 * i)]] | hasdot[1 + (4 * i)] ));
@@ -182,6 +183,8 @@ int main(int argc, char **argv)
 			writepin(sclstr, 0);
 			writepin(sdastr, 0);
 			charoffset = 0;
+
+			sem_leave();
 
 			for (i = 0; i < 32; i++)
 				hasdot[i] = 0;
@@ -206,7 +209,6 @@ int main(int argc, char **argv)
 			}
 
 		}
-		sem_leave();
 	}
 
 	sem_enter();

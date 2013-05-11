@@ -8,6 +8,9 @@
 
 #define BUFSIZE 64
 
+char sdastr[64];
+char sclstr[64];
+
 void writepin(char *pinstr, char val)
 {
 	FILE *fh;
@@ -18,15 +21,37 @@ void writepin(char *pinstr, char val)
 	usleep(1);
 }
 
+void push_data(short int *buf, unsigned char buf_pos)
+{
+	short int i;
+	short int number;
+	sem_enter();
+	for (i = 0; i < buf_pos; i++) {
+		number = buf[buf_pos];
+		if ((number >= 0) && (number <= 255)) {
+			for (i = 7; i >= 0; i--) {
+				writepin(sdastr, 0);
+				writepin(sclstr, 0);
+				writepin(sdastr, (number & (1 << i)) ? 1 : 0);
+				writepin(sclstr, 1);
+			}
+		}
+	}
+	writepin(sdastr, 1);
+	writepin(sclstr, 0);
+	writepin(sdastr, 0);
+	sem_leave();
+
+}
+
 int main(int argc, char **argv)
 {
 	char line[BUFSIZE];
-	signed char i;
+	short int buf[BUFSIZE];
+	unsigned char buf_pos = 0;
 	short int number;
 
 	int sdapin = 0, sclpin = 0;
-	char sdastr[64];
-	char sclstr[64];
 
 	if (argc < 2)
 		errx(1, "usage: blinkenconrold <sdapin> <sclpin>");
@@ -40,28 +65,16 @@ int main(int argc, char **argv)
 	sem_init(12);
 
 	while (fgets(line, BUFSIZE, stdin) != NULL) {
-		sem_enter();
 		if (sscanf(line, "%hi\n", &number) == 1) {
-			if ((number >= 0) && (number <= 255)) {
-				for (i = 7; i >= 0; i--) {
-					writepin(sdastr, 0);
-					writepin(sclstr, 0);
-					writepin(sdastr, (number & (1 << i)) ? 1 : 0);
-					writepin(sclstr, 1);
-				}
+			if (buf_pos <= BUFSIZE) {
+				buf[buf_pos++] = number;
 			}
 		}
 		if (strcmp(line, "push\n") == 0) {
-			writepin(sdastr, 1);
-			writepin(sclstr, 0);
-			writepin(sdastr, 0);
+			push_data(buf, buf_pos);
+			buf_pos = 0;
 		}
-		sem_leave();
 	}
-	sem_enter();
-	writepin(sdastr, 1);
-	writepin(sclstr, 0);
-	writepin(sdastr, 0);
-	sem_leave();
+	push_data(buf, buf_pos);
 	return 0;
 }

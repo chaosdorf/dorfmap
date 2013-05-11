@@ -21,7 +21,9 @@ void writepin(char *pinstr, char val)
 int main(int argc, char **argv)
 {
 	char line[BUFSIZE];
-	short int number;
+	char buf[BUFSIZE];
+	short int buf_pos = 0;
+	short int number, i;
 
 	int sdapin = 0, sclpin = 0;
 	char sdastr[64];
@@ -39,16 +41,19 @@ int main(int argc, char **argv)
 	sem_init(12);
 
 	while (fgets(line, BUFSIZE, stdin) != NULL) {
-		sem_enter();
 		if (sscanf(line, "%hi\n", &number) == 1) {
-			writepin(sdastr, 0);
-			writepin(sclstr, 0);
-			writepin(sdastr, number);
-			writepin(sclstr, 1);
+			if (buf_pos <= BUFSIZE) {
+				buf[buf_pos++] = number;
+			}
 		}
-		sem_leave();
 	}
 	sem_enter();
+	for (i = 0; i < buf_pos; i++) {
+		writepin(sdastr, 0);
+		writepin(sclstr, 0);
+		writepin(sdastr, number);
+		writepin(sclstr, 1);
+	}
 	writepin(sdastr, 1);
 	writepin(sclstr, 0);
 	writepin(sdastr, 0);
