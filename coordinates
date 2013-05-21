@@ -30,7 +30,10 @@ hackcenter_blau       535  355  894  408 feedback1/5          type=light        
 hackcenter_spots      700  180    0    0 feedback1/6          type=light        LED-Spots über Stoff
 hackcenter_roehre     600  180    0    0 feedback1/7          type=light        6x weiße Röhre (Putzbeleuchtung)
 
-amp                  1270  361    0    0 none                 type=amp
+amp0                 1270  361    0    0 amp0                 type=amp
+amp1                 1300  361    0    0 amp1                 type=amp
+amp2                 1330  361    0    0 amp2                 type=amp
+amp3                 1360  361    0    0 amp3                 type=amp
 
 phone                  46   32    0    0 none                 type=phone
 

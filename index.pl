@@ -136,8 +136,10 @@ sub save_presets {
 #{{{ other helpers
 
 sub amp_image {
+	my ($id) = @_;
+
 	my $image = 'amp.png';
-	my $state = amp_status();
+	my $state = amp_status($id);
 
 	if ( $state == 1 ) {
 		$image = 'amp_on.png';
@@ -150,14 +152,17 @@ sub amp_image {
 }
 
 sub amp_status {
-	return slurp('/srv/www/amp.status') // -1;
+	my ($id) = @_;
+	return slurp("/srv/www/${id}.status") // -1;
 }
 
 sub amp {
+	my ($id) = @_;
+
 	return
 	  sprintf(
-'<a href="/toggle/amp"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		amp_image, 'amp', 'amp' );
+'<a href="/toggle/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		$id, amp_image($id), 'amp', 'amp' );
 }
 
 sub blinkenlight {
@@ -356,7 +361,7 @@ sub status_number {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp')          { return amp_status() }
+		when ('amp')          { return amp_status($id) }
 		when ('blinkenlight') { return blinkenlight_status($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
 		when ( [qw[phone printer server wifi]] ) {
@@ -372,7 +377,7 @@ sub status_image {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp') { return amp_image() }
+		when ('amp') { return amp_image($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_image( $type, $id )
@@ -471,7 +476,10 @@ $shortcuts->{shutdown} = sub {
 	}
 
 	system(qw(ssh private@door));
-	system('amp_off');
+	system('amp0_off');
+	system('amp1_off');
+	system('amp2_off');
+	system('amp3_off');
 
 	if ( $? != 0 ) {
 		push( @errors, "private\@door returned $?: $!" );
@@ -525,7 +533,7 @@ helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
 	given ($type) {
-		when ('amp')          { return amp() }
+		when ('amp')          { return amp($location) }
 		when ('blinkenlight') { return blinkenlight($location) }
 		when ('light')        { return light( $location, 1 ) }
 		when ('light_au')     { return light( $location, 2 ) }
@@ -925,13 +933,13 @@ get '/toggle/:id' => sub {
 		$self->redirect_to('/');
 	}
 
-	elsif ( $id eq 'amp' ) {
-		my $state = slurp('/srv/www/amp.status');
+	elsif ( $id =~ m{^amp} ) {
+		my $state = slurp("/srv/www/${id}.status");
 		if ( $state == 1 ) {
-			system('amp_off');
+			system("${id}_off");
 		}
 		else {
-			system('amp_on');
+			system("${id}_on");
 		}
 		$self->redirect_to('/');
 	}
