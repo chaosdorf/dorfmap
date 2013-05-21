@@ -138,6 +138,8 @@ sub save_presets {
 sub amp_image {
 	my ($id) = @_;
 
+	$id =~ s{ [ab] $ }{}ox;
+
 	my $image = 'amp.png';
 	my $state = amp_status($id);
 
@@ -153,11 +155,16 @@ sub amp_image {
 
 sub amp_status {
 	my ($id) = @_;
+
+	$id =~ s{ [ab] $ }{}ox;
+
 	return slurp("/srv/www/${id}.status") // -1;
 }
 
 sub amp {
 	my ($id) = @_;
+
+	$id =~ s{ [ab] $ }{}ox;
 
 	return
 	  sprintf(
