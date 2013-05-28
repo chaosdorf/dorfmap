@@ -191,7 +191,7 @@ ISR(TIMER0_OVF_vect)
 		apply_pwm();
 	}
 
-	if (sstep == ( ( (opmode & OM_M_SPEED) + 1 ) * 4 ) ) {
+	if (sstep == ( ( (opmode & OM_M_SPEED) + 1 ) * 7 ) ) {
 		sstep = 0;
 		switch (opmode & OM_M_MODE) {
 			case OM_MODE_BLINKRGB:
