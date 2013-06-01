@@ -17,26 +17,26 @@ temp_hackcenter       840  350    0    0 none                 type=rtext
 temp_serverraum      1265  400    0    0 none                 type=rtext
 online_guests           0    0    0    0 none                 type=rtext
 
-logo                  224  460    0    0 gpio2                type=light_au     LED-Leiste über Chaosdorflogo
-treppe_w              350  525    0    0 gpio27               type=light        Kaltweiße LEDs
-lounge_rgb              5  110    0    0 donationprint2       type=blinkenlight RGB-LED-Streifen
-lounge_weiss          114   80    0    0 donationprint1/9     type=light        Weiße LED über Tisch
-outdoor                 9  438    0    0 gpio17               type=light_au     Röhre über Tür, außen
-roehre_blau           748   42    0    0 feedback1/2          type=light        Blaue Röhre
-schaufenster            5  595    0    0 gpio24               type=light_ro     LEDs im Schaufenster
-lightclc1160          887   63    0    0 feedback1/3          type=light        Lampe im eMac-Gehäuse
-hackcenter_w          686  280    0    0 feedback1/4          type=light        Weiße LEDs über der Tischreihe
-hackcenter_blau       535  355  894  408 feedback1/5          type=light        Blauer LED-Streifen am Kabelkanal
-hackcenter_spots      700  180    0    0 feedback1/6          type=light        LED-Spots über Stoff
-hackcenter_roehre     600  180    0    0 feedback1/7          type=light        6x weiße Röhre (Putzbeleuchtung)
+logo                  224  460    0    0 gpio2                type=light_au       LED-Leiste über Chaosdorflogo
+treppe_w              350  525    0    0 gpio27               type=light          Kaltweiße LEDs
+lounge_rgb              5  110    0    0 donationprint2       type=blinkenlight   RGB-LED-Streifen
+lounge_weiss          114   80    0    0 donationprint1/9     type=light          Weiße LED über Tisch
+outdoor                 9  438    0    0 gpio17               type=light_au       Röhre über Tür, außen
+roehre_blau           748   42    0    0 feedback1/2          type=light          Blaue Röhre
+schaufenster            5  595    0    0 gpio24               type=light_ro       LEDs im Schaufenster
+lightclc1160          887   63    0    0 feedback1/3          type=light delay=1  Lampe im eMac-Gehäuse
+hackcenter_w          686  280    0    0 feedback1/4          type=light          Weiße LEDs über der Tischreihe
+hackcenter_blau       535  355  894  408 feedback1/5          type=light          Blauer LED-Streifen am Kabelkanal
+hackcenter_spots      700  180    0    0 feedback1/6          type=light          LED-Spots über Stoff
+hackcenter_roehre     600  180    0    0 feedback1/7          type=light delay=2  6x weiße Röhre (Putzbeleuchtung)
 
-amp0a                 150  590    0    0 amp0                 type=amp
-amp0b                 350  590    0    0 amp0                 type=amp
-amp1a                 150   32    0    0 amp1                 type=amp
-amp2a                 100   32    0    0 amp2                 type=amp
-amp2b                 200   32    0    0 amp2                 type=amp
-amp3a                 990   50    0    0 amp3                 type=amp
-amp3b                 890  370    0    0 amp3                 type=amp
+amp0a                 150  590    0    0 amp0                 type=amp delay=4
+amp0b                 350  590    0    0 amp0                 type=amp delay=4
+amp1a                 150   32    0    0 amp1                 type=amp delay=4
+amp2a                 100   32    0    0 amp2                 type=amp delay=4
+amp2b                 200   32    0    0 amp2                 type=amp delay=4
+amp3a                 990   50    0    0 amp3                 type=amp delay=4
+amp3b                 890  370    0    0 amp3                 type=amp delay=4
 
 phone                  46   32    0    0 none                 type=phone
 
