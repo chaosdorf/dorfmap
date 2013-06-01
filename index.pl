@@ -23,7 +23,7 @@ my $shortcuts   = {};
 
 my $automaticfile = '/tmp/automatic_light';
 my $shutdownfile  = '/tmp/is_shutdown';
-my $tsdir = '/tmp/dorfmap-ts';
+my $tsdir         = '/tmp/dorfmap-ts';
 
 my @layers = qw(control wiki);
 my @sortedpresets;
@@ -65,13 +65,13 @@ sub set_remote {
 }
 
 sub set_device {
-	my ($id, $value, $force) = @_;
+	my ( $id, $value, $force ) = @_;
 
-	if (not -e $tsdir) {
+	if ( not -e $tsdir ) {
 		mkdir($tsdir);
 	}
 
-	spew( "${tsdir}/${id}", $value);
+	spew( "${tsdir}/${id}", $value );
 
 	if ( exists $gpiomap->{$id} ) {
 		spew( $gpiomap->{$id}, $value );
@@ -80,7 +80,7 @@ sub set_device {
 		set_remote( $remotemap->{$id}, $value );
 	}
 	elsif ( $id =~ m{^amp.$} ) {
-		if ($value == 1) {
+		if ( $value == 1 ) {
 			system("${id}_on");
 		}
 		else {
@@ -487,6 +487,26 @@ sub wikilink {
 
 #{{{ Shortcuts
 
+$shortcuts->{'amps on'} = sub {
+	my ($self) = @_;
+
+	for my $amp (qw(amp0 amp1 amp2 amp3)) {
+		set_device( $amp, 1, 0 );
+	}
+
+	return;
+};
+
+$shortcuts->{'amps off'} = sub {
+	my ($self) = @_;
+
+	for my $amp (qw(amp0 amp1 amp2 amp3)) {
+		set_device( $amp, 0, 0 );
+	}
+
+	return;
+};
+
 $shortcuts->{makeprivate} = sub {
 	my ($self) = @_;
 
@@ -516,7 +536,7 @@ $shortcuts->{shutdown} = sub {
 			push( @errors, "please turn off printer ${device}" );
 		}
 		else {
-			set_device($device, 0, 1);
+			set_device( $device, 0, 1 );
 		}
 	}
 
@@ -621,7 +641,7 @@ get '/' => sub {
 		version     => $VERSION,
 		coordinates => $coordinates,
 		shortcuts   => [ sort keys %{$shortcuts} ],
-		errors      => [$self->param('error') || ()],
+		errors      => [ $self->param('error') || () ],
 		presets     => \@sortedpresets,
 		refresh     => 1,
 		layer       => $layer,
@@ -906,7 +926,7 @@ get '/presets/apply/:name' => sub {
 		if ( exists $presets->{$name}->{$id}
 			and $presets->{$name}->{$id} != -1 )
 		{
-			set_device($id, $presets->{$name}->{$id}, 0 );
+			set_device( $id, $presets->{$name}->{$id}, 0 );
 		}
 	}
 
@@ -952,7 +972,7 @@ get '/toggle/:id' => sub {
 	}
 
 	my $state = get_device($id);
-	if (set_device($id, $state ^ 1, 0)) {
+	if ( set_device( $id, $state ^ 1, 0 ) ) {
 		$self->redirect_to('/');
 	}
 	else {
@@ -966,7 +986,7 @@ get '/off/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	set_device($id, 0, 0);
+	set_device( $id, 0, 0 );
 
 	$self->render(
 		data   => q{},
@@ -979,7 +999,7 @@ get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	set_device($id, 1, 0);
+	set_device( $id, 1, 0 );
 
 	$self->redirect_to('/');
 	return;
