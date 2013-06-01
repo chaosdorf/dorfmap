@@ -23,6 +23,7 @@ my $shortcuts   = {};
 
 my $automaticfile = '/tmp/automatic_light';
 my $shutdownfile  = '/tmp/is_shutdown';
+my $tsdir = '/tmp/dorfmap-ts';
 
 my @layers = qw(control wiki);
 my @sortedpresets;
@@ -61,6 +62,52 @@ sub set_remote {
 	elsif ( $path =~ m{ feedback }x ) {
 		system('avrshift-feedback');
 	}
+}
+
+sub set_device {
+	my ($id, $value, $force) = @_;
+
+	if (not -e $tsdir) {
+		mkdir($tsdir);
+	}
+
+	spew( "${tsdir}/${id}", $value);
+
+	if ( exists $gpiomap->{$id} ) {
+		spew( $gpiomap->{$id}, $value );
+	}
+	elsif ( exists $remotemap->{$id} ) {
+		set_remote( $remotemap->{$id}, $value );
+	}
+	elsif ( $id =~ m{^amp.$} ) {
+		if ($value == 1) {
+			system("${id}_on");
+		}
+		else {
+			system("${id}_off");
+		}
+	}
+	else {
+		return 0;
+	}
+	return 1;
+}
+
+sub get_device {
+	my ($id) = @_;
+	my $state = -1;
+
+	if ( exists $gpiomap->{$id} ) {
+		$state = slurp( $gpiomap->{$id} );
+	}
+	elsif ( exists $remotemap->{$id} ) {
+		$state = slurp( $remotemap->{$id} );
+	}
+	elsif ( $id =~ m{^amp} ) {
+		$state = slurp("/srv/www/${id}.status");
+	}
+
+	return $state;
 }
 
 #}}}
@@ -210,7 +257,7 @@ sub infotext {
 		$is_shutdown ? 'Yes' : 'No',
 	);
 
-	if ( $is_shutdown and slurp( $gpiomap->{outdoor} ) == 1 ) {
+	if ( $is_shutdown and get_device('outdoor') == 1 ) {
 		$buf
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
@@ -282,13 +329,7 @@ sub light_image {
 sub light_status {
 	my ($light) = @_;
 
-	if ( exists $gpiomap->{$light} ) {
-		return slurp( $gpiomap->{$light} ) // -1;
-	}
-	if ( exists $remotemap->{$light} ) {
-		return slurp( $remotemap->{$light} ) // -1;
-	}
-	return -1;
+	return get_device($light);
 }
 
 sub light {
@@ -463,10 +504,7 @@ $shortcuts->{shutdown} = sub {
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
 
-		if ( $type eq 'light' and exists $gpiomap->{$device} ) {
-			spew( $gpiomap->{$device}, 0 );
-		}
-		elsif ( $type eq 'blinkenlight' ) {
+		if ( $type eq 'blinkenlight' ) {
 			my $path = $remotemap->{$device};
 			spew( "${path}/mode",  "0\n" );
 			spew( "${path}/red",   "0\n" );
@@ -474,19 +512,15 @@ $shortcuts->{shutdown} = sub {
 			spew( "${path}/blue",  "0\n" );
 			system('blinkencontrol-donationprint');
 		}
-		elsif ( exists $remotemap->{$device} ) {
-			set_remote( $remotemap->{$device}, 0 );
-		}
 		elsif ( $type eq 'printer' and slurp("/srv/www/${device}.ping") == 1 ) {
 			push( @errors, "please turn off printer ${device}" );
+		}
+		else {
+			set_device($device, 0, 1);
 		}
 	}
 
 	system(qw(ssh private@door));
-	system('amp0_off');
-	system('amp1_off');
-	system('amp2_off');
-	system('amp3_off');
 
 	if ( $? != 0 ) {
 		push( @errors, "private\@door returned $?: $!" );
@@ -872,12 +906,7 @@ get '/presets/apply/:name' => sub {
 		if ( exists $presets->{$name}->{$id}
 			and $presets->{$name}->{$id} != -1 )
 		{
-			if ( exists $gpiomap->{$id} ) {
-				spew( $gpiomap->{$id}, $presets->{$name}->{$id} );
-			}
-			elsif ( exists $remotemap->{$id} ) {
-				set_remote( $remotemap->{$id}, $presets->{$name}->{$id} );
-			}
+			set_device($id, $presets->{$name}->{$id}, 0 );
 		}
 	}
 
@@ -922,36 +951,12 @@ get '/toggle/:id' => sub {
 		unlink($shutdownfile);
 	}
 
-	if ( exists $gpiomap->{$id} ) {
-		my $state = slurp( $gpiomap->{$id} );
-		spew( $gpiomap->{$id}, $state ^ 1 );
-		$self->redirect_to('/');
-	}
-	elsif ( exists $remotemap->{$id} ) {
-		my $state = slurp( $remotemap->{$id} );
-
-		if ( $coordinates->{$id}->{type} eq 'printer' ) {
-			set_remote( $remotemap->{$id}, 1 );
-		}
-		else {
-			set_remote( $remotemap->{$id}, $state ^ 1 );
-		}
-
-		$self->redirect_to('/');
-	}
-
-	elsif ( $id =~ m{^amp} ) {
-		my $state = slurp("/srv/www/${id}.status");
-		if ( $state == 1 ) {
-			system("${id}_off");
-		}
-		else {
-			system("${id}_on");
-		}
+	my $state = get_device($id);
+	if (set_device($id, $state ^ 1, 0)) {
 		$self->redirect_to('/');
 	}
 	else {
-		$self->redirect_to('/?error=nosuchfile');
+		$self->redirect_to('/?error=no+such+device');
 	}
 
 	return;
@@ -961,12 +966,7 @@ get '/off/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	if ( exists $gpiomap->{$id} ) {
-		spew( $gpiomap->{$id}, 0 );
-	}
-	elsif ( exists $remotemap->{$id} ) {
-		set_remote( $remotemap->{$id}, 0 );
-	}
+	set_device($id, 0, 0);
 
 	$self->render(
 		data   => q{},
@@ -979,12 +979,7 @@ get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	if ( exists $gpiomap->{$id} ) {
-		spew( $gpiomap->{$id}, 1 );
-	}
-	elsif ( exists $remotemap->{$id} ) {
-		set_remote( $remotemap->{$id}, 1 );
-	}
+	set_device($id, 1, 0);
 
 	$self->redirect_to('/');
 	return;
