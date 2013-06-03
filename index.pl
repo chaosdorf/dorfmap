@@ -79,7 +79,8 @@ sub set_device {
 	elsif ( exists $remotemap->{$id} ) {
 		set_remote( $remotemap->{$id}, $value );
 	}
-	elsif ( $id =~ m{^amp.$} ) {
+	elsif ( $id =~ m{^amp..?$} ) {
+		$id =~ s{ [ab] $ }{}ox;
 		if ( $value == 1 ) {
 			system("${id}_on");
 		}
@@ -104,6 +105,7 @@ sub get_device {
 		$state = slurp( $remotemap->{$id} );
 	}
 	elsif ( $id =~ m{^amp} ) {
+		$id =~ s{ [ab] $ }{}ox;
 		$state = slurp("/srv/www/${id}.status");
 	}
 
