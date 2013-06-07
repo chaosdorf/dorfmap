@@ -132,10 +132,11 @@ sub load_coordinates {    #{{{
 		$bottom ||= $top + 32;
 
 		$coordinates->{$id} = {
-			x1 => $left,
-			y1 => $top,
-			x2 => $right - $left,
-			y2 => $bottom - $top,
+			x1   => $left,
+			y1   => $top,
+			x2   => $right - $left,
+			y2   => $bottom - $top,
+			path => $controlpath,
 		};
 
 		for my $elem (@rest) {
@@ -783,9 +784,11 @@ get '/list/all' => sub {
 
 	for my $id ( keys %{$coordinates} ) {
 		$devices->{$id}->{type} = $coordinates->{$id}->{type};
-		$devices->{$id}->{is_readable} = exists $gpiomap->{$id} ? 1 : 0;
+		$devices->{$id}->{is_readable}
+		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$devices->{$id}->{is_writable}
-		  = ( exists $gpiomap->{$id} and $devices->{$id}->{type} !~ m{_ro$} )
+		  = (     $coordinates->{$id}->{path} ne 'none'
+			  and $id !~ m{ _ ( au | r o ) $}ox )
 		  ? 1
 		  : 0;
 		$devices->{$id}->{status} = status_number($id);
@@ -815,7 +818,8 @@ get '/list/all' => sub {
 get '/list/readables' => sub {
 	my ($self) = @_;
 
-	my @readables = grep { exists $gpiomap->{$_} } keys %{$coordinates};
+	my @readables
+	  = grep { $coordinates->{$_}->{path} ne 'none' } keys %{$coordinates};
 
 	$self->respond_to(
 		json => { json => { devices => \@readables } },
@@ -832,8 +836,10 @@ get '/list/readables' => sub {
 get '/list/writables' => sub {
 	my ($self) = @_;
 
-	my @writables
-	  = grep { exists $gpiomap->{$_} and $coordinates->{$_}->{type} !~ m{_ro$} }
+	my @writables = grep {
+		      $coordinates->{$_}->{path} ne 'none'
+		  and $coordinates->{$_}->{type} !~ m{ _ ( ro | au ) $ }ox
+	  }
 	  keys %{$coordinates};
 
 	$self->respond_to(
