@@ -792,6 +792,7 @@ get '/list/all' => sub {
 		  ? 1
 		  : 0;
 		$devices->{$id}->{status} = status_number($id);
+		$devices->{$id}->{desc}   = $coordinates->{$id}->{text};
 	}
 
 	$self->respond_to(
@@ -1026,4 +1027,6 @@ app->config(
 app->defaults( layout => 'default' );
 
 load_coordinates();
+app->types->type( txt  => 'text/plain; charset=utf-8' );
+app->types->type( json => 'application/json; charset=utf-8' );
 app->start;
