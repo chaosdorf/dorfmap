@@ -20,6 +20,7 @@ online_guests           0    0    0    0 none                 type=rtext
 logo                  224  460    0    0 gpio2                type=light_au       LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 gpio27               type=light          Kaltweiße LEDs
 lounge_rgb              5  110    0    0 donationprint2       type=blinkenlight   RGB-LED-Streifen
+lounge_roehre         260  180    0    0 donationprint1/12    type=light delay=2  6x weiße Röhre (Putzbeleuchtung)
 lounge_weiss          114   80    0    0 donationprint1/9     type=light          Weiße LED über Tisch
 outdoor                 9  438    0    0 gpio17               type=light_au       Röhre über Tür, außen
 roehre_blau           748   42    0    0 feedback1/2          type=light          Blaue Röhre
