@@ -148,7 +148,7 @@ sub load_coordinates {    #{{{
 			}
 		}
 
-		$coordinates->{$id}->{text} = decode( 'UTF-8', join( ' ', @text ) );
+		$coordinates->{$id}->{text} = decode( 'UTF-8', join( q{ }, @text ) );
 
 		$controlpath //= q{};
 		if ( $controlpath =~ m{ ^ gpio (\d+) $ }ox ) {
@@ -788,7 +788,7 @@ get '/list/all' => sub {
 		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$devices->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
-			  and $id !~ m{ _ ( au | r o ) $}ox )
+			  and $id !~ m{ _ (?: au | r o ) $}ox )
 		  ? 1
 		  : 0;
 		$devices->{$id}->{status} = status_number($id);
@@ -839,7 +839,7 @@ get '/list/writables' => sub {
 
 	my @writables = grep {
 		      $coordinates->{$_}->{path} ne 'none'
-		  and $coordinates->{$_}->{type} !~ m{ _ ( ro | au ) $ }ox
+		  and $coordinates->{$_}->{type} !~ m{ _ (?: ro | au ) $ }ox
 	  }
 	  keys %{$coordinates};
 
