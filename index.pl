@@ -123,7 +123,7 @@ sub load_coordinates {    #{{{
 		my @text;
 		my $type;
 
-		if ( not $id ) {
+		if ( not $id or $id =~ m{^#}o ) {
 			next;
 		}
 
