@@ -744,20 +744,31 @@ get '/blinkencontrol/:device' => sub {
 	else {
 		my $mode = slurp("${controlpath}/mode") // 0;
 
-		$self->param( red    => slurp("${controlpath}/red") );
-		$self->param( green  => slurp("${controlpath}/green") );
-		$self->param( blue   => slurp("${controlpath}/blue") );
-		$self->param( speed  => 31 - ( $mode & 0x1f ) );
+		$self->param( red   => slurp("${controlpath}/red")   // 0 );
+		$self->param( green => slurp("${controlpath}/green") // 0 );
+		$self->param( blue  => slurp("${controlpath}/blue")  // 0 );
+		$self->param( speed => 31 - ( $mode & 0x1f ) );
 		$self->param( opmode => $opmodes[ ( $mode & 0xe0 ) >> 5 ] );
 	}
 
-	$self->render(
-		'blinkencontrol',
-		coordinates => {},
-		device      => $device,
-		errors      => [],
-		version     => $VERSION,
-		refresh     => $refresh,
+	$self->respond_to(
+		any => {
+			template    => 'blinkencontrol',
+			coordinates => {},
+			device      => $device,
+			errors      => [],
+			version     => $VERSION,
+			refresh     => $refresh,
+		},
+		json => {
+			json => {
+				red    => $self->param('red'),
+				green  => $self->param('green'),
+				blue   => $self->param('blue'),
+				speed  => $self->param('speed'),
+				opmode => $self->param('opmode'),
+			}
+		},
 	);
 };
 
