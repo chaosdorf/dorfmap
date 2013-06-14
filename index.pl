@@ -807,6 +807,7 @@ get '/list/all' => sub {
 		  : 0;
 		$devices->{$id}->{status} = status_number($id);
 		$devices->{$id}->{desc}   = $coordinates->{$id}->{text};
+		$devices->{$id}->{area}   = $coordinates->{$id}->{area};
 	}
 
 	$self->respond_to(
