@@ -414,7 +414,7 @@ sub status_number {
 	given ($type) {
 		when ('amp')          { return amp_status($id) }
 		when ('blinkenlight') { return blinkenlight_status($id) }
-		when ('dorf') {
+		when ('door') {
 			return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 )
 		}
 		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
