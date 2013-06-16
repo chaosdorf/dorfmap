@@ -52,6 +52,5 @@ figurehead           1232  400    0    0 none                 type=server area=S
 hyperion             1232  361    0    0 none                 type=server area=Serverraum
 door                   35  585    0    0 none                 type=server area=Schleuse
 
-freifunk              420  178    0    0 none                 type=wifi
 unifi                 420  210    0    0 none                 type=wifi
-wlan-hinten          1753  135    0    0 none                 type=wifi
+wlan-hinten          1428  120    0    0 none                 type=wifi
