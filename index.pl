@@ -496,6 +496,7 @@ sub wikilink {
 $shortcuts->{'amps on'} = sub {
 	my ($self) = @_;
 
+	unlink($shutdownfile);
 	for my $amp (qw(amp0 amp1 amp2 amp3)) {
 		set_device( $amp, 1, 0 );
 	}
@@ -1023,6 +1024,7 @@ get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
+	unlink($shutdownfile);
 	set_device( $id, 1, 0 );
 
 	$self->redirect_to('/');
