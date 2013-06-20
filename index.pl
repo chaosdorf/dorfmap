@@ -539,7 +539,10 @@ $shortcuts->{shutdown} = sub {
 			spew( "${path}/blue",  "0\n" );
 			system('blinkencontrol-donationprint');
 		}
-		elsif ( $type eq 'printer' and slurp("/srv/www/${device}.ping") == 1 ) {
+		elsif ( $type eq 'printer'
+			and slurp("/srv/www/${device}.ping") == 1
+			and not set_device( $device, 0, 1 ) )
+		{
 			push( @errors, "please turn off printer ${device}" );
 		}
 		else {
@@ -550,7 +553,14 @@ $shortcuts->{shutdown} = sub {
 	system(qw(ssh private@door));
 
 	if ( $? != 0 ) {
-		push( @errors, "private\@door returned $?: $!" );
+		push( @errors,
+			    "CRITICAL: private\@door returned $?: $! --"
+			  . ' please make sure the door is set to non-public' );
+	}
+	elsif (@errors) {
+		unshift( @errors,
+			    'shutdown successful. however, the following '
+			  . 'warnings were generated:' );
 	}
 
 	return @errors;
