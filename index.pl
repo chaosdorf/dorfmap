@@ -526,6 +526,8 @@ $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 	my @errors;
 
+	system('shutdown-announce');
+
 	spew( $shutdownfile, q{} );
 
 	for my $device ( keys %{$coordinates} ) {
