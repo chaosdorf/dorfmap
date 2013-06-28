@@ -13,8 +13,8 @@ Treppe                295  356  432  522 none
 
 infoarea              450  406  900  600 none                 type=infoarea
 
-#temp_hackcenter       840  350    0    0 none                 type=rtext
-#temp_serverraum      1265  400    0    0 none                 type=rtext
+temp_hackcenter       840  350    0    0 none                 type=rtext
+temp_serverraum      1265  400    0    0 none                 type=rtext
 online_guests           0    0    0    0 none                 type=rtext
 
 logo                  224  460    0    0 gpio2                type=light_au area=Schleuse                   LED-Leiste über Chaosdorflogo
