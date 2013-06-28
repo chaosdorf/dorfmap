@@ -21,9 +21,8 @@ my $presets     = {};
 my $remotemap   = {};
 my $shortcuts   = {};
 
-my $automaticfile = '/tmp/automatic_light';
-my $shutdownfile  = '/tmp/is_shutdown';
-my $tsdir         = '/tmp/dorfmap-ts';
+my $shutdownfile = '/tmp/is_shutdown';
+my $tsdir        = '/tmp/dorfmap-ts';
 
 my @layers = qw(control wiki);
 my @sortedpresets;
@@ -314,7 +313,7 @@ sub light_image {
 	my $suffix  = q{};
 
 	if ( $coordinates->{$light}->{type} eq 'light_au' ) {
-		$suffix = ( -e $automaticfile ) ? '_auto' : '_noauto';
+		$suffix = ( -e "/tmp/automatic_${light}" ) ? '_auto' : '_noauto';
 	}
 
 	if ( -e "public/${light}_on.png" and -e "public/${light}_off.png" ) {
@@ -468,7 +467,7 @@ sub sunrisetext {
 	return sprintf(
 		'Aktiv von %s bis %s %s',
 		$sunset->hms, $sunrise->hms,
-		( -e $automaticfile ) ? q{} : '(Automatik deaktiviert)',
+		( -e '/tmp/automatic_outdoor' ) ? q{} : '(Automatik deaktiviert)',
 	);
 
 }
@@ -993,11 +992,11 @@ get '/toggle/:id' => sub {
 	my $id = $self->stash('id');
 
 	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
-		if ( -e $automaticfile ) {
-			unlink($automaticfile);
+		if ( -e "/tmp/automatic_${id}" ) {
+			unlink("/tmp/automatic_${id}");
 		}
 		else {
-			spew( $automaticfile, q{} );
+			spew( "/tmp/automatic_${id}", q{} );
 		}
 		if ( slurp( $gpiomap->{$id} ) == 0 ) {
 			$self->redirect_to('/');
