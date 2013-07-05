@@ -118,7 +118,19 @@ sub load_coordinates {    #{{{
 	$ccontent =~ s{\\\n}{}gs;
 	my @lines = split( /\n/, $ccontent );
 
+	my %section;
+
 	for my $line (@lines) {
+
+		if ($line =~ s{ ^ \[ (.*) \] $ }{$1}ox) {
+			%section = ();
+			for my $elem (split(/\s+/, $line)) {
+				my ($key, $value) = split(/=/, $elem);
+				$section{$key} = $value;
+			}
+			next;
+		}
+
 		my ( $id, $left, $top, $right, $bottom, $controlpath, @rest )
 		  = split( /\s+/, $line );
 		my @text;
@@ -147,6 +159,9 @@ sub load_coordinates {    #{{{
 			else {
 				push( @text, $elem );
 			}
+		}
+		for my $key (keys %section) {
+			$coordinates->{$id}->{$key} = $section{$key};
 		}
 
 		$coordinates->{$id}->{text} = decode( 'UTF-8', join( q{ }, @text ) );

@@ -1,3 +1,5 @@
+[layer=wiki]
+
 Bikeshed              295  526  432  620 none
 dorfdoor               58  420   66  518 none \
   type=door area=Schleuse Tür
@@ -12,16 +14,16 @@ Serverraum           1232  360 1304  451 none
 Transporterraum      1429  250 1737  365 none
 Treppe                295  356  432  522 none
 
+[layer=control]
 infoarea              450  406  900  600 none \
   type=infoarea
 
-temp_hackcenter       840  350    0    0 none \
-  type=rtext
-temp_serverraum      1265  400    0    0 none \
-  type=rtext
-online_guests           0    0    0    0 none \
-  type=rtext
+[layer=control type=rtext]
+temp_hackcenter       840  350    0    0 none
+temp_serverraum      1265  400    0    0 none
+online_guests           0    0    0    0 none
 
+[layer=control]
 logo                  224  460    0    0 gpio2 \
   type=light_au area=Schleuse  LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 gpio27 \
@@ -49,21 +51,23 @@ hackcenter_spots      700  180    0    0 feedback1/6 \
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light delay=2 area=Hackcenter  6x weiße Röhre (Putzbeleuchtung)
 
+[layer=control type=amp delay=4]
 amp0a                 150  590    0    0 amp0 \
-  type=amp delay=4 area=Schleuse   Rear Left
+  area=Schleuse   Rear Left
 amp0b                 350  590    0    0 amp0 \
-  type=amp delay=4 area=Schleuse   Rear Right
+  area=Schleuse   Rear Right
 amp1a                 150   32    0    0 amp1 \
-  type=amp delay=4 area=Lounge     Center + Subwoofer
+  area=Lounge     Center + Subwoofer
 amp2a                 100   32    0    0 amp2 \
-  type=amp delay=4 area=Lounge     Front Left
+  area=Lounge     Front Left
 amp2b                 200   32    0    0 amp2 \
-  type=amp delay=4 area=Lounge     Front Right
+  area=Lounge     Front Right
 amp3a                 990   50    0    0 amp3 \
-  type=amp delay=4 area=Hackcenter Hackcenter Left
+  area=Hackcenter Hackcenter Left
 amp3b                 890  370    0    0 amp3 \
-  type=amp delay=4 area=Hackcenter Hackcenter Right
+  area=Hackcenter Hackcenter Right
 
+[layer=control]
 phone                  46   32    0    0 none \
   type=phone area=Lounge
 
