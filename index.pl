@@ -122,10 +122,10 @@ sub load_coordinates {    #{{{
 
 	for my $line (@lines) {
 
-		if ($line =~ s{ ^ \[ (.*) \] $ }{$1}ox) {
+		if ( $line =~ s{ ^ \[ (.*) \] $ }{$1}ox ) {
 			%section = ();
-			for my $elem (split(/\s+/, $line)) {
-				my ($key, $value) = split(/=/, $elem);
+			for my $elem ( split( /\s+/, $line ) ) {
+				my ( $key, $value ) = split( /=/, $elem );
 				$section{$key} = $value;
 			}
 			next;
@@ -152,7 +152,7 @@ sub load_coordinates {    #{{{
 			path => $controlpath,
 		};
 
-		for my $key (keys %section) {
+		for my $key ( keys %section ) {
 			$coordinates->{$id}->{$key} = $section{$key};
 		}
 
