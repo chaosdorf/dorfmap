@@ -114,7 +114,9 @@ sub get_device {
 #}}}
 
 sub load_coordinates {    #{{{
-	my @lines = split( /\n/, slurp('coordinates') );
+	my $ccontent = slurp('coordinates');
+	$ccontent =~ s{\\\n}{}gs;
+	my @lines = split( /\n/, $ccontent );
 
 	for my $line (@lines) {
 		my ( $id, $left, $top, $right, $bottom, $controlpath, @rest )
