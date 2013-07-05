@@ -838,6 +838,7 @@ get '/list/all' => sub {
 		$devices->{$id}->{status} = status_number($id);
 		$devices->{$id}->{desc}   = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}   = $coordinates->{$id}->{area};
+		$devices->{$id}->{layer}  = $coordinates->{$id}->{layer};
 	}
 
 	$self->respond_to(
