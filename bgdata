@@ -19,10 +19,26 @@ our $VERSION = '0.01';
 my $ua = LWP::UserAgent->new;
 $ua->timeout(2);
 
+my $re_host = qr{
+	^
+	(?<host> \S+ )
+}x;
+
 my $re_pingdev = qr{
 	^
 	(?<host> \S+ )
 	.* type = (?: phone | printer | server | wifi )
+}x;
+
+my $re_pingdev_section = qr{
+	^
+	\[
+	.* type = (?: phone | printer | server | wifi )
+}x;
+
+my $re_other_section = qr{
+	^
+	\[
 }x;
 
 my @printers = ('/tmp/donationprint1/4');
@@ -66,8 +82,21 @@ while ( sleep(120) ) {
 		}
 	}
 
-	for my $line ( read_file('coordinates') ) {
-		if ( $line =~ $re_pingdev ) {
+	my $raw_coordinates = read_file('coordinates');
+	$raw_coordinates =~ s{\\\n}{}gs;
+	my $in_pingdev_section = 0;
+
+	for my $line ( split( /\n/, $raw_coordinates ) ) {
+		if ( $line =~ $re_pingdev_section ) {
+			$in_pingdev_section = 1;
+		}
+		elsif ( $line =~ $re_other_section ) {
+			$in_pingdev_section = 0;
+		}
+		elsif ( $line =~ $re_pingdev ) {
+			ping_host( $+{host} );
+		}
+		elsif ( $in_pingdev_section and $line =~ $re_host ) {
 			ping_host( $+{host} );
 		}
 	}
