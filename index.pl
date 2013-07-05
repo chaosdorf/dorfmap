@@ -24,7 +24,7 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
-my @layers = qw(control wiki);
+my @layers = qw(control caution wiki);
 my @sortedpresets;
 
 #{{{ primitive helpers
@@ -152,6 +152,10 @@ sub load_coordinates {    #{{{
 			path => $controlpath,
 		};
 
+		for my $key (keys %section) {
+			$coordinates->{$id}->{$key} = $section{$key};
+		}
+
 		for my $elem (@rest) {
 			if ( $elem =~ m{ ^ (?<key> [^=]+ ) = (?<value> .+ ) $ }ox ) {
 				$coordinates->{$id}->{ $+{key} } = $+{value};
@@ -159,9 +163,6 @@ sub load_coordinates {    #{{{
 			else {
 				push( @text, $elem );
 			}
-		}
-		for my $key (keys %section) {
-			$coordinates->{$id}->{$key} = $section{$key};
 		}
 
 		$coordinates->{$id}->{text} = decode( 'UTF-8', join( q{ }, @text ) );

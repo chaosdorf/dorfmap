@@ -31,7 +31,7 @@ treppe_w              350  525    0    0 gpio27 \
 lounge_rgb              5  110    0    0 donationprint2 \
   type=blinkenlight area=Lounge  RGB-LED-Streifen
 lounge_roehre         260  180    0    0 donationprint1/12 \
-  type=light delay=2 area=Lounge  6x weiße Röhre (Putzbeleuchtung)
+  type=light delay=2 area=Lounge  layer=caution  6x weiße Röhre (Putzbeleuchtung)
 lounge_weiss          114   80    0    0 donationprint1/9  \
   type=light area=Lounge  Weiße LED über Tisch
 outdoor                 9  438    0    0 gpio17 \
@@ -49,7 +49,7 @@ hackcenter_blau       535  355  894  408 feedback1/5 \
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light area=Hackcenter  LED-Spots über Stoff
 hackcenter_roehre     600  180    0    0 feedback1/7 \
-  type=light delay=2 area=Hackcenter  6x weiße Röhre (Putzbeleuchtung)
+  type=light delay=2 area=Hackcenter layer=caution  6x weiße Röhre (Putzbeleuchtung)
 
 [layer=control type=amp delay=4]
 amp0a                 150  590    0    0 amp0 \

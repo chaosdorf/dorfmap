@@ -49,9 +49,9 @@ Layers
 %	my $type = $coordinates->{$location}->{type} // q{};
 %	if (
 %	($coordinates->{$location}->{x1} + $coordinates->{$location}->{y1} != 0)
-%	and (($type ne q{} and $layer eq 'control') or ($type eq q{} and $layer eq 'wiki'))) {
+%	and (($type ne q{} and $layer ne 'wiki') or ($type eq q{} and $layer eq 'wiki'))) {
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
-% if ($type ne q{} and $layer eq 'control') {
+% if ($type ne q{} and $layer eq $coordinates->{$location}->{layer}) {
 %==	statusimage($type, $location);
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
