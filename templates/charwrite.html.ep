@@ -1,0 +1,18 @@
+% if (@{$errors}) {
+<div class="errors">
+<ul>
+% for my $error (@{$errors}) {
+<li><%= $error %></li>
+% }
+</ul>
+</div>
+% }
+
+<div class="blinkencontrol">
+
+<a class="backlink" href="/">← back</a>
+
+%= form_for "/charwrite/$device" => begin
+text: <%= text_field 'disptext' %>
+</div> <!-- blinkencontrol -->
+%= end

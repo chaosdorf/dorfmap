@@ -805,6 +805,56 @@ get '/blinkencontrol/:device' => sub {
 	);
 };
 
+get '/charwrite/:device' => sub {
+	my ($self) = @_;
+	my $device = $self->stash('device');
+	my $layer = $self->param('layer') // 'control';
+
+	my $text    = $self->param('disptext');
+	my $refresh = 1;
+
+	my $controlpath = $remotemap->{$device};
+
+	if ( not $controlpath ) {
+		$self->render(
+			'overview',
+			version     => $VERSION,
+			coordinates => $coordinates,
+			shortcuts   => [ sort keys %{$shortcuts} ],
+			errors      => ['no such device'],
+			presets     => \@sortedpresets,
+			refresh     => 0,
+			layer       => $layer,
+			layers      => \@layers,
+		);
+		return;
+	}
+
+	if ( defined $text ) {
+		spew( "${controlpath}/text", "${text}\n" );
+
+		#if ( $controlpath =~ m{ donationprint }ox ) {
+		#	system('blinkencontrol-donationprint');
+		#}
+		$refresh = 0;
+	}
+	else {
+		$self->param( disptext => slurp("${controlpath}/text") // q{} );
+	}
+
+	$self->respond_to(
+		any => {
+			template    => 'charwrite',
+			coordinates => {},
+			device      => $device,
+			errors      => [],
+			version     => $VERSION,
+			refresh     => $refresh,
+		},
+		json => { json => { text => $self->param('text'), } },
+	);
+};
+
 get '/get/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
