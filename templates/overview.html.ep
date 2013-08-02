@@ -25,7 +25,6 @@
 <a href="/m/presets">Presets</a>
 </div>
 <div class="dropdownmenu">
-<a href="/presets">manage</a>
 % for my $preset (@{$presets}) {
 <a href="<%= $preset->[0] %>"><%= $preset->[1] %></a>
 % }
