@@ -14,7 +14,16 @@
 #define MYADDRESS (0x0003)
 
 volatile uint8_t rcvbuf[32];
-volatile uint8_t dispbuf[32];
+volatile uint8_t dispbuf[32] = {
+	0x01, 0x01, 0x01, 0xf1,
+	0x02, 0x02, 0x02, 0xf2,
+	0x04, 0x04, 0x04, 0xf4,
+	0x08, 0x08, 0x08, 0xf8,
+	0x10, 0x10, 0x10, 0x10,
+	0x20, 0x20, 0x20, 0x20,
+	0x40, 0x40, 0x40, 0x40,
+	0x80, 0x80, 0x80, 0x80
+};
 
 volatile uint16_t address;
 
@@ -31,8 +40,9 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
+	DDRA = _BV(PA0) | _BV(PA1);
 	DDRB = 0xff;
-	DDRD = _BV(DDD0) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
+	DDRD = _BV(DDD0) | _BV(DDD1);
 
 	PORTB = 0xff;
 	PORTD = _BV(PD2) | _BV(PD3);
@@ -55,28 +65,32 @@ int main (void)
 		}
 
 		PORTB = 0xff;
-		PORTD = _BV(PD0) | _BV(PD2) | _BV(PD3);
+		PORTA = 0;
+		PORTD = _BV(PA0) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[0];
 
 		for (i = 0; i < 16; i++)
 			asm("wdr");
 
 		PORTB = 0xff;
-		PORTD = _BV(PD2) | _BV(PD3) | _BV(PD4);
+		PORTA = 0;
+		PORTD = _BV(PA1) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[1];
 
 		for (i = 0; i < 16; i++)
 			asm("wdr");
 
 		PORTB = 0xff;
-		PORTD = _BV(PD2) | _BV(PD3) | _BV(PD5);
+		PORTA = _BV(PD1);
+		PORTD = _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[2];
 
 		for (i = 0; i < 16; i++)
 			asm("wdr");
 
 		PORTB = 0xff;
-		PORTD = _BV(PD2) | _BV(PD3) | _BV(PD6);
+		PORTA = _BV(PD0);
+		PORTD = _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[3];
 
 		for (i = 0; i < 16; i++)
