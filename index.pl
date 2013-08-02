@@ -25,7 +25,7 @@ my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
-my (@dd_shortcuts, @dd_presets);
+my ( @dd_shortcuts, @dd_presets );
 
 #{{{ primitive helpers
 
@@ -134,7 +134,6 @@ sub load_coordinates {    #{{{
 		my ( $id, $left, $top, $right, $bottom, $controlpath, @rest )
 		  = split( /\s+/, $line );
 		my @text;
-		my $type;
 
 		if ( not $id or $id =~ m{^#}o ) {
 			next;
@@ -184,9 +183,14 @@ sub load_presets {
 	if ( -e 'presets.db' ) {
 		$presets = lock_retrieve('presets.db');
 
-		@dd_presets = (['/presets', 'manage'], map { [ "/presets/apply/$_",
-		$_ ] } (reverse sort { $presets->{$a}->{timestamp} <=>
-		$presets->{$b}->{timestamp} } ( keys %{$presets} ) ));
+		@dd_presets = (
+			[ '/presets', 'manage' ],
+			map { [ "/presets/apply/$_", $_ ] } (
+				reverse sort {
+					$presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp}
+				} ( keys %{$presets} )
+			)
+		);
 	}
 
 	return;
@@ -511,7 +515,7 @@ sub wikilink {
 #{{{ Shortcuts
 
 sub make_shortcuts {
-	@dd_shortcuts = map { [ "/action/$_", $_ ] } (sort keys %{$shortcuts});
+	@dd_shortcuts = map { [ "/action/$_", $_ ] } ( sort keys %{$shortcuts} );
 }
 
 $shortcuts->{'amps on'} = sub {
@@ -663,7 +667,6 @@ helper statustext => sub {
 };
 
 #}}}
-
 
 #{{{ Routes
 
