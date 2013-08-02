@@ -428,6 +428,37 @@ sub pingdevice {
 
 }
 
+sub pump_image {
+	my ($id) = @_;
+
+	my $image = 'pump.png';
+	my $state = pump_status($id);
+
+	if ( $state == 1 ) {
+		$image = 'pump_on.png';
+	}
+	elsif ( $state == 0 ) {
+		$image = 'pump_off.png';
+	}
+
+	return $image;
+}
+
+sub pump_status {
+	my ($id) = @_;
+
+	return get_device($id);
+}
+
+sub pump {
+	my ($id) = @_;
+
+	return
+	  sprintf(
+'<a href="/toggle/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		$id, pump_image($id), 'pump', 'pump' );
+}
+
 sub status_number {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
@@ -438,6 +469,7 @@ sub status_number {
 		when ('door') {
 			return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 )
 		}
+		when ('pump') { return pump_status($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_status($id)
@@ -453,6 +485,7 @@ sub status_image {
 
 	given ($type) {
 		when ('amp') { return amp_image($id) }
+		when ('pump') { return pump_image($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_image( $type, $id )
@@ -643,6 +676,7 @@ helper statusimage => sub {
 		when ('light')        { return light( $location, 1 ) }
 		when ('light_au')     { return light( $location, 2 ) }
 		when ('light_ro')     { return light( $location, 0 ) }
+		when ('pump')         { return pump($location) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice( $type, $location, $location )
 		}
