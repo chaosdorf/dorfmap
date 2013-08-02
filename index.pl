@@ -24,8 +24,8 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
-my @layers = qw(control caution wiki);
-my @sortedpresets;
+my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
+my (@dd_shortcuts, @dd_presets);
 
 #{{{ primitive helpers
 
@@ -184,9 +184,9 @@ sub load_presets {
 	if ( -e 'presets.db' ) {
 		$presets = lock_retrieve('presets.db');
 
-		@sortedpresets = reverse
-		  sort { $presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp} }
-		  ( keys %{$presets} );
+		@dd_presets = (['/presets', 'manage'], map { [ "/presets/apply/$_",
+		$_ ] } (reverse sort { $presets->{$a}->{timestamp} <=>
+		$presets->{$b}->{timestamp} } ( keys %{$presets} ) ));
 	}
 
 	return;
@@ -510,6 +510,10 @@ sub wikilink {
 
 #{{{ Shortcuts
 
+sub make_shortcuts {
+	@dd_shortcuts = map { [ "/action/$_", $_ ] } (sort keys %{$shortcuts});
+}
+
 $shortcuts->{'amps on'} = sub {
 	my ($self) = @_;
 
@@ -660,6 +664,7 @@ helper statustext => sub {
 
 #}}}
 
+
 #{{{ Routes
 
 get '/' => sub {
@@ -676,12 +681,12 @@ get '/' => sub {
 		'overview',
 		version     => $VERSION,
 		coordinates => $coordinates,
-		shortcuts   => [ sort keys %{$shortcuts} ],
+		shortcuts   => \@dd_shortcuts,
 		errors      => [ $self->param('error') || () ],
-		presets     => \@sortedpresets,
+		presets     => \@dd_presets,
 		refresh     => 1,
 		layer       => $layer,
-		layers      => \@layers,
+		layers      => \@dd_layers,
 	);
 	return;
 };
@@ -701,12 +706,12 @@ get '/action/:action' => sub {
 			'overview',
 			version     => $VERSION,
 			coordinates => $coordinates,
-			shortcuts   => [ sort keys %{$shortcuts} ],
+			shortcuts   => \@dd_shortcuts,
 			errors      => \@errors,
-			presets     => \@sortedpresets,
+			presets     => \@dd_presets,
 			refresh     => 0,
 			layer       => $layer,
-			layers      => \@layers,
+			layers      => \@dd_layers,
 		);
 	}
 	else {
@@ -753,12 +758,12 @@ get '/blinkencontrol/:device' => sub {
 			'overview',
 			version     => $VERSION,
 			coordinates => $coordinates,
-			shortcuts   => [ sort keys %{$shortcuts} ],
+			shortcuts   => \@dd_shortcuts,
 			errors      => ['no such device'],
-			presets     => \@sortedpresets,
+			presets     => \@dd_presets,
 			refresh     => 0,
 			layer       => $layer,
-			layers      => \@layers,
+			layers      => \@dd_layers,
 		);
 		return;
 	}
@@ -820,12 +825,12 @@ get '/charwrite/:device' => sub {
 			'overview',
 			version     => $VERSION,
 			coordinates => $coordinates,
-			shortcuts   => [ sort keys %{$shortcuts} ],
+			shortcuts   => \@dd_shortcuts,
 			errors      => ['no such device'],
-			presets     => \@sortedpresets,
+			presets     => \@dd_presets,
 			refresh     => 0,
 			layer       => $layer,
-			layers      => \@layers,
+			layers      => \@dd_layers,
 		);
 		return;
 	}
@@ -1006,7 +1011,7 @@ any '/presets' => sub {
 		coordinates => {},
 		errors      => [],
 		presetdata  => $presets,
-		presets     => \@sortedpresets,
+		presets     => \@dd_presets,
 		toggles     => \@toggles,
 		version     => $VERSION,
 		refresh     => 0,
@@ -1124,6 +1129,7 @@ app->config(
 app->defaults( layout => 'default' );
 
 load_coordinates();
+make_shortcuts();
 app->types->type( txt  => 'text/plain; charset=utf-8' );
 app->types->type( json => 'application/json; charset=utf-8' );
 app->start;

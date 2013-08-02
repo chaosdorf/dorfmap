@@ -11,34 +11,34 @@
 <div class="dropdowncontainer">
 <div class="dropdown">
 <div class="dropdownheader">
-Actions
+<a href="/m/actions">Actions</a>
 </div>
 <div class="dropdownmenu">
 % for my $shortcut (@{$shortcuts}) {
-<a href="/action/<%= $shortcut %>"><%= $shortcut %></a>
+<a href="<%= $shortcut->[0] %>"><%= $shortcut->[1] %></a>
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
 
 <div class="dropdown">
 <div class="dropdownheader">
-Presets
+<a href="/m/presets">Presets</a>
 </div>
 <div class="dropdownmenu">
 <a href="/presets">manage</a>
 % for my $preset (@{$presets}) {
-<a href="/presets/apply/<%= $preset %>"><%= $preset %></a>
+<a href="<%= $preset->[0] %>"><%= $preset->[1] %></a>
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
 
 <div class="dropdown">
 <div class="dropdownheader">
-Layers
+<a href="/m/layers">Layers</a>
 </div>
 <div class="dropdownmenu">
 % for my $l (@{$layers}) {
-<a href="/?layer=<%= $l %>"><%= $l %></a>
+<a href="<%= $l->[0] %>"><%= $l->[1] %></a>
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
