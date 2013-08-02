@@ -993,6 +993,48 @@ get '/list/writables' => sub {
 	return;
 };
 
+get '/m/:name' => sub {
+	my ($self) = @_;
+	my $name = $self->stash('name');
+
+	given($name) {
+		when ('actions') {
+			$self->render('mlist',
+				label => 'Actions',
+				items => \@dd_shortcuts,
+				coordinates => {},
+				errors      => [],
+				version     => $VERSION,
+				refresh     => 0,
+			);
+		}
+		when ('presets') {
+			$self->render('mlist',
+				label => 'Presets',
+				items => \@dd_presets,
+				coordinates => {},
+				errors      => [],
+				version     => $VERSION,
+				refresh     => 0,
+			);
+		}
+		when ('layers') {
+			$self->render('mlist',
+				label => 'Layers',
+				items => \@dd_layers,
+				coordinates => {},
+				errors      => [],
+				version     => $VERSION,
+				refresh     => 0,
+			);
+		}
+		default {
+			$self->redirect_to('/?error=no+such+menu');
+		}
+	}
+	return;
+};
+
 any '/presets' => sub {
 	my ($self) = @_;
 	my $action = $self->param('action') // q{};

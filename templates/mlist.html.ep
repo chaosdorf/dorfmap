@@ -1,0 +1,13 @@
+<div class="mlist">
+
+<a class="backlink" href="/">← back</a>
+
+<h1><%= $label %></h1>
+
+<ul>
+% for my $item (@{$items}) {
+<li> <a href="<%= $item->[0] %>"> <%= $item->[1] %> </a> </li>
+% }
+</ul>
+
+</div> <!-- mlist -->
