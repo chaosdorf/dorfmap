@@ -50,7 +50,7 @@ function updatecolor() {
 %	[255, 255, 0], [0, 255, 255], [255, 0, 255],
 %	[255, 255, 255], [0, 0, 0]) {
 <a class="preset" style="background-color: rgb(<%= join(', ', @{$preset}) %>)"
-href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>&amp;opmode=steady">&nbsp;</a>
+href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>&amp;speed=210">&nbsp;</a>
 % }
 
 <div style="clear: both"> </div>
@@ -63,16 +63,10 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 <tr><th>red</th><td> <%= range_field red => 0, min => 0, max => 255, onchange => 'updatered(this.value)' %></td></tr>
 <tr><th>green</th><td> <%= range_field green => 255, min => 0, max => 255, onchange => 'updategreen(this.value)' %></td></tr>
 <tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255, onchange => 'updateblue(this.value)' %></td></tr>
-<tr><th>speed</th><td> <%= range_field speed => 16, min => 0, max => 31 %></td></tr>
+<tr><th>speed</th><td> <%= range_field speed => 16, min => 0, max => 255 %></td></tr>
 </table>
-<%= radio_button opmode => 'steady' %> steady<br/>
-<%= radio_button opmode => 'blinkrgb' %> RGB (hard transition)<br/>
-<%= radio_button opmode => 'blinkrand' %> random (hard transition)<br/>
-<%= radio_button opmode => 'blinkonoff' %> blink on/off<br/>
-<%= radio_button opmode => 'fadetosteady' %> fade to new color<br/>
-<%= radio_button opmode => 'fadergb' %> RGB (fading)<br/>
-<%= radio_button opmode => 'faderand' %> random (fading)<br/>
-<%= radio_button opmode => 'fadeonoff' %> fade on/off<br/>
+Upload custom animation:
+<%= text_field 'command' %><br/>
 %= submit_button 'Apply';
 %= end
 </div> <!-- blinkencontrol -->

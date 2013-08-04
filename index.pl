@@ -593,10 +593,7 @@ $shortcuts->{shutdown} = sub {
 
 		if ( $type eq 'blinkenlight' ) {
 			my $path = $remotemap->{$device};
-			spew( "${path}/mode",  "0\n" );
-			spew( "${path}/red",   "0\n" );
-			spew( "${path}/green", "0\n" );
-			spew( "${path}/blue",  "0\n" );
+			spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n1\n" );
 			system('blinkencontrol-donationprint');
 		}
 		elsif ( $type eq 'printer'
@@ -765,29 +762,20 @@ get '/blinkencontrol/:device' => sub {
 	my $red     = $self->param('red');
 	my $green   = $self->param('green');
 	my $blue    = $self->param('blue');
-	my $speed   = $self->param('speed');
+	my $speed   = $self->param('speed') // 254;
 	my $opmode  = $self->param('opmode');
+	my $command = $self->param('command') // q{};
 	my $rawmode = 0;
 	my $refresh = 1;
 
 	my $controlpath = $remotemap->{$device};
 
-	my @opmodes
-	  = (
-		qw(steady blinkrgb blinkrand blinkonoff fadetosteady fadergb faderand fadeonoff)
-	  );
-
-	if ($opmode) {
-		for my $i ( 0 .. $#opmodes ) {
-			if ( $opmode eq $opmodes[$i] ) {
-				$rawmode = $i << 5;
-				last;
-			}
-		}
-	}
-
 	if ( defined $speed ) {
-		$rawmode |= ( 31 - $speed );
+		$speed = 255 - $speed;
+
+		if ($speed == 0) {
+			$speed = 1;
+		}
 	}
 
 	if ( not $controlpath ) {
@@ -805,25 +793,24 @@ get '/blinkencontrol/:device' => sub {
 		return;
 	}
 
-	if ( defined $red and defined $green and defined $blue and defined $opmode )
+	if (length($command) == 0 and defined $red and defined $green and defined $blue and defined $speed)
 	{
-		spew( "${controlpath}/mode",  "${rawmode}\n" );
-		spew( "${controlpath}/red",   "${red}\n" );
-		spew( "${controlpath}/green", "${green}\n" );
-		spew( "${controlpath}/blue",  "${blue}\n" );
-		if ( $controlpath =~ m{ donationprint }ox ) {
-			system('blinkencontrol-donationprint');
-		}
+		$command = join(',', $speed, $red, $green, $blue);
 		$refresh = 0;
 	}
-	else {
-		my $mode = slurp("${controlpath}/mode") // 0;
 
-		$self->param( red   => slurp("${controlpath}/red")   // 0 );
-		$self->param( green => slurp("${controlpath}/green") // 0 );
-		$self->param( blue  => slurp("${controlpath}/blue")  // 0 );
-		$self->param( speed => 31 - ( $mode & 0x1f ) );
-		$self->param( opmode => $opmodes[ ( $mode & 0xe0 ) >> 5 ] );
+	if (length($command)) {
+		my $ctext = q{};
+		my $id = 0;
+
+		for my $part (split(/ /, $command)) {
+			my ($speed, $red, $green, $blue) = split(/,/, $part);
+			$ctext .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n1\npush\n";
+			$id++;
+		}
+
+		spew( "${controlpath}/commands", $ctext );
+		system('blinkencontrol-donationprint');
 	}
 
 	$self->respond_to(
@@ -837,11 +824,11 @@ get '/blinkencontrol/:device' => sub {
 		},
 		json => {
 			json => {
-				red    => $self->param('red'),
-				green  => $self->param('green'),
-				blue   => $self->param('blue'),
-				speed  => $self->param('speed'),
-				opmode => $self->param('opmode'),
+				red    => 0,
+				green  => 0,
+				blue   => 0,
+				speed  => 0,
+				opmode => 0,
 			}
 		},
 	);
