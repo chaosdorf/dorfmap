@@ -23,20 +23,8 @@
 
 #define MYADDRESS (0x0001)
 
-#define OM_M_MODE  ( _BV(7) | _BV(6) | _BV(5) )
-#define OM_M_SPEED ( _BV(0) | _BV(1) | _BV(2) | _BV(3) | _BV(4) )
-
-#define OM_MODE_STEADY        (     0  |     0  |     0  )
-#define OM_MODE_BLINKRGB      (     0  |     0  | _BV(5) )
-#define OM_MODE_BLINKRAND     (     0  | _BV(6) |     0  )
-#define OM_MODE_BLINKONOFF    (     0  | _BV(6) | _BV(5) )
-#define OM_MODE_FADEANY       ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADETOSTEADY  ( _BV(7) |     0  |     0  )
-#define OM_MODE_FADERGB       ( _BV(7) |     0  | _BV(5) )
-#define OM_MODE_FADERAND      ( _BV(7) | _BV(6) |     0  )
-#define OM_MODE_FADEONOFF     ( _BV(7) | _BV(6) | _BV(5) )
-
-volatile uint8_t opmode = 0;
+volatile uint8_t anim_slot = 0;
+volatile uint8_t delay = 0;
 volatile uint8_t red = 0;
 volatile uint8_t green = 0;
 volatile uint8_t blue = 0;
@@ -45,9 +33,10 @@ volatile uint8_t want_red = 0;
 volatile uint8_t want_green = 0;
 volatile uint8_t want_blue = 0;
 
-volatile uint16_t step = 0;
-volatile uint8_t sstep = 0;
-volatile uint8_t fstep = 0;
+volatile uint8_t step = 0;
+volatile uint16_t animstep = 0;
+
+volatile uint8_t seq[97];
 
 const uint8_t pwmtable[32] PROGMEM = {
 	0, 1, 2, 2, 2, 3, 3, 4, 5, 6, 7, 8, 10, 11, 13, 16, 19, 23,
@@ -86,6 +75,10 @@ int main (void)
 
 	sei();
 
+	seq[0] = 1;
+	seq[1] = seq[2] = seq[3] = 0;
+	seq[96] = 0;
+
 	while (1) {
 		MCUCR |= _BV(SE);
 		asm("sleep");
@@ -117,15 +110,17 @@ ISR(INT0_vect)
 {
 	static uint16_t address;
 	static uint8_t rcvopmode = 0;
-	static uint8_t rcvred = 0;
-	static uint8_t rcvgreen = 0;
-	static uint8_t rcvblue = 0;
+	static uint8_t rcvdelay  = 0;
+	static uint8_t rcvred    = 0;
+	static uint8_t rcvgreen  = 0;
+	static uint8_t rcvblue   = 0;
 
 	// disable fading etc. during receive
 	TIMSK = 0;
 	if (CLOCK_HI) {
 		// rising clock: read data
-		rcvopmode  = (rcvopmode  << 1) | (rcvred   >> 7);
+		rcvopmode  = (rcvopmode  << 1) | (rcvdelay >> 7);
+		rcvdelay   = (rcvdelay   << 1) | (rcvred   >> 7);
 		rcvred     = (rcvred     << 1) | (rcvgreen >> 7);
 		rcvgreen   = (rcvgreen   << 1) | (rcvblue  >> 7);
 		rcvblue    = (rcvblue    << 1) | (address  >> 15);
@@ -140,22 +135,16 @@ ISR(INT0_vect)
 	}
 	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
-		if (address == MYADDRESS) {
+		if ((address == MYADDRESS) && (rcvopmode < 24)) {
 
-			opmode = rcvopmode;
-			red = rcvred;
-			green = rcvgreen;
-			blue = rcvblue;
+			seq[ rcvopmode * 4 + 0 ] = rcvdelay;
+			seq[ rcvopmode * 4 + 1 ] = rcvred;
+			seq[ rcvopmode * 4 + 2 ] = rcvgreen;
+			seq[ rcvopmode * 4 + 3 ] = rcvblue;
 
-			if (opmode & OM_MODE_FADEANY) {
-				step = fstep = sstep = 0;
-			}
-			else {
-				ORED   = red;
-				OGREEN = green;
-				OBLUE  = blue;
-				apply_pwm();
-			}
+			seq[96] = rcvopmode;
+
+			step = animstep = 0;
 		}
 
 		TIMSK = _BV(TOIE0);
@@ -164,18 +153,18 @@ ISR(INT0_vect)
 
 ISR(TIMER0_OVF_vect)
 {
+	static uint8_t software_prescaler = 0;
+
+	if (software_prescaler++ != 8)
+		return;
+	software_prescaler = 0;
+
 	step++;
 	if ((step % 64) == 0) {
-		fstep++;
-	}
-	if (step == 4096) {
-		step = 0;
-		sstep++;
+		animstep++;
 	}
 
-	if (( fstep == ( (opmode & OM_M_SPEED) + 1 ) )
-			&& (opmode & OM_MODE_FADEANY ) ) {
-		fstep = 0;
+	if ((step % delay) == 0) {
 		if (want_red > ORED)
 			ORED++;
 		else if (want_red < ORED)
@@ -191,81 +180,17 @@ ISR(TIMER0_OVF_vect)
 		apply_pwm();
 	}
 
-	if (sstep == ( ( (opmode & OM_M_SPEED) + 1 ) * 7 ) ) {
-		sstep = 0;
-		switch (opmode & OM_M_MODE) {
-			case OM_MODE_BLINKRGB:
-				if (!OBLUE && ORED && !OGREEN)
-					OGREEN = 255;
-				else if (ORED && OGREEN)
-					ORED = 0;
-				else if (OGREEN && !OBLUE)
-					OBLUE = 255;
-				else if (OGREEN && OBLUE)
-					OGREEN = 0;
-				else if (OBLUE && !ORED)
-					ORED = 255;
-				else if (OBLUE && ORED)
-					OBLUE = 0;
-				else
-					ORED = 255;
-				apply_pwm();
-				break;
-			case OM_MODE_BLINKRAND:
-				ORED   = pwmtable[ rand() / 8 ];
-				OGREEN = pwmtable[ rand() / 8 ];
-				OBLUE  = pwmtable[ rand() / 8 ];
-				apply_pwm();
-				break;
-			case OM_MODE_BLINKONOFF:
-				if (red == ORED) {
-					ORED = OGREEN = OBLUE = 0;
-				}
-				else {
-					ORED = red;
-					OGREEN = green;
-					OBLUE = blue;
-				}
-				apply_pwm();
-				break;
-			case OM_MODE_FADEONOFF:
-				if (red == ORED) {
-					want_red = want_green = want_blue = 0;
-				}
-				else {
-					want_red = red;
-					want_green = green;
-					want_blue = blue;
-				}
-				apply_pwm();
-				break;
-			case OM_MODE_FADERGB:
-				if (!want_blue && want_red && !want_green)
-					want_green = 255;
-				else if (want_red && want_green)
-					want_red = 0;
-				else if (want_green && !want_blue)
-					want_blue = 255;
-				else if (want_green && want_blue)
-					want_green = 0;
-				else if (want_blue && !want_red)
-					want_red = 255;
-				else if (want_blue && want_red)
-					want_blue = 0;
-				else
-					want_red = 255;
-				break;
-			case OM_MODE_FADERAND:
-				want_red = pwmtable[ rand() / 8 ];
-				want_green = pwmtable[ rand() / 8 ];
-				want_blue = pwmtable[ rand() / 8 ];
-				break;
-			case OM_MODE_FADETOSTEADY:
-				want_red = red;
-				want_green = green;
-				want_blue = blue;
-				break;
-		}
+	if (animstep == ((uint16_t) delay) << 2 ) {
+		animstep   = 0;
+		delay      = seq[ anim_slot * 4 + 0 ];
+		want_red   = seq[ anim_slot * 4 + 1 ];
+		want_green = seq[ anim_slot * 4 + 2 ];
+		want_blue  = seq[ anim_slot * 4 + 3 ];
+
+		if (anim_slot >= seq[96])
+			anim_slot = 0;
+		else
+			anim_slot++;
 	}
 #ifdef DEBUG
 	if (DATA_BIT)
