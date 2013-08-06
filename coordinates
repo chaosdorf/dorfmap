@@ -81,8 +81,6 @@ clc1160               842   60    0    0 none \
   type=printer area=Hackcenter
 hp2100                386   60    0    0 donationprint1/4 \
   type=printer area=Lounge HP2100 (geht nach 20min automatisch aus)
-hp4500                420   60    0    0 none \
-  type=printer area=Lounge
 
 dashpi                883  300    0    0 none \
   type=server area=Hackcenter
