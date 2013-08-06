@@ -41,7 +41,10 @@ my $re_other_section = qr{
 	\[
 }x;
 
-my @autooff = ( '/tmp/donationprint1/4', '/tmp/donationprint1/11' );
+my %autooff = (
+	'/tmp/donationprint1/4'  => 20,
+	'/tmp/donationprint1/11' =>  5,
+);
 
 sub slurp {
 	my ($file) = @_;
@@ -71,11 +74,11 @@ sub ping_host {
 
 while ( sleep(120) ) {
 
-	for my $device (@autooff) {
+	for my $device (keys %autooff) {
 		if ( -e $device and slurp($device) == 1 ) {
 			my $now = DateTime->now( time_zone => 'Europe/Berlin' )->epoch;
 			my $modified = ( stat($device) )[9];
-			if ( ( $now - $modified ) > ( 20 * 60 ) ) {
+			if ( ( $now - $modified ) > ( $autooff{$device} * 60 ) ) {
 				spew( $device, "0\n" );
 				system('/usr/local/bin/avrshift-donationprint');
 			}
