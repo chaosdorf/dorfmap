@@ -65,10 +65,29 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 <tr><th>blue</th><td> <%= range_field blue => 255, min => 0, max => 255, onchange => 'updateblue(this.value)' %></td></tr>
 <tr><th>speed</th><td> <%= range_field speed => 16, min => 0, max => 255 %></td></tr>
 </table>
-Upload custom animation:
-<%= text_field 'command' %><br/>
+
+<table>
+<tr>
+<td>Upload custom animation:</td>
+<td><%= text_field 'command', size => 70 %></td>
+</tr><tr>
+<td>(optional) save as:</td>
+<td><%= text_field 'cmdname' %></td>
+</tr>
+</table>
+
 %= submit_button 'Apply';
 %= end
+
+saved presets:<br/>
+<table>
+% for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
+<tr>
+<td> <a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>"><%= $cb_preset %></a> </td>
+<td><%= $bc_presets->{blinkencontrol1}->{$cb_preset} %></td>
+</tr>
+% }
+</table>
 </div> <!-- blinkencontrol -->
 
 

@@ -177,7 +177,17 @@ sub load_coordinates {    #{{{
 	return;
 }    #}}}
 
-#{{{ presets
+#{{{ storables
+
+sub load_blinkencontrol {
+	my $ret = {};
+
+	if ( -e 'blinkencontrol.db' ) {
+		$ret = lock_retrieve('blinkencontrol.db');
+	}
+
+	return $ret;
+}
 
 sub load_presets {
 	if ( -e 'presets.db' ) {
@@ -192,6 +202,14 @@ sub load_presets {
 			)
 		);
 	}
+
+	return;
+}
+
+sub save_blinkencontrol {
+	my ($bc_presets) = @_;
+
+	lock_nstore( $bc_presets, 'blinkencontrol.db' );
 
 	return;
 }
@@ -484,7 +502,7 @@ sub status_image {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp') { return amp_image($id) }
+		when ('amp')  { return amp_image($id) }
 		when ('pump') { return pump_image($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
 		when ( [qw[phone printer server wifi]] ) {
@@ -765,15 +783,18 @@ get '/blinkencontrol/:device' => sub {
 	my $speed   = $self->param('speed') // 254;
 	my $opmode  = $self->param('opmode');
 	my $command = $self->param('command') // q{};
+	my $cmdname = $self->param('cmdname') // q{};
 	my $rawmode = 0;
 	my $refresh = 1;
+
+	my $bc_presets = load_blinkencontrol();
 
 	my $controlpath = $remotemap->{$device};
 
 	if ( defined $speed ) {
 		$speed = 255 - $speed;
 
-		if ($speed == 0) {
+		if ( $speed == 0 ) {
 			$speed = 1;
 		}
 	}
@@ -793,24 +814,34 @@ get '/blinkencontrol/:device' => sub {
 		return;
 	}
 
-	if (length($command) == 0 and defined $red and defined $green and defined $blue and defined $speed)
+	if (    length($command) == 0
+		and defined $red
+		and defined $green
+		and defined $blue
+		and defined $speed )
 	{
-		$command = join(',', $speed, $red, $green, $blue);
+		$command = join( ',', $speed, $red, $green, $blue );
 		$refresh = 0;
 	}
 
-	if (length($command)) {
+	if ( length($command) ) {
 		my $ctext = q{};
-		my $id = 0;
+		my $id    = 0;
 
-		for my $part (split(/ /, $command)) {
-			my ($speed, $red, $green, $blue) = split(/,/, $part);
-			$ctext .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n1\npush\n";
+		for my $part ( split( / /, $command ) ) {
+			my ( $speed, $red, $green, $blue ) = split( /,/, $part );
+			$ctext
+			  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n1\npush\n";
 			$id++;
 		}
 
 		spew( "${controlpath}/commands", $ctext );
 		system('blinkencontrol-donationprint');
+
+		if ( length($cmdname) ) {
+			$bc_presets->{blinkencontrol1}->{$cmdname} = $command;
+			save_blinkencontrol($bc_presets);
+		}
 	}
 
 	$self->respond_to(
@@ -821,6 +852,7 @@ get '/blinkencontrol/:device' => sub {
 			errors      => [],
 			version     => $VERSION,
 			refresh     => $refresh,
+			bc_presets  => $bc_presets,
 		},
 		json => {
 			json => {
@@ -984,11 +1016,12 @@ get '/m/:name' => sub {
 	my ($self) = @_;
 	my $name = $self->stash('name');
 
-	given($name) {
+	given ($name) {
 		when ('actions') {
-			$self->render('mlist',
-				label => 'Actions',
-				items => \@dd_shortcuts,
+			$self->render(
+				'mlist',
+				label       => 'Actions',
+				items       => \@dd_shortcuts,
 				coordinates => {},
 				errors      => [],
 				version     => $VERSION,
@@ -996,9 +1029,10 @@ get '/m/:name' => sub {
 			);
 		}
 		when ('presets') {
-			$self->render('mlist',
-				label => 'Presets',
-				items => \@dd_presets,
+			$self->render(
+				'mlist',
+				label       => 'Presets',
+				items       => \@dd_presets,
 				coordinates => {},
 				errors      => [],
 				version     => $VERSION,
@@ -1006,9 +1040,10 @@ get '/m/:name' => sub {
 			);
 		}
 		when ('layers') {
-			$self->render('mlist',
-				label => 'Layers',
-				items => \@dd_layers,
+			$self->render(
+				'mlist',
+				label       => 'Layers',
+				items       => \@dd_layers,
 				coordinates => {},
 				errors      => [],
 				version     => $VERSION,
