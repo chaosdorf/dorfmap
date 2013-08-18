@@ -24,6 +24,8 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
+my $auto_prefix = '/etc/automatic_light_control';
+
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
 
@@ -513,10 +515,13 @@ sub status_image {
 	return q{};
 }
 
-sub sunrisetext {
+sub auto_text {
+
+	my ($id) = @_;
 
 	my $now = DateTime->now( time_zone => 'Europe/Berlin' );
-	my $delta = DateTime::Duration->new( minutes => 20 );
+	my $delta = DateTime::Duration->new(
+		minutes => ( slurp("${auto_prefix}/${id}") || 0 ) );
 
 	my ( $rise_str, $set_str )
 	  = sunrise( $now->year, $now->month, $now->day, 6.47, 51.14,
@@ -538,9 +543,10 @@ sub sunrisetext {
 	$sunset->subtract_duration($delta);
 
 	return sprintf(
-		'Aktiv von %s bis %s %s',
-		$sunset->hms, $sunrise->hms,
-		( -e '/tmp/automatic_outdoor' ) ? q{} : '(Automatik deaktiviert)',
+		'Automatik: %s → %s %s',
+		$sunset->strftime('%H:%M'),
+		$sunrise->strftime('%H:%M'),
+		( -e "/tmp/automatic_${id}" ) ? q{} : '(deaktiviert)',
 	);
 
 }
@@ -709,8 +715,9 @@ helper statustext => sub {
 	if ( $type eq 'infoarea' ) {
 		return infotext();
 	}
-	if ( $location eq 'outdoor' ) {
-		return $coordinates->{$location}->{text} . '<br/>' . sunrisetext();
+	if ( $type eq 'light_au' ) {
+		return $coordinates->{$location}->{text} . '<br/>'
+		  . auto_text($location);
 	}
 	return $coordinates->{$location}->{text};
 };
