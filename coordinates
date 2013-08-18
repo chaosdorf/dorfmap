@@ -33,7 +33,7 @@ lounge_7seg             5  70     0    0 donationprint3 \
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light area=Lounge  Grüner LED-Strahler
 lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump area=Lounge layer=caution  Bewässerungspumpe
+  type=pump area=Lounge   Bewässerungspumpe
 lounge_rgb              5  110    0    0 donationprint2 \
   type=blinkenlight area=Lounge  RGB-LED-Streifen
 lounge_roehre         260  180    0    0 donationprint1/12 \
