@@ -792,7 +792,6 @@ get '/blinkencontrol/:device' => sub {
 	my $command = $self->param('command') // q{};
 	my $cmdname = $self->param('cmdname') // q{};
 	my $rawmode = 0;
-	my $refresh = 1;
 
 	my $bc_presets = load_blinkencontrol();
 
@@ -828,7 +827,6 @@ get '/blinkencontrol/:device' => sub {
 		and defined $speed )
 	{
 		$command = join( ',', $speed, $red, $green, $blue );
-		$refresh = 0;
 	}
 
 	if ( length($command) ) {
@@ -858,7 +856,7 @@ get '/blinkencontrol/:device' => sub {
 			device      => $device,
 			errors      => [],
 			version     => $VERSION,
-			refresh     => $refresh,
+			refresh     => 0,
 			bc_presets  => $bc_presets,
 		},
 		json => {
