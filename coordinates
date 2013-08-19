@@ -24,9 +24,9 @@ temp_serverraum      1265  400    0    0 none
 online_guests           0    0    0    0 none
 
 [layer=control]
-logo                  224  460    0    0 gpio2 \
+logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au area=Schleuse  LED-Leiste über Chaosdorflogo
-treppe_w              350  525    0    0 gpio27 \
+treppe_w              350  525    0    0 feedback2/bin6 \
   type=light area=Lounge  Kaltweiße LEDs
 lounge_7seg             5  70     0    0 donationprint3 \
   type=charwrite area=lounge 4x7Segment-Display
@@ -44,7 +44,7 @@ outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse  Röhre über Tür, außen
 roehre_blau           748   42    0    0 feedback1/2 \
   type=light area=Hackcenter  Blaue Röhre
-schaufenster            5  595    0    0 gpio24 \
+schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_ro area=Schleuse  LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3 \
   type=light delay=1 area=Hackcenter  Lampe im eMac-Gehäuse
