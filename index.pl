@@ -363,7 +363,7 @@ sub light_image {
 	}
 
 	given ($state) {
-		when ('1') { $image = "${prefix}_on${suffix}.png" }
+		when ([1, 255]) { $image = "${prefix}_on${suffix}.png" }
 		when ('0') { $image = "${prefix}_off${suffix}.png" }
 	}
 
