@@ -25,6 +25,7 @@ my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
 my $auto_prefix = '/etc/automatic_light_control';
+my $store_prefix = '/srv/www/stored';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
@@ -306,11 +307,11 @@ sub infotext {
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
 
-	if ( -e '/tmp/online_guests' ) {
+	if ( -e "${store_prefix}.online_guests" ) {
 		$buf .= sprintf(
 			'<span class="onlinegueststext">Online guest IPs</span>'
 			  . '<span class="onlineguests">%d</span><br/>',
-			slurp('/tmp/online_guests')
+			slurp("${store_prefix}.online_guests")
 		);
 	}
 
@@ -710,7 +711,7 @@ helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
 	if ( $type eq 'rtext' ) {
-		return slurp("/tmp/${location}");
+		return slurp("${store_prefix}.${location}");
 	}
 	if ( $type eq 'infoarea' ) {
 		return infotext();
@@ -1157,7 +1158,7 @@ post '/set' => sub {
 		if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
 			and $self->param($key) )
 		{
-			spew( "/tmp/${key}", $self->param($key) );
+			spew( "${store_prefix}.${key}", $self->param($key) );
 		}
 	}
 
