@@ -21,7 +21,7 @@
 <a href="/presets?name=<%= $preset %>"><%= $preset %></a>
 </td>
 <td>
-% my $dt = DateTime->from_epoch( epoch => $presetdata->{$preset}->{timestamp} );
+% my $dt = DateTime->from_epoch( epoch => ($presetdata->{$preset}->{timestamp} || 0) );
 %= $dt->ymd
 </td>
 <td>
