@@ -24,7 +24,7 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
-my $auto_prefix = '/etc/automatic_light_control';
+my $auto_prefix  = '/etc/automatic_light_control';
 my $store_prefix = '/srv/www/stored';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
@@ -291,6 +291,19 @@ sub blinkenlight_status {
 	return -1;
 }
 
+sub charwrite {
+	my ($id) = @_;
+
+	my $ret = sprintf( '<a href="/charwrite/%s">', $id );
+
+	$ret
+	  .= sprintf( '<img src="/charwrite.png" class="charwrite %s" alt="%s" />',
+		$id, $id );
+	$ret .= '</a>';
+
+	return $ret;
+}
+
 sub infotext {
 	my $buf;
 
@@ -364,7 +377,7 @@ sub light_image {
 	}
 
 	given ($state) {
-		when ([1, 255]) { $image = "${prefix}_on${suffix}.png" }
+		when ( [ 1, 255 ] ) { $image = "${prefix}_on${suffix}.png" }
 		when ('0') { $image = "${prefix}_off${suffix}.png" }
 	}
 
@@ -695,6 +708,7 @@ helper statusimage => sub {
 	given ($type) {
 		when ('amp')          { return amp($location) }
 		when ('blinkenlight') { return blinkenlight($location) }
+		when ('charwrite')    { return charwrite($location) }
 		when ('light')        { return light( $location, 1 ) }
 		when ('light_au')     { return light( $location, 2 ) }
 		when ('light_ro')     { return light( $location, 0 ) }
@@ -877,8 +891,7 @@ get '/charwrite/:device' => sub {
 	my $device = $self->stash('device');
 	my $layer = $self->param('layer') // 'control';
 
-	my $text    = $self->param('disptext');
-	my $refresh = 1;
+	my $text = $self->param('disptext');
 
 	my $controlpath = $remotemap->{$device};
 
@@ -898,15 +911,14 @@ get '/charwrite/:device' => sub {
 	}
 
 	if ( defined $text ) {
-		spew( "${controlpath}/text", "${text}\n" );
+		spew( $controlpath, "${text}\n" );
 
-		#if ( $controlpath =~ m{ donationprint }ox ) {
-		#	system('blinkencontrol-donationprint');
-		#}
-		$refresh = 0;
+		if ( $coordinates->{$device}->{postcmd} ) {
+			system( $coordinates->{$device}->{postcmd} );
+		}
 	}
 	else {
-		$self->param( disptext => slurp("${controlpath}/text") // q{} );
+		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
 	}
 
 	$self->respond_to(
@@ -916,7 +928,7 @@ get '/charwrite/:device' => sub {
 			device      => $device,
 			errors      => [],
 			version     => $VERSION,
-			refresh     => $refresh,
+			refresh     => 0,
 		},
 		json => { json => { text => $self->param('text'), } },
 	);

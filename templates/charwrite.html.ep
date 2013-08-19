@@ -12,7 +12,22 @@
 
 <a class="backlink" href="/">← back</a>
 
+<p>
+modes:
+<ul>
+<li> <a href="?disptext=clock">clock</a> (HH.MM) </li>
+<li> <a href="?disptext=hosts">online hosts</a> (guests and total) </li>
+</ul>
+</p>
+
+<p>
 %= form_for "/charwrite/$device" => begin
-text: <%= text_field 'disptext' %>
+set custom text: <%= text_field 'disptext' %>
+%= submit_button 'Apply'
+</p>
+
+<p>
+Note: the mode is only checked once per minute
+</p>
 </div> <!-- blinkencontrol -->
 %= end
