@@ -22,6 +22,7 @@ infoarea              450  406  900  600 none \
 temp_hackcenter       840  350    0    0 none
 temp_serverraum      1265  400    0    0 none
 online_guests           0    0    0    0 none
+online_hosts            0    0    0    0 none
 
 [layer=control]
 logo                  224  460    0    0 feedback2/pwm2 \
