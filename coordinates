@@ -45,7 +45,7 @@ outdoor                 9  438    0    0 gpio17 \
 roehre_blau           748   42    0    0 feedback1/2 \
   type=light area=Hackcenter  Blaue Röhre
 schaufenster            5  595    0    0 feedback2/bin1 \
-  type=light_ro area=Schleuse  LEDs im Schaufenster
+  type=light_au area=Schleuse  LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3 \
   type=light delay=1 area=Hackcenter  Lampe im eMac-Gehäuse
 hackcenter_w          686  280    0    0 feedback1/4 \
