@@ -16,16 +16,19 @@
 <table>
 <tr><th>preset</th><th>last used</th><th>delete?</th></tr>
 % for my $preset (@{$presets}) {
+% if ($preset->[1] eq 'manage') {
+% next;
+% }
 <tr>
 <td>
-<a href="/presets?name=<%= $preset %>"><%= $preset %></a>
+<a href="/presets?name=<%= $preset->[1] %>"><%= $preset->[1] %></a>
 </td>
 <td>
-% my $dt = DateTime->from_epoch( epoch => ($presetdata->{$preset}->{timestamp} || 0) );
+% my $dt = DateTime->from_epoch( epoch => ($presetdata->{$preset->[1]}->{timestamp} || 0) );
 %= $dt->ymd
 </td>
 <td>
-<a href="/presets?name=<%= $preset %>&amp;action=delete">X</a>
+<a href="/presets?name=<%= $preset->[1] %>&amp;action=delete">X</a>
 </td>
 </tr>
 % }
