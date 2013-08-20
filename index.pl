@@ -114,6 +114,16 @@ sub get_device {
 	return $state;
 }
 
+sub unshutdown {
+	unlink($shutdownfile);
+
+	spew('/tmp/donationprint1/7segment1.mode', 'clock');
+	system('avrshift-donationprint');
+
+	return;
+}
+
+
 #}}}
 
 sub load_coordinates {    #{{{
@@ -592,7 +602,7 @@ sub make_shortcuts {
 $shortcuts->{'amps on'} = sub {
 	my ($self) = @_;
 
-	unlink($shutdownfile);
+	unshutdown;
 	for my $amp (qw(amp0 amp1 amp2 amp3)) {
 		set_device( $amp, 1, 0 );
 	}
@@ -664,7 +674,7 @@ $shortcuts->{shutdown} = sub {
 $shortcuts->{unshutdown} = sub {
 	my ($self) = @_;
 
-	unlink($shutdownfile);
+	unshutdown;
 
 	return;
 };
@@ -1197,7 +1207,7 @@ get '/toggle/:id' => sub {
 		}
 	}
 	else {
-		unlink($shutdownfile);
+		unshutdown;
 	}
 
 	my $state = get_device($id);
@@ -1228,7 +1238,7 @@ get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
-	unlink($shutdownfile);
+	unshutdown;
 	set_device( $id, 1, 0 );
 
 	$self->redirect_to('/');
