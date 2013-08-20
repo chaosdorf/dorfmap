@@ -115,10 +115,13 @@ sub get_device {
 }
 
 sub unshutdown {
-	unlink($shutdownfile);
 
-	spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
-	system('avrshift-donationprint');
+	if ( -e $shutdownfile ) {
+		unlink($shutdownfile);
+
+		spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
+		system('avrshift-donationprint');
+	}
 
 	return;
 }
