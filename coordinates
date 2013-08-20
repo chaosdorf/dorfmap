@@ -49,6 +49,8 @@ schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_au area=Schleuse  LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3 \
   type=light delay=1 area=Hackcenter  Lampe im eMac-Gehäuse
+hackcenter_3spot      580  125    0    0 feedback1/12 \
+  type=light area=Hackcenter  3x Spots
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light area=Hackcenter  Weiße LEDs über der Tischreihe
 hackcenter_blau       535  355  894  408 feedback1/5 \
