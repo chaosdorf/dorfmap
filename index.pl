@@ -117,12 +117,11 @@ sub get_device {
 sub unshutdown {
 	unlink($shutdownfile);
 
-	spew('/tmp/donationprint1/7segment1.mode', 'clock');
+	spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
 	system('avrshift-donationprint');
 
 	return;
 }
-
 
 #}}}
 
@@ -631,6 +630,7 @@ $shortcuts->{makeprivate} = sub {
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 	my @errors;
+	my @delayed;
 
 	system('shutdown-announce');
 
@@ -638,6 +638,12 @@ $shortcuts->{shutdown} = sub {
 
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
+
+		# delayed poweroff so the shutdown announcement has sufficient time
+		if ( $type eq 'amp' ) {
+			push( @delayed, $device );
+			next;
+		}
 
 		if ( $type eq 'blinkenlight' ) {
 			my $path = $remotemap->{$device};
@@ -656,6 +662,10 @@ $shortcuts->{shutdown} = sub {
 	}
 
 	system(qw(ssh private@door));
+
+	for my $device (@delayed) {
+		set_device( $device, 0, 1 );
+	}
 
 	if ( $? != 0 ) {
 		push( @errors,
