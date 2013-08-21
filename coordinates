@@ -78,27 +78,27 @@ amp3b                 890  370    0    0 amp3 \
 
 [layer=control]
 phone                  46   32    0    0 none \
-  type=phone area=Lounge
+  type=phone area=Lounge watts=4
 
 clc1160               842   60    0    0 none \
-  type=printer area=Hackcenter
+  type=printer area=Hackcenter watts=200
 hp2100                386   60    0    0 donationprint1/4 \
-  type=printer area=Lounge HP2100 (geht nach 20min automatisch aus)
+  type=printer area=Lounge watts=15 HP2100 (geht nach 20min automatisch aus)
 
 dashpi                883  300    0    0 none \
-  type=server area=Hackcenter
+  type=server area=Hackcenter watts=4
 donationprint          70  390    0    0 none \
-  type=server area=Lounge
+  type=server area=Lounge watts=4
 feedback               64  585    0    0 none \
-  type=server area=Schleuse
+  type=server area=Schleuse watts=4
 figurehead           1232  400    0    0 none \
-  type=server area=Serverraum
+  type=server area=Serverraum watts=35
 hyperion             1232  361    0    0 none \
-  type=server area=Serverraum
+  type=server area=Serverraum watts=70
 door                   35  585    0    0 none \
-  type=server area=Schleuse
+  type=server area=Schleuse watts=8
 
 unifi                 420  210    0    0 none \
-  type=wifi
+  type=wifi watts=5
 wlan-hinten          1428  120    0    0 none \
-  type=wifi
+  type=wifi watts=5

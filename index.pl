@@ -319,7 +319,7 @@ sub charwrite {
 
 sub estimated_power_consumption {
 	my $consumption = sum map { $coordinates->{$_}->{watts} }
-	  grep { get_device($_) and get_device($_) > 0 } keys %{$coordinates};
+	  grep { status_number($_) and status_number($_) > 0 } keys %{$coordinates};
 	return $consumption // 0;
 }
 
@@ -348,7 +348,7 @@ sub infotext {
 	}
 
 	$buf .= sprintf(
-		'<span class="wattagetext">Light power consumption</span>'
+		'<span class="wattagetext">Known power consumption</span>'
 		  . '<span class="wattage">ca. %dW</span><br/>',
 		estimated_power_consumption
 	);
