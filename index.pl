@@ -949,8 +949,8 @@ get '/charwrite/:device' => sub {
 	if ( defined $text ) {
 		spew( $controlpath, "${text}\n" );
 
-		if ( $coordinates->{$device}->{postcmd} ) {
-			system( $coordinates->{$device}->{postcmd} );
+		if ( $controlpath =~ m{donationprint}o ) {
+			system('avrshift-donationprint');
 		}
 	}
 	else {
