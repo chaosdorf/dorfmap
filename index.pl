@@ -317,6 +317,12 @@ sub charwrite {
 	return $ret;
 }
 
+sub estimated_power_consumption {
+	my $consumption = sum map { $coordinates->{$_}->{watts} }
+	  grep { get_device($_) and get_device($_) > 0 } keys %{$coordinates};
+	return $consumption // 0;
+}
+
 sub infotext {
 	my $buf;
 
@@ -341,9 +347,11 @@ sub infotext {
 		);
 	}
 
-	$buf .= sprintf('<span class="wattagetext">Light power consumption</span>'
-	. '<span class="wattage">ca. %dW</span><br/>',
-		sum map { $coordinates->{$_}->{watts} } grep { get_device($_) }  keys %{$coordinates});
+	$buf .= sprintf(
+		'<span class="wattagetext">Light power consumption</span>'
+		  . '<span class="wattage">ca. %dW</span><br/>',
+		estimated_power_consumption
+	);
 
 	return $buf;
 }
@@ -972,6 +980,21 @@ get '/get/:id' => sub {
 		png  => sub    { $self->render_static( status_image($id) ) },
 		any  => {
 			data   => status_number($id),
+			status => 406
+		},
+	);
+
+	return;
+};
+
+get '/get_power_consumption' => sub {
+	my ($self) = @_;
+
+	$self->respond_to(
+		json => { json => { power => estimated_power_consumption } },
+		txt => { text => estimated_power_consumption },
+		any => {
+			data   => estimated_power_consumption,
 			status => 406
 		},
 	);
