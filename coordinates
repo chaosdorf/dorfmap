@@ -26,41 +26,41 @@ online_hosts            0    0    0    0 none
 
 [layer=control]
 logo                  224  460    0    0 feedback2/pwm2 \
-  type=light_au area=Schleuse  LED-Leiste über Chaosdorflogo
+  type=light_au area=Schleuse watts=1       LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 feedback2/bin6 \
-  type=light area=Lounge  Kaltweiße LEDs
+  type=light area=Lounge watts=10           Kaltweiße LEDs
 lounge_7seg            46  70     0    0 donationprint1/7segment1.mode \
-  type=charwrite area=lounge postcmd=avrshift-donationprint 4x7Segment-Display
+  type=charwrite area=lounge                4x7Segment-Display
 lounge_pflanze         40  312    0    0 donationprint1/7 \
-  type=light area=Lounge  Grüner LED-Strahler
+  type=light area=Lounge watts=4            Grüner LED-Strahler
 lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump area=Lounge   Bewässerungspumpe
+  type=pump area=Lounge watts=5             Bewässerungspumpe
 lounge_rgb              5  110    0    0 donationprint2 \
-  type=blinkenlight area=Lounge  RGB-LED-Streifen
+  type=blinkenlight area=Lounge watts=7     RGB-LED-Streifen
 lounge_roehre         260  180    0    0 donationprint1/12 \
-  type=light delay=2 area=Lounge  layer=caution  6x weiße Röhre (Putzbeleuchtung)
+  type=light delay=2 area=Lounge watts=350 layer=caution  6x weiße Röhre (Putzbeleuchtung)
 lounge_weiss          114   80    0    0 donationprint1/9  \
-  type=light area=Lounge  Weiße LED über Tisch
+  type=light area=Lounge watts=35           Weiße Halogenlampe über Tisch
 outdoor                 9  438    0    0 gpio17 \
-  type=light_au area=Schleuse  Röhre über Tür, außen
+  type=light_au area=Schleuse watts=35      Röhre über Tür, außen
 roehre_blau           748   42    0    0 feedback1/2 \
-  type=light area=Hackcenter  Blaue Röhre
+  type=light area=Hackcenter watts=20       Blaue Röhre
 schaufenster            5  595    0    0 feedback2/bin1 \
-  type=light_au area=Schleuse  LEDs im Schaufenster
+  type=light_au area=Schleuse watts=5       LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3 \
-  type=light delay=1 area=Hackcenter  Lampe im eMac-Gehäuse
+  type=light delay=1 area=Hackcenter watts=15  Lampe im eMac-Gehäuse
 hackcenter_3spot      580  125    0    0 feedback1/12 \
-  type=light area=Hackcenter  3x Spots
+  type=light area=Hackcenter watts=105      3x Spots
 hackcenter_w          686  280    0    0 feedback1/4 \
-  type=light area=Hackcenter  Weiße LEDs über der Tischreihe
+  type=light area=Hackcenter watts=20       Weiße LEDs über der Tischreihe
 hackcenter_blau       535  355  894  408 feedback1/5 \
-  type=light area=Hackcenter  Blauer LED-Streifen am Kabelkanal
+  type=light area=Hackcenter watts=24       Blauer LED-Streifen am Kabelkanal
 hackcenter_spots      700  180    0    0 feedback1/6 \
-  type=light area=Hackcenter  LED-Spots über Stoff
+  type=light area=Hackcenter watts=30       LED-Spots über Stoff
 hackcenter_roehre     600  180    0    0 feedback1/7 \
-  type=light delay=2 area=Hackcenter layer=caution  6x weiße Röhre (Putzbeleuchtung)
+  type=light delay=2 area=Hackcenter layer=caution watts=350  6x weiße Röhre (Putzbeleuchtung)
 
-[layer=control type=amp delay=4]
+[layer=control type=amp delay=4 watts=12]
 amp0a                 150  590    0    0 amp0 \
   area=Schleuse   Rear Left
 amp0b                 350  590    0    0 amp0 \

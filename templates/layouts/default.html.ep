@@ -197,7 +197,8 @@
 		background-color: gray;
 	}
 
-	.overview span.onlineguests {
+	.overview span.onlineguests,
+	.overview span.wattage {
 		font-size: 120%;
 		font-weight: bold;
 	}
@@ -207,7 +208,8 @@
 		font-weight: bold;
 	}
 
-	.overview span.onlinegueststext:after {
+	.overview span.onlinegueststext:after,
+	.overview span.wattagetext:after {
 		content: ": ";
 	}
 

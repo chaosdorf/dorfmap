@@ -10,6 +10,7 @@ use DateTime;
 use DateTime::Duration;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
+use List::Util qw(sum);
 use Mojolicious::Lite;
 use Storable qw(retrieve lock_nstore lock_retrieve);
 
@@ -339,6 +340,10 @@ sub infotext {
 			slurp("${store_prefix}.online_guests")
 		);
 	}
+
+	$buf .= sprintf('<span class="wattagetext">Light power consumption</span>'
+	. '<span class="wattage">ca. %dW</span><br/>',
+		sum map { $coordinates->{$_}->{watts} } grep { get_device($_) }  keys %{$coordinates});
 
 	return $buf;
 }
