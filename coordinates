@@ -30,7 +30,7 @@ logo                  224  460    0    0 feedback2/pwm2 \
 treppe_w              350  525    0    0 feedback2/bin6 \
   type=light area=Lounge watts=10           Kaltweiße LEDs
 lounge_7seg            46  50     0    0 donationprint1/7segment1.mode \
-  type=charwrite area=lounge                4x7Segment-Display
+  type=charwrite area=Lounge                4x7Segment-Display
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light area=Lounge watts=4            Grüner LED-Strahler
 lounge_pumpe            5  142    0    0 donationprint1/11 \
@@ -51,6 +51,10 @@ lightclc1160          887   63    0    0 feedback1/3 \
   type=light delay=1 area=Hackcenter watts=15  Lampe im eMac-Gehäuse
 hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light area=Hackcenter watts=105      3x Spots
+hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
+  type=charwrite area=Hackcenter            4x7Segment links
+hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
+  type=charwrite area=Hackcenter            4x7Segment rechts
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light area=Hackcenter watts=20       Weiße LEDs über der Tischreihe
 hackcenter_blau       535  355  894  408 feedback1/5 \
