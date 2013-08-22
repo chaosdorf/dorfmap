@@ -16,6 +16,7 @@
 modes:
 <ul>
 <li> <a href="?disptext=clock">clock</a> (HH.MM) </li>
+<li> <a href="?disptext=date">date</a> (dd.mm.) </li>
 <li> <a href="?disptext=hosts">online hosts</a> (guests and total) </li>
 </ul>
 </p>
