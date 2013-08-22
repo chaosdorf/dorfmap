@@ -121,7 +121,10 @@ sub unshutdown {
 		unlink($shutdownfile);
 
 		spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
+		spew( '/tmp/feedback1/7segment2.mode',      'date' );
+		spew( '/tmp/feedback1/7segment3.mode',      'clock' );
 		system('avrshift-donationprint');
+		system('avrshift-feedback');
 	}
 
 	return;
@@ -951,6 +954,9 @@ get '/charwrite/:device' => sub {
 
 		if ( $controlpath =~ m{donationprint}o ) {
 			system('avrshift-donationprint');
+		}
+		elsif ( $controlpath =~ m{feedback}o ) {
+			system('avrshift-feedback');
 		}
 	}
 	else {
