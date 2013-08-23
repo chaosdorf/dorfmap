@@ -1,0 +1,128 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{makecell}
+\usepackage{amssymb}
+\usepackage{algorithmicx}
+\usepackage[noend]{algpseudocode}
+\usepackage{color}
+\usepackage{gauss}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{mathtools}
+\usepackage{stmaryrd}
+\usepackage{parskip}
+\usepackage{titlesec}
+\usepackage{rotating}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes,automata,backgrounds,petri,decorations.markings}
+\usepackage{tikz-qtree}
+\usepackage{tikz-timing}
+\usepackage{wasysym}
+\allowdisplaybreaks[4]
+
+\renewcommand{\iff}{\Leftrightarrow}
+\renewcommand{\implies}{\Rightarrow}
+\newcommand{\Par}[1]{\left ( #1 \right )}
+\newcommand{\Parb}[1]{\big ( #1 \big )}
+\newcommand{\ParB}[1]{\Big ( #1 \Big )}
+\newcommand{\Parbb}[1]{\bigg ( #1 \bigg )}
+\newcommand{\ParBB}[1]{\Bigg ( #1 \Bigg )}
+\newcommand{\Bra}[1]{\left [ #1 \right ]}
+\newcommand{\Brab}[1]{\big [ #1 \big ]}
+\newcommand{\BraB}[1]{\Big [ #1 \Big ]}
+\newcommand{\Brabb}[1]{\bigg [ #1 \bigg ]}
+\newcommand{\BraBB}[1]{\Bigg [ #1 \Bigg ]}
+\newcommand{\Ang}[1]{\left < #1 \right >}
+\newcommand{\Cur}[1]{\left \{ #1 \right \}}
+\newcommand{\Abs}[1]{\left | #1 \right |}
+\newcommand{\LBra}[1]{\left \llbracket #1 \right \rrbracket}
+\newcommand{\eps}{\varepsilon}
+\renewcommand{\min}[1]{\mathrm{min} \Cur{#1}}
+\renewcommand{\max}[1]{\mathrm{max} \Cur{#1}}
+\newcommand{\ilimn}{\lim_{n \rightarrow \infty}}
+\newcommand{\isumn}{\sum_{n=1}^{\infty}}
+\newcommand{\nsumi}{\sum_{i=1}^{n}}
+\newcommand{\nsumI}{\sum_{i=0}^{n-1}}
+\newcommand{\limx}[1]{\lim_{\substack{x \to #1 \\ x \neq #1}}}
+\newcommand{\limxa}{\lim_{\substack{x \to a \\ x \neq a}}}
+\newcommand{\limxn}{\lim_{\substack{x \to 0 \\ x \neq 0}}}
+\newcommand{\intabx}[1]{\int_a^b #1 \, \mathrm{d}x}
+\newcommand{\intx}[3]{\int_{#1}^{#2} #3 \, \mathrm{d}x}
+\newcommand{\intt}[3]{\int_{#1}^{#2} #3 \, \mathrm{d}t}
+\newcommand{\inta}[1]{\int_0^a #1 \, \mathrm{d}x}
+\newcommand{\gintx}[1]{\int #1 \, \mathrm{d}x}
+\newcommand{\nint}[3]{\left [ #3 \right ]_{#1}^{#2}}
+\newcommand{\dx}{\mathrm{d}x}
+\newcommand{\dt}{\mathrm{d}t}
+\newcommand{\ddx}{\frac{d}{dx}}
+\newcommand{\diff}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\diffn}[3]{\frac{\mathrm{d}^{#3} #1}{\mathrm{d} {#2}^{#3}}}
+\newcommand{\Zsup}{\underset{Z}{\sup}\ }
+\newcommand{\Zinf}{\underset{Z}{\inf}\ }
+\newcommand{\mN}{\mathbb{N}}
+\newcommand{\mR}{\mathbb{R}}
+\newcommand{\mZ}{\mathbb{Z}}
+\newcommand{\mO}{\mathcal{O}}
+\newcommand{\mQ}{\mathbb{Q}}
+\newcommand{\NNF}[1]{\mathrm{NNF}\Par{#1} }
+\newcommand{\KNF}[1]{\mathrm{KNF}\Par{#1} }
+\newcommand{\sem}[1]{\LBra{#1}_\alpha}
+\renewcommand{\check}{\ \checkmark}
+\newcommand{\world}[2]{\begin{tabular}{|c|}\hline #1 \\ \hline #2 \\ \hline \end{tabular}}
+\newcommand{\mA}{\mathcal{A}}
+\newcommand{\wpipe}{\ |\ }
+\newcommand{\ablr}{\Rightarrow_r}
+\newcommand{\blank}{\textvisiblespace}
+
+\titleformat{\subparagraph}[runin]{\normalfont\normalsize}{\thesubparagraph}{2em}{}[:]
+
+\setlength{\voffset}{-1in}
+\setlength{\hoffset}{-1in}
+\addtolength{\textheight}{+2in}
+\addtolength{\textwidth}{+2in}
+
+\begin{document}
+
+{
+\Huge
+\definecolor{hidden}{rgb}{1,1,1}
+\definecolor{normal}{rgb}{0,0,0}
+\begin{tikztimingtable}[thin]
+      & \\
+  SCL & 2C 2C 2C 2C 2C 2C C S 2L2C 2C \\
+  SDA & L2D{MSB} 2L 2D{...} 2L 2D{...} 2L S L 2D{LSB} HHL  \\
+\extracode
+  \begin{pgfonlayer}{background}
+    \begin{scope}[semitransparent,semithick]
+      \vertlines[blue]{2,6,10,16}
+      \vertlines[red]{18}
+    \end{scope}
+  \node [anchor=south east,inner sep=0pt]
+    at (1.5,-0.8) {\large $\text{t}_{\text{low}}$};
+  \node [anchor=south east,inner sep=0pt]
+    at (3.5,-0.8) {\large $\text{t}_{\text{high}}$};
+  \node [anchor=south west,inner sep=0pt]
+    at (2.2,0.6) {\large \textcolor{blue}{read bit}};
+  \node [anchor=south west,inner sep=0pt]
+    at (6.2,0.6) {\large \textcolor{blue}{read bit}};
+  \node [anchor=south west,inner sep=0pt]
+    at (10.2,0.6) {\large \textcolor{blue}{read bit}};
+  \node [anchor=south west,inner sep=0pt]
+    at (16.2,0.6) {\large \textcolor{blue}{read bit}};
+  \node [anchor=south west,inner sep=0pt]
+    at (18.2,-0.4) {\large \textcolor{red}{stop cond}};
+  \end{pgfonlayer}
+\end{tikztimingtable}
+}
+
+{
+\Large
+$\text{t}_{\text{low}} = \text{t}_{\text{high}} = 2 \mu s$
+
+}
+
+\end{document}
