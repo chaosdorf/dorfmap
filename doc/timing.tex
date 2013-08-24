@@ -99,12 +99,15 @@
   \begin{pgfonlayer}{background}
     \begin{scope}[semitransparent,semithick]
       \vertlines[blue]{2,6,10,16}
+      \vertlines[blue,dashed]{3,7,11,17}
       \vertlines[red]{18}
     \end{scope}
   \node [anchor=south east,inner sep=0pt]
     at (1.5,-0.8) {\large $\text{t}_{\text{low}}$};
   \node [anchor=south east,inner sep=0pt]
     at (3.5,-0.8) {\large $\text{t}_{\text{high}}$};
+  \node [anchor=south east, inner sep=0pt]
+    at (3,-4.8) {\large $\text{t}_{\text{dv}}$};
   \node [anchor=south west,inner sep=0pt]
     at (2.2,0.6) {\large \textcolor{blue}{read bit}};
   \node [anchor=south west,inner sep=0pt]
@@ -122,6 +125,8 @@
 {
 \Large
 $\text{t}_{\text{low}} = \text{t}_{\text{high}} = 2 \mu s$
+\quad\quad
+data valid: $\text{t}_{\text{dv}} = 1 \mu s$
 
 }
 
