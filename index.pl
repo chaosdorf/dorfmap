@@ -675,6 +675,9 @@ $shortcuts->{shutdown} = sub {
 		{
 			push( @errors, "please turn off printer ${device}" );
 		}
+		elsif ( $type eq 'charwrite' ) {
+			set_device( $device, q{ }, 1 );
+		}
 		else {
 			set_device( $device, 0, 1 );
 		}
@@ -950,14 +953,7 @@ get '/charwrite/:device' => sub {
 	}
 
 	if ( defined $text ) {
-		spew( $controlpath, "${text}\n" );
-
-		if ( $controlpath =~ m{donationprint}o ) {
-			system('avrshift-donationprint');
-		}
-		elsif ( $controlpath =~ m{feedback}o ) {
-			system('avrshift-feedback');
-		}
+		set_remote( $controlpath, $text );
 	}
 	else {
 		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
