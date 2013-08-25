@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#define STATUSLED ( _BV( PB7 ) )
+#define STATUSLED ( _BV( PD6 ) )
 
 /*
  * PD2 and PD3 are inverted (optokoppler to gnd and internal pull-ups)
@@ -14,7 +14,16 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x0001)
+#define MYADDRESS (0x0007)
+
+/* in this edition:
+ *
+ * PB0 .. PB7 -> 12V
+ * PD6 -> green LED onboard
+ * PD5, PD4 -> 12V
+ * PA0, PA1 -> 12V
+ * PD0, PD1 -> red/green LED external
+ */
 
 volatile uint8_t status_hi = 0;
 volatile uint8_t status_lo = 0;
@@ -22,12 +31,12 @@ volatile uint16_t address;
 
 static inline void statusled_on(void)
 {
-	PORTB &= ~STATUSLED;
+	PORTD |= STATUSLED;
 }
 
 static inline void statusled_off(void)
 {
-	PORTB |= STATUSLED;
+	PORTD &= ~STATUSLED;
 }
 
 int main (void)
@@ -39,6 +48,7 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
+	DDRA = _BV(PA0) | _BV(PA1);
 	DDRB = 0xff;
 	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
@@ -72,30 +82,27 @@ ISR(INT0_vect)
 		status_hi = (status_hi << 1) | (status_lo >> 7);
 		status_lo = (status_lo << 1) | (address >> 15);
 		address = (address << 1) | DATA_BIT;
-		if (DATA_BIT != 0)
-			statusled_on();
-		else
-			statusled_off();
+		if (DATA_BIT != 0) {
+			PORTD |= _BV(PD0);
+			PORTD &= ~_BV(PD1);
+		}
+		else {
+			PORTD &= ~_BV(PD0);
+			PORTD |= _BV(PD1);
+		}
 	}
 	else if (DATA_HI && (address == MYADDRESS)) {
+		statusled_off();
 		// falling clock, data is high: end of transmission
-		PORTD =
-			( (status_lo & _BV(0)) << 0 ) | // PD0 -> OUT00
-			( (status_lo & _BV(1)) << 0 ) | // PD1 -> OUT01
-			_BV(PD2) | _BV(PD3) |
-			( (status_lo & _BV(2)) << 2 ) | // PD4 -> OUT02
-			( (status_lo & _BV(3)) << 2 ) | // PD5 -> OUT03
-			( (status_lo & _BV(4)) << 2 );  // PD6 -> OUT04
 
-		PORTB =
-			( (status_lo & _BV(5)) >> 5 ) | // PB0 -> OUT05
-			( (status_lo & _BV(6)) >> 5 ) | // PB1 -> OUT06
-			( (status_lo & _BV(7)) >> 5 ) | // PB2 -> OUT07
-			( (status_hi & _BV(0)) << 3 ) | // PB3 -> OUT08
-			( (status_hi & _BV(1)) << 3 ) | // PB4 -> OUT09
-			( (status_hi & _BV(2)) << 3 ) | // PB5 -> OUT10
-			( (status_hi & _BV(3)) << 3 ) | // PB6 -> OUT11
-			( (status_hi & _BV(4)) << 3 );  // PB7 -> STATUSLED
+		PORTB = status_lo;
+		PORTA =
+			( (status_hi & _BV(0)) << 0 ) |
+			( (status_hi & _BV(1)) << 0 );
+		PORTD =
+			_BV(PD2) | _BV(PD3) |
+			( (status_hi & _BV(2)) << 3 ) |
+			( (status_hi & _BV(3)) << 3 );
 	}
 }
 
