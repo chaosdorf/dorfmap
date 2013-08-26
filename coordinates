@@ -37,9 +37,9 @@ lounge_pumpe            5  142    0    0 donationprint1/11 \
   type=pump area=Lounge watts=5             Bewässerungspumpe
 lounge_rgb              5  110    0    0 donationprint2 \
   type=blinkenlight area=Lounge watts=7     RGB-LED-Streifen
-lounge_roehre         260  180    0    0 donationprint1/12 \
+lounge_roehre         260  180    0    0 feedback3/2 \
   type=light delay=2 area=Lounge watts=350 layer=caution  6x weiße Röhre (Putzbeleuchtung)
-lounge_weiss          114   80    0    0 donationprint1/9  \
+lounge_weiss          114   80    0    0 feedback3/12  \
   type=light area=Lounge watts=35           Weiße Halogenlampe über Tisch
 outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse watts=35      Röhre über Tür, außen
