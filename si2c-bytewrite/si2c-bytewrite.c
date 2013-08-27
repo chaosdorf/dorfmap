@@ -15,8 +15,6 @@ void writepin(char *pinstr, char val)
 {
 	FILE *fh;
 
-	printf(">>> %s %d\n", pinstr, val);
-
 	fh = fopen(pinstr, "w");
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
