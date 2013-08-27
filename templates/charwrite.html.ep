@@ -28,8 +28,5 @@ set custom text: <%= text_field 'disptext' %>
 %= submit_button 'Apply'
 </p>
 
-<p>
-Note: the mode is only checked once per minute
-</p>
 </div> <!-- blinkencontrol -->
 %= end
