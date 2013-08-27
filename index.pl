@@ -79,6 +79,10 @@ sub set_device {
 	if ( exists $gpiomap->{$id} ) {
 		spew( $gpiomap->{$id}, $value );
 	}
+	elsif ( $coordinates->{$id}->{type} eq 'charwrite' ) {
+		spew( $remotemap->{$id}, "${value}\n" );
+		system('update_clocks');
+	}
 	elsif ( exists $remotemap->{$id} ) {
 		set_remote( $remotemap->{$id}, $value );
 	}
@@ -953,7 +957,7 @@ get '/charwrite/:device' => sub {
 	}
 
 	if ( defined $text ) {
-		set_remote( $controlpath, $text );
+		set_device( $device, $text );
 	}
 	else {
 		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
