@@ -357,12 +357,12 @@ sub infotext {
 	$buf .= '<span class="wattagetext infohead">power consumption</span>';
 	$buf .= sprintf(
 '<span class="wattagetext" title="Light, amps, non-serverraum hosts">dorfmap devices</span>'
-		  . '<span class="wattage" title="Serverraum hardware, measured by UPS">ca. %dW</span><br/>',
+		  . '<span class="wattage">ca. %dW</span><br/>',
 		estimated_power_consumption
 	);
 	if ( -e "${store_prefix}.power_serverraum" ) {
 		$buf .= sprintf(
-			'<span class="wattagetext">Serverraum</span>'
+'<span class="wattagetext" title="Serverraum hardware, measured by UPS">Serverraum</span>'
 			  . '<span class="wattage">%dW</span><br/>',
 			slurp("${store_prefix}.power_serverraum"),
 		);
