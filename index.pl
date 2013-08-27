@@ -363,7 +363,7 @@ sub infotext {
 	if (-e "${store_prefix}.power_serverraum") {
 		$buf .= sprintf(
 			'<span class="wattagetext">Serverraum</span>'
-			. '<span class="wattage">ca. %dW</span><br/>',
+			. '<span class="wattage">%dW</span><br/>',
 			slurp("${store_prefix}.power_serverraum"),
 		);
 	}
