@@ -208,6 +208,11 @@
 		font-weight: bold;
 	}
 
+	.overview span.infohead {
+		display: block;
+		margin-top: 1.5em;
+	}
+
 	.overview span.onlinegueststext:after,
 	.overview span.wattagetext:after {
 		content: ": ";

@@ -354,11 +354,19 @@ sub infotext {
 		);
 	}
 
+	$buf .= '<span class="wattagetext infohead">power consumption</span>';
 	$buf .= sprintf(
-		'<span class="wattagetext">Known power consumption</span>'
+		'<span class="wattagetext">dorfmap devices</span>'
 		  . '<span class="wattage">ca. %dW</span><br/>',
 		estimated_power_consumption
 	);
+	if (-e "${store_prefix}.power_serverraum") {
+		$buf .= sprintf(
+			'<span class="wattagetext">Serverraum</span>'
+			. '<span class="wattage">ca. %dW</span><br/>',
+			slurp("${store_prefix}.power_serverraum"),
+		);
+	}
 
 	return $buf;
 }
