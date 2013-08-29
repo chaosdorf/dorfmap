@@ -40,7 +40,19 @@ lounge_rgb              5  110    0    0 donationprint2 \
   type=blinkenlight area=Lounge watts=7     RGB-LED-Streifen
 lounge_roehre         260  180    0    0 feedback3/2 \
   type=light delay=2 area=Lounge watts=350 layer=caution  6x weiße Röhre (Putzbeleuchtung)
-lounge_weiss          114   80    0    0 feedback3/12  \
+lounge_t1a            260   60    0    0 feedback3/4   \
+  type=light area=Lounge watts=4            TROSS 1a (Sofa Pult)
+lounge_t1b            100   60    0    0 feedback3/8   \
+  type=light area=Lounge watts=4            TROSS 1b (Sofa Whiteboard)
+lounge_t1c             40  160    0    0 feedback3/3   \
+  type=light area=Lounge watts=4            TROSS 1c (Ecksofa)
+lounge_t2a            200  230    0    0 feedback3/5   \
+  type=light area=Lounge watts=4            TROSS 2a (Sofa Eingang)
+lounge_t2b            350  330    0    0 feedback3/6   \
+  type=light area=Lounge watts=4            TROSS 2b (Treppe)
+lounge_t2c            150  520    0    0 feedback3/7   \
+  type=light area=Lounge watts=4            TROSS 2c (Membershelf)
+lounge_weiss          114   90    0    0 feedback3/12  \
   type=light area=Lounge watts=35           Weiße Halogenlampe über Tisch
 outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse watts=35      Röhre über Tür, außen
