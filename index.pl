@@ -401,6 +401,38 @@ sub json_status {
 	return { status => status_number($id) };
 }
 
+sub killswitch_image {
+	my ($cb) = @_;
+	my $state = killswitch_status($cb);
+	my $image = 'killswitch.png';
+
+	given ($state) {
+		when (1) { $image = 'killswitch_on.png' }
+		when (0) { $image = 'killswitch_off.png' }
+	}
+
+	return $image;
+}
+
+sub killswitch_status {
+	my ($cb) = @_;
+
+	return get_device($cb);
+}
+
+sub killswitch {
+	my ( $cb ) = @_;
+
+	my $ret = sprintf( '<a href="/killswitch/%s">', $cb );
+
+	$ret .= sprintf( '<img src="/%s" class="killswitch %s" alt="%s" />',
+		killswitch_image($cb), $cb, $cb);
+
+	$ret .= '</a>';
+
+	return $ret;
+}
+
 sub light_image {
 	my ($light) = @_;
 	my $state   = light_status($light);
@@ -763,6 +795,7 @@ helper statusimage => sub {
 		when ('amp')          { return amp($location) }
 		when ('blinkenlight') { return blinkenlight($location) }
 		when ('charwrite')    { return charwrite($location) }
+		when ('killswitch')   { return killswitch($location) }
 		when ('light')        { return light( $location, 1 ) }
 		when ('light_au')     { return light( $location, 2 ) }
 		when ('light_ro')     { return light( $location, 0 ) }
@@ -1014,6 +1047,51 @@ get '/get_power_consumption' => sub {
 	);
 
 	return;
+};
+
+get '/killswitch/:device' => sub {
+	my ($self) = @_;
+	my $device = $self->stash('device');
+	my $action = $self->param('action');
+
+	my $controlpath = $remotemap->{$device};
+
+	if ( not $controlpath ) {
+		$self->render(
+			'overview',
+			version     => $VERSION,
+			coordinates => $coordinates,
+			shortcuts   => \@dd_shortcuts,
+			errors      => ['no such device'],
+			presets     => \@dd_presets,
+			refresh     => 0,
+			layer       => 'caution',
+			layers      => \@dd_layers,
+		);
+		return;
+	}
+
+	if ( $action ) {
+		if ($action eq 'on') {
+			set_device($device, 1);
+		}
+		elsif ($action eq 'off') {
+			set_device($device, 0);
+		}
+	}
+
+	$self->respond_to(
+		any => {
+			template    => 'killswitch',
+			coordinates => {},
+			device      => $device,
+			status      => get_device($device),
+			errors      => [],
+			version     => $VERSION,
+			refresh     => 0,
+		},
+		json => { json => { status => get_device($device), } },
+	);
 };
 
 get '/list/all' => sub {

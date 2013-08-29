@@ -81,6 +81,9 @@ amp3a                 990   50    0    0 amp3 \
 amp3b                 890  370    0    0 amp3 \
   area=Hackcenter Hackcenter Right
 
+[layer=caution type=killswitch]
+cb_feedback1           72  560   88  576 feedback3/3
+
 [layer=control]
 phone                   6   24    0    0 none \
   type=phone area=Lounge watts=4

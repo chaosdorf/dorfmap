@@ -129,6 +129,14 @@
 		text-align: center;
 	}
 
+	.killswitchsite p.warning {
+		padding: 5em;
+		font-weight: bold;
+		font-size: 150%;
+		background-color: red;
+		color: white;
+	}
+
 	.overview {
 		background-image: url(/map.png);
 		width: 2202px;

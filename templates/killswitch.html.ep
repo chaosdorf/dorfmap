@@ -1,0 +1,39 @@
+% if (@{$errors}) {
+<div class="errors">
+<ul>
+% for my $error (@{$errors}) {
+<li><%= $error %></li>
+% }
+</ul>
+</div>
+% }
+
+<div class="killswitchsite">
+
+<a class="backlink" href="/">← back</a>
+
+<p class="warning">
+WARNING: Disabling the power supply will immediately disable ALL devices
+on the bus. This is only intended to reset broken devices. Do not use it
+unless you know what you are doing.<br/>
+<br/>
+Note: If the problem was caused by a device, it is recommended to turn it
+off (via regular dorfmap usage) before re-enabling the power supply.
+</p>
+
+<p>
+The current status is:
+% if ($status) {
+ON
+% }
+% else {
+OFF
+% }
+<br/>
+<ul>
+<li><a href="?action=off">DISABLE power supply</a></li>
+<li><a href="?action=on">ENABLE power supply</a></li>
+</ul>
+</p>
+
+</div> <!-- killswitch -->
