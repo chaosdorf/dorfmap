@@ -109,12 +109,10 @@ ISR(INT0_vect)
 			PORTB = binary_out
 				& ( _BV(0) | _BV(1) | _BV(5) | _BV(6) | _BV(7) );
 
-#if 0
 			if (binary_out & _BV(3))
 				PORTD |= _BV(PD6);
 			else
 				PORTD &= ~_BV(PD6);
-#endif
 
 			OCR0A = pwm[0];
 			OCR1A = pwm[1];
