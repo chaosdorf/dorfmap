@@ -127,8 +127,9 @@ sub unshutdown {
 		spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
 		spew( '/tmp/feedback1/7segment2.mode',      'date' );
 		spew( '/tmp/feedback1/7segment3.mode',      'clock' );
-		system('avrshift-donationprint');
-		system('avrshift-feedback');
+		system('update_clocks');
+
+		set_device( 'cb_feedback1', 1 );
 	}
 
 	return;
@@ -402,7 +403,7 @@ sub json_status {
 }
 
 sub killswitch_image {
-	my ($cb) = @_;
+	my ($cb)  = @_;
 	my $state = killswitch_status($cb);
 	my $image = 'killswitch.png';
 
@@ -421,12 +422,12 @@ sub killswitch_status {
 }
 
 sub killswitch {
-	my ( $cb ) = @_;
+	my ($cb) = @_;
 
 	my $ret = sprintf( '<a href="/killswitch/%s">', $cb );
 
 	$ret .= sprintf( '<img src="/%s" class="killswitch %s" alt="%s" />',
-		killswitch_image($cb), $cb, $cb);
+		killswitch_image($cb), $cb, $cb );
 
 	$ret .= '</a>';
 
@@ -703,7 +704,7 @@ $shortcuts->{shutdown} = sub {
 		my $type = $coordinates->{$device}->{type};
 
 		# delayed poweroff so the shutdown announcement has sufficient time
-		if ( $type eq 'amp' ) {
+		if ( $type ~~ [qw[amp killswitch]] ) {
 			push( @delayed, $device );
 			next;
 		}
@@ -1071,12 +1072,12 @@ get '/killswitch/:device' => sub {
 		return;
 	}
 
-	if ( $action ) {
-		if ($action eq 'on') {
-			set_device($device, 1);
+	if ($action) {
+		if ( $action eq 'on' ) {
+			set_device( $device, 1 );
 		}
-		elsif ($action eq 'off') {
-			set_device($device, 0);
+		elsif ( $action eq 'off' ) {
+			set_device( $device, 0 );
 		}
 	}
 
