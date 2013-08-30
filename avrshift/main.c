@@ -29,16 +29,6 @@ volatile uint8_t status_hi = 0;
 volatile uint8_t status_lo = 0;
 volatile uint16_t address;
 
-static inline void statusled_on(void)
-{
-	PORTD |= STATUSLED;
-}
-
-static inline void statusled_off(void)
-{
-	PORTD &= ~STATUSLED;
-}
-
 int main (void)
 {
 	/* watchdog reset after ~4 seconds */
@@ -53,8 +43,6 @@ int main (void)
 	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
 	PORTD |= _BV(PD2) | _BV(PD3);
-
-	statusled_on();
 
 	OCR1A = 0x9fff;
 	TCCR1A = 0;
@@ -92,7 +80,6 @@ ISR(INT0_vect)
 		}
 	}
 	else if (DATA_HI && (address == MYADDRESS)) {
-		statusled_off();
 		// falling clock, data is high: end of transmission
 
 		PORTB = status_lo;
@@ -108,5 +95,5 @@ ISR(INT0_vect)
 
 ISR(TIMER1_COMPA_vect)
 {
-	statusled_on();
+	PIND |= STATUSLED;
 }
