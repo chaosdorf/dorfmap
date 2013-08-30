@@ -137,6 +137,16 @@
 		color: white;
 	}
 
+	.killswitchsite span.connected {
+		color: darkgreen;
+	}
+
+	.killswitchsite span.disconnected {
+		color: darkred;
+		text-transform: uppercase;
+		font-weight: bold;
+	}
+
 	.overview {
 		background-image: url(/map.png);
 		width: 2202px;

@@ -22,18 +22,16 @@ off (via regular dorfmap usage) before re-enabling the power supply.
 </p>
 
 <p>
-The current status is:
+Right now, the bus power supply is
 % if ($status) {
-ON
+<span class="connected">connected</span>.
 % }
 % else {
-OFF
+<span class="disconnected">disconnected</span>.
 % }
-<br/>
-<ul>
-<li><a href="?action=off">DISABLE power supply</a></li>
-<li><a href="?action=on">ENABLE power supply</a></li>
-</ul>
+<br/><br/>
+<a href="?action=on">Connect power supply</a><br/><br/>
+<a href="?action=off">DISCONNECT power supply</a>
 </p>
 
 </div> <!-- killswitch -->
