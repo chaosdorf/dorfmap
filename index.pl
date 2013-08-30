@@ -30,6 +30,7 @@ my $store_prefix = '/srv/www/stored';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
+my (@killswitches);
 
 #{{{ primitive helpers
 
@@ -194,6 +195,10 @@ sub load_coordinates {    #{{{
 		}
 		elsif ( $controlpath =~ m{ ^ ( donationprint | feedback ) }ox ) {
 			$remotemap->{$id} = "/tmp/${controlpath}";
+		}
+
+		if ( $coordinates->{$id}->{type} eq 'killswitch' ) {
+			push( @killswitches, $id );
 		}
 	}
 	return;
@@ -365,6 +370,17 @@ sub infotext {
 			  . '<span class="wattage">%dW</span><br/>',
 			slurp("${store_prefix}.power_serverraum"),
 		);
+	}
+
+	for my $cb (@killswitches) {
+		if ( get_device($cb) == 0 ) {
+			$buf
+			  .= sprintf(
+				'<img src="/warning.png" alt="!" /> Bus Circuit Breaker '
+				  . '<a href="/killswitch/%s">%s</a> is disconnected - '
+				  . 'some devices will not work<br/>',
+				$cb, $cb );
+		}
 	}
 
 	return $buf;
