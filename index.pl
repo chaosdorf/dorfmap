@@ -128,8 +128,6 @@ sub unshutdown {
 		spew( '/tmp/feedback1/7segment2.mode',      'date' );
 		spew( '/tmp/feedback1/7segment3.mode',      'clock' );
 		system('update_clocks');
-
-		set_device( 'cb_feedback1', 1 );
 	}
 
 	return;
@@ -704,8 +702,13 @@ $shortcuts->{shutdown} = sub {
 		my $type = $coordinates->{$device}->{type};
 
 		# delayed poweroff so the shutdown announcement has sufficient time
-		if ( $type ~~ [qw[amp killswitch]] ) {
+		if ( $type ~~ [qw[amp]] ) {
 			push( @delayed, $device );
+			next;
+		}
+
+		# do not trip circuit breakers
+		if ( $type ~~ [qw[killswitch]] ) {
 			next;
 		}
 
