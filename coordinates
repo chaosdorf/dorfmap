@@ -30,7 +30,7 @@ logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au area=Schleuse watts=1       LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 feedback2/bin6 \
   type=light area=Lounge watts=10           Kaltweiße LEDs
-lounge_7seg            46  50     0    0 donationprint1/7segment1.mode \
+lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
   type=charwrite area=Lounge                4x7Segment-Display
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light area=Lounge watts=4            Grüner LED-Strahler
@@ -42,17 +42,17 @@ lounge_roehre         260  180    0    0 feedback3/2 \
   type=light delay=2 area=Lounge watts=350 layer=caution  6x weiße Röhre (Putzbeleuchtung)
 lounge_t1a            260   60    0    0 feedback3/4   \
   type=light area=Lounge watts=4            TROSS 1a (Sofa Pult)
-lounge_t1b            100   60    0    0 feedback3/8   \
+lounge_t1b             60   60    0    0 feedback3/8   \
   type=light area=Lounge watts=4            TROSS 1b (Sofa Whiteboard)
-lounge_t1c             40  160    0    0 feedback3/3   \
+lounge_t1c             60  200    0    0 feedback3/3   \
   type=light area=Lounge watts=4            TROSS 1c (Ecksofa)
-lounge_t2a            200  230    0    0 feedback3/5   \
+lounge_t2a            260  200    0    0 feedback3/5   \
   type=light area=Lounge watts=4            TROSS 2a (Sofa Eingang)
 lounge_t2b            350  330    0    0 feedback3/6   \
   type=light area=Lounge watts=4            TROSS 2b (Treppe)
 lounge_t2c            150  520    0    0 feedback3/7   \
   type=light area=Lounge watts=4            TROSS 2c (Membershelf)
-lounge_weiss          114   90    0    0 feedback3/12  \
+lounge_weiss          130  100    0    0 feedback3/12  \
   type=light area=Lounge watts=35           Weiße Halogenlampe über Tisch
 outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse watts=35      Röhre über Tür, außen
