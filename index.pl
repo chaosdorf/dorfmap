@@ -197,7 +197,9 @@ sub load_coordinates {    #{{{
 			$remotemap->{$id} = "/tmp/${controlpath}";
 		}
 
-		if ( $coordinates->{$id}->{type} eq 'killswitch' ) {
+		if (    $coordinates->{$id}->{type}
+			and $coordinates->{$id}->{type} eq 'killswitch' )
+		{
 			push( @killswitches, $id );
 		}
 	}
