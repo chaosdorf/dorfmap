@@ -14,6 +14,8 @@ use List::Util qw(sum);
 use Mojolicious::Lite;
 use Storable qw(retrieve lock_nstore lock_retrieve);
 
+no if $] >= 5.018, warnings => "experimental::smartmatch";
+
 our $VERSION = qx{git describe --dirty} || '0.03';
 my $locations   = {};
 my $coordinates = {};
