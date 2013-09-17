@@ -48,7 +48,7 @@ lounge_t1c             60  200    0    0 feedback3/3   \
   type=light area=Lounge watts=4            TROSS 1c (Ecksofa)
 lounge_t2a            260  200    0    0 feedback3/5   \
   type=light area=Lounge watts=4            TROSS 2a (Sofa Eingang)
-lounge_t2b            350  330    0    0 feedback3/6   \
+lounge_t2b            260  330    0    0 feedback3/6   \
   type=light area=Lounge watts=4            TROSS 2b (Treppe)
 lounge_t2c            150  520    0    0 feedback3/7   \
   type=light area=Lounge watts=4            TROSS 2c (Membershelf)
