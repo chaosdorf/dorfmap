@@ -86,6 +86,11 @@
 		border-bottom: 1px solid gray;
 	}
 
+	.dropdownmenu .special {
+		border-bottom: 3px double gray;
+	}
+
+
 	.presetmgr td {
 		text-align: right;
 	}

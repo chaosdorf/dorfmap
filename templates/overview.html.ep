@@ -26,7 +26,12 @@
 </div>
 <div class="dropdownmenu">
 % for my $preset (@{$presets}) {
+% if ($preset->[1] eq 'manage') {
+<a href="<%= $preset->[0] %>" class="special"><%= $preset->[1] %></a>
+% }
+% else {
 <a href="<%= $preset->[0] %>"><%= $preset->[1] %></a>
+% }
 % }
 </div> <!-- dropdownmenu -->
 </div> <!-- dropdown -->
