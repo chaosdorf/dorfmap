@@ -79,6 +79,12 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 %= submit_button 'Apply';
 %= end
 
+<p>
+animation format: "Time1,Red1,Green1,Blue1 Time2,Red2,Green2,Blue2 ..."<br/>
+Each field is [0-255], transitions are always fading. See the saved presets
+for examples.
+</p>
+
 saved presets:<br/>
 <table>
 % for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
