@@ -12,16 +12,35 @@
 #define OGREEN ( OCR1A )
 #define ORED   ( OCR0A )
 
+#ifndef SDASCL_MIXUP
+#define SDASCL_NORMAL
+#endif
+
 /*
  * PD2 and PD3 are inverted (optokoppler to gnd and internal pull-ups)
  */
+#ifdef SDASCL_NORMAL
+
 #define CLOCK_LO ( ( PIND & _BV(PD2) ) != 0 )
 #define CLOCK_HI ( ( PIND & _BV(PD2) ) == 0 )
 #define DATA_LO ( ( PIND & _BV(PD3) ) != 0 )
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x0001)
+#else
+
+#define CLOCK_LO ( ( PIND & _BV(PD3) ) != 0 )
+#define CLOCK_HI ( ( PIND & _BV(PD3) ) == 0 )
+#define DATA_LO ( ( PIND & _BV(PD2) ) != 0 )
+#define DATA_HI ( ( PIND & _BV(PD2) ) == 0 )
+#define DATA_BIT ( ( ~PIND & _BV(PD2) ) >> PD2 )
+
+#endif
+
+
+#ifndef ADDRESS
+#define ADDRESS (0x0000)
+#endif
 
 volatile uint8_t anim_slot = 0;
 volatile uint8_t delay = 0;
@@ -57,8 +76,13 @@ int main (void)
 
 	PORTD = _BV(PD2) | _BV(PD3);
 
+#ifdef SDASCL_NORMAL
 	MCUCR = _BV(ISC00);
 	GIMSK = _BV(INT0);
+#else
+	MCUCR = _BV(ISC10);
+	GIMSK = _BV(INT1);
+#endif
 
 	/* Fast PWM on OC0A, interrupt on overflow*/
 	TCCR0A = _BV(COM0A1) | _BV(WGM01) | _BV(WGM00);
@@ -106,7 +130,11 @@ static void apply_pwm(void)
 		TCCR1A &= ~_BV(COM1B1);
 }
 
+#ifdef SDASCL_NORMAL
 ISR(INT0_vect)
+#else
+ISR(INT1_vect)
+#endif
 {
 	static uint16_t address;
 	static uint8_t rcvopmode = 0;
@@ -135,7 +163,7 @@ ISR(INT0_vect)
 	}
 	else if (DATA_HI) {
 		// falling clock, data is high: end of transmission
-		if ((address == MYADDRESS) && (rcvopmode < 24)) {
+		if ((address == ADDRESS) && (rcvopmode < 24)) {
 
 			seq[ rcvopmode * 4 + 0 ] = rcvdelay;
 			seq[ rcvopmode * 4 + 1 ] = rcvred;
