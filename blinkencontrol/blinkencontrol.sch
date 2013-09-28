@@ -6522,8 +6522,8 @@ http://www.fairchildsemi.com/ds/LM/LM7805.pdf</description>
 <part name="R3" library="resistor" deviceset="R-EU_" device="0207/10" value="3k3"/>
 <part name="R4" library="resistor" deviceset="R-EU_" device="0207/10" value="1k"/>
 <part name="R5" library="resistor" deviceset="R-EU_" device="0207/10" value="1k"/>
-<part name="C1" library="capacitor-wima" deviceset="C" device="2.5/2" value="22nF"/>
-<part name="C2" library="capacitor-wima" deviceset="C" device="2.5/2" value="22nF"/>
+<part name="C1" library="capacitor-wima" deviceset="C" device="2.5/2" value="22pF"/>
+<part name="C2" library="capacitor-wima" deviceset="C" device="2.5/2" value="22pF"/>
 <part name="T1" library="transistor" deviceset="*-NPN-" device="TO92-CBE" technology="BC337-40" value="BC337"/>
 <part name="T2" library="transistor" deviceset="*-NPN-" device="TO92-CBE" technology="BC337-40" value="BC337"/>
 <part name="T3" library="transistor" deviceset="*-NPN-" device="TO92-CBE" technology="BC337-40" value="BC337"/>
