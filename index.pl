@@ -958,16 +958,27 @@ get '/blinkencontrol/:device' => sub {
 	if ( length($command) ) {
 		my $ctext = q{};
 		my $id    = 0;
+		my $addr  = 1;
+
+		if ( $controlpath =~ m{feedback}o ) {
+			$addr = 8;
+		}
 
 		for my $part ( split( / /, $command ) ) {
 			my ( $speed, $red, $green, $blue ) = split( /,/, $part );
 			$ctext
-			  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n1\npush\n";
+			  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n${addr}\npush\n";
 			$id++;
 		}
 
 		spew( "${controlpath}/commands", $ctext );
-		system('blinkencontrol-donationprint');
+
+		if ( $controlpath =~ m{donationprint}o ) {
+			system('blinkencontrol-donationprint');
+		}
+		elsif ( $controlpath =~ m{feedback}o ) {
+			system('blinkencontrol-feedback');
+		}
 
 		if ( length($cmdname) ) {
 			$bc_presets->{blinkencontrol1}->{$cmdname} = $command;

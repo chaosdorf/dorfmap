@@ -74,6 +74,8 @@ hackcenter_blau       535  355  894  408 feedback1/5 \
   type=light area=Hackcenter watts=24       Blauer LED-Streifen am Kabelkanal
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light area=Hackcenter watts=30       LED-Spots über Stoff
+hackcenter_regal      600   60    0    0 feedback4 \
+  type=blinkenlight area=Hackcenter watts=3      RGB-LED-Streifen
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light delay=2 area=Hackcenter layer=caution watts=350  6x weiße Röhre (Putzbeleuchtung)
 
