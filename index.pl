@@ -734,8 +734,14 @@ $shortcuts->{shutdown} = sub {
 
 		if ( $type eq 'blinkenlight' ) {
 			my $path = $remotemap->{$device};
-			spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n1\n" );
-			system('blinkencontrol-donationprint');
+			if ( $path =~ m{donationprint}o ) {
+				spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n1\n" );
+				system('blinkencontrol-donationprint');
+			}
+			elsif ( $path =~ m{feedback}o ) {
+				spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n8\n" );
+				system('blinkencontrol-feedback');
+			}
 		}
 		elsif ( $type eq 'printer'
 			and slurp("/srv/www/${device}.ping") == 1
