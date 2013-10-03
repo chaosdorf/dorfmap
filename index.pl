@@ -108,7 +108,16 @@ sub get_device {
 	my ($id) = @_;
 	my $state = -1;
 
-	if ( exists $gpiomap->{$id} ) {
+	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
+		$state = slurp( $remotemap->{$id} . '/commands' );
+		if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
+			$state = 0;
+		}
+		else {
+			$state = 1;
+		}
+	}
+	elsif ( exists $gpiomap->{$id} ) {
 		$state = slurp( $gpiomap->{$id} );
 	}
 	elsif ( exists $remotemap->{$id} ) {
@@ -297,26 +306,31 @@ sub blinkenlight {
 
 	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
 
-	$ret
-	  .= sprintf(
-		'<img src="/blinkenlight.png" class="blinklight %s" alt="%s" />',
-		$light, $light );
+	$ret .= sprintf(
+		'<img src="/%s" class="blinklight %s" alt="%s" />',
+		blinkenlight_image($light),
+		$light, $light
+	);
 
 	$ret .= '</a>';
 
 	return $ret;
 }
 
-sub blinkenlight_status {
-	my ($light) = @_;
+sub blinkenlight_image {
+	my ($id) = @_;
 
-	if ( exists $remotemap->{$light} ) {
-		return 'rgb('
-		  . join( ',',
-			map { slurp( $remotemap->{$light} . "/$_" ) } (qw(red green blue)) )
-		  . ')';
+	my $image = 'blinkenlight.png';
+	my $state = light_status($id);
+
+	if ( $state == 1 ) {
+		$image = 'blinkenlight_on.png';
 	}
-	return -1;
+	elsif ( $state == 0 ) {
+		$image = 'blinkenlight_off.png';
+	}
+
+	return $image;
 }
 
 sub charwrite {
@@ -589,13 +603,14 @@ sub status_number {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp')          { return amp_status($id) }
-		when ('blinkenlight') { return blinkenlight_status($id) }
+		when ('amp') { return amp_status($id) }
 		when ('door') {
 			return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 )
 		}
 		when ('pump') { return pump_status($id) }
-		when ( [qw[light light_au light_ro]] ) { return light_status($id) }
+		when ( [qw[blinkenlight light light_au light_ro]] ) {
+			return light_status($id)
+		}
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_status($id)
 		}
@@ -609,8 +624,9 @@ sub status_image {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp')  { return amp_image($id) }
-		when ('pump') { return pump_image($id) }
+		when ('amp')          { return amp_image($id) }
+		when ('blinkenlight') { return blinkenlight_image($id) }
+		when ('pump')         { return pump_image($id) }
 		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
 		when ( [qw[phone printer server wifi]] ) {
 			return pingdevice_image( $type, $id )
