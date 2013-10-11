@@ -24,6 +24,9 @@ temp_serverraum      1265  400    0    0 none
 online_guests           0    0    0    0 none
 online_hosts            0    0    0    0 none
 power_serverraum        0    0    0    0 none
+power_phase1            0    0    0    0 none
+power_phase2            0    0    0    0 none
+power_phase3            0    0    0    0 none
 
 [layer=control]
 logo                  224  460    0    0 feedback2/pwm2 \
