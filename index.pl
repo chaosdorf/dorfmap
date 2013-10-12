@@ -376,19 +376,32 @@ sub infotext {
 		);
 	}
 
-	$buf .= '<span class="wattagetext infohead">power consumption</span>';
+	my $power_p1 = slurp("${store_prefix}.power_phase1");
+	my $power_p2 = slurp("${store_prefix}.power_phase1");
+	my $power_p3 = slurp("${store_prefix}.power_phase1");
+
+	$buf .= '<span class="wattagetext">power consumption</span>';
+	$buf .= sprintf( '<span class="wattage"> %dW</span><br/>',
+		$power_p1 + $power_p2 + $power_p3 );
+	$buf .= '<ul>';
+	$buf
+	  .= sprintf( '<li><span class="wattagetext">phases</span>'
+		  . '<span class="wattage">%dW + %dW + %dW</span></li>',
+		$power_p1, $power_p2, $power_p3 );
 	$buf .= sprintf(
-'<span class="wattagetext" title="Light, amps, non-serverraum hosts">dorfmap devices</span>'
-		  . '<span class="wattage">ca. %dW</span><br/>',
+		'<li><span class="wattagetext">known dorfmap devices</span>'
+		  . '<span class="wattage">ca. %dW</span></li>',
 		estimated_power_consumption
 	);
+
 	if ( -e "${store_prefix}.power_serverraum" ) {
 		$buf .= sprintf(
-'<span class="wattagetext" title="Serverraum hardware, measured by UPS">Serverraum</span>'
-			  . '<span class="wattage">%dW</span><br/>',
+			'<li><span class="wattagetext">Serverraum (UPS)</span>'
+			  . '<span class="wattage">%dW</span></li>',
 			slurp("${store_prefix}.power_serverraum"),
 		);
 	}
+	$buf .= '</ul>';
 
 	for my $cb (@killswitches) {
 		if ( get_device($cb) == 0 ) {
