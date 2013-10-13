@@ -77,7 +77,13 @@ while ( sleep(17) ) {
 		}
 	}
 
-	for my $interval ( 30, 60, 600 ) {
+	for my $ts (keys %cache) {
+		if ($now - $ts > 3600) {
+			delete $cache{$ts};
+		}
+	}
+
+	for my $interval ( 30, 60, 300, 600, 3600 ) {
 		my %phase_avg;
 		for my $phase (qw(p1 p2 p3)) {
 			my ( $cnt, $sum ) = ( 0, 0 );
