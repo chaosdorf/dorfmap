@@ -1,0 +1,96 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use 5.010;
+
+use App::Daemon qw(daemonize);
+use DateTime;
+use File::Slurp qw(read_file write_file);
+use JSON;
+use List::Util qw(sum);
+use LWP::UserAgent;
+
+$App::Daemon::as_user = 'www-data';
+$App::Daemon::logfile = '/tmp/fluksod.log';
+
+daemonize();
+
+our $VERSION = '0.01';
+
+my $out_prefix = '/srv/www/flukso';
+my %cache;
+
+# current timestamp is latest one returned from flukso to avoid clock desync
+my $now;
+
+my $re_pair = qr{
+	\[ (?<timestamp> \d+ ) , (?<value> \d+ ) \]
+}x;
+
+my $ua = LWP::UserAgent->new;
+$ua->timeout(4);
+
+sub slurp {
+	my ($file) = @_;
+
+	my $content = read_file( $file, err_mode => 'quiet' );
+	if ( defined $content ) {
+		chomp $content;
+	}
+	return $content;
+}
+
+sub spew {
+	my ( $file, $value ) = @_;
+
+	return write_file( $file, { err_mode => 'quiet' }, $value );
+}
+
+mkdir($out_prefix);
+
+while ( sleep(17) ) {
+
+	for my $pair (
+		[ 'p1', 'd80587d41bebde066f003a8f60ac0d01' ],
+		[ 'p2', '2267a0503927a5f2bbf0050f657dcc55' ],
+		[ 'p3', '90d083c153310b5787e3f1a7fc7967a5' ]
+	  )
+	{
+
+		my ( $name, $id ) = @{$pair};
+		my $res
+		  = $ua->get(
+"http://flukso:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
+		  );
+
+		my $content = $res->decoded_content;
+
+		while ( $content =~ s{$re_pair}{} ) {
+			my ( $ts, $value ) = @+{ 'timestamp', 'value' };
+
+			if ( not exists $cache{$ts}{$name} ) {
+				$cache{$ts}{$name} = $value;
+				$cache{$ts}{total} += $value;
+				$now = $ts;
+			}
+		}
+	}
+
+	for my $interval ( 30, 60, 600 ) {
+		my %phase_avg;
+		for my $phase (qw(p1 p2 p3)) {
+			my ( $cnt, $sum ) = ( 0, 0 );
+			for my $ts ( ( $now - $interval ) .. $now ) {
+				if ( $cache{$ts}{$phase} ) {
+					$sum += $cache{$ts}{$phase};
+					$cnt++;
+				}
+			}
+			$phase_avg{$phase} = $sum / $cnt;
+			spew( "${out_prefix}/${interval}_${phase}", $phase_avg{$phase} );
+		}
+		spew( "${out_prefix}/${interval}", sum values %phase_avg );
+	}
+
+}
