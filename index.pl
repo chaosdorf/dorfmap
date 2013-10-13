@@ -376,9 +376,9 @@ sub infotext {
 		);
 	}
 
-	my $power_p1 = slurp("${store_prefix}.power_phase1");
-	my $power_p2 = slurp("${store_prefix}.power_phase2");
-	my $power_p3 = slurp("${store_prefix}.power_phase3");
+	my $power_p1 = slurp('/srv/www/flukso/30_p1');
+	my $power_p2 = slurp('/srv/www/flukso/30_p2');
+	my $power_p3 = slurp('/srv/www/flukso/30_p3');
 
 	$buf .= '<span class="wattagetext">power consumption</span>';
 	$buf .= sprintf( '<span class="wattage"> %dW</span><br/>',
