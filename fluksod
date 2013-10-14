@@ -64,6 +64,10 @@ while ( sleep(17) ) {
 "http://flukso:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
 		  );
 
+		if (not $res->is_success) {
+			next;
+		}
+
 		my $content = $res->decoded_content;
 
 		while ( $content =~ s{$re_pair}{} ) {
