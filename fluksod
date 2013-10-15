@@ -92,7 +92,7 @@ while ( sleep(17) ) {
 		for my $phase (qw(p1 p2 p3)) {
 			my ( $cnt, $sum ) = ( 0, 0 );
 			for my $ts ( ( $now - $interval ) .. $now ) {
-				if ( $cache{$ts}{$phase} ) {
+				if ( exists $cache{$ts}{$phase} ) {
 					$sum += $cache{$ts}{$phase};
 					$cnt++;
 				}
@@ -105,8 +105,13 @@ while ( sleep(17) ) {
 
 	my $history = q{};
 	for my $ts ( sort keys %cache ) {
-		$history .= sprintf( "%d,%4d,%4d,%4d\n",
-			$ts, $cache{$ts}{p1}, $cache{$ts}{p2}, $cache{$ts}{p3} );
+		$history .= sprintf(
+			"%d,%4d,%4d,%4d\n",
+			$ts,
+			$cache{$ts}{p1} // -1,
+			$cache{$ts}{p2} // -1,
+			$cache{$ts}{p3} // -1
+		);
 	}
 	spew( "${out_prefix}/dump", $history );
 
