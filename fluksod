@@ -49,7 +49,7 @@ sub spew {
 
 mkdir($out_prefix);
 
-while ( sleep(17) ) {
+while ( sleep(7) ) {
 
 	for my $pair (
 		[ 'p1', 'd80587d41bebde066f003a8f60ac0d01' ],
@@ -97,7 +97,12 @@ while ( sleep(17) ) {
 					$cnt++;
 				}
 			}
-			$phase_avg{$phase} = $sum / $cnt;
+			if ($cnt) {
+				$phase_avg{$phase} = $sum / $cnt;
+			}
+			else {
+				$phase_avg{$phase} = -1;
+			}
 			spew( "${out_prefix}/${interval}_${phase}", $phase_avg{$phase} );
 		}
 		spew( "${out_prefix}/${interval}", sum values %phase_avg );
