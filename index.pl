@@ -137,8 +137,8 @@ sub unshutdown {
 		unlink($shutdownfile);
 
 		spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
-		spew( '/tmp/feedback1/7segment2.mode',      'date' );
-		spew( '/tmp/feedback1/7segment3.mode',      'clock' );
+		spew( '/tmp/feedback1/7segment2.mode',      'power' );
+		spew( '/tmp/feedback1/7segment3.mode',      ' avg' );
 		system('update_clocks');
 	}
 
