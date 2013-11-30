@@ -258,7 +258,7 @@
 <body>
 
 <div class="about">
-<a href="https://github.com/derf/dorfmap">dorfmap</a> —
+<a href="https://github.com/chaosdorf/dorfmap">dorfmap</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung">about</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung#API">API</a><br/>
 v<%= $version %>
