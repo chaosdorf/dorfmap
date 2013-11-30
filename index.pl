@@ -34,6 +34,10 @@ my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
 my (@killswitches);
 
+# ref (1):
+# some browsers send unsolicited POST requests e.g. when updating their
+# hestory. Do not allow these to change anything.
+
 #{{{ primitive helpers
 
 sub slurp {
@@ -917,7 +921,8 @@ get '/action/:action' => sub {
 	my $layer = $self->param('layer') // 'control';
 	my @errors = ('no such action');
 
-	if ( exists $shortcuts->{$action} ) {
+	# see (1)
+	if ( exists $shortcuts->{$action} and $self->req->method eq 'GET' ) {
 		@errors = &{ $shortcuts->{$action} }($self);
 	}
 
@@ -990,7 +995,8 @@ get '/blinkencontrol/:device' => sub {
 		$command = join( ',', $speed, $red, $green, $blue );
 	}
 
-	if ( length($command) ) {
+	# see (1)
+	if ( length($command) and $self->req->method eq 'GET' ) {
 		my $ctext = q{};
 		my $id    = 0;
 		my $addr  = 1;
@@ -1067,7 +1073,8 @@ get '/charwrite/:device' => sub {
 		return;
 	}
 
-	if ( defined $text ) {
+	# see (1)
+	if ( defined $text and $self->req->method eq 'GET' ) {
 		set_device( $device, $text );
 	}
 	else {
@@ -1141,7 +1148,8 @@ get '/killswitch/:device' => sub {
 		return;
 	}
 
-	if ($action) {
+	# see (1)
+	if ( $action and $self->req->method eq 'GET' ) {
 		if ( $action eq 'on' ) {
 			set_device( $device, 1 );
 		}
@@ -1298,7 +1306,8 @@ any '/presets' => sub {
 
 	$name =~ tr{[0-9a-zA-Z ]}{}cd;
 
-	if ( $save and length($name) ) {
+	# see (1)
+	if ( $save and length($name) and $self->req->method eq 'GET' ) {
 		for my $id ( keys %{$coordinates} ) {
 			if (    $coordinates->{$id}->{type}
 				and $coordinates->{$id}->{type} eq 'light' )
@@ -1316,7 +1325,8 @@ any '/presets' => sub {
 		load_presets();
 	}
 
-	if ( $action eq 'delete' and $name ) {
+	# see (1)
+	if ( $action eq 'delete' and $name and $self->req->method eq 'GET' ) {
 		delete $presets->{$name};
 		save_presets();
 		$self->redirect_to('/presets');
@@ -1356,6 +1366,12 @@ get '/presets/apply/:name' => sub {
 	my ($self) = @_;
 	my $name = $self->stash('name');
 
+	# see (1)
+	if ( $self->req->method ne 'GET' ) {
+		$self->redirect_to('/');
+		return;
+	}
+
 	load_presets();
 
 	if ( exists $presets->{$name}->{timestamp} ) {
@@ -1379,11 +1395,14 @@ get '/presets/apply/:name' => sub {
 post '/set' => sub {
 	my ($self) = @_;
 
-	for my $key ( keys %{$coordinates} ) {
-		if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
-			and $self->param($key) )
-		{
-			spew( "${store_prefix}.${key}", $self->param($key) );
+	# see (1)
+	if ( $self->req->method eq 'GET' ) {
+		for my $key ( keys %{$coordinates} ) {
+			if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
+				and $self->param($key) )
+			{
+				spew( "${store_prefix}.${key}", $self->param($key) );
+			}
 		}
 	}
 
@@ -1396,6 +1415,12 @@ post '/set' => sub {
 get '/toggle/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
+
+	# see (1)
+	if ( $self->req->method ne 'GET' ) {
+		$self->redirect_to('/');
+		return;
+	}
 
 	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
 		if ( -e "/tmp/automatic_${id}" ) {
@@ -1428,6 +1453,12 @@ get '/off/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
+	# see (1)
+	if ( $self->req->method ne 'GET' ) {
+		$self->redirect_to('/');
+		return;
+	}
+
 	set_device( $id, 0, 0 );
 
 	$self->render(
@@ -1440,6 +1471,12 @@ get '/off/:id' => sub {
 get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
+
+	# see (1)
+	if ( $self->req->method ne 'GET' ) {
+		$self->redirect_to('/');
+		return;
+	}
 
 	unshutdown;
 	set_device( $id, 1, 0 );
