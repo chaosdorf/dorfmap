@@ -59,7 +59,7 @@ lounge_weiss          130  100    0    0 feedback3/12  \
   type=light area=Lounge watts=35           Weiße Halogenlampe über Tisch
 outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse watts=35      Röhre über Tür, außen
-roehre_blau           748   42    0    0 feedback1/2 \
+roehre_blau           748   20    0    0 feedback1/2 \
   type=light area=Hackcenter watts=20       Blaue Röhre
 schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_au area=Schleuse watts=5       LEDs im Schaufenster
@@ -81,6 +81,22 @@ hackcenter_regal      600   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3      RGB-LED-Streifen
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light delay=2 area=Hackcenter layer=caution watts=720  6x weiße Röhre (Putzbeleuchtung)
+hackcenter_regal1     480   60    0    0 feedback5/1 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 1
+hackcenter_regal2     515   60    0    0 feedback5/3 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 2
+hackcenter_regal3     550   60    0    0 feedback5/5 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 3
+hackcenter_regal4     640   60    0    0 feedback5/7 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 4
+hackcenter_regal5     670   60    0    0 feedback5/8 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 5
+hackcenter_regal6     705   60    0    0 feedback5/6 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 6
+hackcenter_regal7     740   60    0    0 feedback5/4 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 7
+hackcenter_regal8     775   60    0    0 feedback5/2 \
+  type=light area=Hackcenter watts=1     LED-Streifen Regal 8
 
 [layer=control type=amp delay=4 watts=12]
 amp0a                 150  590    0    0 amp0 \
