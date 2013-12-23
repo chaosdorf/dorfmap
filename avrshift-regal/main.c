@@ -32,7 +32,7 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
-	DDRB = 0x00;
+	DDRB = 0xff;
 	DDRD = _BV(DDD3);
 
 	PORTB = 0x00;
