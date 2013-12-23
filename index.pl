@@ -1307,7 +1307,7 @@ any '/presets' => sub {
 	$name =~ tr{[0-9a-zA-Z ]}{}cd;
 
 	# see (1)
-	if ( $save and length($name) and $self->req->method eq 'GET' ) {
+	if ( $save and length($name) and $self->req->method ~~ [qw[GET POST]] ) {
 		for my $id ( keys %{$coordinates} ) {
 			if (    $coordinates->{$id}->{type}
 				and $coordinates->{$id}->{type} eq 'light' )
