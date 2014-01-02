@@ -957,6 +957,7 @@ get '/blinkencontrol/:device' => sub {
 	my $opmode  = $self->param('opmode');
 	my $command = $self->param('command') // q{};
 	my $cmdname = $self->param('cmdname') // q{};
+	my $action  = $self->param('action') // q{};
 	my $rawmode = 0;
 
 	my $bc_presets = load_blinkencontrol();
@@ -1025,6 +1026,11 @@ get '/blinkencontrol/:device' => sub {
 			$bc_presets->{blinkencontrol1}->{$cmdname} = $command;
 			save_blinkencontrol($bc_presets);
 		}
+	}
+	elsif ( $cmdname and $action eq 'delete' and $self->req->method eq 'GET' ) {
+		delete $bc_presets->{blinkencontrol1}->{$cmdname};
+		save_blinkencontrol($bc_presets);
+		$bc_presets = load_blinkencontrol();
 	}
 
 	$self->respond_to(

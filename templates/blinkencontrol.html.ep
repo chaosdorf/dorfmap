@@ -89,6 +89,7 @@ saved presets:<br/>
 <table>
 % for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
 <tr>
+<td>(<a href="?cmdname=<%= $cb_preset %>&amp;action=delete">X</a>)</td>
 <td> <a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>"><%= $cb_preset %></a> </td>
 <td><%= $bc_presets->{blinkencontrol1}->{$cb_preset} %></td>
 </tr>
