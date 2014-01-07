@@ -299,10 +299,11 @@ sub amp {
 
 	$id =~ s{ [ab] $ }{}ox;
 
-	return
-	  sprintf(
-'<a href="/toggle/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		$id, amp_image($id), 'amp', 'amp' );
+	return sprintf(
+'<a href="/%s/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		amp_status($id) ? 'off' : 'on',
+		$id, amp_image($id), 'amp', 'amp'
+	);
 }
 
 sub blinkenlight {
@@ -518,7 +519,8 @@ sub light {
 	my $ret = q{};
 
 	if ($is_rw) {
-		$ret .= sprintf( '<a href="/toggle/%s">', $light );
+		$ret .= sprintf( '<a href="/%s/%s">',
+			light_status($light) ? 'off' : 'on', $light );
 	}
 
 	$ret .= sprintf( '<img src="/%s" class="light ro %s" alt="%s" />',
@@ -609,10 +611,11 @@ sub pump_status {
 sub pump {
 	my ($id) = @_;
 
-	return
-	  sprintf(
-'<a href="/toggle/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		$id, pump_image($id), 'pump', 'pump' );
+	return sprintf(
+'<a href="/%s/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		pump_status($id) ? 'off' : 'on',
+		$id, pump_image($id), 'pump', 'pump'
+	);
 }
 
 sub status_number {
@@ -1465,12 +1468,19 @@ get '/off/:id' => sub {
 		return;
 	}
 
-	set_device( $id, 0, 0 );
+	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+		if ( -e "/tmp/automatic_${id}" ) {
+			unlink("/tmp/automatic_${id}");
+		}
+	}
 
-	$self->render(
-		data   => q{},
-		status => 204
-	);
+	if ( set_device( $id, 0, 0 ) ) {
+		$self->redirect_to('/');
+	}
+	else {
+		$self->redirect_to('/?error=no+such+device');
+	}
+
 	return;
 };
 
@@ -1484,10 +1494,20 @@ get '/on/:id' => sub {
 		return;
 	}
 
-	unshutdown;
-	set_device( $id, 1, 0 );
+	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+		spew( "/tmp/automatic_${id}", q{} );
+		$self->redirect_to('/');
+		return;
+	}
 
-	$self->redirect_to('/');
+	unshutdown;
+	if ( set_device( $id, 1, 0 ) ) {
+		$self->redirect_to('/');
+	}
+	else {
+		$self->redirect_to('/?error=no+such+device');
+	}
+
 	return;
 };
 
