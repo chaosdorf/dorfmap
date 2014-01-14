@@ -82,7 +82,7 @@ while ( sleep(7) ) {
 	}
 
 	for my $ts ( keys %cache ) {
-		if ( $now - $ts > 18000 ) {
+		if ( $now - $ts > 7200 ) {
 			delete $cache{$ts};
 		}
 	}
