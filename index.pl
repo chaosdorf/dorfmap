@@ -66,12 +66,8 @@ sub set_remote {
 	my ( $path, $value ) = @_;
 
 	spew( $path, "${value}\n" );
-	if ( $path =~ m{ donationprint }x ) {
-		system('avrshift-donationprint');
-	}
-	elsif ( $path =~ m{ feedback }x ) {
-		system('avrshift-feedback');
-	}
+	my $bus = (split(qr{ / }ox, $path))[2]; # /tmp/$bus/$id
+	system('avrshift', $bus);
 }
 
 sub set_device {
