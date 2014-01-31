@@ -1400,8 +1400,7 @@ get '/presets/apply/:name' => sub {
 post '/set' => sub {
 	my ($self) = @_;
 
-	# see (1)
-	if ( $self->req->method eq 'GET' ) {
+	if ( $self->req->method eq 'POST' ) {
 		for my $key ( keys %{$coordinates} ) {
 			if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
 				and $self->param($key) )
