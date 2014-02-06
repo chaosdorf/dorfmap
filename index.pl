@@ -296,9 +296,9 @@ sub amp {
 	$id =~ s{ [ab] $ }{}ox;
 
 	return sprintf(
-'<a href="/%s/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="/%s/%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		amp_status($id) ? 'off' : 'on',
-		$id, amp_image($id), 'amp', 'amp'
+		$id, $id, amp_image($id), 'amp', 'amp'
 	);
 }
 
@@ -308,9 +308,9 @@ sub blinkenlight {
 	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
 
 	$ret .= sprintf(
-		'<img src="/%s" class="blinklight %s" alt="%s" />',
+		'<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
 		blinkenlight_image($light),
-		$light, $light
+		$light, $light, $light
 	);
 
 	$ret .= '</a>';
@@ -340,8 +340,9 @@ sub charwrite {
 	my $ret = sprintf( '<a href="/charwrite/%s">', $id );
 
 	$ret
-	  .= sprintf( '<img src="/charwrite.png" class="charwrite %s" alt="%s" />',
-		$id, $id );
+	  .= sprintf(
+		'<img src="/charwrite.png" class="charwrite %s" id="img%s" alt="%s" />',
+		$id, $id, $id );
 	$ret .= '</a>';
 
 	return $ret;
@@ -472,8 +473,9 @@ sub killswitch {
 
 	my $ret = sprintf( '<a href="/killswitch/%s">', $cb );
 
-	$ret .= sprintf( '<img src="/%s" class="killswitch %s" alt="%s" />',
-		killswitch_image($cb), $cb, $cb );
+	$ret
+	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
+		killswitch_image($cb), $cb, $cb, $cb );
 
 	$ret .= '</a>';
 
@@ -519,8 +521,9 @@ sub light {
 			light_status($light) ? 'off' : 'on', $light );
 	}
 
-	$ret .= sprintf( '<img src="/%s" class="light ro %s" alt="%s" />',
-		light_image($light), $light, $light, $light );
+	$ret
+	  .= sprintf( '<img src="/%s" id="img%s" class="light ro %s" alt="%s" />',
+		light_image($light), $light, $light, $light, $light );
 
 	if ($is_rw) {
 		$ret .= sprintf('</a>');
@@ -567,16 +570,16 @@ sub pingdevice {
 
 	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
 		return sprintf(
-'<a href="/on/%s"><img src="/%s" class="%s ro %s" title="%s" alt="%s" /></a>',
+'<a href="/on/%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
 			$host, pingdevice_image( $type, $host ),
-			$type, $host, $label, $host
+			$host, $type, $host, $label, $host
 		);
 	}
 	else {
 		return sprintf(
-			'<img src="/%s" class="%s ro %s" title="%s" alt="%s" />',
+			'<img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" />',
 			pingdevice_image( $type, $host ),
-			$type, $host, $label, $host,
+			$host, $type, $host, $label, $host,
 		);
 	}
 
@@ -608,9 +611,9 @@ sub pump {
 	my ($id) = @_;
 
 	return sprintf(
-'<a href="/%s/%s"><img src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="/%s/%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		pump_status($id) ? 'off' : 'on',
-		$id, pump_image($id), 'pump', 'pump'
+		$id, $id, pump_image($id), 'pump', 'pump'
 	);
 }
 

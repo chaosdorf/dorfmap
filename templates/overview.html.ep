@@ -57,12 +57,12 @@
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 % if ($type ne q{} and $layer eq $coordinates->{$location}->{layer}) {
 %==	statusimage($type, $location);
-% if ($location =~ m{^[0-9a-zA-Z_]*$}) {
+% if ($location =~ m{^[0-9a-zA-Z_]*$} and $type ne 'charwrite') {
 % my $delay = sprintf('15%03d', rand(999));
 %= javascript begin
 function reload<%= $location %>() {
 	d = new Date();
-	$("<%= $location %>").attr("src", "/get/<%= $location %>.png?r="+d.getTime());
+	$("#img<%= $location %>").attr("src", "/get/<%= $location %>.png?r="+d.getTime());
 	setTimeout('reload<%= $location %>()', <%= $delay %>);
 }
 setTimeout('reload<%= $location %>()', <%= $delay %>);
