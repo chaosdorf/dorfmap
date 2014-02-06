@@ -57,6 +57,17 @@
 <div id="<%= $location %>" class="<%== statusclass($type, $location) %>">
 % if ($type ne q{} and $layer eq $coordinates->{$location}->{layer}) {
 %==	statusimage($type, $location);
+% if ($location =~ m{^[0-9a-zA-Z_]*$}) {
+% my $delay = sprintf('60%03d', rand(999));
+%= javascript begin
+function reload<%= $location %>() {
+	d = new Date();
+	$("<%= $location %>").attr("src", "/get/<%= $location %>.png?r="+d.getTime());
+	setTimeout('reload<%= $location %>()', <%= $delay %>);
+}
+setTimeout('reload<%= $location %>()', <%= $delay %>);
+% end
+% }
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
 %	}
