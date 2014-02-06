@@ -58,7 +58,7 @@
 % if ($type ne q{} and $layer eq $coordinates->{$location}->{layer}) {
 %==	statusimage($type, $location);
 % if ($location =~ m{^[0-9a-zA-Z_]*$}) {
-% my $delay = sprintf('60%03d', rand(999));
+% my $delay = sprintf('15%03d', rand(999));
 %= javascript begin
 function reload<%= $location %>() {
 	d = new Date();
