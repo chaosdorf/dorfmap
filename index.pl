@@ -1419,6 +1419,56 @@ post '/set' => sub {
 	);
 };
 
+get '/space_api' => sub {
+	my ($self) = @_;
+
+	my %json = (
+		api      => '0.13',
+		space    => 'Chaosdorf',
+		logo     => 'https://wiki.chaosdorf.de/images/1/1d/ChaosdorfLogo.svg',
+		url      => 'https://chaosdorf.de',
+		location => {
+			address => 'Chaos Computer Club Düsseldorf / Chaosdorf e.V.,'
+			  . ' Hüttenstr. 25, 40215 Düsseldorf, Germany',
+			lat => 51.21656,
+			lon => 6.78347,
+		},
+		state => {
+
+			# \1 -> json true, \0 -> json false
+			open => slurp('/srv/www/doorstatus') eq 'open' ? \1 : \0,
+		},
+		contact => {
+			irc     => 'irc://irc.oftc.net/#chaosdorf',
+			twitter => '@chaosdorf',
+			email   => 'mail@chaosdorf.de',
+		},
+		issue_report_channels => ['twitter'],
+		feeds                 => {
+			blog => {
+				url  => 'http://chaosdorf.de/feed/',
+				type => 'rss',
+			},
+			calendar => {
+				url  => 'http://flux.derf0.net/cccd.ics',
+				type => 'ical',
+			},
+		},
+		projects => [
+			'https://wiki.chaosdorf.de/Projects',
+			'https://github.com/chaosdorf',
+		],
+	);
+
+	$self->respond_to(
+		json => { json => \%json },
+		any  => {
+			data   => 'not acceptables. use json',
+			status => 406
+		},
+	);
+};
+
 get '/toggle/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
