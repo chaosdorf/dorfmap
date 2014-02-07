@@ -261,7 +261,8 @@
 <div class="about">
 <a href="https://github.com/chaosdorf/dorfmap">dorfmap</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung">about</a> —
-<a href="https://wiki.chaosdorf.de/Lichtsteuerung#API">API</a><br/>
+<a href="https://wiki.chaosdorf.de/Lichtsteuerung#API">API</a> —
+<a href="/space_api.json">spaceAPI</a><br/>
 v<%= $version %>
 </div>
 
