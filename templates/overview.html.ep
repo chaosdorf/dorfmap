@@ -65,7 +65,7 @@ function reload<%= $location %>() {
 	$("#img<%= $location %>").attr("src", "/get/<%= $location %>.png?r="+d.getTime());
 	setTimeout('reload<%= $location %>()', <%= $delay %>);
 }
-setTimeout('reload<%= $location %>()', <%= $delay %>);
+//setTimeout('reload<%= $location %>()', <%= $delay %>);
 % end
 % }
 %	if ($type ~~ [qw[infoarea rtext]]) {

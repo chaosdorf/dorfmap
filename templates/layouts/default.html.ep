@@ -4,7 +4,7 @@
 	<title>dorfmap</title>
 	<meta charset="UTF-8">
 % if ($refresh) {
-	<meta http-equiv="refresh" content="300" />
+	<meta http-equiv="refresh" content="50" />
 % }
 
 
