@@ -305,7 +305,7 @@ sub amp {
 
 	return
 	  sprintf(
-'<a href="/%ss"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		amp_link($id), $id, amp_image($id), 'amp', 'amp' );
 }
 
