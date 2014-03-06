@@ -10,7 +10,7 @@
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 <a class="<%= statusclass($type, $location) %>"
-href="<%= statuslink($type, $location) %>"> <%= $coordinates->{$location}->{text} %> </a>
+href="<%= statuslink($type, $location) %>?m=1"> <%= $coordinates->{$location}->{text} %> </a>
 % }
 % }
 

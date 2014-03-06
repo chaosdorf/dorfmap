@@ -997,7 +997,7 @@ get '/action/:action' => sub {
 		);
 	}
 	else {
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	return;
 };
@@ -1463,7 +1463,7 @@ get '/presets/apply/:name' => sub {
 
 	# see (1)
 	if ( $self->req->method ne 'GET' ) {
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 		return;
 	}
 
@@ -1483,7 +1483,7 @@ get '/presets/apply/:name' => sub {
 		}
 	}
 
-	$self->redirect_to('/');
+	$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	return;
 };
 
@@ -1574,7 +1574,7 @@ get '/toggle/:id' => sub {
 			spew( "/tmp/automatic_${id}", q{} );
 		}
 		if ( slurp( $gpiomap->{$id} ) == 0 ) {
-			$self->redirect_to('/');
+			$self->redirect_to( $self->param('m') ? '/m' : '/' );
 			return;
 		}
 	}
@@ -1584,7 +1584,7 @@ get '/toggle/:id' => sub {
 
 	my $state = get_device($id);
 	if ( set_device( $id, $state ^ 1, 0 ) ) {
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1610,7 +1610,7 @@ get '/off/:id' => sub {
 	}
 
 	if ( set_device( $id, 0, 0 ) ) {
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1631,13 +1631,13 @@ get '/on/:id' => sub {
 
 	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
 		spew( "/tmp/automatic_${id}", q{} );
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 		return;
 	}
 
 	unshutdown;
 	if ( set_device( $id, 1, 0 ) ) {
-		$self->redirect_to('/');
+		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
