@@ -290,22 +290,35 @@ sub amp_status {
 	return slurp("/srv/www/${id}.status") // -1;
 }
 
+sub amp_link {
+	my ($id) = @_;
+
+	$id =~ s{ [ab] $ }{}ox;
+
+	return sprintf( '/%s/%s', amp_status($id) ? 'off' : 'on', $id );
+}
+
 sub amp {
 	my ($id) = @_;
 
 	$id =~ s{ [ab] $ }{}ox;
 
-	return sprintf(
-'<a href="/%s/%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		amp_status($id) ? 'off' : 'on',
-		$id, $id, amp_image($id), 'amp', 'amp'
-	);
+	return
+	  sprintf(
+'<a href="/%ss"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		amp_link($id), $id, amp_image($id), 'amp', 'amp' );
+}
+
+sub blinkenlight_link {
+	my ($light) = @_;
+
+	return sprintf( '/blinkencontrol/%s', $light );
 }
 
 sub blinkenlight {
 	my ($light) = @_;
 
-	my $ret = sprintf( '<a href="/blinkencontrol/%s">', $light );
+	my $ret = sprintf( '<a href="%s">', blinkenlight_link($light) );
 
 	$ret .= sprintf(
 		'<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
@@ -334,10 +347,16 @@ sub blinkenlight_image {
 	return $image;
 }
 
+sub charwrite_link {
+	my ($id) = @_;
+
+	return sprintf( '/charwrite/%s', $id );
+}
+
 sub charwrite {
 	my ($id) = @_;
 
-	my $ret = sprintf( '<a href="/charwrite/%s">', $id );
+	my $ret = sprintf( '<a href="%s">', charwrite_link($id) );
 
 	$ret
 	  .= sprintf(
@@ -468,10 +487,16 @@ sub killswitch_status {
 	return get_device($cb);
 }
 
+sub killswitch_link {
+	my ($cb) = @_;
+
+	return sprintf( '/killswitch/%s', $cb );
+}
+
 sub killswitch {
 	my ($cb) = @_;
 
-	my $ret = sprintf( '<a href="/killswitch/%s">', $cb );
+	my $ret = sprintf( '<a href="%s">', killswitch_link($cb) );
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
@@ -511,14 +536,19 @@ sub light_status {
 	return get_device($light);
 }
 
+sub light_link {
+	my ($light) = @_;
+
+	return sprintf( '/%s/%s', light_status($light) ? 'off' : 'on', $light );
+}
+
 sub light {
 	my ( $light, $is_rw ) = @_;
 
 	my $ret = q{};
 
 	if ($is_rw) {
-		$ret .= sprintf( '<a href="/%s/%s">',
-			light_status($light) ? 'off' : 'on', $light );
+		$ret .= sprintf( '<a href="%s">', light_link($light) );
 	}
 
 	$ret
@@ -607,14 +637,19 @@ sub pump_status {
 	return get_device($id);
 }
 
+sub pump_link {
+	my ($id) = @_;
+
+	return sprintf( '/%s/%s', pump_status($id) ? 'off' : 'on', $id );
+}
+
 sub pump {
 	my ($id) = @_;
 
-	return sprintf(
-'<a href="/%s/%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		pump_status($id) ? 'off' : 'on',
-		$id, $id, pump_image($id), 'pump', 'pump'
-	);
+	return
+	  sprintf(
+'<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		pump_link($id), $id, pump_image($id), 'pump', 'pump' );
 }
 
 sub status_number {
@@ -848,6 +883,26 @@ helper statusclass => sub {
 	}
 	if ( $type eq 'rtext' ) {
 		return 'rtext';
+	}
+
+	return q{};
+};
+
+helper statuslink => sub {
+	my ( $self, $type, $location ) = @_;
+
+	given ($type) {
+		when ('amp')          { return amp_link($location) }
+		when ('blinkenlight') { return blinkenlight_link($location) }
+		when ('charwrite')    { return "/charwrite/$location" }
+		when ('killswitch')   { return killswitch_link($location) }
+		when ('light')        { return light_link($location) }
+		when ('light_au')     { return light_link($location) }
+		when ('light_ro')     { return light_link($location) }
+		when ('pump')         { return pump_link($location) }
+		when ( [qw[phone printer server wifi]] ) {
+			return "/on/${location}"
+		}
 	}
 
 	return q{};
@@ -1254,6 +1309,38 @@ get '/list/writables' => sub {
 			data   => 'not acceptable. use json or txt.',
 			status => 406
 		},
+	);
+
+	return;
+};
+
+get '/m' => sub {
+	my ($self) = @_;
+
+	my %areas;
+
+	for my $location ( keys %{$coordinates} ) {
+		if (    $coordinates->{$location}->{type}
+			and $coordinates->{$location}->{x1}
+			+ $coordinates->{$location}->{y1} != 0 )
+		{
+			my $area = $coordinates->{$location}->{area};
+			if ($area) {
+				push( @{ $areas{$area} }, $location );
+			}
+		}
+	}
+
+	for my $area ( keys %areas ) {
+		@{ $areas{$area} } = sort @{ $areas{$area} };
+	}
+
+	$self->render(
+		'tiled',
+		version     => $VERSION,
+		areas       => \%areas,
+		coordinates => $coordinates,
+		refresh     => 1,
 	);
 
 	return;

@@ -253,6 +253,45 @@
 
 % }
 
+	.tiledmenu {
+		font-size: 300%;
+		top: 1em;
+		right: 1em;
+		text-align: left;
+		margin-bottom: 1em;
+	}
+
+	.tiled {
+		font-size: 300%;
+	}
+
+	.tiled h1 {
+		clear: both;
+	}
+
+	.tiled a {
+		display: block;
+		text-align: left;
+		float: left;
+		width: 260px;
+		height: 250px;
+		max-width: 250px;
+		max-height: 300px;
+		overflow: hidden;
+		padding: 0.2em;
+		margin: 0.2em;
+	}
+
+	.tiled a.on {
+		background-color: darkgreen;
+		color: white;
+	}
+
+	.tiled a.off {
+		background-color: darkred;
+		color: white;
+	}
+
 	</style>
 	%= javascript '/jquery-1.10.2.min.js'
 </head>

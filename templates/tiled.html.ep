@@ -1,0 +1,17 @@
+<div class="tiledmenu">
+<a href="/m/actions">Actions</a>
+<a href="/m/presets">Presets</a>
+<a href="/m/layers">Layers</a>
+</div> <!-- menu-->
+<div class="tiled">
+
+% for my $area (sort keys %{$areas}) {
+<h1><%= $area %></h1>
+% for my $location (@{ $areas->{$area} }) {
+% my $type = $coordinates->{$location}->{type};
+<a class="<%= statusclass($type, $location) %>"
+href="<%= statuslink($type, $location) %>"> <%= $coordinates->{$location}->{text} %> </a>
+% }
+% }
+
+</div> <!-- tiles -->
