@@ -9,7 +9,12 @@
 <h1><%= $area %></h1>
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
-<a class="<%= statusclass($type, $location) %>"
+% my $class = q{};
+% given (status_number($location)) {
+% when (1) { $class = 'on' }
+% when (0) { $class = 'off' }
+% }
+<a class="<%= $class %>"
 href="<%= statuslink($type, $location) %>?m=1"> <%= $coordinates->{$location}->{text} %> </a>
 % }
 % }

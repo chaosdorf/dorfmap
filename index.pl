@@ -908,6 +908,12 @@ helper statuslink => sub {
 	return q{};
 };
 
+helper status_number => sub {
+	my ( $self, $location ) = @_;
+
+	return status_number($location);
+};
+
 helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
