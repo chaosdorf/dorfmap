@@ -117,10 +117,10 @@ sub get_device {
 			$state = 1;
 		}
 	}
-	elsif ( exists $gpiomap->{$id} ) {
+	elsif ( exists $gpiomap->{$id} and -e $gpiomap->{$id} ) {
 		$state = slurp( $gpiomap->{$id} );
 	}
-	elsif ( exists $remotemap->{$id} ) {
+	elsif ( exists $remotemap->{$id} and -e $remotemap->{$id} ) {
 		$state = slurp( $remotemap->{$id} );
 	}
 	elsif ( $id =~ m{^amp} ) {
@@ -264,30 +264,57 @@ sub save_presets {
 
 #{{{ other helpers
 
-sub amp_image {
+sub device_status {
 	my ($id) = @_;
+	my $type = $coordinates->{$id}->{type};
 
-	$id =~ s{ [ab] $ }{}ox;
-
-	my $image = 'amp.png';
-	my $state = amp_status($id);
-
-	if ( $state == 1 ) {
-		$image = 'amp_on.png';
-	}
-	elsif ( $state == 0 ) {
-		$image = 'amp_off.png';
+	if ( $type ~~ [qw[phone printer server wifi]] and get_device($id) == -1 ) {
+		return slurp("/srv/www/${id}.ping") || 0;
 	}
 
-	return $image;
+	return get_device($id);
 }
 
-sub amp_status {
+sub device_image {
 	my ($id) = @_;
+	my $type = $coordinates->{$id}->{type};
 
-	$id =~ s{ [ab] $ }{}ox;
+	if ( $type eq 'amp' ) {
+		$id =~ s{ [ab] $}{}ox;
+	}
 
-	return slurp("/srv/www/${id}.status") // -1;
+	my $state  = device_status($id);
+	my $prefix = $type;
+	my $suffix = q{};
+
+	if ( $type ~~ [qw[light_au light_ro]] ) {
+		$prefix = 'light';
+	}
+
+	if ( -e "public/${id}_on.png" and -e "public/${id}_off.png" ) {
+		$prefix = $id;
+	}
+
+	if ( $type eq 'pingdevice' ) {
+
+		# unknown => off
+		$suffix = '_off';
+	}
+
+	if ( $state == 1 or $state == 255 ) {
+		$suffix = '_on';
+	}
+	elsif ( $state == 0 ) {
+		$suffix = '_off';
+	}
+
+	if ( $type eq 'light_au' ) {
+		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
+	}
+
+	say "${id} is ${state}";
+
+	return "${prefix}${suffix}.png";
 }
 
 sub amp_link {
@@ -295,18 +322,16 @@ sub amp_link {
 
 	$id =~ s{ [ab] $ }{}ox;
 
-	return sprintf( '/%s/%s', amp_status($id) ? 'off' : 'on', $id );
+	return sprintf( '/%s/%s', device_status($id) ? 'off' : 'on', $id );
 }
 
 sub amp {
 	my ($id) = @_;
 
-	$id =~ s{ [ab] $ }{}ox;
-
 	return
 	  sprintf(
 '<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		amp_link($id), $id, amp_image($id), 'amp', 'amp' );
+		amp_link($id), $id, device_image($id), 'amp', 'amp' );
 }
 
 sub blinkenlight_link {
@@ -320,31 +345,13 @@ sub blinkenlight {
 
 	my $ret = sprintf( '<a href="%s">', blinkenlight_link($light) );
 
-	$ret .= sprintf(
-		'<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
-		blinkenlight_image($light),
-		$light, $light, $light
-	);
+	$ret
+	  .= sprintf( '<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
+		device_image($light), $light, $light, $light );
 
 	$ret .= '</a>';
 
 	return $ret;
-}
-
-sub blinkenlight_image {
-	my ($id) = @_;
-
-	my $image = 'blinkenlight.png';
-	my $state = light_status($id);
-
-	if ( $state == 1 ) {
-		$image = 'blinkenlight_on.png';
-	}
-	elsif ( $state == 0 ) {
-		$image = 'blinkenlight_off.png';
-	}
-
-	return $image;
 }
 
 sub charwrite_link {
@@ -468,25 +475,6 @@ sub json_status {
 	return { status => status_number($id) };
 }
 
-sub killswitch_image {
-	my ($cb)  = @_;
-	my $state = killswitch_status($cb);
-	my $image = 'killswitch.png';
-
-	given ($state) {
-		when (1) { $image = 'killswitch_on.png' }
-		when (0) { $image = 'killswitch_off.png' }
-	}
-
-	return $image;
-}
-
-sub killswitch_status {
-	my ($cb) = @_;
-
-	return get_device($cb);
-}
-
 sub killswitch_link {
 	my ($cb) = @_;
 
@@ -500,46 +488,17 @@ sub killswitch {
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
-		killswitch_image($cb), $cb, $cb, $cb );
+		device_image($cb), $cb, $cb, $cb );
 
 	$ret .= '</a>';
 
 	return $ret;
 }
 
-sub light_image {
-	my ($light) = @_;
-	my $state   = light_status($light);
-	my $image   = 'light.png';
-	my $prefix  = 'light';
-	my $suffix  = q{};
-
-	if ( $coordinates->{$light}->{type} eq 'light_au' ) {
-		$suffix = ( -e "/tmp/automatic_${light}" ) ? '_auto' : '_noauto';
-	}
-
-	if ( -e "public/${light}_on.png" and -e "public/${light}_off.png" ) {
-		$prefix = $light;
-	}
-
-	given ($state) {
-		when ( [ 1, 255 ] ) { $image = "${prefix}_on${suffix}.png" }
-		when ('0') { $image = "${prefix}_off${suffix}.png" }
-	}
-
-	return $image;
-}
-
-sub light_status {
-	my ($light) = @_;
-
-	return get_device($light);
-}
-
 sub light_link {
 	my ($light) = @_;
 
-	return sprintf( '/%s/%s', light_status($light) ? 'off' : 'on', $light );
+	return sprintf( '/%s/%s', device_status($light) ? 'off' : 'on', $light );
 }
 
 sub light {
@@ -553,7 +512,7 @@ sub light {
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="light ro %s" alt="%s" />',
-		light_image($light), $light, $light, $light, $light );
+		device_image($light), $light, $light, $light, $light );
 
 	if ($is_rw) {
 		$ret .= sprintf('</a>');
@@ -571,76 +530,30 @@ sub muninlink {
 		$plugin, $name // $plugin );
 }
 
-sub pingdevice_image {
-	my ( $type, $host ) = @_;
-	my $image = "${type}_off.png";
-	my $state = pingdevice_status($host) // -1;
-
-	if ( $state == 1 ) {
-		$image = "${type}_on.png";
-	}
-
-	return $image;
-}
-
-sub pingdevice_status {
-	my ($host) = @_;
-
-	if ( exists $gpiomap->{$host} ) {
-		return slurp( $gpiomap->{$host} );
-	}
-	if ( exists $remotemap->{$host} ) {
-		return slurp( $remotemap->{$host} );
-	}
-	return slurp("/srv/www/${host}.ping") || 0;
-}
-
 sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
 		return sprintf(
 '<a href="/on/%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
-			$host, pingdevice_image( $type, $host ),
+			$host, device_image( $type, $host ),
 			$host, $type, $host, $label, $host
 		);
 	}
 	else {
 		return sprintf(
 			'<img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" />',
-			pingdevice_image( $type, $host ),
+			device_image( $type, $host ),
 			$host, $type, $host, $label, $host,
 		);
 	}
 
 }
 
-sub pump_image {
-	my ($id) = @_;
-
-	my $image = 'pump.png';
-	my $state = pump_status($id);
-
-	if ( $state == 1 ) {
-		$image = 'pump_on.png';
-	}
-	elsif ( $state == 0 ) {
-		$image = 'pump_off.png';
-	}
-
-	return $image;
-}
-
-sub pump_status {
-	my ($id) = @_;
-
-	return get_device($id);
-}
-
 sub pump_link {
 	my ($id) = @_;
 
-	return sprintf( '/%s/%s', pump_status($id) ? 'off' : 'on', $id );
+	return sprintf( '/%s/%s', device_status($id) ? 'off' : 'on', $id );
 }
 
 sub pump {
@@ -649,7 +562,7 @@ sub pump {
 	return
 	  sprintf(
 '<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		pump_link($id), $id, pump_image($id), 'pump', 'pump' );
+		pump_link($id), $id, device_image($id), 'pump', 'pump' );
 }
 
 sub status_number {
@@ -657,37 +570,13 @@ sub status_number {
 	my $type = $coordinates->{$id}->{type};
 
 	given ($type) {
-		when ('amp') { return amp_status($id) }
 		when ('door') {
 			return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 )
 		}
-		when ('pump') { return pump_status($id) }
-		when ( [qw[blinkenlight light light_au light_ro]] ) {
-			return light_status($id)
-		}
-		when ( [qw[phone printer server wifi]] ) {
-			return pingdevice_status($id)
-		}
+		default { return device_status($id) }
 	}
 
 	return -1;
-}
-
-sub status_image {
-	my ($id) = @_;
-	my $type = $coordinates->{$id}->{type};
-
-	given ($type) {
-		when ('amp')          { return amp_image($id) }
-		when ('blinkenlight') { return blinkenlight_image($id) }
-		when ('pump')         { return pump_image($id) }
-		when ( [qw[light light_au light_ro]] ) { return light_image($id) }
-		when ( [qw[phone printer server wifi]] ) {
-			return pingdevice_image( $type, $id )
-		}
-	}
-
-	return q{};
 }
 
 sub auto_text {
@@ -1170,7 +1059,7 @@ get '/get/:id' => sub {
 	$self->respond_to(
 		json => { json => json_status($id) },
 		txt  => { text => status_number($id) . "\n" },
-		png  => sub    { $self->render_static( status_image($id) ) },
+		png  => sub    { $self->render_static( device_image($id) ) },
 		any  => {
 			data   => status_number($id),
 			status => 406
