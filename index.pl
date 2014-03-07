@@ -268,7 +268,9 @@ sub device_status {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
 
-	if ( $type ~~ [qw[phone printer server wifi]] and get_device($id) == -1 ) {
+	if ( ( $type ~~ [qw[phone printer server wifi]] )
+		and get_device($id) == -1 )
+	{
 		return slurp("/srv/www/${id}.ping") || 0;
 	}
 
@@ -295,7 +297,7 @@ sub device_image {
 		$prefix = $id;
 	}
 
-	if ( $type eq 'pingdevice' ) {
+	if ( $type ~~ [qw[phone printer server wifi]] ) {
 
 		# unknown => off
 		$suffix = '_off';
@@ -534,18 +536,16 @@ sub pingdevice {
 	my ( $type, $host, $label ) = @_;
 
 	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
-		return sprintf(
+		return
+		  sprintf(
 '<a href="/on/%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
-			$host, device_image( $type, $host ),
-			$host, $type, $host, $label, $host
-		);
+			$host, device_image($host), $host, $type, $host, $label, $host );
 	}
 	else {
-		return sprintf(
+		return
+		  sprintf(
 			'<img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" />',
-			device_image( $type, $host ),
-			$host, $type, $host, $label, $host,
-		);
+			device_image($host), $host, $type, $host, $label, $host, );
 	}
 
 }
