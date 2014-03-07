@@ -35,7 +35,7 @@ my ( @dd_shortcuts, @dd_presets );
 my (@killswitches);
 
 # ref (1):
-# some browsers send unsolicited POST requests e.g. when updating their
+# some browsers send unsolicited HEAD requests e.g. when updating their
 # hestory. Do not allow these to change anything.
 
 #{{{ primitive helpers
