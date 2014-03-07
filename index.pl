@@ -264,6 +264,25 @@ sub save_presets {
 
 #{{{ other helpers
 
+sub device_actionlink {
+	my ($id) = @_;
+	my $type = $coordinates->{$id}->{type};
+
+	if ( $type eq 'amp' ) {
+		$id =~ s{ [ab] $}{}ox;
+	}
+
+	my $action = device_status($id) ? 'off' : 'on';
+
+	given ($type) {
+		when ('blinkenlight') { $action = 'blinkencontrol' }
+		when ( [qw[charwrite killswitch]] )      { $action = $type }
+		when ( [qw[phone printer server wifi]] ) { $action = 'on' }
+	}
+
+	return "/${action}/${id}";
+}
+
 sub device_status {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
@@ -314,17 +333,7 @@ sub device_image {
 		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
 	}
 
-	say "${id} is ${state}";
-
 	return "${prefix}${suffix}.png";
-}
-
-sub amp_link {
-	my ($id) = @_;
-
-	$id =~ s{ [ab] $ }{}ox;
-
-	return sprintf( '/%s/%s', device_status($id) ? 'off' : 'on', $id );
 }
 
 sub amp {
@@ -333,19 +342,13 @@ sub amp {
 	return
 	  sprintf(
 '<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		amp_link($id), $id, device_image($id), 'amp', 'amp' );
-}
-
-sub blinkenlight_link {
-	my ($light) = @_;
-
-	return sprintf( '/blinkencontrol/%s', $light );
+		device_actionlink($id), $id, device_image($id), 'amp', 'amp' );
 }
 
 sub blinkenlight {
 	my ($light) = @_;
 
-	my $ret = sprintf( '<a href="%s">', blinkenlight_link($light) );
+	my $ret = sprintf( '<a href="%s">', device_actionlink($light) );
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
@@ -356,16 +359,10 @@ sub blinkenlight {
 	return $ret;
 }
 
-sub charwrite_link {
-	my ($id) = @_;
-
-	return sprintf( '/charwrite/%s', $id );
-}
-
 sub charwrite {
 	my ($id) = @_;
 
-	my $ret = sprintf( '<a href="%s">', charwrite_link($id) );
+	my $ret = sprintf( '<a href="%s">', device_actionlink($id) );
 
 	$ret
 	  .= sprintf(
@@ -477,16 +474,10 @@ sub json_status {
 	return { status => status_number($id) };
 }
 
-sub killswitch_link {
-	my ($cb) = @_;
-
-	return sprintf( '/killswitch/%s', $cb );
-}
-
 sub killswitch {
 	my ($cb) = @_;
 
-	my $ret = sprintf( '<a href="%s">', killswitch_link($cb) );
+	my $ret = sprintf( '<a href="%s">', device_actionlink($cb) );
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
@@ -497,19 +488,13 @@ sub killswitch {
 	return $ret;
 }
 
-sub light_link {
-	my ($light) = @_;
-
-	return sprintf( '/%s/%s', device_status($light) ? 'off' : 'on', $light );
-}
-
 sub light {
 	my ( $light, $is_rw ) = @_;
 
 	my $ret = q{};
 
 	if ($is_rw) {
-		$ret .= sprintf( '<a href="%s">', light_link($light) );
+		$ret .= sprintf( '<a href="%s">', device_actionlink($light) );
 	}
 
 	$ret
@@ -550,19 +535,13 @@ sub pingdevice {
 
 }
 
-sub pump_link {
-	my ($id) = @_;
-
-	return sprintf( '/%s/%s', device_status($id) ? 'off' : 'on', $id );
-}
-
 sub pump {
 	my ($id) = @_;
 
 	return
 	  sprintf(
 '<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		pump_link($id), $id, device_image($id), 'pump', 'pump' );
+		device_actionlink($id), $id, device_image($id), 'pump', 'pump' );
 }
 
 sub status_number {
@@ -780,21 +759,7 @@ helper statusclass => sub {
 helper statuslink => sub {
 	my ( $self, $type, $location ) = @_;
 
-	given ($type) {
-		when ('amp')          { return amp_link($location) }
-		when ('blinkenlight') { return blinkenlight_link($location) }
-		when ('charwrite')    { return "/charwrite/$location" }
-		when ('killswitch')   { return killswitch_link($location) }
-		when ('light')        { return light_link($location) }
-		when ('light_au')     { return light_link($location) }
-		when ('light_ro')     { return light_link($location) }
-		when ('pump')         { return pump_link($location) }
-		when ( [qw[phone printer server wifi]] ) {
-			return "/on/${location}"
-		}
-	}
-
-	return q{};
+	return device_actionlink($type);
 };
 
 helper status_number => sub {
