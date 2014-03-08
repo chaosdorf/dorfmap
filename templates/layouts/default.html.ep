@@ -251,6 +251,18 @@
 		height: <%= $coord{y2} %>px;
 	}
 
+% my $i = 0;
+% for my $dup (@{$coordinates->{$location}->{duplicates} // []}) {
+% $i++;
+% %coord = %{$dup};
+	.overview #<%= $location %>_dup<%= $i %> {
+		position: absolute;
+		left: <%= $coord{x1} %>px;
+		top: <%= $coord{y1} %>px;
+		width: <%= $coord{x2} %>px;
+		height: <%= $coord{y2} %>px;
+	}
+% }
 % }
 
 	.tiledmenu {

@@ -177,6 +177,19 @@ sub load_coordinates {    #{{{
 		$right  ||= $left + 32;
 		$bottom ||= $top + 32;
 
+		if ( exists $coordinates->{$id} ) {
+			push(
+				@{ $coordinates->{$id}->{duplicates} },
+				{
+					x1 => $left,
+					y1 => $top,
+					x2 => $right - $left,
+					y2 => $bottom - $top
+				}
+			);
+			next;
+		}
+
 		$coordinates->{$id} = {
 			x1   => $left,
 			y1   => $top,

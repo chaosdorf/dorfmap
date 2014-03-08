@@ -99,20 +99,20 @@ hackcenter_regal8     775   60    0    0 feedback5/2 \
   type=light area=Hackcenter watts=1     LED-Streifen Regal 8
 
 [layer=control type=amp delay=4 watts=12]
-amp0a                 150  590    0    0 amp0 \
-  area=Schleuse   Rear Left
-amp0b                 350  590    0    0 amp0 \
-  area=Schleuse   Rear Right
-amp1a                 200   12    0    0 amp1 \
+amp0                 150  590    0    0 amp0 \
+  area=Schleuse   Rear
+amp0                 350  590    0    0 amp0 \
+  area=Schleuse   Rear
+amp1                 200   12    0    0 amp1 \
   area=Lounge     Center + Subwoofer
-amp2a                  48   12    0    0 amp2 \
-  area=Lounge     Front Left
-amp2b                 350   12    0    0 amp2 \
-  area=Lounge     Front Right
-amp3a                 990   50    0    0 amp3 \
-  area=Hackcenter Hackcenter Left
-amp3b                 890  370    0    0 amp3 \
-  area=Hackcenter Hackcenter Right
+amp2                  48   12    0    0 amp2 \
+  area=Lounge     Front
+amp2                 350   12    0    0 amp2 \
+  area=Lounge     Front
+amp3                 990   50    0    0 amp3 \
+  area=Hackcenter Hackcenter
+amp3                 890  370    0    0 amp3 \
+  area=Hackcenter Hackcenter
 
 [layer=control]
 phone                   6   24    0    0 none \
