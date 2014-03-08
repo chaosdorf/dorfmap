@@ -1524,7 +1524,6 @@ get '/on/:id' => sub {
 app->config(
 	hypnotoad => {
 		accept_interval => 0.2,
-		clients         => 4,
 		listen          => ['http://127.0.0.1:8081'],
 		pid_file        => '/tmp/dorfmap.pid',
 		workers         => 4,
