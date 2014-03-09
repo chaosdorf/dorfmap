@@ -10,7 +10,7 @@ use RDF::Trine;
 use Storable qw(nstore);
 
 my $db;
-my $store   = RDF::Trine::Store::Memory->new();
+my $store   = RDF::Trine::Store::Hexastore->new();
 my $model   = RDF::Trine::Model->new($store);
 my $outfile = shift // 'locations.db';
 
