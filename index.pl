@@ -408,11 +408,11 @@ sub infotext {
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
 
-	if ( -e "${store_prefix}.online_guests" ) {
+	if ( -e "${store_prefix}/online_guests" ) {
 		$buf .= sprintf(
 			'<span class="onlinegueststext">Online guest IPs</span>'
 			  . '<span class="onlineguests">%d</span><br/>',
-			slurp("${store_prefix}.online_guests")
+			slurp("${store_prefix}/online_guests")
 		);
 	}
 
@@ -434,11 +434,11 @@ sub infotext {
 		estimated_power_consumption
 	);
 
-	if ( -e "${store_prefix}.power_serverraum" ) {
+	if ( -e "${store_prefix}/power_serverraum" ) {
 		$buf .= sprintf(
 			'<li><span class="wattagetext">Serverraum (UPS)</span>'
 			  . '<span class="wattage">%dW</span></li>',
-			slurp("${store_prefix}.power_serverraum"),
+			slurp("${store_prefix}/power_serverraum"),
 		);
 	}
 	$buf .= '</ul>';
@@ -584,7 +584,7 @@ sub auto_text {
 		$now->offset / 3600, 0 );
 
 	my ( $rise_h, $rise_m ) = ( $rise_str =~ m{(..):(..)} );
-	my ( $set_h,  $set_m )  = ( $set_str  =~ m{(..):(..)} );
+	my ( $set_h,  $set_m )  = ( $set_str =~ m{(..):(..)} );
 
 	my $sunrise = $now->clone->set(
 		hour   => $rise_h,
@@ -805,7 +805,7 @@ helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
 	if ( $type eq 'rtext' ) {
-		return slurp("${store_prefix}.${location}");
+		return slurp("${store_prefix}/${location}");
 	}
 	if ( $type eq 'infoarea' ) {
 		return infotext();
@@ -1026,7 +1026,11 @@ get '/charwrite/:device' => sub {
 			version     => $VERSION,
 			refresh     => 0,
 		},
-		json => { json => { text => $self->param('text'), } },
+		json => {
+			json => {
+				text => $self->param('text'),
+			}
+		},
 	);
 };
 
@@ -1104,7 +1108,11 @@ get '/killswitch/:device' => sub {
 			version     => $VERSION,
 			refresh     => 0,
 		},
-		json => { json => { status => get_device($device), } },
+		json => {
+			json => {
+				status => get_device($device),
+			}
+		},
 	);
 };
 
@@ -1363,12 +1371,16 @@ get '/presets/apply/:name' => sub {
 post '/set' => sub {
 	my ($self) = @_;
 
+	if ( not -d $store_prefix ) {
+		mkdir($store_prefix);
+	}
+
 	if ( $self->req->method eq 'POST' ) {
 		for my $key ( keys %{$coordinates} ) {
 			if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
 				and $self->param($key) )
 			{
-				spew( "${store_prefix}.${key}", $self->param($key) );
+				spew( "${store_prefix}/${key}", $self->param($key) );
 			}
 		}
 	}
