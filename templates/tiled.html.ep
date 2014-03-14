@@ -11,11 +11,15 @@
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
 % given (status_number($location)) {
-% when (1) { $class = 'on' }
+% when ([1, 255]) { $class = 'on' }
 % when (0) { $class = 'off' }
 % }
+% my $mname = $location;
+% say "$area : $mname";
+% $mname =~ s{ ^ $area _? }{}ix;
+% say "-> $mname";
 <a class="<%= $class %>"
-href="<%= statuslink($type, $location) %>?m=1"> <%= $coordinates->{$location}->{text} %> </a>
+href="<%= statuslink($location) %>?m=1"> <%= $mname %> </a>
 % }
 % }
 

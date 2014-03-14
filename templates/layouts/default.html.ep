@@ -3,6 +3,7 @@
 <head>
 	<title>dorfmap</title>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 % if ($refresh) {
 	<meta http-equiv="refresh" content="50" />
 % }
@@ -274,7 +275,7 @@
 	}
 
 	.tiled {
-		font-size: 300%;
+		font-size: 170%;
 	}
 
 	.tiled h1 {
@@ -285,10 +286,10 @@
 		display: block;
 		text-align: left;
 		float: left;
-		width: 260px;
-		height: 250px;
-		max-width: 250px;
-		max-height: 300px;
+		width: 130px;
+		height: 130px;
+		max-width: 130px;
+		max-height: 130px;
 		overflow: hidden;
 		padding: 0.2em;
 		margin: 0.2em;
