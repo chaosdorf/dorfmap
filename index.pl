@@ -125,7 +125,7 @@ sub get_device {
 	}
 	elsif ( $id =~ m{^amp} ) {
 		$id =~ s{ [ab] $ }{}ox;
-		$state = slurp("/srv/www/${id}.status");
+		$state = slurp("${store_prefix}/amp.${id}");
 	}
 
 	return $state;
