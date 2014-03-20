@@ -15,9 +15,7 @@
 % when (0) { $class = 'off' }
 % }
 % my $mname = $location;
-% say "$area : $mname";
 % $mname =~ s{ ^ $area _? }{}ix;
-% say "-> $mname";
 <a class="<%= $class %>"
 href="<%= statuslink($location) %>?m=1"> <%= $mname %> </a>
 % }

@@ -221,6 +221,11 @@ sub load_coordinates {    #{{{
 			$remotemap->{$id} = "/tmp/${controlpath}";
 		}
 
+		$coordinates->{$id}->{is_readable}
+			= ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
+		$coordinates->{$id}->{is_writable}
+			= (     $coordinates->{$id}->{path} ne 'none' and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
+
 		if (    $coordinates->{$id}->{type}
 			and $coordinates->{$id}->{type} eq 'killswitch' )
 		{
@@ -1122,13 +1127,8 @@ get '/list/all' => sub {
 
 	for my $id ( keys %{$coordinates} ) {
 		$devices->{$id}->{type} = $coordinates->{$id}->{type};
-		$devices->{$id}->{is_readable}
-		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
-		$devices->{$id}->{is_writable}
-		  = (     $coordinates->{$id}->{path} ne 'none'
-			  and $id !~ m{ _ (?: au | r o ) $}ox )
-		  ? 1
-		  : 0;
+		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
+		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
 		$devices->{$id}->{status} = status_number($id);
 		$devices->{$id}->{desc}   = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}   = $coordinates->{$id}->{area};
@@ -1203,7 +1203,8 @@ get '/m' => sub {
 	for my $location ( keys %{$coordinates} ) {
 		if (    $coordinates->{$location}->{type}
 			and $coordinates->{$location}->{x1}
-			+ $coordinates->{$location}->{y1} != 0 )
+			+ $coordinates->{$location}->{y1} != 0
+			and $coordinates->{$location}->{is_writable})
 		{
 			my $area = $coordinates->{$location}->{area};
 			if ($area) {
