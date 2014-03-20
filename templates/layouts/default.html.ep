@@ -301,12 +301,14 @@
 		padding: 10px;
 		font-size: 16px;
 		color: #ffffff;
-		vertical-align: middle;
 		display: block;
 		height: 32px;
 	}
+	ul.tiled li a span {
+		vertical-align: middle;
+	}
 	ul.tiled li a img {
-		float: left;
+		vertical-align: middle;
 	}
 
 	ul.tiled li.header {

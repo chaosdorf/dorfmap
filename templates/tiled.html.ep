@@ -21,7 +21,7 @@
 <a class="<%= $class %>"
 href="<%= statuslink($location) %>?m=1">
 <img src="<%= status_image($location) %>" />
-%== statustext($type, $location);
+<span><%== statustext($type, $location); %></span>
 </a>
 </li>
 % }
