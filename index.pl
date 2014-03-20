@@ -222,9 +222,10 @@ sub load_coordinates {    #{{{
 		}
 
 		$coordinates->{$id}->{is_readable}
-			= ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
+		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$coordinates->{$id}->{is_writable}
-			= (     $coordinates->{$id}->{path} ne 'none' and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
+		  = (     $coordinates->{$id}->{path} ne 'none'
+			  and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
 
 		if (    $coordinates->{$id}->{type}
 			and $coordinates->{$id}->{type} eq 'killswitch' )
@@ -786,6 +787,12 @@ helper status_number => sub {
 	return status_number($location);
 };
 
+helper status_image => sub {
+	my ( $self, $location ) = @_;
+
+	return device_image($location);
+};
+
 helper statusimage => sub {
 	my ( $self, $type, $location ) = @_;
 
@@ -839,6 +846,7 @@ get '/' => sub {
 	$self->render(
 		'overview',
 		version     => $VERSION,
+		about       => 1,
 		coordinates => $coordinates,
 		shortcuts   => \@dd_shortcuts,
 		errors      => [ $self->param('error') || () ],
@@ -864,6 +872,7 @@ get '/action/:action' => sub {
 	if (@errors) {
 		$self->render(
 			'overview',
+			about       => 1,
 			version     => $VERSION,
 			coordinates => $coordinates,
 			shortcuts   => \@dd_shortcuts,
@@ -910,6 +919,7 @@ get '/blinkencontrol/:device' => sub {
 	if ( not $controlpath ) {
 		$self->render(
 			'overview',
+			about       => 1,
 			version     => $VERSION,
 			coordinates => $coordinates,
 			shortcuts   => \@dd_shortcuts,
@@ -1002,6 +1012,7 @@ get '/charwrite/:device' => sub {
 	if ( not $controlpath ) {
 		$self->render(
 			'overview',
+			about       => 1,
 			version     => $VERSION,
 			coordinates => $coordinates,
 			shortcuts   => \@dd_shortcuts,
@@ -1081,6 +1092,7 @@ get '/killswitch/:device' => sub {
 	if ( not $controlpath ) {
 		$self->render(
 			'overview',
+			about       => 1,
 			version     => $VERSION,
 			coordinates => $coordinates,
 			shortcuts   => \@dd_shortcuts,
@@ -1126,13 +1138,13 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
-		$devices->{$id}->{type} = $coordinates->{$id}->{type};
+		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
 		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
-		$devices->{$id}->{status} = status_number($id);
-		$devices->{$id}->{desc}   = $coordinates->{$id}->{text};
-		$devices->{$id}->{area}   = $coordinates->{$id}->{area};
-		$devices->{$id}->{layer}  = $coordinates->{$id}->{layer};
+		$devices->{$id}->{status}      = status_number($id);
+		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
+		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
+		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 	}
 
 	$self->respond_to(
@@ -1204,7 +1216,7 @@ get '/m' => sub {
 		if (    $coordinates->{$location}->{type}
 			and $coordinates->{$location}->{x1}
 			+ $coordinates->{$location}->{y1} != 0
-			and $coordinates->{$location}->{is_writable})
+			and $coordinates->{$location}->{is_writable} )
 		{
 			my $area = $coordinates->{$location}->{area};
 			if ($area) {
@@ -1219,9 +1231,11 @@ get '/m' => sub {
 
 	$self->render(
 		'tiled',
+		about       => 0,
 		version     => $VERSION,
 		areas       => \%areas,
 		coordinates => $coordinates,
+		hideabout   => 1,
 		refresh     => 1,
 	);
 
@@ -1236,6 +1250,7 @@ get '/m/:name' => sub {
 		when ('actions') {
 			$self->render(
 				'mlist',
+				about       => 1,
 				label       => 'Actions',
 				items       => \@dd_shortcuts,
 				coordinates => {},
@@ -1247,6 +1262,7 @@ get '/m/:name' => sub {
 		when ('presets') {
 			$self->render(
 				'mlist',
+				about       => 1,
 				label       => 'Presets',
 				items       => \@dd_presets,
 				coordinates => {},
@@ -1258,6 +1274,7 @@ get '/m/:name' => sub {
 		when ('layers') {
 			$self->render(
 				'mlist',
+				about       => 1,
 				label       => 'Layers',
 				items       => \@dd_layers,
 				coordinates => {},
@@ -1327,6 +1344,7 @@ any '/presets' => sub {
 
 	$self->render(
 		'presets',
+		about       => 1,
 		coordinates => {},
 		errors      => [],
 		presetdata  => $presets,

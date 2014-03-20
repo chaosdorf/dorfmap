@@ -15,6 +15,10 @@
 		font-family: Sans-Serif;
 	}
 
+	body {
+		margin: 0;
+	}
+
 	a {
 		color: #000066;
 		text-decoration: none;
@@ -33,6 +37,11 @@
 	div.about a {
 		font-family: Sans-Serif;
 		font-variant: small-caps;
+	}
+
+	div.content {
+		padding: 0;
+		margin: 0;
 	}
 
 	.errors {
@@ -274,35 +283,36 @@
 		margin-bottom: 1em;
 	}
 
-	.tiled {
-		font-size: 170%;
+	ul.tiled {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
 	}
-
-	.tiled h1 {
-		clear: both;
+	ul.tiled li {
+		margin: 0;
+		color: #ffffff;
+		font-size: 14px;
+		background-color: #333333;
+		border-width: 1px 0;
+		border-color: #666666 #666666 #333333 #333333;
+		border-style: solid;
 	}
-
-	.tiled a {
+	ul.tiled li a {
+		padding: 10px;
+		font-size: 16px;
+		color: #ffffff;
+		vertical-align: middle;
 		display: block;
-		text-align: left;
+		height: 32px;
+	}
+	ul.tiled li a img {
 		float: left;
-		width: 130px;
-		height: 130px;
-		max-width: 130px;
-		max-height: 130px;
-		overflow: hidden;
-		padding: 0.2em;
-		margin: 0.2em;
 	}
 
-	.tiled a.on {
-		background-color: darkgreen;
-		color: white;
-	}
-
-	.tiled a.off {
-		background-color: darkred;
-		color: white;
+	ul.tiled li.header {
+		padding: 15px 10px 10px;
+		font-size: 16px;
+		font-weight: bold;
 	}
 
 	</style>
@@ -310,6 +320,7 @@
 </head>
 <body>
 
+% if ($about) {
 <div class="about">
 <a href="https://github.com/chaosdorf/dorfmap">dorfmap</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung">about</a> —
@@ -317,6 +328,7 @@
 <a href="/space_api.json">spaceAPI</a><br/>
 v<%= $version %>
 </div>
+% }
 
 <div class="content">
 %= content

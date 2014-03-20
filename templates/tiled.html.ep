@@ -1,12 +1,13 @@
+<!--
 <div class="tiledmenu">
 <a href="/m/actions">Actions</a>
 <a href="/m/presets">Presets</a>
 <a href="/m/layers">Layers</a>
-</div> <!-- menu-->
-<div class="tiled">
+</div>--> <!-- menu-->
 
 % for my $area (sort keys %{$areas}) {
-<h1><%= $area %></h1>
+<ul class="tiled">
+<li class="header"><%= $area %></li>
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
@@ -16,9 +17,13 @@
 % }
 % my $mname = $location;
 % $mname =~ s{ ^ $area _? }{}ix;
+<li>
 <a class="<%= $class %>"
-href="<%= statuslink($location) %>?m=1"> <%= $mname %> </a>
+href="<%= statuslink($location) %>?m=1">
+<img src="<%= status_image($location) %>" />
+%== statustext($type, $location);
+</a>
+</li>
 % }
+</ul> <!-- tiled -->
 % }
-
-</div> <!-- tiles -->
