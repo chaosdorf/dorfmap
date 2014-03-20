@@ -981,6 +981,7 @@ get '/blinkencontrol/:device' => sub {
 	$self->respond_to(
 		any => {
 			template    => 'blinkencontrol',
+			about       => 1,
 			coordinates => {},
 			device      => $device,
 			errors      => [],
@@ -1036,6 +1037,7 @@ get '/charwrite/:device' => sub {
 	$self->respond_to(
 		any => {
 			template    => 'charwrite',
+			about       => 1,
 			coordinates => {},
 			device      => $device,
 			errors      => [],
@@ -1118,6 +1120,7 @@ get '/killswitch/:device' => sub {
 	$self->respond_to(
 		any => {
 			template    => 'killswitch',
+			about       => 1,
 			coordinates => {},
 			device      => $device,
 			status      => get_device($device),
