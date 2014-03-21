@@ -398,6 +398,16 @@ sub estimated_power_consumption {
 	return $consumption // 0;
 }
 
+sub sprintf_wattage {
+	my ($value) = @_;
+
+	return sprintf(
+		'<span class="wattage %s">%s</span>',
+		$value > 0 ? q{} : 'error',
+		$value > 0 ? sprintf( '%dW', $value ) : '?'
+	);
+}
+
 sub infotext {
 	my $buf;
 
@@ -427,13 +437,14 @@ sub infotext {
 	my $power_p3 = slurp('/srv/www/flukso/30_p3');
 
 	$buf .= '<span class="wattagetext">power consumption</span>';
-	$buf .= sprintf( '<span class="wattage"> %dW</span><br/>',
-		$power_p1 + $power_p2 + $power_p3 );
-	$buf .= '<ul>';
-	$buf
-	  .= sprintf( '<li><span class="wattagetext">phases</span>'
-		  . '<span class="wattage">%dW + %dW + %dW</span></li>',
-		$power_p1, $power_p2, $power_p3 );
+	$buf .= sprintf_wattage( $power_p1 + $power_p2 + $power_p3 );
+	$buf .= '<br/><ul>';
+	$buf .= '<li><span class="wattagetext">phases</span>';
+
+	$buf .= join( ' + ',
+		map { sprintf_wattage($_) } ( $power_p1, $power_p2, $power_p3 ) );
+	$buf .= '</li>';
+
 	$buf .= sprintf(
 		'<li><span class="wattagetext">known dorfmap devices</span>'
 		  . '<span class="wattage">ca. %dW</span></li>',
@@ -441,11 +452,9 @@ sub infotext {
 	);
 
 	if ( -e "${store_prefix}/power_serverraum" ) {
-		$buf .= sprintf(
-			'<li><span class="wattagetext">Serverraum (UPS)</span>'
-			  . '<span class="wattage">%dW</span></li>',
-			slurp("${store_prefix}/power_serverraum"),
-		);
+		$buf .= '<li><span class="wattagetext">Serverraum (UPS)</span>';
+		$buf .= sprintf_wattage( slurp("${store_prefix}/power_serverraum") );
+		$buf .= '</li>';
 	}
 	$buf .= '</ul>';
 

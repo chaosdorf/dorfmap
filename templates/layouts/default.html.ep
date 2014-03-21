@@ -57,6 +57,10 @@
 		z-index: 100;
 	}
 
+	span.error {
+		color: red;
+	}
+
 	.dropdown {
 		display: inline-block;
 	}
