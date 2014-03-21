@@ -1,13 +1,6 @@
-<div class="mlist">
-
-<a class="backlink" href="/">← back</a>
-
-<h1><%= $label %></h1>
-
-<ul>
+<ul class="mlist">
+<li class="header"><%= $label %></li>
 % for my $item (@{$items}) {
-<li> <a href="<%= $item->[0] %>"> <%= $item->[1] %> </a> </li>
+<li><a href="<%= $item->[0] %>"> <%= $item->[1] %> </a> </li>
 % }
-</ul>
-
-</div> <!-- mlist -->
+</ul> <!-- mlist -->

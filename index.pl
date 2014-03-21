@@ -1233,7 +1233,7 @@ get '/m' => sub {
 	}
 
 	$self->render(
-		'tiled',
+		'mlist-overview',
 		about       => 0,
 		version     => $VERSION,
 		areas       => \%areas,
@@ -1253,7 +1253,7 @@ get '/m/:name' => sub {
 		when ('actions') {
 			$self->render(
 				'mlist',
-				about       => 1,
+				about       => 0,
 				label       => 'Actions',
 				items       => \@dd_shortcuts,
 				coordinates => {},
@@ -1265,7 +1265,7 @@ get '/m/:name' => sub {
 		when ('presets') {
 			$self->render(
 				'mlist',
-				about       => 1,
+				about       => 0,
 				label       => 'Presets',
 				items       => \@dd_presets,
 				coordinates => {},
@@ -1277,7 +1277,7 @@ get '/m/:name' => sub {
 		when ('layers') {
 			$self->render(
 				'mlist',
-				about       => 1,
+				about       => 0,
 				label       => 'Layers',
 				items       => \@dd_layers,
 				coordinates => {},

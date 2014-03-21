@@ -275,20 +275,12 @@
 % }
 % }
 
-	.tiledmenu {
-		font-size: 300%;
-		top: 1em;
-		right: 1em;
-		text-align: left;
-		margin-bottom: 1em;
-	}
-
-	ul.tiled {
+	ul.mlist {
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
 	}
-	ul.tiled li {
+	ul.mlist li {
 		margin: 0;
 		color: #ffffff;
 		font-size: 14px;
@@ -297,7 +289,7 @@
 		border-color: #666666 #666666 #333333 #333333;
 		border-style: solid;
 	}
-	ul.tiled li a {
+	ul.mlist li a {
 		padding: 10px;
 		font-size: 16px;
 		color: #ffffff;
@@ -306,16 +298,16 @@
 		background-position:5px 10px;
 		background-repeat: no-repeat;
 	}
-	ul.tiled li a span {
+	ul.mlist li a span {
 		margin-left: 40px;
 		display: inline-block;
 		vertical-align: middle;
 	}
-	ul.tiled li a img {
+	ul.mlist li a img {
 		vertical-align: middle;
 	}
 
-	ul.tiled li.header {
+	ul.mlist li.header {
 		padding: 15px 10px 10px;
 		font-size: 16px;
 		font-weight: bold;

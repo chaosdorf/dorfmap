@@ -6,7 +6,7 @@
 </div>--> <!-- menu-->
 
 % for my $area (sort keys %{$areas}) {
-<ul class="tiled">
+<ul class="mlist">
 <li class="header"><%= $area %></li>
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
@@ -25,5 +25,5 @@ href="<%= statuslink($location) %>?m=1">
 </a>
 </li>
 % }
-</ul> <!-- tiled -->
+</ul> <!-- mlist -->
 % }
