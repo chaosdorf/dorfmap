@@ -1224,6 +1224,8 @@ get '/m' => sub {
 
 	my %areas;
 
+	load_presets();
+
 	for my $location ( keys %{$coordinates} ) {
 		if (    $coordinates->{$location}->{type}
 			and $coordinates->{$location}->{x1}
@@ -1247,6 +1249,8 @@ get '/m' => sub {
 		version     => $VERSION,
 		areas       => \%areas,
 		coordinates => $coordinates,
+		shortcuts   => \@dd_shortcuts,
+		presets     => \@dd_presets,
 		hideabout   => 1,
 		refresh     => 1,
 	);
