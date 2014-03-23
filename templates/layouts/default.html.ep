@@ -15,9 +15,11 @@
 		font-family: Sans-Serif;
 	}
 
+% if (not $about) {
 	body {
 		margin: 0;
 	}
+% }
 
 	a {
 		color: #000066;
