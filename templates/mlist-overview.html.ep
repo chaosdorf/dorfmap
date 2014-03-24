@@ -32,7 +32,7 @@
 % $mname =~ s{ ^ $area _? }{}ix;
 <li>
 <a class="<%= $class %>"
-style="background-image:url(<%=status_image($location)%>);"
+style="background-image:url(/<%=status_image($location)%>);"
 href="<%= statuslink($location) %>?m=1">
 <span><%== statustext($type, $location); %></span>
 </a>
