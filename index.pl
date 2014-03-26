@@ -253,8 +253,8 @@ sub load_presets {
 		$presets = lock_retrieve('presets.db');
 
 		@dd_presets = (
-			[ '/presets', 'manage' ],
-			map { [ "/presets/apply/$_", $_ ] } (
+			[ '/presets?', 'manage' ],
+			map { [ "/presets/apply/$_?", $_ ] } (
 				reverse sort {
 					$presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp}
 				} ( keys %{$presets} )
@@ -643,7 +643,7 @@ sub wikilink {
 #{{{ Shortcuts
 
 sub make_shortcuts {
-	@dd_shortcuts = map { [ "/action/$_", $_ ] } ( sort keys %{$shortcuts} );
+	@dd_shortcuts = map { [ "/action/$_?", $_ ] } ( sort keys %{$shortcuts} );
 }
 
 $shortcuts->{'amps on'} = sub {

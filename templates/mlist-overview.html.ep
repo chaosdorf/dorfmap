@@ -8,15 +8,15 @@
 <ul class="mlist">
 <li class="header menu">Actions</li>
 % for my $shortcut (@{$shortcuts}) {
-<li><a href="<%= $shortcut->[0] %>"><span><%= $shortcut->[1] %></span></a></li>
+<li><a href="<%= $shortcut->[0] %>&amp;m=1"><span><%= $shortcut->[1] %></span></a></li>
 % }
 <li class="header menu">Presets</li>
 % for my $preset (@{$presets}) {
 % if ($preset->[1] eq 'manage') {
-<li><a href="<%= $preset->[0] %>" class="special"><span><%= $preset->[1] %></span></a></li>
+<li><a href="<%= $preset->[0] %>&amp;m=1" class="special"><span><%= $preset->[1] %></span></a></li>
 % }
 % else {
-<li><a href="<%= $preset->[0] %>"><span><%= $preset->[1] %></span></a></li>
+<li><a href="<%= $preset->[0] %>&amp;m=1"><span><%= $preset->[1] %></span></a></li>
 % }
 % }
 % for my $area (sort keys %{$areas}) {
