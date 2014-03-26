@@ -1014,7 +1014,8 @@ get '/blinkencontrol/:device' => sub {
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-	my $layer = $self->param('layer') // 'control';
+	my $layer  = $self->param('layer') // 'control';
+	my $mobile = $self->param('m')     // q{};
 
 	my $text = $self->param('disptext');
 
@@ -1046,8 +1047,8 @@ get '/charwrite/:device' => sub {
 
 	$self->respond_to(
 		any => {
-			template    => 'charwrite',
-			about       => 1,
+			template => 'charwrite' . ( $mobile ? '-m' : q{} ),
+			about => !$mobile,
 			coordinates => {},
 			device      => $device,
 			errors      => [],

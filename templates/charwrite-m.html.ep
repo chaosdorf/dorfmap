@@ -1,0 +1,17 @@
+<ul class="mlist charwrite">
+<li><a href="/m"><span>&larr; back</span></a></li>
+<li class="header">set mode</li>
+<li><a href="?disptext=%20&amp;m=1"><span>blank</span></a></li>
+<li><a href="?disptext=clock&amp;m=1"><span>clock (HH.MM)</span></a></li>
+<li><a href="?disptext=date&amp;m=1"><span>date (dd.mm.)</span></a></li>
+<li><a href="?disptext=hosts&amp;m=1"><span>online hosts</span></a></li>
+<li><a href="?disptext=power&amp;m=1"><span>power consumption (Watts)</span></a></li>
+<li class="header">custom text</li>
+<li>
+%= form_for "/charwrite/$device" => begin
+%= text_field 'disptext';
+%= hidden_field m => 1;
+%= submit_button 'apply';
+%= end
+</li>
+</ul> <!-- mlist -->

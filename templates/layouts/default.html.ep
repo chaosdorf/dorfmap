@@ -320,6 +320,15 @@
 		font-size: 120%;
 	}
 
+	ul.mlist li input {
+		border: 1px solid black;
+		height: 32px;
+		width: 48%;
+	}
+
+	ul.mlist li select {
+	}
+
 	</style>
 	%= javascript '/jquery-1.10.2.min.js'
 </head>
