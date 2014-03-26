@@ -911,6 +911,7 @@ get '/blinkencontrol/:device' => sub {
 	my $command = $self->param('command') // q{};
 	my $cmdname = $self->param('cmdname') // q{};
 	my $action  = $self->param('action') // q{};
+	my $mobile  = $self->param('m') // q{};
 	my $rawmode = 0;
 
 	my $bc_presets = load_blinkencontrol();
@@ -989,8 +990,8 @@ get '/blinkencontrol/:device' => sub {
 
 	$self->respond_to(
 		any => {
-			template    => 'blinkencontrol',
-			about       => 1,
+			template => 'blinkencontrol' . ( $mobile ? '-m' : q{} ),
+			about => !$mobile,
 			coordinates => {},
 			device      => $device,
 			errors      => [],
