@@ -304,6 +304,13 @@
 		background-position:5px 10px;
 		background-repeat: no-repeat;
 	}
+	ul.mlist li.preset a {
+		float: left;
+		width: 10%;
+	}
+	ul.mlist div.preset-end {
+		clear: both;
+	}
 	ul.mlist li a span {
 		margin-left: 40px;
 		display: inline-block;
@@ -328,6 +335,7 @@
 
 	ul.mlist li select {
 	}
+
 
 	</style>
 	%= javascript '/jquery-1.10.2.min.js'

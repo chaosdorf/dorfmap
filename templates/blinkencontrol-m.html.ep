@@ -1,12 +1,15 @@
 <ul class="mlist blinkencontrol">
 <li><a href="/m"><span>&larr; back</span></a></li>
 <li class="header">set steady color</li>
+<li class="preset">
 % for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 255],
 %	[255, 255, 0], [0, 255, 255], [255, 0, 255],
 %	[255, 255, 255], [0, 0, 0]) {
-<li class="preset" style="background-color: rgb(<%= join(', ', @{$preset}) %>)">
-<a href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>&amp;speed=210&amp;m=1">&nbsp;</a></li>
+<a style="background-color: rgb(<%= join(', ', @{$preset}) %>)"
+href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $preset->[2] %>&amp;speed=210&amp;m=1">&nbsp;</a>
 % }
+<div class="preset-end"></div>
+</li>
 <li class="header">set animation</li>
 % for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
 <li><a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>&amp;m=1"><span><%= $cb_preset %></span></a></li>
