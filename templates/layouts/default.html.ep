@@ -18,6 +18,7 @@
 % if (not $about) {
 	body {
 		margin: 0;
+		background-color: #333333;
 	}
 % }
 
