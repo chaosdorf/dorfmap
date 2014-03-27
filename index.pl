@@ -1584,4 +1584,5 @@ load_coordinates();
 make_shortcuts();
 app->types->type( txt  => 'text/plain; charset=utf-8' );
 app->types->type( json => 'application/json; charset=utf-8' );
+app->plugin('browser_detect');
 app->start;

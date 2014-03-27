@@ -9,6 +9,9 @@
 % }
 
 <div class="dropdowncontainer">
+% if ($self->browser->mobile) {
+<a href="/m">Mobile View</a>
+% }
 <div class="dropdown">
 <div class="dropdownheader">
 <a href="/m/actions">Actions</a>

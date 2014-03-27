@@ -6,6 +6,9 @@
 </div>--> <!-- menu-->
 
 <ul class="mlist">
+% if (not $self->browser->mobile) {
+<li><a href="/"><span>Desktop View</span></a></li>
+% }
 <li class="header menu">Actions</li>
 % for my $shortcut (@{$shortcuts}) {
 <li><a href="<%= $shortcut->[0] %>&amp;m=1"><span><%= $shortcut->[1] %></span></a></li>
