@@ -1246,7 +1246,7 @@ get '/m' => sub {
 	}
 
 	$self->render(
-		'mlist-overview',
+		'overview-m',
 		about       => 0,
 		version     => $VERSION,
 		areas       => \%areas,
