@@ -473,32 +473,48 @@ sub infotext {
 }
 
 sub json_status {
-	my ($id) = @_;
-
-	my @opmodes
-	  = (
-		qw(steady blinkrgb blinkrand blinkonoff fadeonoff fadergb faderand undef)
-	  );
+	my ( $id, $embed ) = @_;
 
 	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
 		my $controlpath = $remotemap->{$id};
-		my $red         = slurp("${controlpath}/red") // 0;
-		my $green       = slurp("${controlpath}/green") // 0;
-		my $blue        = slurp("${controlpath}/blue") // 0;
-		my $mode        = slurp("${controlpath}/mode") // 0;
 
-		my $speed = 31 - ( $mode & 0x1f );
-		my $opmode = $opmodes[ ( $mode & 0xe0 ) >> 5 ];
+		my ( @sequence, @animation );
 
-		return {
-			red    => $red,
-			green  => $green,
-			blue   => $blue,
-			opmode => $opmode,
-			speed  => $speed
-		};
+		for my $line ( split( /\n/, slurp("${controlpath}/commands") ) ) {
+			if ( $line eq 'push' ) {
+				push(
+					@sequence,
+					{
+						delay => $animation[1],
+						red   => $animation[2],
+						green => $animation[3],
+						blue  => $animation[4],
+					}
+				);
+				@animation = ();
+			}
+			else {
+				push( @animation, $line );
+			}
+		}
+		if (@animation) {
+			push(
+				@sequence,
+				{
+					delay => $animation[1],
+					red   => $animation[2],
+					green => $animation[3],
+					blue  => $animation[4],
+				}
+			);
+		}
+
+		return \@sequence;
 	}
 
+	if ($embed) {
+		return status_number($id);
+	}
 	return { status => status_number($id) };
 }
 
@@ -1068,7 +1084,7 @@ get '/get/:id' => sub {
 	my $id = $self->stash('id');
 
 	$self->respond_to(
-		json => { json => json_status($id) },
+		json => { json => json_status( $id, 0 ) },
 		txt  => { text => status_number($id) . "\n" },
 		png  => sub    { $self->render_static( device_image($id) ) },
 		any  => {
@@ -1155,7 +1171,7 @@ get '/list/all' => sub {
 		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
 		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
-		$devices->{$id}->{status}      = status_number($id);
+		$devices->{$id}->{status}      = json_status( $id, 1 );
 		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
