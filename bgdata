@@ -42,7 +42,7 @@ my $re_other_section = qr{
 }x;
 
 my %autooff = (
-	'/tmp/donationprint1/4'  => 20,
+	'/tmp/donationprint1/4'  => 45,
 	'/tmp/donationprint1/11' =>  5,
 );
 

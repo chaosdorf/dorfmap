@@ -121,7 +121,7 @@ phone                   6   24    0    0 none \
 clc1160               842   60    0    0 none \
   type=printer area=Hackcenter watts=200
 hp2100                386   60    0    0 donationprint1/4 \
-  type=printer area=Lounge watts=15 HP2100 (geht nach 20min automatisch aus)
+  type=printer area=Lounge watts=15 HP2100 (geht nach 45min automatisch aus)
 
 dashpi                883  300    0    0 none \
   type=server area=Hackcenter watts=4
