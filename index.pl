@@ -360,14 +360,15 @@ sub amp {
 
 	return
 	  sprintf(
-'<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, device_image($id), 'amp', 'amp' );
+'<a href="%s" id="link%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		device_actionlink($id), $id, $id, device_image($id), 'amp', 'amp' );
 }
 
 sub blinkenlight {
 	my ($light) = @_;
 
-	my $ret = sprintf( '<a href="%s">', device_actionlink($light) );
+	my $ret = sprintf( '<a href="%s" id="link%s">', device_actionlink($light),
+		$light );
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
@@ -381,7 +382,8 @@ sub blinkenlight {
 sub charwrite {
 	my ($id) = @_;
 
-	my $ret = sprintf( '<a href="%s">', device_actionlink($id) );
+	my $ret
+	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($id), $id );
 
 	$ret
 	  .= sprintf(
@@ -521,7 +523,8 @@ sub json_status {
 sub killswitch {
 	my ($cb) = @_;
 
-	my $ret = sprintf( '<a href="%s">', device_actionlink($cb) );
+	my $ret
+	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($cb), $cb );
 
 	$ret
 	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
@@ -538,7 +541,8 @@ sub light {
 	my $ret = q{};
 
 	if ($is_rw) {
-		$ret .= sprintf( '<a href="%s">', device_actionlink($light) );
+		$ret .= sprintf( '<a href="%s" id="link%s">',
+			device_actionlink($light), $light );
 	}
 
 	$ret
@@ -567,8 +571,9 @@ sub pingdevice {
 	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
 		return
 		  sprintf(
-'<a href="/on/%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
-			$host, device_image($host), $host, $type, $host, $label, $host );
+'<a href="/on/%s" id="link%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
+			$host, $host, device_image($host), $host, $type, $host, $label,
+			$host );
 	}
 	else {
 		return
@@ -584,8 +589,8 @@ sub pump {
 
 	return
 	  sprintf(
-'<a href="%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, device_image($id), 'pump', 'pump' );
+'<a href="%s" class="link%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+		device_actionlink($id), $id, $id, device_image($id), 'pump', 'pump' );
 }
 
 sub status_number {

@@ -72,6 +72,18 @@
 <div id="<%= $location %>_dup<%= $i %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
 % }
+% if ($type ~~ [qw[light light_au pump amp printer]]) {
+%= javascript begin
+$("#link<%= $location %>").attr("href", "#<%= $location %>");
+$(function() {
+	$("#link<%= $location %>").on("click", function() {
+		$.get("<%= statuslink($type, $location) %>", {}, function(data){
+			$("#img<%= $location %>").attr("src", "/get/<%= $location %>.png");
+		});
+	});
+});
+% end
+% }
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
 %	}
