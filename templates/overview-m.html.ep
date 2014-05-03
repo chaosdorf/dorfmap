@@ -40,6 +40,7 @@ style="background-image:url(/<%=status_image($location)%>);"
 href="<%= statuslink($location) %>?m=1">
 <span><%== statustext($type, $location); %></span>
 </a>
+% if ($type ~~ [qw[light light pump amp printer]]) {
 %= javascript begin
 $("#link<%= $location %>").removeAttr("href");
 $(function() {
@@ -52,6 +53,7 @@ $(function() {
 	});
 });
 % end
+% }
 </li>
 % }
 % }
