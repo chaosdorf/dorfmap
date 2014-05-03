@@ -77,7 +77,7 @@
 $("#link<%= $location %>").attr("href", "#<%= $location %>");
 $(function() {
 	$("#link<%= $location %>").on("click", function() {
-		$.get("<%= statuslink($type, $location) %>", {}, function(data){
+		$.get("<%= statuslink($location) %>", {}, function(data){
 			$("#img<%= $location %>").attr("src", "/get/<%= $location %>.png");
 		});
 	});

@@ -806,7 +806,7 @@ helper statusclass => sub {
 };
 
 helper statuslink => sub {
-	my ( $self, $type, $location ) = @_;
+	my ( $self, $type ) = @_;
 
 	return device_actionlink($type);
 };
