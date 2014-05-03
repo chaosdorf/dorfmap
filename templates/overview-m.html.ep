@@ -35,10 +35,23 @@
 % $mname =~ s{ ^ $area _? }{}ix;
 <li>
 <a class="<%= $class %>"
+id="link<%= $location %>"
 style="background-image:url(/<%=status_image($location)%>);"
 href="<%= statuslink($location) %>?m=1">
 <span><%== statustext($type, $location); %></span>
 </a>
+%= javascript begin
+$("#link<%= $location %>").removeAttr("href");
+$(function() {
+	$("#link<%= $location %>").on("click", function() {
+		$.get("/toggle/<%= $location %>", {m: 1}, function(data){
+			d = new Date();
+			$("#link<%= $location %>").attr("style",
+			"background-image:url(/get/<%= $location %>.png?r="+d.getTime()+")");
+		});
+	});
+});
+% end
 </li>
 % }
 % }

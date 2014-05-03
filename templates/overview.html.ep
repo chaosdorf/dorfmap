@@ -72,9 +72,9 @@
 <div id="<%= $location %>_dup<%= $i %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
 % }
-% if ($type ~~ [qw[light light_au pump amp printer]]) {
+% if ($type ~~ [qw[light light pump amp printer]]) {
 %= javascript begin
-$("#link<%= $location %>").attr("href", "#");
+$("#link<%= $location %>").removeAttr("href");
 $(function() {
 	$("#link<%= $location %>").on("click", function() {
 		$.get("/toggle/<%= $location %>", {}, function(data){
