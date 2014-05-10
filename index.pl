@@ -75,11 +75,21 @@ sub set_device {
 
 	$opt{force} //= 0;
 
+	my $tsfile = "${tsdir}/${id}";
+
 	if ( not -e $tsdir ) {
 		mkdir($tsdir);
 	}
 
-	spew( "${tsdir}/${id}", $value );
+	if ( $coordinates->{$id}->{ratelimit} and not $opt{force} and -e $tsfile ) {
+		my $last_use = ( stat($tsfile) )[9];
+		my $now      = time;
+		if ( $now - $last_use < $coordinates->{$id}->{ratelimit} ) {
+			return 1;
+		}
+	}
+
+	spew( $tsfile, $value );
 
 	if ( exists $gpiomap->{$id} ) {
 		spew( $gpiomap->{$id}, $value );
