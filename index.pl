@@ -199,7 +199,7 @@ sub load_coordinates {    #{{{
 		};
 
 		for my $key ( keys %section ) {
-			$coordinates->{$id}->{$key} = $section{$key};
+			$coordinates->{$id}->{$key} //= $section{$key};
 		}
 
 		for my $elem (@rest) {
