@@ -19,7 +19,6 @@ infoarea              450  406  900  600 none \
   type=infoarea
 
 [layer=control type=rtext]
-temp_hackcenter       840  350    0    0 none
 temp_serverraum      1265  400    0    0 none
 online_guests           0    0    0    0 none
 online_hosts            0    0    0    0 none
