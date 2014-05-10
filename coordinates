@@ -59,7 +59,7 @@ lounge_weiss          130  100    0    0 feedback3/12  \
 outdoor                 9  438    0    0 gpio17 \
   type=light_au area=Schleuse watts=35      Röhre über Tür, außen
 roehre_blau           748   20    0    0 feedback1/2 \
-  type=light ratelimit=90 area=Hackcenter watts=20       Blaue Röhre
+  type=light ratelimit=15 area=Hackcenter watts=20       Blaue Röhre
 schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_au area=Schleuse watts=5       LEDs im Schaufenster
 lightclc1160          887   63    0    0 feedback1/3 \
@@ -71,11 +71,11 @@ hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
 hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
   type=charwrite area=Hackcenter            4x7Segment rechts
 hackcenter_w          686  280    0    0 feedback1/4 \
-  type=light ratelimit=20 area=Hackcenter watts=20       Weiße LEDs über der Tischreihe
+  type=light ratelimit=5 area=Hackcenter watts=20       Weiße LEDs über der Tischreihe
 hackcenter_blau       535  355  894  408 feedback1/5 \
-  type=light ratelimit=10 area=Hackcenter watts=24       Blauer LED-Streifen am Kabelkanal
+  type=light ratelimit=7 area=Hackcenter watts=24       Blauer LED-Streifen am Kabelkanal
 hackcenter_spots      700  180    0    0 feedback1/6 \
-  type=light ratelimit=20 area=Hackcenter watts=30       LED-Spots über Stoff
+  type=light ratelimit=10 area=Hackcenter watts=30       LED-Spots über Stoff
 hackcenter_regal      600   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3      RGB-LED-Streifen
 hackcenter_roehre     600  180    0    0 feedback1/7 \
