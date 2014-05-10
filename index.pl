@@ -71,7 +71,9 @@ sub set_remote {
 }
 
 sub set_device {
-	my ( $id, $value, $force ) = @_;
+	my ( $id, $value, %opt ) = @_;
+
+	$opt{force} //= 0;
 
 	if ( not -e $tsdir ) {
 		mkdir($tsdir);
@@ -672,7 +674,7 @@ $shortcuts->{'amps on'} = sub {
 
 	unshutdown;
 	for my $amp (qw(amp0 amp1 amp2 amp3)) {
-		set_device( $amp, 1, 0 );
+		set_device( $amp, 1 );
 	}
 
 	return;
@@ -682,7 +684,7 @@ $shortcuts->{'amps off'} = sub {
 	my ($self) = @_;
 
 	for my $amp (qw(amp0 amp1 amp2 amp3)) {
-		set_device( $amp, 0, 0 );
+		set_device( $amp, 0 );
 	}
 
 	return;
@@ -732,22 +734,22 @@ $shortcuts->{shutdown} = sub {
 		}
 		elsif ( $type eq 'printer'
 			and slurp("/srv/www/${device}.ping") == 1
-			and not set_device( $device, 0, 1 ) )
+			and not set_device( $device, 0, force => 1 ) )
 		{
 			push( @errors, "please turn off printer ${device}" );
 		}
 		elsif ( $type eq 'charwrite' ) {
-			set_device( $device, q{ }, 1 );
+			set_device( $device, q{ }, force => 1 );
 		}
 		else {
-			set_device( $device, 0, 1 );
+			set_device( $device, 0, force => 1 );
 		}
 	}
 
 	system(qw(ssh private@door));
 
 	for my $device (@delayed) {
-		set_device( $device, 0, 1 );
+		set_device( $device, 0, force => 1 );
 	}
 
 	if ( $? != 0 ) {
@@ -1418,7 +1420,7 @@ get '/presets/apply/:name' => sub {
 		if ( exists $presets->{$name}->{$id}
 			and $presets->{$name}->{$id} != -1 )
 		{
-			set_device( $id, $presets->{$name}->{$id}, 0 );
+			set_device( $id, $presets->{$name}->{$id} );
 		}
 	}
 
@@ -1526,7 +1528,7 @@ get '/toggle/:id' => sub {
 	}
 
 	my $state = get_device($id);
-	if ( set_device( $id, $state ^ 1, 0 ) ) {
+	if ( set_device( $id, $state ^ 1 ) ) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
@@ -1552,7 +1554,7 @@ get '/off/:id' => sub {
 		}
 	}
 
-	if ( set_device( $id, 0, 0 ) ) {
+	if ( set_device( $id, 0 ) ) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
@@ -1579,7 +1581,7 @@ get '/on/:id' => sub {
 	}
 
 	unshutdown;
-	if ( set_device( $id, 1, 0 ) ) {
+	if ( set_device( $id, 1 ) ) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
