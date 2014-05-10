@@ -858,6 +858,18 @@ helper statusimage => sub {
 helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
+	my $extra = q{};
+
+	if ( $coordinates->{$location}->{ratelimit} and -e "${tsdir}/${location}" )
+	{
+		my $last_use = ( stat("${tsdir}/${location}") )[9];
+		my $now      = time;
+		if ( $now - $last_use < $coordinates->{$location}->{ratelimit} ) {
+			$extra = sprintf( ' (rate limited - wait %d seconds)',
+				$coordinates->{$location}->{ratelimit} - ( $now - $last_use ) );
+		}
+	}
+
 	if ( $type eq 'rtext' ) {
 		return slurp("${store_prefix}/${location}");
 	}
@@ -868,7 +880,7 @@ helper statustext => sub {
 		return $coordinates->{$location}->{text} . '<br/>'
 		  . auto_text($location);
 	}
-	return $coordinates->{$location}->{text};
+	return $coordinates->{$location}->{text} . $extra;
 };
 
 #}}}
