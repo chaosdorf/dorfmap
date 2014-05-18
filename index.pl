@@ -315,6 +315,7 @@ sub device_actionlink {
 		when ('blinkenlight') { $action = 'blinkencontrol' }
 		when ( [qw[charwrite killswitch]] )      { $action = $type }
 		when ( [qw[phone printer server wifi]] ) { $action = 'on' }
+		when ('light_au') { $action = 'toggle' }
 	}
 
 	return "/${action}/${id}";
