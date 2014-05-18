@@ -62,6 +62,16 @@ sub gpio {
 	return "/sys/class/gpio/gpio${index}/value";
 }
 
+sub get_ratelimit_delay {
+	my ($id) = @_;
+	if ( not $coordinates->{$id}->{ratelimit} or not -e "${tsdir}/${id}" ) {
+		return -1;
+	}
+	my $last_use = ( stat("${tsdir}/${id}") )[9];
+	my $now      = time;
+	return ( $coordinates->{$id}->{ratelimit} - ( $now - $last_use ) );
+}
+
 sub set_remote {
 	my ( $path, $value ) = @_;
 
@@ -81,12 +91,8 @@ sub set_device {
 		mkdir($tsdir);
 	}
 
-	if ( $coordinates->{$id}->{ratelimit} and not $opt{force} and -e $tsfile ) {
-		my $last_use = ( stat($tsfile) )[9];
-		my $now      = time;
-		if ( $now - $last_use < $coordinates->{$id}->{ratelimit} ) {
-			return 1;
-		}
+	if ( get_ratelimit_delay($id) > 0 ) {
+		return 1;
 	}
 
 	spew( $tsfile, $value );
@@ -860,14 +866,9 @@ helper statustext => sub {
 
 	my $extra = q{};
 
-	if ( $coordinates->{$location}->{ratelimit} and -e "${tsdir}/${location}" )
-	{
-		my $last_use = ( stat("${tsdir}/${location}") )[9];
-		my $now      = time;
-		if ( $now - $last_use < $coordinates->{$location}->{ratelimit} ) {
-			$extra = sprintf( ' (rate limited - wait %d seconds)',
-				$coordinates->{$location}->{ratelimit} - ( $now - $last_use ) );
-		}
+	if ( get_ratelimit_delay($location) > 0 ) {
+		$extra = sprintf( ' (rate limited - wait %d seconds)',
+			get_ratelimit_delay($location) );
 	}
 
 	if ( $type eq 'rtext' ) {
