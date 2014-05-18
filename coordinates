@@ -27,7 +27,7 @@ power_phase1            0    0    0    0 none
 power_phase2            0    0    0    0 none
 power_phase3            0    0    0    0 none
 
-[layer=control]
+[layer=control ratelimit=2]
 logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au area=Schleuse watts=1       LED-Leiste über Chaosdorflogo
 treppe_w              350  525    0    0 feedback2/bin6 \
