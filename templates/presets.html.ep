@@ -12,6 +12,12 @@
 
 <a class="backlink" href="/">← back</a>
 
+<div style="margin-bottom: 1em;">
+<span style="font-weight: bold;">*</span> is "Don't care", so the light status
+is not changed when applying the preset.<br/>
+Hover over a device to see its description.
+</div>
+
 <div class="presetlist">
 <table>
 <tr><th>preset</th><th>last used</th><th>delete?</th></tr>
