@@ -1396,7 +1396,7 @@ any '/presets' => sub {
 		if (    $coordinates->{$id}->{type}
 			and $coordinates->{$id}->{type} eq 'light' )
 		{
-			push( @toggles, $id );
+			push( @toggles, [ $id, $coordinates->{$id} ] );
 			if ( $name and exists $presets->{$name}->{$id} ) {
 				$self->param( $id => $presets->{$name}->{$id} );
 			}

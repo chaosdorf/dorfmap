@@ -47,9 +47,11 @@
 % }
 <table>
 <tr><th>device</th><th title="don't care">*</th><th>off</th><th>on</th></tr>
-% for my $id ( sort @{$toggles} ) {
+% for my $pair ( sort @{$toggles} ) {
+% my $id = $pair->[0];
+% my $desc = $pair->[1]->{text};
 <tr>
-<td> <%= $id %> </td>
+<td title="<%= $desc %>"> <%= $id %> </td>
 <td> <%= radio_button $id => -1 %> </td>
 <td> <%= radio_button $id => 0 %> </td>
 <td> <%= radio_button $id => 1 %> </td>
