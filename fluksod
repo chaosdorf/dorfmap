@@ -81,31 +81,33 @@ while ( sleep(7) ) {
 		}
 	}
 
-	for my $ts ( keys %cache ) {
-		if ( $now - $ts > 7200 ) {
-			delete $cache{$ts};
-		}
+	for my $ts ( ( $now - 7220 ) .. ( $now - 7200 ) ) {
+		delete $cache{$ts};
 	}
 
-	for my $interval ( 30, 60, 300, 600, 3600 ) {
-		my %phase_avg;
+	my ( %phase_sum, %phase_cnt );
+	for my $offset ( 0 .. 3600 ) {
+		my $ts = $now - $offset;
 		for my $phase (qw(p1 p2 p3)) {
-			my ( $cnt, $sum ) = ( 0, 0 );
-			for my $ts ( ( $now - $interval ) .. $now ) {
-				if ( exists $cache{$ts}{$phase} ) {
-					$sum += $cache{$ts}{$phase};
-					$cnt++;
-				}
+			if ( exists $cache{$ts}{$phase} ) {
+				$phase_sum{$phase} += $cache{$ts}{$phase};
+				$phase_cnt{$phase}++;
 			}
-			if ($cnt) {
-				$phase_avg{$phase} = $sum / $cnt;
-			}
-			else {
-				$phase_avg{$phase} = -1;
-			}
-			spew( "${out_prefix}/${interval}_${phase}", $phase_avg{$phase} );
 		}
-		spew( "${out_prefix}/${interval}", sum values %phase_avg );
+		if ( $offset ~~ [qw[30 60 300 600 3600]] ) {
+			my %phase_avg;
+			for my $phase (qw(p1 p2 p3)) {
+				if ( $phase_cnt{$phase} ) {
+					$phase_avg{$phase}
+					  = $phase_sum{$phase} / $phase_cnt{$phase};
+				}
+				else {
+					$phase_avg{$phase} = -1;
+				}
+				spew( "${out_prefix}/${offset}_${phase}", $phase_avg{$phase} );
+			}
+			spew( "${out_prefix}/${offset}", sum values %phase_avg );
+		}
 	}
 
 	my $history = q{};
