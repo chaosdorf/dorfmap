@@ -27,8 +27,9 @@ my $shortcuts   = {};
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
 
-my $auto_prefix  = '/etc/automatic_light_control';
-my $store_prefix = '/srv/www/stored';
+my $auto_prefix   = '/etc/automatic_light_control';
+my $store_prefix  = '/srv/www/stored';
+my $bgdata_prefix = '/srv/www/bgdata/hosts_dynamic';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
@@ -445,11 +446,11 @@ sub infotext {
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
 
-	if ( -e "${store_prefix}/online_guests" ) {
+	if ( -e "${bgdata_prefix}/online_guests" ) {
 		$buf .= sprintf(
 			'<span class="onlinegueststext">Online guest IPs</span>'
 			  . '<span class="onlineguests">%d</span><br/>',
-			slurp("${store_prefix}/online_guests")
+			slurp("${bgdata_prefix}/online_guests")
 		);
 	}
 
