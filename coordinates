@@ -130,7 +130,11 @@ hyperion             1232  361    0    0 none \
 door                   35  585    0    0 none \
   type=server area=Schleuse watts=8
 
-unifi                 420  210    0    0 none \
+ap-hackcenter         420  210    0    0 none \
   type=wifi watts=5
-wlan-hinten          1428  120    0    0 none \
+ap-hackcenter2        420  178    0    0 none \
+  type=wifi watts=5
+hinterzimmer          1428  120    0    0 none \
+  type=wifi watts=5
+nomspace              1130  268    0    0 none \
   type=wifi watts=5
