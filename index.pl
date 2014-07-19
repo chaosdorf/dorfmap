@@ -446,11 +446,18 @@ sub infotext {
 		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
 	}
 
-	if ( -e "${bgdata_prefix}/online_guests" ) {
+	if ( -e "${bgdata_prefix}/hosts_dynamic" ) {
 		$buf .= sprintf(
 			'<span class="onlinegueststext">Online guest IPs</span>'
 			  . '<span class="onlineguests">%d</span><br/>',
-			slurp("${bgdata_prefix}/online_guests")
+			slurp("${bgdata_prefix}/hosts_dynamic")
+		);
+	}
+	if ( -e "${bgdata_prefix}/hosts_total" ) {
+		$buf .= sprintf(
+			'<span class="onlinegueststext">Total online IPs</span>'
+			  . '<span class="onlineguests">%d</span><br/>',
+			slurp("${bgdata_prefix}/hosts_total")
 		);
 	}
 
