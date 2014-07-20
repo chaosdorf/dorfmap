@@ -121,10 +121,10 @@ dashpi                883  300    0    0 none \
   type=server area=Hackcenter watts=4
 donationprint          70  390    0    0 none \
   type=server area=Lounge watts=4
+edge                 1232  400    0    0 none \
+  type=server area=Serverraum
 feedback               64  585    0    0 none \
   type=server area=Schleuse watts=4
-figurehead           1232  400    0    0 none \
-  type=server area=Serverraum
 hyperion             1232  361    0    0 none \
   type=server area=Serverraum
 door                   35  585    0    0 none \
