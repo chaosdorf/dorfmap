@@ -495,7 +495,7 @@ sub infotext {
 
 	for my $h ( keys %{$coordinates} ) {
 		if ( exists $coordinates->{$h}->{dorfmap}
-			and get_device($h) == 0 )
+			and device_status($h) == 0 )
 		{
 			$buf .= sprintf(
 				'<img src="/warning.png" alt="!" /> %s is offline — '
