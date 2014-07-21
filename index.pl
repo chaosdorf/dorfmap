@@ -493,6 +493,18 @@ sub infotext {
 		}
 	}
 
+	for my $h ( keys %{$coordinates} ) {
+		if ( exists $coordinates->{$h}->{dorfmap}
+			and get_device($h) == 0 )
+		{
+			$buf .= sprintf(
+				'<img src="/warning.png" alt="!" /> %s is offline — '
+				  . 'some devices may not work<br/>',
+				$h
+			);
+		}
+	}
+
 	return $buf;
 }
 

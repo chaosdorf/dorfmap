@@ -120,13 +120,13 @@ hp2100                386   60    0    0 donationprint1/4 \
 dashpi                883  300    0    0 none \
   type=server area=Hackcenter watts=4
 donationprint          70  390    0    0 none \
-  type=server area=Lounge watts=4
+  type=server area=Lounge watts=4 dorfmap=donationprint
 edge                 1232  400    0    0 none \
   type=server area=Serverraum
 feedback               64  585    0    0 none \
-  type=server area=Schleuse watts=4
+  type=server area=Schleuse watts=4 dorfmap=feedback
 hyperion             1232  361    0    0 none \
-  type=server area=Serverraum
+  type=server area=Serverraum dorfmap=amp
 door                   35  585    0    0 none \
   type=server area=Schleuse watts=8
 
