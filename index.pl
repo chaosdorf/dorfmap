@@ -497,10 +497,14 @@ sub infotext {
 		if ( exists $coordinates->{$h}->{dorfmap}
 			and device_status($h) == 0 )
 		{
+			my $prefix = $coordinates->{$h}->{dorfmap};
 			$buf .= sprintf(
-				'<img src="/warning.png" alt="!" /> %s is offline — '
-				  . 'some devices may not work<br/>',
-				$h
+'<img style="float: left;" src="/warning.png" alt="!" /> %s is offline — '
+				  . 'some devices may not work <ul><li>%s</li></ul><br/>',
+				$h,
+				join( '</li><li>',
+					grep { $coordinates->{$_}->{path} =~ m{ ^ $h }x }
+					  keys %{$coordinates} )
 			);
 		}
 	}
