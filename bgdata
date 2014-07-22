@@ -80,7 +80,7 @@ while ( sleep(120) ) {
 			my $modified = ( stat($device) )[9];
 			if ( ( $now - $modified ) > ( $autooff{$device} * 60 ) ) {
 				spew( $device, "0\n" );
-				system('/usr/local/bin/avrshift-donationprint');
+				system('avrshift-donationprint');
 			}
 		}
 	}
