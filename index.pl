@@ -380,7 +380,7 @@ sub amp {
 
 	return
 	  sprintf(
-'<a href="%s" id="link%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="%s" id="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		device_actionlink($id), $id, $id, device_image($id), 'amp', 'amp' );
 }
 
@@ -579,7 +579,7 @@ sub light {
 	my $ret = q{};
 
 	if ($is_rw) {
-		$ret .= sprintf( '<a href="%s" id="link%s">',
+		$ret .= sprintf( '<a href="%s" id="link%s" class="toggle">',
 			device_actionlink($light), $light );
 	}
 
@@ -627,7 +627,7 @@ sub pump {
 
 	return
 	  sprintf(
-'<a href="%s" class="link%s"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
+'<a href="%s" class="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
 		device_actionlink($id), $id, $id, device_image($id), 'pump', 'pump' );
 }
 

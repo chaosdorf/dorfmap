@@ -51,6 +51,21 @@
 </div> <!-- dropdown -->
 </div> <!-- dropdowncontainer -->
 
+%= javascript begin
+$(document).ready(function() {
+	$('.toggle').each(function() {
+		$(this).click(function(e) {
+			e.preventDefault();
+			parent = $(this).parent()
+			$.get('/toggle/'+parent.attr('id'), {}, function(data) {
+				d = new Date();
+				parent.find('img').attr('src', '/get/'+parent.attr('id')+'.png?r='+d.getTime());
+			});
+		});
+	});
+});
+% end
+
 <div class="overview">
 % for my $location (keys %{$coordinates}) {
 %	my $type = $coordinates->{$location}->{type} // q{};
@@ -71,19 +86,6 @@
 </div> <!-- location -->
 <div id="<%= $location %>_dup<%= $i %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
-% }
-% if ($type ~~ [qw[light light pump amp printer]]) {
-%= javascript begin
-$("#link<%= $location %>").removeAttr("href");
-$(function() {
-	$("#link<%= $location %>").on("click", function() {
-		$.get("/toggle/<%= $location %>", {}, function(data){
-			d = new Date();
-			$("#img<%= $location %>").attr("src", "/get/<%= $location %>.png?r="+d.getTime());
-		});
-	});
-});
-% end
 % }
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
