@@ -1,9 +1,17 @@
-<!--
-<div class="tiledmenu">
-<a href="/m/actions">Actions</a>
-<a href="/m/presets">Presets</a>
-<a href="/m/layers">Layers</a>
-</div>--> <!-- menu-->
+%= javascript begin
+$(document).ready(function() {
+	$('.toggle').each(function() {
+		$(this).click(function(e) {
+			e.preventDefault()
+			link = $(this)
+			$.get('/toggle/'+link.attr('id'), {m: 1}, function(data) {
+				d = new Date()
+				link.css('background-image', 'url(/get/'+link.attr('id')+'.png?r='+d.getTime()+')')
+			});
+		});
+	});
+});
+% end
 
 <ul class="mlist">
 % if (not $self->browser->mobile) {
@@ -28,32 +36,21 @@
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
 % given (status_number($location)) {
-% when ([1, 255]) { $class = 'on' }
-% when (0) { $class = 'off' }
+%     when ([1, 255]) { $class = 'on' }
+%     when (0) { $class = 'off' }
+% }
+% if ($type ~~ [qw[amp light light_au pump printer]]) {
+%     $class .= ' toggle';
 % }
 % my $mname = $location;
 % $mname =~ s{ ^ $area _? }{}ix;
 <li>
 <a class="<%= $class %>"
-id="link<%= $location %>"
+id="<%= $location %>"
 style="background-image:url(/<%=status_image($location)%>);"
 href="<%= statuslink($location) %>?m=1">
 <span><%== statustext($type, $location); %></span>
 </a>
-% if ($type ~~ [qw[light light pump amp printer]]) {
-%= javascript begin
-$("#link<%= $location %>").removeAttr("href");
-$(function() {
-	$("#link<%= $location %>").on("click", function() {
-		$.get("/toggle/<%= $location %>", {m: 1}, function(data){
-			d = new Date();
-			$("#link<%= $location %>").attr("style",
-			"background-image:url(/get/<%= $location %>.png?r="+d.getTime()+")");
-		});
-	});
-});
-% end
-% }
 </li>
 % }
 % }
