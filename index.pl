@@ -92,7 +92,8 @@ sub set_device {
 		mkdir($tsdir);
 	}
 
-	if ( get_ratelimit_delay($id) > 0 ) {
+	# force (and turning something off) shall always work
+	if ( get_ratelimit_delay($id) > 0 and not $opt{force} and $value > 0 ) {
 		return 1;
 	}
 
