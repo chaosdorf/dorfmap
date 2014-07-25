@@ -80,7 +80,9 @@ $(document).ready(function() {
 (function imgrefresh() {
 	d = new Date();
 	$('.toggle').each(function() {
-		$(this).find('img').attr('src', '/get/'+$(this).parent().attr('id')+'.png?r='+d.getTime());
+		imgname = $(this).parent().attr('id');
+		imgname = imgname.replace(/_dup./, '');
+		$(this).find('img').attr('src', '/get/'+imgname+'.png?r='+d.getTime());
 	});
 	setTimeout(imgrefresh, 7000);
 })();
