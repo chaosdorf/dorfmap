@@ -516,42 +516,42 @@ sub infotext {
 sub json_status {
 	my ( $id, $embed ) = @_;
 
-	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
-		my $controlpath = $remotemap->{$id};
-
-		my ( @sequence, @animation );
-
-		for my $line ( split( /\n/, slurp("${controlpath}/commands") ) ) {
-			if ( $line eq 'push' ) {
-				push(
-					@sequence,
-					{
-						delay => $animation[1],
-						red   => $animation[2],
-						green => $animation[3],
-						blue  => $animation[4],
-					}
-				);
-				@animation = ();
-			}
-			else {
-				push( @animation, $line );
-			}
-		}
-		if (@animation) {
-			push(
-				@sequence,
-				{
-					delay => $animation[1],
-					red   => $animation[2],
-					green => $animation[3],
-					blue  => $animation[4],
-				}
-			);
-		}
-
-		return \@sequence;
-	}
+#	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
+#		my $controlpath = $remotemap->{$id};
+#
+#		my ( @sequence, @animation );
+#
+#		for my $line ( split( /\n/, slurp("${controlpath}/commands") ) ) {
+#			if ( $line eq 'push' ) {
+#				push(
+#					@sequence,
+#					{
+#						delay => $animation[1],
+#						red   => $animation[2],
+#						green => $animation[3],
+#						blue  => $animation[4],
+#					}
+#				);
+#				@animation = ();
+#			}
+#			else {
+#				push( @animation, $line );
+#			}
+#		}
+#		if (@animation) {
+#			push(
+#				@sequence,
+#				{
+#					delay => $animation[1],
+#					red   => $animation[2],
+#					green => $animation[3],
+#					blue  => $animation[4],
+#				}
+#			);
+#		}
+#
+#		return \@sequence;
+#	}
 
 	if ($embed) {
 		return status_number($id);
