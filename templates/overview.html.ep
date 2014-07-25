@@ -64,6 +64,18 @@ $(document).ready(function() {
 		});
 	});
 });
+
+(function infotextrefresh() {
+	$.ajax({
+		url: '/ajax/infoarea',
+		success: function(data) {
+			$('#infoarea').html(data);
+		},
+		complete: function() {
+			setTimeout(infotextrefresh, 10000);
+		}
+	});
+})();
 % end
 
 <div class="overview">

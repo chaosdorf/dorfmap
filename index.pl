@@ -965,6 +965,13 @@ get '/action/:action' => sub {
 	return;
 };
 
+get '/ajax/infoarea' => sub {
+	my ($self) = @_;
+
+	$self->render( inline => infotext() );
+	return;
+};
+
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
