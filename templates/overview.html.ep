@@ -84,7 +84,7 @@ $(document).ready(function() {
 		imgname = imgname.replace(/_dup./, '');
 		$(this).find('img').attr('src', '/get/'+imgname+'.png?r='+d.getTime());
 	});
-	setTimeout(imgrefresh, 7000);
+	setTimeout(imgrefresh, 15000);
 })();
 % end
 
