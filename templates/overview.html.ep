@@ -76,6 +76,14 @@ $(document).ready(function() {
 		}
 	});
 })();
+
+(function imgrefresh() {
+	d = new Date();
+	$('.toggle').each(function() {
+		$(this).find('img').attr('src', '/get/'+$(this).parent().attr('id')+'.png?r='+d.getTime());
+	});
+	setTimeout(imgrefresh, 7000);
+})();
 % end
 
 <div class="overview">
