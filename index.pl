@@ -1131,7 +1131,7 @@ get '/charwrite/:device' => sub {
 		},
 		json => {
 			json => {
-				text => $self->param('text'),
+				text => scalar $self->param('disptext'),
 			}
 		},
 	);
