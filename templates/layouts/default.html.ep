@@ -339,7 +339,7 @@
 
 
 	</style>
-	%= javascript '/jquery-1.10.2.min.js'
+	%= javascript '/jquery-2.1.1.min.js'
 </head>
 <body>
 
