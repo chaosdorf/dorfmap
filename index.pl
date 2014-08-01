@@ -449,9 +449,9 @@ sub infotext {
 
 	if ( -e "${bgdata_prefix}/hosts_dynamic" ) {
 		$buf .= sprintf(
-			'<span class="onlinegueststext">Online guest IPs</span>'
-			  . '<span class="onlineguests">%d</span> '
-			  . '(total <span class="onlineguests">%d</span>)<br/>',
+			'<span class="onlinegueststext">Online IPs</span>'
+			  . '<span class="onlineguests">%d</span> guests / '
+			  . ' <span class="onlineguests">%d</span> total<br/>',
 			slurp("${bgdata_prefix}/hosts_dynamic"),
 			slurp("${bgdata_prefix}/hosts_total")
 		);
