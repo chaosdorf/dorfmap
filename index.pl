@@ -461,26 +461,26 @@ sub infotext {
 	my $power_p2 = slurp('/srv/www/flukso/30_p2');
 	my $power_p3 = slurp('/srv/www/flukso/30_p3');
 
-	$buf .= '<span class="wattagetext">power consumption</span>';
+	$buf .= '<span class="wattagetext">Verbrauch</span>';
 	$buf .= sprintf_wattage( $power_p1 + $power_p2 + $power_p3 );
 	$buf .= '<br/><ul>';
-	$buf .= '<li><span class="wattagetext">phases</span>';
+	$buf .= '<li><span class="wattagetext">Phasen</span>';
 
 	$buf .= join( ' + ',
 		map { sprintf_wattage($_) } ( $power_p1, $power_p2, $power_p3 ) );
 	$buf .= '</li>';
 
-	$buf .= sprintf(
-		'<li><span class="wattagetext">known dorfmap devices</span>'
-		  . '<span class="wattage">ca. %dW</span></li>',
-		estimated_power_consumption
-	);
-
 	if ( -e "${store_prefix}/power_serverraum" ) {
-		$buf .= '<li><span class="wattagetext">Serverraum (UPS)</span>';
+		$buf .= '<li><span class="wattagetext">Serverraum (USV)</span>';
 		$buf .= sprintf_wattage( slurp("${store_prefix}/power_serverraum") );
 		$buf .= '</li>';
 	}
+
+	$buf .= sprintf(
+		'<li><span class="wattagetext">Beleuchtung</span>'
+		  . '<span class="wattage">ca. %dW</span></li>',
+		estimated_power_consumption
+	);
 	$buf .= '</ul>';
 
 	for my $cb (@killswitches) {
