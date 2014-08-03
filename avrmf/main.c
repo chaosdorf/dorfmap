@@ -4,9 +4,11 @@
 #include <stdlib.h>
 
 /*
- * PD0: SCL out
- * PD1: SDA out
- * PD6: circuit breaker
+ * PD0: red LED
+ * PD1: green LED
+ * PD4: SCL out
+ * PD5: SDA out
+ * PD6: binary out
  * PB0, PB1, PB5, PB6, PB7: binary out
  * PB2, PB3, PB4: analog out (pwm)
  */
@@ -20,7 +22,7 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x0006)
+#define MYADDRESS (0x000a)
 
 volatile uint8_t binary_out = 0;
 volatile uint8_t pwm[3];
@@ -38,7 +40,7 @@ int main (void)
 	ACSR |= _BV(ACD);
 
 	DDRB = 0xff;
-	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD6);
+	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
 	PORTB = 0;
 	PORTD = _BV(PD2) | _BV(PD3);
@@ -55,10 +57,8 @@ int main (void)
 	TCCR1A = _BV(WGM10);
 	TCCR1B = _BV(WGM12) | _BV(CS00);
 
-	for (start_delay = 0; start_delay < 0xffff; start_delay++)
+	for (start_delay = 0; start_delay < 0xff; start_delay++)
 		asm("nop");
-
-	PORTD |= _BV(PD6);
 
 	sei();
 
@@ -91,7 +91,7 @@ static void apply_pwm(void)
 ISR(INT0_vect)
 {
 	if (CLOCK_HI) {
-		PORTD |= _BV(PD0);
+		PORTD |= _BV(PD4);
 
 		// rising clock: read data
 		binary_out = (binary_out << 1) | (pwm[2] >> 7);
@@ -99,9 +99,13 @@ ISR(INT0_vect)
 		pwm[1] = (pwm[1] << 1) | (pwm[0] >> 7);
 		pwm[0] = (pwm[0] << 1) | (address >> 15);
 		address = (address << 1) | DATA_BIT;
+		if (DATA_BIT != 0)
+			PORTD |= _BV(PD0);
+		else
+			PORTD &= ~_BV(PD0);
 	}
 	else {
-		PORTD &= ~_BV(PD0);
+		PORTD &= ~_BV(PD4);
 
 		if (DATA_HI && (address == MYADDRESS)) {
 			// falling clock, data is high: end of transmission
@@ -125,12 +129,17 @@ ISR(INT0_vect)
 ISR(INT1_vect)
 {
 	if (DATA_HI)
-		PORTD |= _BV(PD1);
+		PORTD |= _BV(PD5);
 	else
-		PORTD &= ~_BV(PD1);
+		PORTD &= ~_BV(PD5);
 }
 
 ISR(TIMER0_OVF_vect)
 {
+	static uint16_t cnt = 0;
+	if (++cnt == 0x9fff) {
+		PIND |= _BV(PD1);
+		cnt = 0;
+	}
 	asm("wdr");
 }
