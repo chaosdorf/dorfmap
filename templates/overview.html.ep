@@ -58,8 +58,11 @@ $(document).ready(function() {
 			e.preventDefault();
 			parent = $(this).parent()
 			$.get('/toggle/'+parent.attr('id'), {}, function(data) {
-				d = new Date();
-				parent.find('img').attr('src', '/get/'+parent.attr('id')+'.png?r='+d.getTime());
+				$.getJSON("/list/all.json", {}, function(data) {
+					$.each(data, function(k, v) {
+						$('#img'+k).attr('src', v["image"])
+					})
+				});
 			});
 		});
 	});
@@ -78,13 +81,12 @@ $(document).ready(function() {
 })();
 
 (function imgrefresh() {
-	d = new Date();
-	$('.toggle').each(function() {
-		imgname = $(this).parent().attr('id');
-		imgname = imgname.replace(/_dup./, '');
-		$(this).find('img').attr('src', '/get/'+imgname+'.png?r='+d.getTime());
+	$.getJSON("/list/all.json", {}, function(data) {
+		$.each(data, function(k, v) {
+			$('#img'+k).attr('src', v["image"])
+		})
 	});
-	setTimeout(imgrefresh, 15000);
+	setTimeout(imgrefresh, 5000);
 })();
 % end
 
