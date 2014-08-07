@@ -340,6 +340,10 @@ sub device_image {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
 
+	if (not $type) {
+		return;
+	}
+
 	if ( $type eq 'amp' ) {
 		$id =~ s{ [ab] $}{}ox;
 	}
@@ -1233,6 +1237,7 @@ get '/list/all' => sub {
 		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
+		$devices->{$id}->{image}       = device_image($id);
 	}
 
 	$self->respond_to(
