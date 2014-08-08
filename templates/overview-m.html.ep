@@ -56,7 +56,7 @@ $(document).ready(function() {
 <li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1" class="special"><span><%= $preset->[1] %></span></a></li>
 % }
 % else {
-<li><a href="<%= $preset->[0] %>&amp;m=1"><span><%= $preset->[1] %></span></a></li>
+<li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1"><span><%= $preset->[1] %></span></a></li>
 % }
 % }
 % for my $area (sort keys %{$areas}) {
