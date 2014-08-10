@@ -377,7 +377,7 @@ sub device_image {
 		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
 	}
 
-	return "/static/${prefix}${suffix}.png";
+	return "static/${prefix}${suffix}.png";
 }
 
 sub amp {
