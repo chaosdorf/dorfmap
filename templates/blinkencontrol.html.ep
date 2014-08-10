@@ -44,6 +44,19 @@ function updatecolor() {
 
 <a class="backlink" href="/">← back</a>
 
+<h1>set animation</h1>
+<table>
+% for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
+<tr>
+<td>(<a href="?cmdname=<%= $cb_preset %>&amp;action=delete">X</a>)</td>
+<td> <a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>"><%= $cb_preset %></a> </td>
+<td><%= $bc_presets->{blinkencontrol1}->{$cb_preset} %></td>
+</tr>
+% }
+</table>
+
+<h1>set steady colour</h1>
+
 <div class="presets">
 
 % for my $preset ([255, 0, 0], [0, 255, 0], [0, 0, 255],
@@ -66,6 +79,8 @@ href="?red=<%= $preset->[0] %>&amp;green=<%= $preset->[1] %>&amp;blue=<%= $prese
 <tr><th>speed</th><td> <%= range_field speed => 16, min => 0, max => 255 %></td></tr>
 </table>
 
+<h1>add animation</h1>
+
 <table>
 <tr>
 <td>Upload custom animation:</td>
@@ -84,17 +99,6 @@ animation format: "Time1,Red1,Green1,Blue1 Time2,Red2,Green2,Blue2 ..."<br/>
 Each field is [0-255], transitions are always fading. See the saved presets
 for examples.
 </p>
-
-saved presets:<br/>
-<table>
-% for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
-<tr>
-<td>(<a href="?cmdname=<%= $cb_preset %>&amp;action=delete">X</a>)</td>
-<td> <a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>"><%= $cb_preset %></a> </td>
-<td><%= $bc_presets->{blinkencontrol1}->{$cb_preset} %></td>
-</tr>
-% }
-</table>
 </div> <!-- blinkencontrol -->
 
 
