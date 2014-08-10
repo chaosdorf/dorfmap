@@ -340,7 +340,7 @@ sub device_image {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
 
-	if (not $type) {
+	if ( not $type ) {
 		return;
 	}
 
@@ -377,7 +377,7 @@ sub device_image {
 		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
 	}
 
-	return "${prefix}${suffix}.png";
+	return "/static/${prefix}${suffix}.png";
 }
 
 sub amp {
@@ -412,7 +412,7 @@ sub charwrite {
 
 	$ret
 	  .= sprintf(
-		'<img src="/charwrite.png" class="charwrite %s" id="img%s" alt="%s" />',
+'<img src="/static/charwrite.png" class="charwrite %s" id="img%s" alt="%s" />',
 		$id, $id, $id );
 	$ret .= '</a>';
 
@@ -491,7 +491,7 @@ sub infotext {
 		if ( get_device($cb) == 0 ) {
 			$buf
 			  .= sprintf(
-				'<img src="/warning.png" alt="!" /> Bus Circuit Breaker '
+				'<img src="/static/warning.png" alt="!" /> Bus Circuit Breaker '
 				  . '<a href="/killswitch/%s">%s</a> is disconnected - '
 				  . 'some devices will not work<br/>',
 				$cb, $cb );
@@ -504,7 +504,7 @@ sub infotext {
 		{
 			my $prefix = $coordinates->{$h}->{dorfmap};
 			$buf .= sprintf(
-'<img style="float: left;" src="/warning.png" alt="!" /> %s is offline — '
+'<img style="float: left;" src="/static/warning.png" alt="!" /> %s is offline — '
 				  . 'some devices may not work <ul><li>%s</li></ul><br/>',
 				$h,
 				join( '</li><li>',
@@ -655,7 +655,7 @@ sub wikilink {
 	my $image  = undef;
 
 	if ( $name =~ s{ ^ Host : }{}ox ) {
-		$image = 'host.png';
+		$image = '/static/host.png';
 	}
 
 	return sprintf(

@@ -170,7 +170,7 @@
 	}
 
 	.overview {
-		background-image: url(/map.png);
+		background-image: url(/static/map.png);
 		width: 2202px;
 		height: 648px;
 		position: absolute;
