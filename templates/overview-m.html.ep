@@ -1,47 +1,3 @@
-%= javascript begin
-$(document).ready(function() {
-	$('.toggle').each(function() {
-		$(this).click(function(e) {
-			e.preventDefault()
-			link = $(this)
-			$.get('/toggle/'+link.attr('id'), {m: 1}, function(data) {
-				$.getJSON("/list/all.json", {}, function(data) {
-					$.each(data, function(k, v) {
-						$('#'+k).css('background-image', 'url(/'+v["image"]+')')
-					});
-				});
-			});
-		});
-	});
-	$('li.header').each(function() {
-		children = $('li.child_'+$(this).attr('id'))
-		children.each(function() {
-			$(this).css('display', 'none')
-		})
-		$(this).click(function() {
-			children = $('li.child_'+$(this).attr('id'))
-			children.each(function() {
-				if ($(this).css('display') == 'none') {
-					$(this).css('display', 'block')
-				}
-				else {
-					$(this).css('display', 'none')
-				}
-			})
-		})
-	})
-});
-
-(function imgrefresh() {
-	$.getJSON("/list/all.json", {}, function(data) {
-		$.each(data, function(k, v) {
-			$('#'+k).css('background-image', 'url(/'+v["image"]+')')
-		});
-	});
-	setTimeout(imgrefresh, 5000);
-})();
-% end
-
 <ul class="mlist">
 % if (not $self->browser->mobile) {
 <li><a href="/"><span>Desktop View</span></a></li>
@@ -84,3 +40,6 @@ href="<%= statuslink($location) %>?m=1">
 % }
 % }
 </ul> <!-- mlist -->
+
+%= javascript '/static/js/overview-m.js';
+%= javascript '/static/js/collapse.js';
