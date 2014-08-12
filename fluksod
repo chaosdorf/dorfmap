@@ -16,7 +16,7 @@ $App::Daemon::logfile = '/tmp/fluksod.log';
 
 daemonize();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $out_prefix = '/srv/www/flukso';
 my %cache;
@@ -59,9 +59,12 @@ while ( sleep(7) ) {
 	{
 
 		my ( $name, $id ) = @{$pair};
+
+		# host lookups take a while on the raspi (~800ms additional user time)
+		# -> use raw IP
 		my $res
 		  = $ua->get(
-"http://flukso:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
+"http://172.22.26.9:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
 		  );
 
 		if ( not $res->is_success ) {
