@@ -1622,6 +1622,12 @@ app->config(
 );
 app->defaults( layout => 'default' );
 
+#plugin NYTProf => {
+#	nytprof => {
+#		profiles_dir => '/tmp/dorfmap-nytprof',
+#	},
+#};
+
 load_coordinates();
 make_shortcuts();
 app->types->type( txt  => 'text/plain; charset=utf-8' );
