@@ -64,7 +64,7 @@ while ( sleep(7) ) {
 		# -> use raw IP
 		my $res
 		  = $ua->get(
-"http://172.22.26.9:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
+"http://172.22.26.11:8080/sensor/${id}?version=1.0&interval=minute&unit=watt&callback=realtime"
 		  );
 
 		if ( not $res->is_success ) {
