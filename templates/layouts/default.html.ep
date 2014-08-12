@@ -4,7 +4,7 @@
 	<title>dorfmap</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-% if ($refresh) {
+% if (stash('refresh')) {
 	<meta http-equiv="refresh" content="300" />
 % }
 
@@ -15,7 +15,7 @@
 		font-family: Sans-Serif;
 	}
 
-% if (not $about) {
+% if (not stash('about')) {
 	body {
 		margin: 0;
 		background-color: #333333;
@@ -258,6 +258,7 @@
 		content: ": ";
 	}
 
+% if (my $coordinates = stash('coordinates')) {
 % for my $location (keys %{$coordinates}) {
 %    my %coord = %{$coordinates->{$location}};
 	.overview #<%= $location %> {
@@ -279,6 +280,7 @@
 		width: <%= $coord{x2} %>px;
 		height: <%= $coord{y2} %>px;
 	}
+% }
 % }
 % }
 
@@ -343,13 +345,13 @@
 </head>
 <body>
 
-% if ($about) {
+% if (stash('about')) {
 <div class="about">
 <a href="https://github.com/chaosdorf/dorfmap">dorfmap</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung">about</a> —
 <a href="https://wiki.chaosdorf.de/Lichtsteuerung#API">API</a> —
 <a href="/space_api.json">spaceAPI</a><br/>
-v<%= $version %>
+v<%= stash('version') %>
 </div>
 % }
 
