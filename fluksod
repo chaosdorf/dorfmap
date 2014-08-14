@@ -20,6 +20,7 @@ our $VERSION = '0.02';
 
 my $out_prefix = '/srv/www/flukso';
 my %cache;
+my @intervals = qw(30 60 300 600 3600);
 
 # current timestamp is latest one returned from flukso to avoid clock desync
 my $now;
@@ -47,9 +48,17 @@ sub spew {
 	return write_file( $file, { err_mode => 'quiet' }, $value );
 }
 
+for my $interval (@intervals) {
+	for my $phase (qw(p1 p2 p3)) {
+		@{ $cache{$phase}{$interval} } = (0) x $interval;
+	}
+}
+
 mkdir($out_prefix);
 
 while ( sleep(7) ) {
+
+	my %sums;
 
 	for my $pair (
 		[ 'p1', 'd80587d41bebde066f003a8f60ac0d01' ],
@@ -76,53 +85,17 @@ while ( sleep(7) ) {
 		while ( $content =~ s{$re_pair}{} ) {
 			my ( $ts, $value ) = @+{ 'timestamp', 'value' };
 
-			if ( not exists $cache{$ts}{$name} ) {
-				$cache{$ts}{$name} = $value;
-				$cache{$ts}{total} += $value;
-				$now = $ts;
+			for my $interval (@intervals) {
+				$cache{$name}{$interval}[ $ts % $interval ] = $value;
 			}
 		}
-	}
-
-	for my $ts ( ( $now - 7220 ) .. ( $now - 7200 ) ) {
-		delete $cache{$ts};
-	}
-
-	my ( %phase_sum, %phase_cnt );
-	for my $offset ( 0 .. 3600 ) {
-		my $ts = $now - $offset;
-		for my $phase (qw(p1 p2 p3)) {
-			if ( exists $cache{$ts}{$phase} ) {
-				$phase_sum{$phase} += $cache{$ts}{$phase};
-				$phase_cnt{$phase}++;
-			}
-		}
-		if ( $offset ~~ [qw[30 60 300 600 3600]] ) {
-			my %phase_avg;
-			for my $phase (qw(p1 p2 p3)) {
-				if ( $phase_cnt{$phase} ) {
-					$phase_avg{$phase}
-					  = $phase_sum{$phase} / $phase_cnt{$phase};
-				}
-				else {
-					$phase_avg{$phase} = -1;
-				}
-				spew( "${out_prefix}/${offset}_${phase}", $phase_avg{$phase} );
-			}
-			spew( "${out_prefix}/${offset}", sum values %phase_avg );
+		for my $interval (@intervals) {
+			my $avg = ( sum @{ $cache{$name}{$interval} } ) / $interval;
+			spew( "${out_prefix}/${interval}_${name}", $avg );
+			$sums{$interval} += $avg;
 		}
 	}
-
-	my $history = q{};
-	for my $ts ( sort keys %cache ) {
-		$history .= sprintf(
-			"%d,%4d,%4d,%4d\n",
-			$ts,
-			$cache{$ts}{p1} // -1,
-			$cache{$ts}{p2} // -1,
-			$cache{$ts}{p3} // -1
-		);
+	for my $interval (@intervals) {
+		spew( "${out_prefix}/${interval}", $sums{$interval} );
 	}
-	spew( "${out_prefix}/dump", $history );
-
 }
