@@ -1193,6 +1193,8 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
+		$devices->{$id}->{img_x}       = $coordinates->{$id}->{x1};
+		$devices->{$id}->{img_y}       = $coordinates->{$id}->{y1};
 		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
 		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
