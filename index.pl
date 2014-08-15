@@ -1212,7 +1212,7 @@ get '/list/all' => sub {
 					join( "\t",
 						$_,
 						@{ $devices->{$_} }
-						  {qw[type status is_readables is_writable]} )
+						  {qw[type status is_readable is_writable]} )
 				} keys %{$devices}
 			)
 		},
