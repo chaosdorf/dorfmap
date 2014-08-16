@@ -91,6 +91,8 @@ hackcenter_regal7     740   60    0    0 feedback5/4 \
   type=light area=Hackcenter watts=1     LED-Streifen Regal 7
 hackcenter_regal8     775   60    0    0 feedback5/2 \
   type=light area=Hackcenter watts=1     LED-Streifen Regal 8 (rechts)
+borg16                1280  205   0    0 feedback6/bin7 \
+  type=light area=Nomspace watts=6       Borg16
 durchgang             1400  180   0    0 feedback6/bin3 \
   type=light area=Nomspace watts=6       Durchgang Cave
 
