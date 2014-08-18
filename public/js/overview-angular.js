@@ -23,7 +23,12 @@ function getURLParameter(name) {
             map.menu.shortcuts.function=function(action) {
                 map.menu.clicked(map.menu.shortcuts);
                 $http.get('/action/'+action).success(function() {
-                    $scope.$emit("update");
+                    if (action.indexOf('amps')==-1)
+                        $scope.$emit("update");
+                    else
+                        $timeout(function() {
+                            $scope.$emit("update");
+                        },500);
                 });
             }
             map.menu.presets.function=function() {
