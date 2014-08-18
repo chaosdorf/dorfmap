@@ -1,4 +1,4 @@
-%= javascript '/static/js/overview.js'
+%= javascript '/static/js/overview-angular.js'
 
 <div ng-controller="MapController as map">
 
