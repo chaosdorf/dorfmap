@@ -10,9 +10,6 @@ function getURLParameter(name) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
         map.menu={};
-        
-
-        map.isMobile=false;
         map.menu.clicked=function (type) {
             type.hide=true;
             $timeout(function () {
@@ -53,6 +50,7 @@ function getURLParameter(name) {
                             overview.lamps[key].css=new Object();
                             overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";}
                             overview.lamps[key].image=function() {
+                                if (key=="dorfdoor") return "/static/dorfdoor.png";
                                 statusName=overview.lamps[key].status===1?"on":"off";
                                 if (key==="hackcenter_blau")
                                     return "/static/hackcenter_blau_"+statusName+".png"
@@ -120,11 +118,14 @@ function getURLParameter(name) {
                                 }
                             }
                             overview.lamps[key].statusClass=function() {
-                                if (this.type!="infoarea" && this.type!="rtext")
+                                if (overview.lamps[key].type!="infoarea" && overview.lamps[key].type!="rtext")
                                     return "popup"
+
                             };
                             overview.lamps[key].class=function(){
-                                return this.type==='rtext'?'rtext':'';
+                                if (key==="dorfdoor")
+                                    return overview.lamps[key].status === 0 ? "closed" : "open";
+                                return overview.lamps[key].type==='rtext'?'rtext':'';
                             };
                         } else {
                             overview.lamps[key].status=data[key].status;

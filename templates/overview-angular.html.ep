@@ -3,7 +3,6 @@
 <div ng-controller="MapController as map">
 
 <div class="dropdowncontainer">
-<a href="/m" ng-show="map.isMobile">Mobile View</a>
 <dropdownmenu header="'Actions'" data="map.menu.shortcuts"></dropdownmenu>
 <dropdownmenu header="'Presets'" data="map.menu.presets"></dropdownmenu>
 <dropdownmenu header="'Layer'" data="map.menu.layers"></dropdownmenu>
