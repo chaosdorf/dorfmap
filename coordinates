@@ -28,7 +28,7 @@ logo                  224  460    0    0 feedback2/pwm2 \
 treppe_w              350  525    0    0 feedback2/bin6 \
   type=light area=Lounge watts=10           Treppe oben
 lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
-  type=charwrite area=Lounge                4x7Segment-Display
+  type=charwrite area=Lounge default=clock  4x7Segment-Display
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light area=Lounge watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
@@ -62,9 +62,9 @@ lightclc1160          887   63    0    0 feedback1/3 \
 hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light area=Hackcenter watts=105      3D-Drucker
 hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
-  type=charwrite area=Hackcenter            4x7Segment links
+  type=charwrite area=Hackcenter default=power          4x7Segment links
 hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
-  type=charwrite area=Hackcenter            4x7Segment rechts
+  type=charwrite area=Hackcenter default=*avg           4x7Segment rechts
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light ratelimit=5 area=Hackcenter watts=20       Tischreihe (Spots)
 hackcenter_blau       535  355  894  408 feedback1/5 \
@@ -92,7 +92,7 @@ hackcenter_regal7     740   60    0    0 feedback5/4 \
 hackcenter_regal8     775   60    0    0 feedback5/2 \
   type=light area=Hackcenter watts=1     LED-Streifen Regal 8 (rechts)
 borg16                1280  205   0    0 feedback6/bin7 \
-  type=light area=Nomspace watts=6       Borg16
+  type=light area=Nomspace watts=6 default=1 Borg16
 durchgang             1400  180   0    0 feedback6/bin3 \
   type=light area=Nomspace watts=6       Durchgang Cave
 

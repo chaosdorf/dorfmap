@@ -156,10 +156,11 @@ sub unshutdown {
 	if ( -e $shutdownfile ) {
 		unlink($shutdownfile);
 
-		spew( '/tmp/donationprint1/7segment1.mode', 'clock' );
-		spew( '/tmp/feedback1/7segment2.mode',      'power' );
-		spew( '/tmp/feedback1/7segment3.mode',      ' avg' );
-		system('update_clocks');
+		for my $device ( keys %{$coordinates} ) {
+			if ( exists $coordinates->{$device}->{default} ) {
+				set_device( $device, $coordinates->{$device}->{default} );
+			}
+		}
 	}
 
 	return;
@@ -229,6 +230,10 @@ sub load_coordinates {    #{{{
 			else {
 				push( @text, $elem );
 			}
+		}
+
+		if ( $coordinates->{$id}->{default} ) {
+			$coordinates->{$id}->{default} =~ tr{*}{ };
 		}
 
 		$coordinates->{$id}->{text} = decode( 'UTF-8', join( q{ }, @text ) );
