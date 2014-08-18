@@ -1187,7 +1187,7 @@ get '/get/:id' => sub {
 		json => {
 			json => {
 				status => json_status( $id, 1 ),
-				auto   => 0
+				auto => ( -e "/tmp/automatic_${id}" ? 1 : 0 )
 			}
 		},
 		txt => { text => status_number($id) . "\n" },
@@ -1290,8 +1290,8 @@ get '/list/all' => sub {
 		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
 		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
-		$devices->{$id}->{status}      = json_status( $id, 1 );
-		$devices->{$id}->{auto}        = 0;
+		$devices->{$id}->{status}      = status_number($id);
+		$devices->{$id}->{auto}        = ( -e "/tmp/automatic_${id}" ? 1 : 0 );
 		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
