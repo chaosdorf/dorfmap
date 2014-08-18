@@ -1,6 +1,6 @@
 
 
-<div id="{{lamp.name}}" class="{{lamp.class}}">
+<div id="{{lamp.name}}" class="lamp" ng-class="lamp.class" ng-style="lamp.style()">
 	<img ng-hide="lamp.type==='rtext' || lamp.type==='infoarea'" ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
 	<div class="{{lamp.statusClass()}}" ng-show="lamp.statusText">
 		<div ng-bind-html="lamp.statusText"></div>
@@ -8,7 +8,7 @@
 	</div>
 </div>
 <div ng-repeat="dup in lamp.duplicates">
-	<div id="{{lamp.name}}_dup{{$index+1}}" class="{{lamp.class}}">
+	<div id="{{lamp.name}}_dup{{$index+1}}" class="lamp" ng-class="lamp.class" ng-style="lamp.style(dup)">
 		<img ng-hide="lamp.type=='rtext'" ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
 		<div class="{{lamp.statusClass()}}" ng-show="lamp.statusText">
 			<div ng-bind-html="lamp.statusText"></div>

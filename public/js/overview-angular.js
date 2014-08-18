@@ -3,7 +3,6 @@ function getURLParameter(name) {
 }
 
 (function(){
-
     var app = angular.module('dorfmap', []);
 
     app.controller("MapController", function ($http, $timeout, $scope) {
@@ -47,6 +46,7 @@ function getURLParameter(name) {
                     Object.keys(data).forEach(function(key) {
                         if (!overview.lamps[key]) {
                             overview.lamps[key]=data[key];
+                            overview.lamps[key].blocked=false;
                             overview.lamps[key].css=new Object();
                             overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";}
                             overview.lamps[key].image=function() {
@@ -64,8 +64,21 @@ function getURLParameter(name) {
                                     return '/static/'+overview.lamps[key].type+".png";
                                 return '/static/'+overview.lamps[key].type+"_"+statusName+".png";
                             };
+                            overview.lamps[key].style=function(dup) {
+                                var style={};
+                                var l = overview.lamps[key];
+                                if (dup)
+                                    l=dup;
+                                style.left=l.x1;
+                                style.top=l.y1;
+                                if (l.x2!=32)
+                                    style.width=l.x2;
+                                if (l.y2!=32)
+                                    style.height=l.y2;
+                                return style;
+                            }
                             overview.lamps[key].toggle=function() {
-                                if (overview.lamps[key].is_writable && overview.lamps[key].rate_delay <= 0) {
+                                if (overview.lamps[key].is_writable && overview.lamps[key].rate_delay <= 0 && !overview.lamps[key].blocked) {
                                     if (overview.lamps[key].type=="blinkenlight") {
                                         window.location.href='/blinkencontrol/'+key;
                                         return;
@@ -74,6 +87,7 @@ function getURLParameter(name) {
                                         window.location.href='/charwrite/'+key;
                                         return;
                                     }
+                                    overview.lamps[key].blocked=true;
                                     $http.get('/ajax/rate_limit/'+overview.lamps[key].name+'.json').success(function(data) {
                                         if (parseInt(data) > 0 && overview.lamps[key].status===0) {
                                             overview.lamps[key].origStatusText = overview.lamps[key].statusText;
@@ -83,9 +97,10 @@ function getURLParameter(name) {
                                                 if (--overview.lamps[key].rate_delay == 0)
                                                     overview.lamps[key].css.cursor="pointer";
                                             }, 1000, overview.lamps[key].rate_delay);
+                                            overview.lamps[key].blocked=false;
                                             return;
                                         }
-                                        $http.get('/toggle/'+key).success(function(data){
+                                        $http.get('/toggle?ajax=1'+key).success(function(data){
                                             $http.get('/ajax/statustext/infoarea').success(function(data){
                                                 overview.lamps["infoarea"].statusText=$sce.trustAsHtml(data);
                                             });
@@ -112,6 +127,7 @@ function getURLParameter(name) {
                                                         overview.lamps[key].auto=data2.auto;
                                                 });
                                             }
+                                            overview.lamps[key].blocked=false;
                                         });
                                     });
                                     
@@ -166,14 +182,14 @@ function getURLParameter(name) {
     app.directive('lamp', function($sce) {
         return {
             restrict:'E',
-            templateUrl:'/templates/lamp-template.html',
+            templateUrl:'/static/templates/lamp-template.html',
         }
     });
 
     app.directive('dropdownmenu', function() {
         return {
             restrict:'E',
-            templateUrl:'/templates/dropdownmenu-template.html',
+            templateUrl:'/static/templates/dropdownmenu-template.html',
             scope: {
                 action:"=",
                 header:"=",
