@@ -1,7 +1,7 @@
 
 
 <div id="{{lamp.name}}" ng-class="{{lamp.class}}">
-	<img ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
+	<img ng-hide="lamp.type=='rtext'" ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
 	<div class="{{lamp.statusClass()}}" ng-show="lamp.statusText">
 		<div ng-bind-html="lamp.statusText"></div>
 		<div ng-show="lamp.rate_delay > 0">  (rate limited - wait <span ng-bind="lamp.rate_delay" ></span> seconds)</div>
@@ -9,7 +9,7 @@
 </div>
 <div ng-repeat="dup in lamp.duplicates">
 	<div id="{{lamp.name}}_dup{{$index+1}}" ng-class="{{lamp.class}}">
-		<img ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
+		<img ng-hide="lamp.type=='rtext'" ng-style="lamp.css" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}"/>
 		<div class="{{lamp.statusClass()}}" ng-show="lamp.statusText">
 			<div ng-bind-html="lamp.statusText"></div>
 			<div ng-show="lamp.rate_delay > 0">  (rate limited - wait <span ng-bind="lamp.rate_delay" ></span> seconds)

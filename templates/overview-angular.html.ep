@@ -1,51 +1,14 @@
 %= javascript '/static/js/overview.js'
 
 <div ng-controller="MapController as map">
+
 <div class="dropdowncontainer">
-% if ($self->browser->mobile) {
-<a href="/m">Mobile View</a>
-% }
-<div class="dropdown">
-<div class="dropdownheader">
-<a href="/m/actions">Actions</a>
-</div>
-<div class="dropdownmenu">
-<ul>
-% for my $shortcut (@{$shortcuts}) {
-<li ng-click="map.action('<%= $shortcut->[1] %>',this)"><%= $shortcut->[1] %></li>
-% }
-</ul>
-</div> <!-- dropdownmenu -->
-</div> <!-- dropdown -->
-
-<div class="dropdown">
-<div class="dropdownheader">
-<a href="/m/presets">Presets</a>
-</div>
-<div class="dropdownmenu">
-% for my $preset (@{$presets}) {
-<ul>
-</ul>
-<a href="<%= $preset->[0] %>" ng-class:"special:<%=$preset->[1]%>=='manage'"><%= $preset->[1] %></a>
-% }
-</div> <!-- dropdownmenu -->
-</div> <!-- dropdown -->
-<div class="dropdown">
-<div class="dropdownheader">
-<a href="/m/layers">Layers</a>
-</div>
-<div class="dropdownmenu">
-<ul>
-% for my $l (@{$layers}) {
-<li ng-click="map.layer='<%= $l->[1]%>'"><%= $l->[1] %></li>
-% }
-</ul>
-</div> <!-- dropdownmenu -->
-</div> <!-- dropdown -->
+<a href="/m" ng-show="map.isMobile">Mobile View</a>
+<dropdownmenu header="'Actions'" data="map.menu.shortcuts"></dropdownmenu>
+<dropdownmenu header="'Presets'" data="map.menu.presets"></dropdownmenu>
+<dropdownmenu header="'Layer'" data="map.menu.layers"></dropdownmenu>
 </div> <!-- dropdowncontainer -->
-
-
-	<div ng-init='map.layer="<%=$layer%>"' class="overview" ng-controller="OverviewController as overview">
+	<div class="overview" ng-controller="OverviewController as overview">
 		<div ng-repeat="lamp in overview.filteredLamps()">
 			<lamp/>
 		</div>

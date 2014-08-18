@@ -1,14 +1,43 @@
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
+}
+
 (function(){
 
-    //var app = angular.module('dorfmap');
+    var app = angular.module('dorfmap', []);
 
-    app.controller("MapController", function ($http, $scope, $element) {
+    app.controller("MapController", function ($http, $timeout, $scope) {
         var map = this;
-        map.action=function(action, element, $element) {
-            $http.get('/action/'+action).success(function(data) {
-                $scope.$$childHead.overview.update();
+        map.layer=getURLParameter('layer') || 'control';
+        map.menu={};
+        
+
+        map.isMobile=false;
+        map.menu.clicked=function (type) {
+            type.hide=true;
+            $timeout(function () {
+                type.hide=false;
+            },300);
+        };
+        $http.get('/ajax/menu.json').success(function(data) {
+            Object.keys(data).forEach(function(key) {
+                map.menu[key]=data[key];
+                $scope.$root.$broadcast("update");
             });
-        }
+            map.menu.shortcuts.function=function(action) {
+                map.menu.clicked(map.menu.shortcuts);
+                $http.get('/action/'+action).success(function() {
+                    $scope.$emit("update");
+                });
+            }
+            map.menu.presets.function=function() {
+                map.menu.clicked(map.menu.presets);
+            }
+            map.menu.layers.function=function(layer) {
+                map.menu.clicked(map.menu.layers);
+                map.layer=layer;
+            }
+        });
     });
 
     app.controller('OverviewController', function($http, $scope, $sce, $interval) {
@@ -39,6 +68,14 @@
                             };
                             overview.lamps[key].toggle=function() {
                                 if (overview.lamps[key].is_writable && overview.lamps[key].rate_delay <= 0) {
+                                    if (overview.lamps[key].type=="blinkenlight") {
+                                        window.location.href='/blinkencontrol/'+key;
+                                        return;
+                                    }
+                                    if (overview.lamps[key].type=="charwrite") {
+                                        window.location.href='/charwrite/'+key;
+                                        return;
+                                    }
                                     $http.get('/ajax/rate_limit/'+overview.lamps[key].name+'.json').success(function(data) {
                                         if (parseInt(data) > 0 && overview.lamps[key].status===0) {
                                             overview.lamps[key].origStatusText = overview.lamps[key].statusText;
@@ -111,16 +148,16 @@
                         if (!overview.lamps[key].status)
                             overview.lamps[key].status=0;
                         overview.lamps[key].status=parseInt(overview.lamps[key].status);
-                        
                     });
                 }
             );
         };
-        this.update();
+        $scope.$parent.$on('update', overview.update);
+        $scope.$emit('update');
         $interval(this.update, 20000);
 
         this.filteredLamps=function() {
-            return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.$parent.map.layer})
+            return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer})
             .map(function(key) {return overview.lamps[key]});
         };
     });
@@ -135,6 +172,18 @@
                 });
             },
         }
+    });
+
+    app.directive('dropdownmenu', function() {
+        return {
+            restrict:'E',
+            templateUrl:'/templates/dropdownmenu-template.html',
+            scope: {
+                action:"=",
+                header:"=",
+                data:"=",
+            },
+        };
     });
 })();
 

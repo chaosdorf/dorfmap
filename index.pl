@@ -994,6 +994,17 @@ get '/ajax/has_location/:id' => sub {
 	return;
 };
 
+get '/ajax/menu' => sub {
+	my ($self) = @_;
+
+	$self->render(json=>{
+				shortcuts=>\@dd_shortcuts,
+				presets=>\@dd_presets,
+				layers=>\@dd_layers,
+		});
+	return;
+};
+
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');

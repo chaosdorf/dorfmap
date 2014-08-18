@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html ng-app="dorfmap">
 <head>
@@ -358,7 +359,6 @@
 	</style>
 
 	%= javascript '/static/js/angular.min.js'
-	<script>var app = angular.module('dorfmap', []);</script>
 </head>
 <body>
 
