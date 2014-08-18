@@ -130,10 +130,10 @@ function getURLParameter(name) {
                             overview.lamps[key].status=data[key].status;
                             overview.lamps[key].type=data[key].type;
                             overview.lamps[key].rate_delay=data[key].rate_delay;
-                            $http.get('/ajax/statustext/'+key).success(function(data){
-                                overview.lamps[key].statusText=$sce.trustAsHtml(data.split(" (rate")[0]);
-                            });
+                            overview.lamps[key].statusText=data[key].statusText;
                         }
+                        if (typeof(overview.lamps[key].statusText) == "string")
+                            overview.lamps[key].statusText=$sce.trustAsHtml(overview.lamps[key].statusText.split(" (rate")[0]);
                         if (overview.lamps[key].is_writable) {
                             if (overview.lamps[key].rate_delay > 0) {
                                 $interval(function() {  
@@ -166,11 +166,6 @@ function getURLParameter(name) {
         return {
             restrict:'E',
             templateUrl:'/templates/lamp-template.html',
-            controller: function($scope, $http) {
-                $http.get('/ajax/statustext/'+$scope.lamp.name).success(function(data){
-                    $scope.lamp.statusText=$sce.trustAsHtml(data.split(" (rate")[0]);
-                });
-            },
         }
     });
 

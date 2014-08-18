@@ -1281,6 +1281,7 @@ get '/list/all' => sub {
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
+		$devices->{$id}->{statusText}  = $self->statustext($coordinates->{$id}->{type},$id);
 		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
 		$devices->{$id}->{image}       = device_image($id);
 	}
