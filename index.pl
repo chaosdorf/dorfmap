@@ -901,6 +901,31 @@ get '/' => sub {
 	return;
 };
 
+get '/angular' => sub {
+	my ($self) = @_;
+	my $layer = $self->param('layer') // 'control';
+
+	load_presets();
+
+	if ( -e 'locations.db' ) {
+		$locations = retrieve('locations.db');
+	}
+
+	$self->render(
+		'overview-angular',
+		version     => $VERSION,
+		about       => 1,
+		coordinates => $coordinates,
+		shortcuts   => \@dd_shortcuts,
+		errors      => [ $self->param('error') || () ],
+		presets     => \@dd_presets,
+		refresh     => 1,
+		layer       => $layer,
+		layers      => \@dd_layers,
+	);
+	return;
+};
+
 get '/action/:action' => sub {
 	my ($self) = @_;
 	my $action = $self->stash('action');
@@ -936,6 +961,36 @@ get '/ajax/infoarea' => sub {
 	my ($self) = @_;
 
 	$self->render( inline => infotext() );
+	return;
+};
+
+get '/ajax/statustext/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	my $result=q{};
+	if (exists $coordinates->{$id}) {
+		$result = $self->statustext($coordinates->{$id}->{type},$id);
+	}
+
+
+	$self->render(text=>$result, format => 'txt');
+	return;
+};
+
+get '/ajax/rate_limit/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	$self->render(json=>get_ratelimit_delay($id));
+	return;
+};
+
+get '/ajax/has_location/:id' => sub {
+	my ($self) = @_;
+	my $id = $self->stash('id');
+
+	$self->render(json=>$self->has_location($id));
 	return;
 };
 
@@ -1109,7 +1164,7 @@ get '/get/:id' => sub {
 	my $id = $self->stash('id');
 
 	$self->respond_to(
-		json => { json => json_status( $id, 0 ) },
+		json => { json => {status => json_status( $id, 1 ), auto => 0 }},
 		txt  => { text => status_number($id) . "\n" },
 		png  => sub    { $self->render_static( device_image($id) ) },
 		any  => {
@@ -1124,8 +1179,17 @@ get '/get/:id' => sub {
 get '/get_power_consumption' => sub {
 	my ($self) = @_;
 
+	my $power_p1 = slurp('/srv/www/flukso/30_p1');
+	my $power_p2 = slurp('/srv/www/flukso/30_p2');
+	my $power_p3 = slurp('/srv/www/flukso/30_p3');
+
 	$self->respond_to(
-		json => { json => { power => estimated_power_consumption } },
+		json => { json => { 
+			power => estimated_power_consumption, 
+			p1=>$power_p1, 
+			p2=>$power_p2,
+			p3=>$power_p3
+			} },
 		txt => { text => estimated_power_consumption },
 		any => {
 			data   => estimated_power_consumption,
@@ -1193,13 +1257,20 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
+
+		$devices->{$id}->{name}		   = $id;
+		$devices->{$id}->{img_x}       = $coordinates->{$id}->{x1};
+		$devices->{$id}->{img_y}       = $coordinates->{$id}->{y1};
 		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
 		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
 		$devices->{$id}->{status}      = json_status( $id, 1 );
+		$devices->{$id}->{auto}		   = 0;
 		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
+		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
+		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
 		$devices->{$id}->{image}       = device_image($id);
 	}
 
@@ -1212,7 +1283,7 @@ get '/list/all' => sub {
 					join( "\t",
 						$_,
 						@{ $devices->{$_} }
-						  {qw[type status is_readables is_writable]} )
+						  {qw[type status is_readable is_writable]} )
 				} keys %{$devices}
 			)
 		},

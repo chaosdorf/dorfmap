@@ -61,6 +61,8 @@
 % if ($type ne q{} and $layer eq $coordinates->{$location}->{layer}) {
 %==	statusimage($type, $location);
 % my $i = 0;
+
+
 % for my $dup (@{$coordinates->{$location}->{duplicates} // []}) {
 % $i++;
 %	if (statustext($type, $location)) {
@@ -72,6 +74,8 @@
 <div id="<%= $location %>_dup<%= $i %>" class="<%== statusclass($type, $location) %>">
 %==	statusimage($type, $location);
 % }
+
+
 %	if ($type ~~ [qw[infoarea rtext]]) {
 %==	statustext($type, $location);
 %	}

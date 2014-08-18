@@ -1,13 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="dorfmap">
 <head>
 	<title>dorfmap</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-% if (stash('refresh')) {
-	<meta http-equiv="refresh" content="300" />
-% }
-
 
 	<style type="text/css">
 
@@ -94,6 +90,22 @@
 		visibility: visible;
 	}
 
+	.dropdownmenu ul {
+		padding:0;
+		margin:0;
+	}
+	.dropdownmenu li {
+		display: block;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		padding-top: 0.3em;
+		padding-bottom: 0.3em;
+		border-bottom: 1px solid gray;
+	}
+	.dropdownmenu li:hover {
+		cursor:pointer;
+	}
+
 	.dropdownmenu a {
 		display: block;
 		padding-left: 0.5em;
@@ -101,6 +113,9 @@
 		padding-top: 0.3em;
 		padding-bottom: 0.3em;
 		border-bottom: 1px solid gray;
+	}
+	.dropdownmenu a:hover {
+		cursor:pointer;
 	}
 
 	.dropdownmenu .special {
@@ -180,7 +195,7 @@
 		/* overflow: hidden; */
 	}
 
-	.overview > * > .popup {
+	.popup {
 		visibility: hidden;
 		position: absolute;
 		top: 0px;
@@ -192,8 +207,8 @@
 		min-width: 300px;
 	}
 	
-	.overview > *:hover > .popup,
-	.overview > * > .popup:hover {
+	*:hover > .popup,
+	.popup:hover {
 		visibility: visible;
 	}
 
@@ -341,7 +356,9 @@
 
 
 	</style>
-	%= javascript '/static/js/jquery-2.1.1.min.js'
+
+	%= javascript '/static/js/angular.min.js'
+	<script>var app = angular.module('dorfmap', []);</script>
 </head>
 <body>
 
