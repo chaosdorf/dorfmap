@@ -1284,8 +1284,12 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
+		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
+		{
+			next;
+		}
 		$devices->{$id}->{name}        = $id;
-		$devices->{$id}->{x1}      	   = $coordinates->{$id}->{x1};
+		$devices->{$id}->{x1}          = $coordinates->{$id}->{x1};
 		$devices->{$id}->{y1}          = $coordinates->{$id}->{y1};
 		$devices->{$id}->{x2}          = $coordinates->{$id}->{x2};
 		$devices->{$id}->{y2}          = $coordinates->{$id}->{y2};
