@@ -47,6 +47,9 @@ function getURLParameter(name) {
                         if (!overview.lamps[key]) {
                             overview.lamps[key]=data[key];
                             overview.lamps[key].blocked=false;
+                            overview.lamps[key].animationClass=function() {
+                                return overview.lamps[key].blocked ? "pulse" : "";
+                            };
                             overview.lamps[key].css=new Object();
                             overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";}
                             overview.lamps[key].image=function() {
@@ -100,7 +103,7 @@ function getURLParameter(name) {
                                             overview.lamps[key].blocked=false;
                                             return;
                                         }
-                                        $http.get('/toggle?ajax=1'+key).success(function(data){
+                                        $http.get('/toggle/'+key+'?ajax=1').success(function(data){
                                             $http.get('/ajax/statustext/infoarea').success(function(data){
                                                 overview.lamps["infoarea"].statusText=$sce.trustAsHtml(data);
                                             });
