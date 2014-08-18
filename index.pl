@@ -1646,7 +1646,15 @@ get '/toggle/:id' => sub {
 	}
 
 	my $state = get_device($id);
-	if ( set_device( $id, $state ^ 1 ) ) {
+	my $res = set_device( $id, $state ^ 1 );
+
+	if ( $self->param('ajax') ) {
+		$self->render(
+			text   => q{},
+			status => 204
+		);
+	}
+	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
@@ -1672,7 +1680,15 @@ get '/off/:id' => sub {
 		}
 	}
 
-	if ( set_device( $id, 0 ) ) {
+	my $res = set_device( $id, 0 );
+
+	if ( $self->param('ajax') ) {
+		$self->render(
+			text   => q{},
+			status => 204
+		);
+	}
+	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
@@ -1699,7 +1715,15 @@ get '/on/:id' => sub {
 	}
 
 	unshutdown;
-	if ( set_device( $id, 1 ) ) {
+	my $res = set_device( $id, 1 );
+
+	if ( $self->param('ajax') ) {
+		$self->render(
+			text   => q{},
+			status => 204
+		);
+	}
+	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
 	}
 	else {
