@@ -525,10 +525,11 @@ sub infotext {
 sub json_status {
 	my ( $id, $embed ) = @_;
 
-	if ($embed) {
-		return status_number($id);
-	}
-	return { status => status_number($id) };
+	return {
+		rate_delay  => get_ratelimit_delay($id),
+		status      => status_number($id),
+		status_text => status_text($id),
+	};
 }
 
 sub killswitch {
@@ -616,6 +617,30 @@ sub status_number {
 	}
 
 	return -1;
+}
+
+sub status_text {
+	my ($location) = @_;
+
+	my $type  = $coordinates->{$location}->{type};
+	my $extra = q{};
+
+	if ( get_ratelimit_delay($location) > 0 ) {
+		$extra = sprintf( ' (rate limited - wait %d seconds)',
+			get_ratelimit_delay($location) );
+	}
+
+	if ( $type eq 'rtext' ) {
+		return slurp("${store_prefix}/${location}");
+	}
+	if ( $type eq 'infoarea' ) {
+		return infotext();
+	}
+	if ( $type eq 'light_au' ) {
+		return $coordinates->{$location}->{text} . '<br/>'
+		  . auto_text($location);
+	}
+	return $coordinates->{$location}->{text} . $extra;
 }
 
 sub auto_text {
@@ -857,24 +882,7 @@ helper statusimage => sub {
 helper statustext => sub {
 	my ( $self, $type, $location ) = @_;
 
-	my $extra = q{};
-
-	if ( get_ratelimit_delay($location) > 0 ) {
-		$extra = sprintf( ' (rate limited - wait %d seconds)',
-			get_ratelimit_delay($location) );
-	}
-
-	if ( $type eq 'rtext' ) {
-		return slurp("${store_prefix}/${location}");
-	}
-	if ( $type eq 'infoarea' ) {
-		return infotext();
-	}
-	if ( $type eq 'light_au' ) {
-		return $coordinates->{$location}->{text} . '<br/>'
-		  . auto_text($location);
-	}
-	return $coordinates->{$location}->{text} . $extra;
+	return status_text($location);
 };
 
 #}}}
@@ -1655,10 +1663,7 @@ get '/toggle/:id' => sub {
 	my $res = set_device( $id, $state ^ 1 );
 
 	if ( $self->param('ajax') ) {
-		$self->render(
-			text   => q{},
-			status => 204
-		);
+		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
@@ -1689,10 +1694,7 @@ get '/off/:id' => sub {
 	my $res = set_device( $id, 0 );
 
 	if ( $self->param('ajax') ) {
-		$self->render(
-			text   => q{},
-			status => 204
-		);
+		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
@@ -1724,10 +1726,7 @@ get '/on/:id' => sub {
 	my $res = set_device( $id, 1 );
 
 	if ( $self->param('ajax') ) {
-		$self->render(
-			text   => q{},
-			status => 204
-		);
+		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
 		$self->redirect_to( $self->param('m') ? '/m' : '/' );
