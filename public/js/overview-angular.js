@@ -3,7 +3,7 @@ function getURLParameter(name) {
 }
 
 (function(){
-    var app = angular.module('dorfmap', []);
+    var app = angular.module('dorfmap', ['ngMaterial']);
 
     app.controller("MapController", function ($http, $timeout, $scope) {
         var map = this;
@@ -11,13 +11,14 @@ function getURLParameter(name) {
         map.menu={};
         map.menu.clicked=function (type) {
             type.hide=true;
-            $timeout(function () {
+            $timeout(function() {
                 type.hide=false;
-            },300);
+            }, 300);
         };
         $http.get('/ajax/menu.json').success(function(data) {
             Object.keys(data).forEach(function(key) {
                 map.menu[key]=data[key];
+                map.menu[key].hide=false;
                 $scope.$root.$broadcast("update");
             });
             map.menu.shortcuts.function=function(action) {
@@ -31,6 +32,8 @@ function getURLParameter(name) {
                         },500);
                 });
             }
+            map.menu.shortcuts.style={};
+            map.menu.shortcuts.style['margin-left']="-4px";
             map.menu.presets.function=function() {
                 map.menu.clicked(map.menu.presets);
             }
@@ -38,10 +41,12 @@ function getURLParameter(name) {
                 map.menu.clicked(map.menu.layers);
                 map.layer=layer;
             }
+            map.menu.layers.style={};
+            map.menu.layers.style['margin-left']="4px";
         });
     });
 
-    app.controller('OverviewController', function($http, $scope, $sce, $interval) {
+    app.controller('OverviewController', function($http, $scope, $sce, $interval, $materialDialog) {
         var overview = this;
         overview.lamps={};
 
@@ -85,14 +90,17 @@ function getURLParameter(name) {
                                     style.height=l.y2;
                                 return style;
                             }
-                            overview.lamps[key].toggle=function() {
+                            overview.lamps[key].toggle=function($event) {
                                 if (overview.lamps[key].is_writable && overview.lamps[key].rate_delay <= 0 && !overview.lamps[key].blocked) {
                                     if (overview.lamps[key].type=="blinkenlight") {
                                         window.location.href='/blinkencontrol/'+key;
                                         return;
                                     }
                                     if (overview.lamps[key].type=="charwrite") {
-                                        window.location.href='/charwrite/'+key;
+                                        var hideDialog = $materialDialog({
+                                            templateUrl: '/static/templates/charwrite-template.html',
+                                            targetEvent: $event
+                                        });
                                         return;
                                     }
                                     overview.lamps[key].blocked=true;
@@ -190,7 +198,7 @@ function getURLParameter(name) {
     app.directive('lamp', function($sce) {
         return {
             restrict:'E',
-            templateUrl:'/static/templates/lamp-template.html',
+            templateUrl:'/static/templates/lamp-template.html'
         }
     });
 
@@ -201,8 +209,8 @@ function getURLParameter(name) {
             scope: {
                 action:"=",
                 header:"=",
-                data:"=",
-            },
+                data:"="
+            }
         };
     });
 })();

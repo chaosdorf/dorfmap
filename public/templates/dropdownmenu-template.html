@@ -1,11 +1,8 @@
-
 <div class="dropdown">
-<div class="dropdownheader">
-<a href="/m/{{header|lowercase}}">{{header}}</a>
+	<div class="dropdownheader">
+		<a href="/m/{{header|lowercase}}"><material-button class="material-button-raised material-button-colored">{{header}}</material-button></a>
+	</div>
+	<div ng-hide="data.length==0 || data.hide" layout="vertical" class="dropdownmenu" ng-style="data.style">
+	    <material-button style="width:100%;text-transform:none;" class="material-button-flat" ng-click="data.function(d[1])" ng-repeat="d in data">{{d[1]}}</material-button>
+	</div>
 </div>
-<div class="dropdownmenu" ng-hide="data.hide">
-<ul>
-<li ng-repeat="d in data" ng-click="data.function(d[1])">{{d[1]}}</li>
-</ul>
-</div> <!-- dropdownmenu -->
-</div> <!-- dropdown -->
