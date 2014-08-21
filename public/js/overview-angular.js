@@ -121,7 +121,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                             targetEvent: $event,
                                             controller: function($scope, $hideDialog, $http) {
                                                 $scope.lamp=overview.lamps[key];
-                                                $scope.loadingPromise=$http.get('ajax/blinkencontrol').success(function(data) {
+                                                $scope.loadingPromise=$http.get('ajax/blinkencontrol?device='+key).success(function(data) {
                                                     $scope.animations=data.presets;
                                                     if (data.active)
                                                         $scope.radioGroup=data.active.raw_string;
