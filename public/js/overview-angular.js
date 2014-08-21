@@ -146,7 +146,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                 $scope.loadingPromise=$http.get('/ajax/charwrite').success(function(data) {
                                                     $scope.modes=data;
                                                     $scope.radioGroup="custom";
-                                                    if ($scope.modes.indexOf($scope.charwrite_text)!=-1)
+                                                    if ($scope.modes.map(function(m){return m.name}).indexOf($scope.lamp.charwrite_text)!=-1)
                                                         $scope.radioGroup=$scope.lamp.charwrite_text;
                                                 });
                                                 $scope.customModes=['date','clock','hosts','power'];
