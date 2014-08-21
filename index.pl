@@ -994,11 +994,13 @@ get '/ajax/blinkencontrol' => sub {
 	my @json_presets;
 
 	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
+		my $string = $bc_presets->{blinkencontrol1}->{$bc_preset};
+		$string =~ s{ \s+ $ }{}ox;
 		push(
 			@json_presets,
 			{
 				name       => $bc_preset,
-				raw_string => $bc_presets->{blinkencontrol1}->{$bc_preset},
+				raw_string => $string,
 			}
 		);
 	}
