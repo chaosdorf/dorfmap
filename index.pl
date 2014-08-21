@@ -963,6 +963,27 @@ get '/action/:action' => sub {
 	return;
 };
 
+get '/ajax/blinkencontrol' => sub {
+	my ($self) = @_;
+
+	my $bc_presets = load_blinkencontrol();
+	my @json;
+
+	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
+		push(
+			@json,
+			{
+				name       => $bc_preset,
+				raw_string => $bc_presets->{blinkencontrol1}->{$bc_preset},
+			}
+		);
+	}
+
+	$self->render(
+		json => \@json,
+	);
+};
+
 get '/ajax/charwrite' => sub {
 	my ($self) = @_;
 
