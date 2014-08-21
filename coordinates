@@ -27,14 +27,10 @@ logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au area=Schleuse watts=1       Chaosdorf-Logo
 treppe_w              350  525    0    0 feedback2/bin6 \
   type=light area=Lounge watts=10           Treppe oben
-lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
-  type=charwrite area=Lounge default=clock  4x7Segment-Display
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light area=Lounge watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
   type=pump area=Lounge watts=5             Bewässerungspumpe
-lounge_rgb              5  110    0    0 donationprint2 \
-  type=blinkenlight area=Lounge watts=7     RGB-Streifen
 lounge_roehre         260  180    0    0 feedback3/2 \
   type=light ratelimit=90 area=Lounge watts=348 layer=caution  Putzlicht
 lounge_t1a            260   60    0    0 feedback3/4   \
@@ -61,18 +57,12 @@ lightclc1160          887   63    0    0 feedback1/3 \
   type=light area=Hackcenter watts=15  Steharbeitsplatz CLC
 hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light area=Hackcenter watts=105      3D-Drucker
-hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
-  type=charwrite area=Hackcenter default=power          4x7Segment links
-hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
-  type=charwrite area=Hackcenter default=*avg           4x7Segment rechts
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light ratelimit=5 area=Hackcenter watts=20       Tischreihe (Spots)
 hackcenter_blau       535  355  894  408 feedback1/5 \
   type=light ratelimit=7 area=Hackcenter watts=24       Tischreihe (Blau)
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light ratelimit=10 area=Hackcenter watts=30       Deckenlicht
-hackcenter_regal      600   60    0    0 feedback4 \
-  type=blinkenlight area=Hackcenter watts=3      RGB-Streifen
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light ratelimit=90 area=Hackcenter layer=caution watts=348  Putzlicht
 hackcenter_regal1     480   60    0    0 feedback5/1 \
@@ -95,6 +85,19 @@ borg16                1280  205   0    0 feedback6/bin7 \
   type=light area=Nomspace watts=6 default=1 Borg16
 durchgang             1400  180   0    0 feedback6/bin3 \
   type=light area=Nomspace watts=6       Durchgang Cave
+
+[layer=control]
+lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
+  type=charwrite area=Lounge default=clock  4x7Segment-Display
+lounge_rgb              5  110    0    0 donationprint2 \
+  type=blinkenlight area=Lounge watts=7     RGB-Streifen
+hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
+  type=charwrite area=Hackcenter default=power          4x7Segment links
+hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
+  type=charwrite area=Hackcenter default=*avg           4x7Segment rechts
+hackcenter_regal      600   60    0    0 feedback4 \
+  type=blinkenlight area=Hackcenter watts=3      RGB-Streifen
+
 
 [layer=control type=amp ratelimit=30 watts=12]
 amp0                 150  590    0    0 amp0 \
