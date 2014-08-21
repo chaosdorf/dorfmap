@@ -984,8 +984,6 @@ get '/ajax/blinkencontrol' => sub {
 	keys %{ $bc_presets->{blinkencontrol1} };
 	my $active_preset;
 
-	say "current: $current_string";
-
 	if ($current_name) {
 		$active_preset = {
 			name       => $current_name,
@@ -1015,8 +1013,8 @@ get '/ajax/blinkencontrol' => sub {
 
 post '/ajax/blinkencontrol' => sub {
 	my ($self)      = @_;
-	my $device      = $self->param('device');
-	my $raw_string  = $self->param('raw_string');
+	my $device 		= $self->req->json->{device};
+	my $raw_string 	= $self->req->json->{raw_string};
 	my $controlpath = $remotemap->{$device};
 
 	my $ctext = q{};
@@ -1239,8 +1237,8 @@ get '/blinkencontrol/:device' => sub {
 
 post '/ajax/charwrite' => sub {
 	my ($self) = @_;
-	my $device = $self->param('device');
-	my $text   = $self->param('text');
+	my $device = $self->req->json->{device};
+	my $text   = $self->req->json->{text};
 
 	if ( defined $text and defined $device ) {
 		set_device( $device, $text );

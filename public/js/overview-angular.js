@@ -14,6 +14,10 @@ function rateDelayUpdate(lamp, amount, $interval) {
 (function(){
     var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy']);
 
+    //app.config(function($httpProvider) {
+    //    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+    //});
+
     app.controller("MapController", function ($http, $timeout, $scope) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
@@ -28,17 +32,15 @@ function rateDelayUpdate(lamp, amount, $interval) {
             Object.keys(data).forEach(function(key) {
                 map.menu[key]=data[key];
                 map.menu[key].hide=false;
-                $scope.$root.$broadcast("update");
+                $scope.$emit("update");
             });
             map.menu.shortcuts.function=function(action) {
                 map.menu.clicked(map.menu.shortcuts);
                 $http.get('/action/'+action).success(function() {
+                    var timeout = 0;
                     if (action.indexOf('amps')==-1)
-                        $scope.$emit("update");
-                    else
-                        $timeout(function() {
-                            $scope.$emit("update");
-                        },500);
+                        timeout=500;
+                    $scope.$emit('update');
                 });
             }
             map.menu.shortcuts.style={};
@@ -119,18 +121,17 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                             targetEvent: $event,
                                             controller: function($scope, $hideDialog, $http) {
                                                 $scope.lamp=overview.lamps[key];
-                                                $scope.loadingPromise=$http.get('/blinkencontrol/'+key+'.json').success(function(data) {
-                                                    $scope.color={};
-                                                    $scope.color.red=data.red;
-                                                    $scope.color.blue=data.blue;
-                                                    $scope.color.green=data.green;
-                                                    $scope.color.speed=data.speed;
-                                                    $scope.color.opmode=data.opmode;
+                                                $scope.loadingPromise=$http.get('ajax/blinkencontrol').success(function(data) {
+                                                    $scope.animations=data.presets;
+                                                    if (data.active)
+                                                        $scope.radioGroup=data.active.raw_string;
                                                 });
                                                 $scope.close = function() {
                                                     $hideDialog();
                                                 };
                                                 $scope.save = function() {
+                                                    $http.post("/ajax/blinkencontrol", {device:$scope.lamp.name,raw_string:$scope.radioGroup});
+                                                    $scope.close();
                                                 };
                                             }
                                         });
@@ -142,20 +143,23 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                             targetEvent: $event,
                                             controller: function($scope, $hideDialog, $http) {
                                                 $scope.lamp=overview.lamps[key];
-                                                $scope.loadingPromise=$http.get('/charwrite/'+key+'.json').success(function(data) {
-                                                    $scope.lamp.text=data.text;
+                                                $scope.loadingPromise=$http.get('/ajax/charwrite').success(function(data) {
+                                                    $scope.modes=data;
                                                     $scope.radioGroup="custom";
-                                                    if ($scope.customModes.indexOf($scope.lamp.text)!=-1)
-                                                        $scope.radioGroup=$scope.lamp.text;
+                                                    if ($scope.modes.indexOf($scope.charwrite_text)!=-1)
+                                                        $scope.radioGroup=$scope.lamp.charwrite_text;
                                                 });
                                                 $scope.customModes=['date','clock','hosts','power'];
                                                 $scope.close = function() {
+                                                    $scope.lamp.newText='';
                                                     $hideDialog();
                                                 };
                                                 $scope.save = function() {
                                                     if ($scope.radioGroup === "custom")
                                                         $scope.radioGroup=$scope.lamp.newText;
-                                                    $http.post("/ajax/charwrite", {device:$scope.lamp.name,text:$scope.radioGroup});
+                                                    $http.post("/ajax/charwrite", {device:$scope.lamp.name,text:$scope.radioGroup}).success(function() {
+                                                        $scope.charwrite_text=$scope.radioGroup;
+                                                    });
                                                     $scope.close();
                                                 }
                                             }
@@ -167,7 +171,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                         var oldStatus = overview.lamps[key].status;
                                         overview.lamps[key].status=parseInt(data.status);
                                         overview.lamps[key].auto=data.auto;
-                                        overview.lamps["infoarea"].statusText=$sce.trustAsHtml(data.infoarea);
+                                        overview.lamps["infoarea"].status_text=$sce.trustAsHtml(data.infoarea);
                                         if (((oldStatus === overview.lamps[key].status) || (oldStatus==1 && overview.lamps[key].status===0)) && data.rate_delay>0) {
                                             overview.lamps[key].rate_delay=data.rate_delay;
                                             overview.lamps[key].blocked=false;
@@ -177,11 +181,11 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                             return;
                                         }
                                         if (overview.lamps[key].isAuto()) {
-                                            var unsafeStatusText = overview.lamps[key].statusText.toString();
+                                            var unsafeStatusText = overview.lamps[key].status_text.toString();
                                             if (overview.lamps[key].auto==1 && unsafeStatusText.indexOf("(deaktiviert)")!=-1) {
-                                                overview.lamps[key].statusText = $sce.trustAsHtml(unsafeStatusText.replace(" (deaktiviert)",""));
+                                                overview.lamps[key].status_text = $sce.trustAsHtml(unsafeStatusText.replace(" (deaktiviert)",""));
                                             } else if (overview.lamps[key].auto == 0 && unsafeStatusText.indexOf("(deaktiviert)")==-1) {
-                                                overview.lamps[key].statusText=$sce.trustAsHtml(unsafeStatusText+" (deaktiviert)");
+                                                overview.lamps[key].status_text=$sce.trustAsHtml(unsafeStatusText+" (deaktiviert)");
                                             }
                                         }
                                         overview.lamps[key].blocked=false;
@@ -192,10 +196,10 @@ function rateDelayUpdate(lamp, amount, $interval) {
                             overview.lamps[key].status=data[key].status;
                             overview.lamps[key].type=data[key].type;
                             overview.lamps[key].rate_delay=data[key].rate_delay;
-                            overview.lamps[key].statusText=data[key].statusText;
+                            overview.lamps[key].status_text=data[key].status_text;
                         }
-                        if (typeof(overview.lamps[key].statusText) == "string")
-                            overview.lamps[key].statusText=$sce.trustAsHtml(overview.lamps[key].statusText.split(" (rate")[0]);
+                        if (typeof(overview.lamps[key].status_text) == "string")
+                            overview.lamps[key].status_text=$sce.trustAsHtml(overview.lamps[key].status_text.split(" (rate")[0]);
 
                         if (!overview.lamps[key].status)
                             overview.lamps[key].status=0;
@@ -211,7 +215,6 @@ function rateDelayUpdate(lamp, amount, $interval) {
                 $scope.map.loadingPromise=httpGet;
         };
         $scope.$parent.$on('update', overview.update);
-        this.update();
         $interval(this.update, 20000);
 
         this.filteredLamps=function() {
