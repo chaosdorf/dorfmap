@@ -158,7 +158,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                     if ($scope.radioGroup === "custom")
                                                         $scope.radioGroup=$scope.lamp.newText;
                                                     $http.post("/ajax/charwrite", {device:$scope.lamp.name,text:$scope.radioGroup}).success(function() {
-                                                        $scope.charwrite_text=$scope.radioGroup;
+                                                        $scope.lamp.charwrite_text=$scope.radioGroup;
                                                     });
                                                     $scope.close();
                                                 }
