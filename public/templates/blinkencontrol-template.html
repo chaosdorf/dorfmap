@@ -1,0 +1,33 @@
+<material-dialog>
+<div cg-busy="loadingPromise">
+<material-tabs selected="selectedIndex" noink>
+	<material-tab label="Animation"></material-tab>
+	<material-tab label="Steady Color"></material-tab>
+</material-tabs>
+<div class="animate-switch-container" ng-switch on="selectedIndex">
+        <div class="animate-switch" ng-switch-when="0">
+            Animations
+        </div>
+        <div class="animate-switch" ng-switch-when="1" layout="vertical">
+        <div layout="horizontal">
+        	<span flex="20" style="margin:auto 0">Red:</span>
+            <material-slider flex style="padding-bottom:5px">
+            	<input type="range" ng-model="color.red" min="0" max="255">
+            </material-slider>
+        </div>
+        <div layout="horizontal">
+        	<span flex="20" style="margin:auto 0">Blue:</span>
+            <material-slider flex style="padding-bottom:5px">
+            	<input type="range" ng-model="color.blue" min="0" max="255">
+            </material-slider>
+        </div>
+        <div layout="horizontal">
+        	<span flex="20" style="margin:auto 0">Green:</span>
+            <material-slider flex style="padding-bottom:5px">
+            	<input type="range" ng-model="color.green" min="0" max="255">
+            </material-slider>
+        </div>
+        </div>
+    </div>
+</div>
+</material-dialog>

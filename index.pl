@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 
+
 use strict;
 use warnings;
 use 5.014;
@@ -529,6 +530,7 @@ sub json_status {
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
+		infoarea 	=> infotext(),
 	};
 }
 
@@ -1132,6 +1134,21 @@ get '/blinkencontrol/:device' => sub {
 				opmode => 0,
 			}
 		},
+	);
+};
+
+post '/ajax/charwrite' => sub {
+	my ($self) = @_;
+	my $device = $self->param('device');
+	my $text = $self->param('text');
+
+	if (defined $text and defined $device) {
+		set_device($device, $text);
+	}
+
+	$self->render(
+		data   => q{},
+		status => 204
 	);
 };
 
