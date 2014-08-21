@@ -963,6 +963,35 @@ get '/action/:action' => sub {
 	return;
 };
 
+get '/ajax/charwrite' => sub {
+	my ($self) = @_;
+
+	$self->render(
+		json => [
+			{
+				name        => 'blank',
+				description => 'Blank',
+			},
+			{
+				name        => 'clock',
+				description => 'Clock',
+			},
+			{
+				name        => 'date',
+				description => 'Date',
+			},
+			{
+				name        => 'hosts',
+				description => 'Online Hosts',
+			},
+			{
+				name        => 'power',
+				description => 'Power Consumption',
+			},
+		]
+	);
+};
+
 get '/ajax/infoarea' => sub {
 	my ($self) = @_;
 
