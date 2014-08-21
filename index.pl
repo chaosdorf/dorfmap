@@ -125,8 +125,12 @@ sub set_device {
 }
 
 sub get_device {
-	my ($id) = @_;
+	my ( $id, %opt ) = @_;
 	my $state = -1;
+
+	if ( $opt{text} ) {
+		$state = q{},;
+	}
 
 	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
 		$state = slurp( $remotemap->{$id} . '/commands' );
@@ -135,6 +139,12 @@ sub get_device {
 		}
 		else {
 			$state = 1;
+		}
+	}
+	elsif ( $coordinates->{$id}->{type} eq 'charwrite' ) {
+		$state = slurp( $remotemap->{$id} );
+		if ( not $opt{text} ) {
+			$state = ( length($state) ? 1 : 0 );
 		}
 	}
 	elsif ( exists $gpiomap->{$id} and -e $gpiomap->{$id} ) {
@@ -525,13 +535,19 @@ sub infotext {
 sub json_status {
 	my ( $id, $embed ) = @_;
 
-	return {
+	my $ret = {
 		auto => ( -e "/tmp/automatic_${id}" ? 1 : 0 ),
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
 		infoarea    => infotext(),
 	};
+
+	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
+		$ret->{charwrite_text} = get_device( $id, text => 1 );
+	}
+
+	return $ret;
 }
 
 sub killswitch {
@@ -1284,6 +1300,7 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
+		my $type = $coordinates->{$id}->{type} // q{};
 		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
 		{
 			next;
@@ -1302,10 +1319,14 @@ get '/list/all' => sub {
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
-		$devices->{$id}->{statusText}
+		$devices->{$id}->{status_text}
 		  = $self->statustext( $coordinates->{$id}->{type}, $id );
 		$devices->{$id}->{rate_delay} = get_ratelimit_delay($id);
 		$devices->{$id}->{image}      = device_image($id);
+
+		if ( $type eq 'charwrite' ) {
+			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
+		}
 	}
 
 	$self->respond_to(
