@@ -1,18 +1,9 @@
 <link rel="stylesheet" href="/static/css/overview-angular.css" type="text/css">
-<link rel="stylesheet" href="/static/css/material-design.min.css" type="text/css">
-
-
-
 <script src='/static/js/overview-angular.js'></script>
-<script src='/static/js/angular-animate.min.js'></script>
-<script src='/static/js/angular-animate-sequence.js'></script>
-<script src='/static/js/angular-animate-stylers.js'></script>
-<script src='/static/js/material-design.min.js'></script>
-
 
 <div ng-controller="MapController as map">
 
-<div layout="horizontal" layout-align="start" class="dropdowncontainer">
+<div class="dropdowncontainer">
 <dropdownmenu header="'Actions'" data="map.menu.shortcuts"></dropdownmenu>
 <dropdownmenu header="'Presets'" data="map.menu.presets"></dropdownmenu>
 <dropdownmenu header="'Layer'" data="map.menu.layers"></dropdownmenu>
