@@ -130,7 +130,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                     $hideDialog();
                                                 };
                                                 $scope.save = function() {
-                                                    $http.post("/ajax/blinkencontrol", {device:$scope.lamp.name,raw_string:$scope.radioGroup});
+                                                    $http.post("/ajax/blinkencontrol", {device:$scope.lamp.name,raw_string:$scope.radioGroup}).success(function() {
+                                                        $scope.lamp.status=1;
+                                                    });
                                                     $scope.close();
                                                 };
                                             }
