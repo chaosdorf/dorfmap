@@ -10,7 +10,7 @@ use DateTime;
 use DateTime::Duration;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
-use List::Util qw(sum);
+use List::Util qw(first sum);
 use Mojolicious::Lite;
 use Storable qw(retrieve lock_nstore lock_retrieve);
 
@@ -134,11 +134,19 @@ sub get_device {
 
 	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
 		$state = slurp( $remotemap->{$id} . '/commands' );
-		if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
-			$state = 0;
+		if ( $opt{text} ) {
+			$state =~ s{ \n }{,}gx;
+			$state =~ s{ , push ,? }{ }gx;
+			$state
+			  =~ s{ [^\s,]+,([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^\s,]+ }{$1,$2,$3,$4}gx;
 		}
 		else {
-			$state = 1;
+			if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
+				$state = 0;
+			}
+			else {
+				$state = 1;
+			}
 		}
 	}
 	elsif ( $coordinates->{$id}->{type} eq 'charwrite' ) {
@@ -966,12 +974,29 @@ get '/action/:action' => sub {
 get '/ajax/blinkencontrol' => sub {
 	my ($self) = @_;
 
-	my $bc_presets = load_blinkencontrol();
-	my @json;
+	my $device         = $self->param('device');
+	my $current_string = get_device( $device, text => 1 );
+	my $bc_presets     = load_blinkencontrol();
+
+	my $current_name
+	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
+	keys %{ $bc_presets->{blinkencontrol1} };
+	my $active_preset;
+
+	say "current: $current_string";
+
+	if ($current_name) {
+		$active_preset = {
+			name       => $current_name,
+			raw_string => $current_string,
+		};
+	}
+
+	my @json_presets;
 
 	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
 		push(
-			@json,
+			@json_presets,
 			{
 				name       => $bc_preset,
 				raw_string => $bc_presets->{blinkencontrol1}->{$bc_preset},
@@ -980,7 +1005,10 @@ get '/ajax/blinkencontrol' => sub {
 	}
 
 	$self->render(
-		json => \@json,
+		json => {
+			active  => $active_preset,
+			presets => \@json_presets,
+		},
 	);
 };
 
