@@ -10,7 +10,7 @@ use DateTime;
 use DateTime::Duration;
 use Encode qw(decode);
 use File::Slurp qw(read_file write_file);
-use List::Util qw(sum);
+use List::Util qw(first sum);
 use Mojolicious::Lite;
 use Storable qw(retrieve lock_nstore lock_retrieve);
 
@@ -125,16 +125,35 @@ sub set_device {
 }
 
 sub get_device {
-	my ($id) = @_;
+	my ( $id, %opt ) = @_;
 	my $state = -1;
+
+	if ( $opt{text} ) {
+		$state = q{},;
+	}
 
 	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
 		$state = slurp( $remotemap->{$id} . '/commands' );
-		if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
-			$state = 0;
+		if ( $opt{text} ) {
+			$state =~ s{ \n }{,}gx;
+			$state =~ s{ , push $ }{}gx;
+			$state =~ s{ , push , }{ }gx;
+			$state
+			  =~ s{ [^\s,]+,([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^\s,]+ }{$1,$2,$3,$4}gx;
 		}
 		else {
-			$state = 1;
+			if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
+				$state = 0;
+			}
+			else {
+				$state = 1;
+			}
+		}
+	}
+	elsif ( $coordinates->{$id}->{type} eq 'charwrite' ) {
+		$state = slurp( $remotemap->{$id} );
+		if ( not $opt{text} ) {
+			$state = ( length($state) ? 1 : 0 );
 		}
 	}
 	elsif ( exists $gpiomap->{$id} and -e $gpiomap->{$id} ) {
@@ -525,11 +544,19 @@ sub infotext {
 sub json_status {
 	my ( $id, $embed ) = @_;
 
-	return {
+	my $ret = {
+		auto => ( -e "/tmp/automatic_${id}" ? 1 : 0 ),
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
+		infoarea    => infotext(),
 	};
+
+	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
+		$ret->{charwrite_text} = get_device( $id, text => 1 );
+	}
+
+	return $ret;
 }
 
 sub killswitch {
@@ -900,31 +927,6 @@ get '/' => sub {
 	}
 
 	$self->render(
-		'overview',
-		version     => $VERSION,
-		about       => 1,
-		coordinates => $coordinates,
-		shortcuts   => \@dd_shortcuts,
-		errors      => [ $self->param('error') || () ],
-		presets     => \@dd_presets,
-		refresh     => 1,
-		layer       => $layer,
-		layers      => \@dd_layers,
-	);
-	return;
-};
-
-get '/angular' => sub {
-	my ($self) = @_;
-	my $layer = $self->param('layer') // 'control';
-
-	load_presets();
-
-	if ( -e 'locations.db' ) {
-		$locations = retrieve('locations.db');
-	}
-
-	$self->render(
 		'overview-angular',
 		version     => $VERSION,
 		about       => 1,
@@ -965,9 +967,109 @@ get '/action/:action' => sub {
 		);
 	}
 	else {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	return;
+};
+
+get '/ajax/blinkencontrol' => sub {
+	my ($self) = @_;
+
+	my $device         = $self->param('device');
+	my $current_string = get_device( $device, text => 1 );
+	my $bc_presets     = load_blinkencontrol();
+
+	my $current_name
+	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
+	keys %{ $bc_presets->{blinkencontrol1} };
+	my $active_preset;
+
+	if ($current_name) {
+		$active_preset = {
+			name       => $current_name,
+			raw_string => $current_string,
+		};
+	}
+
+	my @json_presets;
+
+	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
+		my $string = $bc_presets->{blinkencontrol1}->{$bc_preset};
+		$string =~ s{ \s+ $ }{}ox;
+		push(
+			@json_presets,
+			{
+				name       => $bc_preset,
+				raw_string => $string,
+			}
+		);
+	}
+
+	$self->render(
+		json => {
+			active  => $active_preset,
+			presets => \@json_presets,
+		},
+	);
+};
+
+post '/ajax/blinkencontrol' => sub {
+	my ($self)      = @_;
+	my $device 		= $self->req->json->{device};
+	my $raw_string 	= $self->req->json->{raw_string};
+	my $controlpath = $remotemap->{$device};
+
+	my $ctext = q{};
+	my $id    = 0;
+	my $addr  = ( $controlpath =~ m{feedback}o ? 8 : 1 );
+
+	for my $part ( split( / /, $raw_string ) ) {
+		my ( $speed, $red, $green, $blue ) = split( /,/, $part );
+		$ctext
+		  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n${addr}\npush\n";
+		$id++;
+	}
+	spew( "${controlpath}/commands", $ctext );
+	if ( $controlpath =~ m{donationprint}o ) {
+		system('blinkencontrol-donationprint');
+	}
+	elsif ( $controlpath =~ m{feedback}o ) {
+		system('blinkencontrol-feedback');
+	}
+
+	$self->render(
+		data   => q{},
+		status => 204
+	);
+};
+
+get '/ajax/charwrite' => sub {
+	my ($self) = @_;
+
+	$self->render(
+		json => [
+			{
+				name        => 'blank',
+				description => 'Blank',
+			},
+			{
+				name        => 'clock',
+				description => 'Clock',
+			},
+			{
+				name        => 'date',
+				description => 'Date',
+			},
+			{
+				name        => 'hosts',
+				description => 'Online Hosts',
+			},
+			{
+				name        => 'power',
+				description => 'Power Consumption',
+			},
+		]
+	);
 };
 
 get '/ajax/infoarea' => sub {
@@ -1135,6 +1237,21 @@ get '/blinkencontrol/:device' => sub {
 	);
 };
 
+post '/ajax/charwrite' => sub {
+	my ($self) = @_;
+	my $device = $self->req->json->{device};
+	my $text   = $self->req->json->{text};
+
+	if ( defined $text and defined $device ) {
+		set_device( $device, $text );
+	}
+
+	$self->render(
+		data   => q{},
+		status => 204
+	);
+};
+
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
@@ -1292,6 +1409,7 @@ get '/list/all' => sub {
 	my $devices = {};
 
 	for my $id ( keys %{$coordinates} ) {
+		my $type = $coordinates->{$id}->{type} // q{};
 		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
 		{
 			next;
@@ -1310,10 +1428,14 @@ get '/list/all' => sub {
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
-		$devices->{$id}->{statusText}
+		$devices->{$id}->{status_text}
 		  = $self->statustext( $coordinates->{$id}->{type}, $id );
 		$devices->{$id}->{rate_delay} = get_ratelimit_delay($id);
 		$devices->{$id}->{image}      = device_image($id);
+
+		if ( $type eq 'charwrite' ) {
+			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
+		}
 	}
 
 	$self->respond_to(
@@ -1373,93 +1495,6 @@ get '/list/writables' => sub {
 		},
 	);
 
-	return;
-};
-
-get '/m' => sub {
-	my ($self) = @_;
-
-	my %areas;
-
-	load_presets();
-
-	for my $location ( keys %{$coordinates} ) {
-		if (    $coordinates->{$location}->{type}
-			and $coordinates->{$location}->{x1}
-			+ $coordinates->{$location}->{y1} != 0
-			and $coordinates->{$location}->{is_writable} )
-		{
-			my $area = $coordinates->{$location}->{area};
-			if ($area) {
-				push( @{ $areas{$area} }, $location );
-			}
-		}
-	}
-
-	for my $area ( keys %areas ) {
-		@{ $areas{$area} } = sort @{ $areas{$area} };
-	}
-
-	$self->render(
-		'overview-m',
-		about       => 0,
-		version     => $VERSION,
-		areas       => \%areas,
-		coordinates => $coordinates,
-		shortcuts   => \@dd_shortcuts,
-		presets     => \@dd_presets,
-		hideabout   => 1,
-		refresh     => 1,
-	);
-
-	return;
-};
-
-get '/m/:name' => sub {
-	my ($self) = @_;
-	my $name = $self->stash('name');
-
-	given ($name) {
-		when ('actions') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Actions',
-				items       => \@dd_shortcuts,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		when ('presets') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Presets',
-				items       => \@dd_presets,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		when ('layers') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Layers',
-				items       => \@dd_layers,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		default {
-			$self->redirect_to('/?error=no+such+menu');
-		}
-	}
 	return;
 };
 
@@ -1651,7 +1686,7 @@ get '/toggle/:id' => sub {
 			spew( "/tmp/automatic_${id}", q{} );
 		}
 		if ( slurp( $gpiomap->{$id} ) == 0 ) {
-			$self->redirect_to( $self->param('m') ? '/m' : '/' );
+			$self->redirect_to('/');
 			return;
 		}
 	}
@@ -1666,7 +1701,7 @@ get '/toggle/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1697,7 +1732,7 @@ get '/off/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1718,7 +1753,7 @@ get '/on/:id' => sub {
 
 	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
 		spew( "/tmp/automatic_${id}", q{} );
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 		return;
 	}
 
@@ -1729,7 +1764,7 @@ get '/on/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');

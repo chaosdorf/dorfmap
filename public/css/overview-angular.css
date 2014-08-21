@@ -142,8 +142,7 @@
 		min-width: 300px;
 	}
 	
-	*:hover > .popup,
-	.popup:hover {
+	*:hover > .popup {
 		visibility: visible;
 	}
 
@@ -214,25 +213,43 @@
 		height:32px;
 	}
 
-	.animated { 
-	    -webkit-animation-duration: 0.5s; 
-	    animation-duration: 0.5s; 
-	    -webkit-animation-fill-mode: both; 
-	    animation-fill-mode: both; 
-	} 
-
-	@-webkit-keyframes pulse { 
-	    0% { -webkit-transform: scale(1); } 
-	    50% { -webkit-transform: scale(1.1); } 
-	    100% { -webkit-transform: scale(1); } 
-	} 
-	@keyframes pulse { 
-	    0% { transform: scale(1); } 
-	    50% { transform: scale(1.1); } 
-	    100% { transform: scale(1); } 
-	} 
-	.pulse { 
-	    -webkit-animation-name: pulse; 
-	    animation-name: pulse; 
+	.lampimage{
+		cursor: pointer;
+		-webkit-transition: all 0.2s linear;
+		transition: all 0.2s linear;
 	}
 
+	.lampimage:hover {
+		 -webkit-transform: scale(1.1);
+		 transform: scale(1.1);
+	}
+
+
+	.animate-switch-container {
+	    position:relative;
+	    background:white;
+	    border:0px solid black;
+	    height:300px;
+	    opacity: 1.0;
+	    overflow:hidden;
+	}
+
+	.animate-switch {
+	    -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
+	    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
+	    position:absolute;
+	}
+
+	.animate-switch.ng-leave.ng-leave-active,
+	.animate-switch.ng-enter {
+	    top:-300px;
+	}
+	.animate-switch.ng-leave,
+	.animate-switch.ng-enter.ng-enter-active {
+	    top:0;
+	}
+
+	.animate-switch.ng-leave
+	{
+	    z-index: 100;
+	}
