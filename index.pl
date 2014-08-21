@@ -136,7 +136,8 @@ sub get_device {
 		$state = slurp( $remotemap->{$id} . '/commands' );
 		if ( $opt{text} ) {
 			$state =~ s{ \n }{,}gx;
-			$state =~ s{ , push ,? }{ }gx;
+			$state =~ s{ , push $ }{}gx;
+			$state =~ s{ , push , }{ }gx;
 			$state
 			  =~ s{ [^\s,]+,([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^\s,]+ }{$1,$2,$3,$4}gx;
 		}
@@ -1009,6 +1010,36 @@ get '/ajax/blinkencontrol' => sub {
 			active  => $active_preset,
 			presets => \@json_presets,
 		},
+	);
+};
+
+post '/ajax/blinkencontrol' => sub {
+	my ($self)      = @_;
+	my $device      = $self->param('device');
+	my $raw_string  = $self->param('raw_string');
+	my $controlpath = $remotemap->{$device};
+
+	my $ctext = q{};
+	my $id    = 0;
+	my $addr  = ( $controlpath =~ m{feedback}o ? 8 : 1 );
+
+	for my $part ( split( / /, $raw_string ) ) {
+		my ( $speed, $red, $green, $blue ) = split( /,/, $part );
+		$ctext
+		  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n${addr}\npush\n";
+		$id++;
+	}
+	spew( "${controlpath}/commands", $ctext );
+	if ( $controlpath =~ m{donationprint}o ) {
+		system('blinkencontrol-donationprint');
+	}
+	elsif ( $controlpath =~ m{feedback}o ) {
+		system('blinkencontrol-feedback');
+	}
+
+	$self->render(
+		data   => q{},
+		status => 204
 	);
 };
 
