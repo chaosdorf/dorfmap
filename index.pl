@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 
-
 use strict;
 use warnings;
 use 5.014;
@@ -527,10 +526,11 @@ sub json_status {
 	my ( $id, $embed ) = @_;
 
 	return {
+		auto => ( -e "/tmp/automatic_${id}" ? 1 : 0 ),
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
-		infoarea 	=> infotext(),
+		infoarea    => infotext(),
 	};
 }
 
@@ -902,31 +902,6 @@ get '/' => sub {
 	}
 
 	$self->render(
-		'overview',
-		version     => $VERSION,
-		about       => 1,
-		coordinates => $coordinates,
-		shortcuts   => \@dd_shortcuts,
-		errors      => [ $self->param('error') || () ],
-		presets     => \@dd_presets,
-		refresh     => 1,
-		layer       => $layer,
-		layers      => \@dd_layers,
-	);
-	return;
-};
-
-get '/angular' => sub {
-	my ($self) = @_;
-	my $layer = $self->param('layer') // 'control';
-
-	load_presets();
-
-	if ( -e 'locations.db' ) {
-		$locations = retrieve('locations.db');
-	}
-
-	$self->render(
 		'overview-angular',
 		version     => $VERSION,
 		about       => 1,
@@ -967,7 +942,7 @@ get '/action/:action' => sub {
 		);
 	}
 	else {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	return;
 };
@@ -1140,10 +1115,10 @@ get '/blinkencontrol/:device' => sub {
 post '/ajax/charwrite' => sub {
 	my ($self) = @_;
 	my $device = $self->param('device');
-	my $text = $self->param('text');
+	my $text   = $self->param('text');
 
-	if (defined $text and defined $device) {
-		set_device($device, $text);
+	if ( defined $text and defined $device ) {
+		set_device( $device, $text );
 	}
 
 	$self->render(
@@ -1393,93 +1368,6 @@ get '/list/writables' => sub {
 	return;
 };
 
-get '/m' => sub {
-	my ($self) = @_;
-
-	my %areas;
-
-	load_presets();
-
-	for my $location ( keys %{$coordinates} ) {
-		if (    $coordinates->{$location}->{type}
-			and $coordinates->{$location}->{x1}
-			+ $coordinates->{$location}->{y1} != 0
-			and $coordinates->{$location}->{is_writable} )
-		{
-			my $area = $coordinates->{$location}->{area};
-			if ($area) {
-				push( @{ $areas{$area} }, $location );
-			}
-		}
-	}
-
-	for my $area ( keys %areas ) {
-		@{ $areas{$area} } = sort @{ $areas{$area} };
-	}
-
-	$self->render(
-		'overview-m',
-		about       => 0,
-		version     => $VERSION,
-		areas       => \%areas,
-		coordinates => $coordinates,
-		shortcuts   => \@dd_shortcuts,
-		presets     => \@dd_presets,
-		hideabout   => 1,
-		refresh     => 1,
-	);
-
-	return;
-};
-
-get '/m/:name' => sub {
-	my ($self) = @_;
-	my $name = $self->stash('name');
-
-	given ($name) {
-		when ('actions') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Actions',
-				items       => \@dd_shortcuts,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		when ('presets') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Presets',
-				items       => \@dd_presets,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		when ('layers') {
-			$self->render(
-				'mlist',
-				about       => 0,
-				label       => 'Layers',
-				items       => \@dd_layers,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
-			);
-		}
-		default {
-			$self->redirect_to('/?error=no+such+menu');
-		}
-	}
-	return;
-};
-
 any '/presets' => sub {
 	my ($self) = @_;
 	my $action = $self->param('action') // q{};
@@ -1668,7 +1556,7 @@ get '/toggle/:id' => sub {
 			spew( "/tmp/automatic_${id}", q{} );
 		}
 		if ( slurp( $gpiomap->{$id} ) == 0 ) {
-			$self->redirect_to( $self->param('m') ? '/m' : '/' );
+			$self->redirect_to('/');
 			return;
 		}
 	}
@@ -1683,7 +1571,7 @@ get '/toggle/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1714,7 +1602,7 @@ get '/off/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
@@ -1735,7 +1623,7 @@ get '/on/:id' => sub {
 
 	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
 		spew( "/tmp/automatic_${id}", q{} );
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 		return;
 	}
 
@@ -1746,7 +1634,7 @@ get '/on/:id' => sub {
 		$self->render( json => json_status($id) );
 	}
 	elsif ($res) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
+		$self->redirect_to('/');
 	}
 	else {
 		$self->redirect_to('/?error=no+such+device');
