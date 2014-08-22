@@ -1543,7 +1543,7 @@ get '/m/:name' => sub {
 		when ('actions') {
 			$self->render(
 				'mlist',
-		layout      => 'mobile',
+				layout      => 'mobile',
 				about       => 0,
 				label       => 'Actions',
 				items       => \@dd_shortcuts,
@@ -1556,7 +1556,7 @@ get '/m/:name' => sub {
 		when ('presets') {
 			$self->render(
 				'mlist',
-		layout      => 'mobile',
+				layout      => 'mobile',
 				about       => 0,
 				label       => 'Presets',
 				items       => \@dd_presets,
@@ -1567,7 +1567,7 @@ get '/m/:name' => sub {
 			);
 		}
 		default {
-			$self->redirect_to('/?error=no+such+menu');
+			$self->redirect_to('/m');
 		}
 	}
 	return;
