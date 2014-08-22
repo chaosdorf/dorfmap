@@ -979,6 +979,8 @@ get '/ajax/blinkencontrol' => sub {
 	my $current_string = get_device( $device, text => 1 );
 	my $bc_presets     = load_blinkencontrol();
 
+	$bc_presets->{blinkencontrol1}->{Off} = '32,0,0,0';
+
 	my $current_name
 	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
 	keys %{ $bc_presets->{blinkencontrol1} };
