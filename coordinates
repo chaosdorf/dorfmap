@@ -90,13 +90,13 @@ durchgang             1400  180   0    0 feedback6/bin3 \
 lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
   type=charwrite area=Lounge default=clock  4x7Segment-Display
 lounge_rgb              5  110    0    0 donationprint2 \
-  type=blinkenlight area=Lounge watts=7     RGB-Streifen
+  type=blinkenlight area=Lounge watts=7 address=1 RGB-Streifen
 hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
   type=charwrite area=Hackcenter default=power          4x7Segment links
 hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
   type=charwrite area=Hackcenter default=*avg           4x7Segment rechts
 hackcenter_regal      600   60    0    0 feedback4 \
-  type=blinkenlight area=Hackcenter watts=3      RGB-Streifen
+  type=blinkenlight area=Hackcenter watts=3 address=8 RGB-Streifen
 
 
 [layer=control type=amp ratelimit=30 watts=12]

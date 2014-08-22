@@ -783,13 +783,17 @@ $shortcuts->{shutdown} = sub {
 		}
 
 		if ( $type eq 'blinkenlight' ) {
-			my $path = $remotemap->{$device};
+			my $path   = $remotemap->{$device};
+			my $addrhi = int( $coordinates->{$device}->{address} / 255 );
+			my $addrlo = $coordinates->{$device}->{address} % 255;
+
+			spew( "${path}/commands",
+				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\n" );
+
 			if ( $path =~ m{donationprint}o ) {
-				spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n1\n" );
 				system('blinkencontrol-donationprint');
 			}
 			elsif ( $path =~ m{feedback}o ) {
-				spew( "${path}/commands", "0\n255\n0\n0\n0\n0\n8\n" );
 				system('blinkencontrol-feedback');
 			}
 		}
@@ -979,6 +983,8 @@ get '/ajax/blinkencontrol' => sub {
 	my $current_string = get_device( $device, text => 1 );
 	my $bc_presets     = load_blinkencontrol();
 
+	$bc_presets->{blinkencontrol1}->{Off} = '32,0,0,0';
+
 	my $current_name
 	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
 	keys %{ $bc_presets->{blinkencontrol1} };
@@ -1019,17 +1025,20 @@ post '/ajax/blinkencontrol' => sub {
 	my $raw_string  = $self->req->json->{raw_string};
 	my $controlpath = $remotemap->{$device};
 
-	my $ctext = q{};
-	my $id    = 0;
-	my $addr  = ( $controlpath =~ m{feedback}o ? 8 : 1 );
+	my $ctext  = q{};
+	my $id     = 0;
+	my $addrhi = int( $coordinates->{$device}->{address} / 255 );
+	my $addrlo = $coordinates->{$device}->{address} % 255;
 
 	for my $part ( split( / /, $raw_string ) ) {
 		my ( $speed, $red, $green, $blue ) = split( /,/, $part );
 		$ctext
-		  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n${addr}\npush\n";
+		  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n${addrhi}\n${addrlo}\npush\n";
 		$id++;
 	}
+
 	spew( "${controlpath}/commands", $ctext );
+
 	if ( $controlpath =~ m{donationprint}o ) {
 		system('blinkencontrol-donationprint');
 	}
