@@ -42,16 +42,16 @@ function rateDelayUpdate(lamp, amount, $interval) {
                         timeout=500;
                     $scope.$emit('update');
                 });
-            }
+            };
             map.menu.shortcuts.style={};
             map.menu.shortcuts.style['margin-left']="-4px";
             map.menu.presets.function=function() {
                 map.menu.clicked(map.menu.presets);
-            }
+            };
             map.menu.layers.function=function(layer) {
                 map.menu.clicked(map.menu.layers);
                 map.layer=layer;
-            }
+            };
             map.menu.layers.style={};
             map.menu.layers.style['margin-left']="4px";
         });
