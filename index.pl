@@ -652,11 +652,6 @@ sub status_text {
 	my $type  = $coordinates->{$location}->{type};
 	my $extra = q{};
 
-	if ( get_ratelimit_delay($location) > 0 ) {
-		$extra = sprintf( ' (rate limited - wait %d seconds)',
-			get_ratelimit_delay($location) );
-	}
-
 	if ( $type eq 'rtext' ) {
 		return slurp("${store_prefix}/${location}");
 	}
