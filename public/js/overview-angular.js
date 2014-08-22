@@ -1,3 +1,4 @@
+
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
 }
@@ -14,9 +15,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 (function(){
     var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy']);
 
-    //app.config(function($httpProvider) {
-    //    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
-    //});
+
 
     app.controller("MapController", function ($http, $timeout, $scope) {
         var map = this;
@@ -73,16 +72,16 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                 return  overview.lamps[key].is_writable &&
                                         overview.lamps[key].rate_delay <=0 &&
                                         !overview.lamps[key].blocked;
-                            }
+                            };
                             overview.lamps[key].imageClass=function() { return overview.lamps[key].canAccess() ? "lampimage":""; };
-                            overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";}
+                            overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";};
                             overview.lamps[key].image=function() {
                                 if (key=="dorfdoor") return "/static/dorfdoor.png";
                                 statusName=overview.lamps[key].status===1?"on":"off";
                                 if (key==="hackcenter_blau")
-                                    return "/static/hackcenter_blau_"+statusName+".png"
+                                    return "/static/hackcenter_blau_"+statusName+".png";
                                 if (overview.lamps[key].isAuto()) {
-                                    autoPrefix=overview.lamps[key].auto==0?"no":"";
+                                    autoPrefix=overview.lamps[key].auto===0?"no":"";
                                     if (overview.lamps[key].status===-1)
                                         return "/static/light_"+autoPrefix+"auto.png";
                                     return "/static/light_"+statusName+"_"+autoPrefix+"auto.png";
@@ -106,7 +105,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                             };
                             overview.lamps[key].statusClass=function() {
                                 if (overview.lamps[key].type!="infoarea" && overview.lamps[key].type!="rtext")
-                                    return "popup"
+                                    return "popup";
                             };
                             overview.lamps[key].class=function(){
                                 if (key==="dorfdoor")
@@ -163,7 +162,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                         $scope.lamp.charwrite_text=$scope.radioGroup;
                                                     });
                                                     $scope.close();
-                                                }
+                                                };
                                             }
                                         });
                                         return;
@@ -173,7 +172,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                         var oldStatus = overview.lamps[key].status;
                                         overview.lamps[key].status=parseInt(data.status);
                                         overview.lamps[key].auto=data.auto;
-                                        overview.lamps["infoarea"].status_text=$sce.trustAsHtml(data.infoarea);
+                                        overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
                                         if (((oldStatus === overview.lamps[key].status) || (oldStatus==1 && overview.lamps[key].status===0)) && data.rate_delay>0) {
                                             overview.lamps[key].rate_delay=data.rate_delay;
                                             overview.lamps[key].blocked=false;
@@ -186,7 +185,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                             var unsafeStatusText = overview.lamps[key].status_text.toString();
                                             if (overview.lamps[key].auto==1 && unsafeStatusText.indexOf("(deaktiviert)")!=-1) {
                                                 overview.lamps[key].status_text = $sce.trustAsHtml(unsafeStatusText.replace(" (deaktiviert)",""));
-                                            } else if (overview.lamps[key].auto == 0 && unsafeStatusText.indexOf("(deaktiviert)")==-1) {
+                                            } else if (overview.lamps[key].auto === 0 && unsafeStatusText.indexOf("(deaktiviert)")===-1) {
                                                 overview.lamps[key].status_text=$sce.trustAsHtml(unsafeStatusText+" (deaktiviert)");
                                             }
                                         }
@@ -208,7 +207,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                         else
                             overview.lamps[key].status=parseInt(overview.lamps[key].status);
                         if (overview.lamps[key].status === 0 && !overview.lamps[key].rateDelayActive && overview.lamps[key].rate_delay > 0) {
-                            rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval)
+                            rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval);
                         }
                     });
                 }
@@ -229,7 +228,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
         return {
             restrict:'E',
             templateUrl:'/static/templates/lamp-template.html'
-        }
+        };
     });
 
     app.directive('dropdownmenu', function() {
