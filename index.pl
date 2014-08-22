@@ -157,18 +157,18 @@ sub get_device {
 	elsif ( $coordinates->{$id}->{type} eq 'charwrite' ) {
 		$state = slurp( $remotemap->{$id} );
 		if ( not $opt{text} ) {
-			$state = ( length($state) ? 1 : 0 );
+			$state = length($state) ? 1 : 0;
 		}
 	}
 	elsif ( exists $gpiomap->{$id} and -e $gpiomap->{$id} ) {
-		$state = slurp( $gpiomap->{$id} );
+		$state = slurp( $gpiomap->{$id} ) ? 1 : 0;
 	}
 	elsif ( exists $remotemap->{$id} and -e $remotemap->{$id} ) {
-		$state = slurp( $remotemap->{$id} );
+		$state = slurp( $remotemap->{$id} ) ? 1 : 0;
 	}
 	elsif ( $id =~ m{^amp} ) {
 		$id =~ s{ [ab] $ }{}ox;
-		$state = slurp("${store_prefix}/amp.${id}");
+		$state = slurp("${store_prefix}/amp.${id}") ? 1 : 0;
 	}
 
 	return $state;
@@ -1764,10 +1764,7 @@ get '/toggle/:id' => sub {
 		else {
 			spew( "/tmp/automatic_${id}", q{} );
 		}
-		if ( slurp( $gpiomap->{$id} ) == 0 ) {
-			$self->redirect_to('/');
-			return;
-		}
+		return;
 	}
 	else {
 		unshutdown;
