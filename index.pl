@@ -127,11 +127,15 @@ sub set_device {
 sub get_device {
 	my ( $id, %opt ) = @_;
 	my $state = -1;
+	my $type  = $coordinates->{$id}->{type};
 
 	if ( $opt{text} ) {
 		$state = q{},;
 	}
 
+	if ( not $type ) {
+		return $state;
+	}
 	if ( $coordinates->{$id}->{type} eq 'blinkenlight' ) {
 		$state = slurp( $remotemap->{$id} . '/commands' );
 		if ( $opt{text} ) {
@@ -390,10 +394,10 @@ sub device_image {
 		$suffix = '_off';
 	}
 
-	if ( $state == 1 or $state == 255 ) {
+	if ( $state and ( $state == 1 or $state == 255 ) ) {
 		$suffix = '_on';
 	}
-	elsif ( $state == 0 ) {
+	elsif ( $state and $state == 0 ) {
 		$suffix = '_off';
 	}
 
@@ -444,13 +448,15 @@ sub charwrite {
 }
 
 sub estimated_power_consumption {
-	my $consumption = sum map { $coordinates->{$_}->{watts} }
+	my $consumption = sum map { $coordinates->{$_}->{watts} // 0 }
 	  grep { status_number($_) and status_number($_) > 0 } keys %{$coordinates};
 	return $consumption // 0;
 }
 
 sub sprintf_wattage {
 	my ($value) = @_;
+
+	$value //= -1;
 
 	return sprintf(
 		'<span class="wattage %s">%s</span>',
@@ -485,9 +491,9 @@ sub infotext {
 		);
 	}
 
-	my $power_p1 = slurp('/srv/www/flukso/30_p1');
-	my $power_p2 = slurp('/srv/www/flukso/30_p2');
-	my $power_p3 = slurp('/srv/www/flukso/30_p3');
+	my $power_p1 = slurp('/srv/www/flukso/30_p1') // -1;
+	my $power_p2 = slurp('/srv/www/flukso/30_p2') // -1;
+	my $power_p3 = slurp('/srv/www/flukso/30_p3') // -1;
 
 	$buf .= '<span class="wattagetext">Verbrauch</span>';
 	$buf .= sprintf_wattage( $power_p1 + $power_p2 + $power_p3 );
@@ -638,7 +644,10 @@ sub status_number {
 
 	given ($type) {
 		when ('door') {
-			return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 )
+			if ( -e '/srv/www/doorstatus' ) {
+				return ( slurp('/srv/www/doorstatus') eq 'open' ? 1 : 0 );
+			}
+			return -1;
 		}
 		default { return device_status($id) }
 	}
@@ -649,9 +658,11 @@ sub status_number {
 sub status_text {
 	my ($location) = @_;
 
-	my $type  = $coordinates->{$location}->{type};
-	my $extra = q{};
+	my $type = $coordinates->{$location}->{type};
 
+	if ( not $type ) {
+		return $coordinates->{$location}->{text};
+	}
 	if ( $type eq 'rtext' ) {
 		return slurp("${store_prefix}/${location}");
 	}
@@ -662,7 +673,6 @@ sub status_text {
 		return $coordinates->{$location}->{text} . '<br/>'
 		  . auto_text($location);
 	}
-	return $coordinates->{$location}->{text} . $extra;
 }
 
 sub auto_text {
@@ -1444,19 +1454,8 @@ get '/list/all' => sub {
 
 	$self->respond_to(
 		json => { json => $devices },
-		txt  => {
-			text => join(
-				"\n",
-				map {
-					join( "\t",
-						$_,
-						@{ $devices->{$_} }
-						  {qw[type status is_readable is_writable]} )
-				} keys %{$devices}
-			)
-		},
-		any => {
-			data   => 'not acceptables. use json or txt',
+		any  => {
+			data   => 'Not Acceptable. Only JSON is supported.',
 			status => 406
 		},
 	);
