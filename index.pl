@@ -1015,8 +1015,8 @@ get '/ajax/blinkencontrol' => sub {
 
 post '/ajax/blinkencontrol' => sub {
 	my ($self)      = @_;
-	my $device 		= $self->req->json->{device};
-	my $raw_string 	= $self->req->json->{raw_string};
+	my $device      = $self->req->json->{device};
+	my $raw_string  = $self->req->json->{raw_string};
 	my $controlpath = $remotemap->{$device};
 
 	my $ctext = q{};
@@ -1495,6 +1495,81 @@ get '/list/writables' => sub {
 		},
 	);
 
+	return;
+};
+
+get '/m' => sub {
+	my ($self) = @_;
+
+	my %areas;
+
+	load_presets();
+
+	for my $location ( keys %{$coordinates} ) {
+		if (    $coordinates->{$location}->{type}
+			and $coordinates->{$location}->{x1}
+			+ $coordinates->{$location}->{y1} != 0
+			and $coordinates->{$location}->{is_writable} )
+		{
+			my $area = $coordinates->{$location}->{area};
+			if ($area) {
+				push( @{ $areas{$area} }, $location );
+			}
+		}
+	}
+
+	for my $area ( keys %areas ) {
+		@{ $areas{$area} } = sort @{ $areas{$area} };
+	}
+
+	$self->render(
+		'overview-m',
+		layout      => 'mobile',
+		version     => $VERSION,
+		areas       => \%areas,
+		coordinates => $coordinates,
+		shortcuts   => \@dd_shortcuts,
+		presets     => \@dd_presets,
+	);
+
+	return;
+};
+
+get '/m/:name' => sub {
+	my ($self) = @_;
+	my $name = $self->stash('name');
+
+	given ($name) {
+		when ('actions') {
+			$self->render(
+				'mlist',
+		layout      => 'mobile',
+				about       => 0,
+				label       => 'Actions',
+				items       => \@dd_shortcuts,
+				coordinates => {},
+				errors      => [],
+				version     => $VERSION,
+				refresh     => 0,
+			);
+		}
+		when ('presets') {
+			$self->render(
+				'mlist',
+		layout      => 'mobile',
+				about       => 0,
+				label       => 'Presets',
+				items       => \@dd_presets,
+				coordinates => {},
+				errors      => [],
+				version     => $VERSION,
+				refresh     => 0,
+			);
+		}
+		default {
+			$self->redirect_to('/?error=no+such+menu');
+		}
+	}
 	return;
 };
 
