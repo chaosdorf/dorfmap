@@ -673,6 +673,7 @@ sub status_text {
 		return $coordinates->{$location}->{text} . '<br/>'
 		  . auto_text($location);
 	}
+	return $coordinates->{$location}->{text};
 }
 
 sub auto_text {
