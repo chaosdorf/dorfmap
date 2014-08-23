@@ -34,6 +34,29 @@ my $bgdata_prefix = '/srv/www/bgdata';
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
 
+my @charwrite_modes = (
+	{
+		name        => 'blank',
+		description => 'Blank',
+	},
+	{
+		name        => 'clock',
+		description => 'Clock',
+	},
+	{
+		name        => 'date',
+		description => 'Date',
+	},
+	{
+		name        => 'hosts',
+		description => 'Online Hosts',
+	},
+	{
+		name        => 'power',
+		description => 'Power Consumption',
+	},
+);
+
 # ref (1):
 # some browsers send unsolicited HEAD requests e.g. when updating their
 # hestory. Do not allow these to change anything.
@@ -859,30 +882,7 @@ post '/ajax/blinkencontrol' => sub {
 get '/ajax/charwrite' => sub {
 	my ($self) = @_;
 
-	$self->render(
-		json => [
-			{
-				name        => 'blank',
-				description => 'Blank',
-			},
-			{
-				name        => 'clock',
-				description => 'Clock',
-			},
-			{
-				name        => 'date',
-				description => 'Date',
-			},
-			{
-				name        => 'hosts',
-				description => 'Online Hosts',
-			},
-			{
-				name        => 'power',
-				description => 'Power Consumption',
-			},
-		]
-	);
+	$self->render( json => \@charwrite_modes );
 };
 
 get '/ajax/infoarea' => sub {
@@ -1064,6 +1064,7 @@ get '/charwrite/:device' => sub {
 		'mobile-charwrite',
 		layout => 'mobile',
 		device => $device,
+		modes  => \@charwrite_modes,
 	);
 };
 
