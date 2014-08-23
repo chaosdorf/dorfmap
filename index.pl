@@ -922,26 +922,8 @@ helper statustext => sub {
 
 get '/' => sub {
 	my ($self) = @_;
-	my $layer = $self->param('layer') // 'control';
 
-	load_presets();
-
-	if ( -e 'locations.db' ) {
-		$locations = retrieve('locations.db');
-	}
-
-	$self->render(
-		'overview-angular',
-		version     => $VERSION,
-		about       => 1,
-		coordinates => $coordinates,
-		shortcuts   => \@dd_shortcuts,
-		errors      => [ $self->param('error') || () ],
-		presets     => \@dd_presets,
-		refresh     => 1,
-		layer       => $layer,
-		layers      => \@dd_layers,
-	);
+	$self->render_static('index.html');
 	return;
 };
 

@@ -11,3 +11,4 @@ obj/
 si2c-bitwrite/si2c-bitwrite
 si2c-bytewrite/si2c-bytewrite
 si2c-charwrite/si2c-charwrite
+node_modules/

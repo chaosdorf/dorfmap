@@ -1,3 +1,9 @@
+'use strict';
+var angular = require('angular');
+require('angular-animate');
+require('./libs/angular-animate-stylers.js')
+require('./libs/angular-busy.min.js');
+require('./libs/angular-material.min.js');
 
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
@@ -17,7 +23,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
 
 
-    app.controller("MapController", function ($http, $timeout, $scope) {
+    app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
         map.menu={};
@@ -54,9 +60,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
             map.menu.layers.style={};
             map.menu.layers.style['margin-left']="4px";
         });
-    });
+    }]);
 
-    app.controller('OverviewController', function($http, $scope, $sce, $interval, $materialDialog) {
+    app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', function($http, $scope, $sce, $interval, $materialDialog) {
         var overview = this;
         overview.lamps={};
 
@@ -77,11 +83,11 @@ function rateDelayUpdate(lamp, amount, $interval) {
                             overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";};
                             overview.lamps[key].image=function() {
                                 if (key=="dorfdoor") return "/static/dorfdoor.png";
-                                statusName=overview.lamps[key].status===1?"on":"off";
+                                var statusName=overview.lamps[key].status===1?"on":"off";
                                 if (key==="hackcenter_blau")
                                     return "/static/hackcenter_blau_"+statusName+".png";
                                 if (overview.lamps[key].isAuto()) {
-                                    autoPrefix=overview.lamps[key].auto===0?"no":"";
+                                    var autoPrefix=overview.lamps[key].auto===0?"no":"";
                                     if (overview.lamps[key].status===-1)
                                         return "/static/light_"+autoPrefix+"auto.png";
                                     return "/static/light_"+statusName+"_"+autoPrefix+"auto.png";
@@ -95,12 +101,12 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                 var l = overview.lamps[key];
                                 if (dup)
                                     l=dup;
-                                style.left=l.x1;
-                                style.top=l.y1;
+                                style['left']=l.x1+'px';
+                                style['top']=l.y1+'px';
                                 if (l.x2!=32)
-                                    style.width=l.x2;
+                                    style['width']=l.x2+'px';
                                 if (l.y2!=32)
-                                    style.height=l.y2;
+                                    style['height']=l.y2+'px';
                                 return style;
                             };
                             overview.lamps[key].statusClass=function() {
@@ -142,7 +148,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                         $materialDialog({
                                             templateUrl: '/static/templates/charwrite-template.html',
                                             targetEvent: $event,
-                                            controller: function($scope, $hideDialog, $http) {
+                                            controller: ['$scope','$hideDialog','$http', function($scope, $hideDialog, $http) {
                                                 $scope.lamp=overview.lamps[key];
                                                 $scope.loadingPromise=$http.get('/ajax/charwrite').success(function(data) {
                                                     $scope.modes=data;
@@ -163,7 +169,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                     });
                                                     $scope.close();
                                                 };
-                                            }
+                                            }]
                                         });
                                         return;
                                     }
@@ -222,9 +228,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
             return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer})
             .map(function(key) {return overview.lamps[key]});
         };
-    });
+    }]);
 
-    app.directive('lamp', function($sce) {
+    app.directive('lamp', function() {
         return {
             restrict:'E',
             templateUrl:'/static/templates/lamp-template.html'
