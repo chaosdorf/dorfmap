@@ -1,7 +1,7 @@
 var angular = require('angular');
 require('angular-animate');
 require('./libs/angular-busy.min.js');
-require('./libs/angular-material.min.js');
+require('./libs/angular-material.js');
 
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;

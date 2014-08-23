@@ -1,17 +1,13 @@
 <material-dialog>
-<div cg-busy="loadingPromise">
-<material-tabs selected="selectedIndex" noink>
-	<material-tab label="Animation"></material-tab>
-	<!--<material-tab label="new Animation"></material-tab>-->
-</material-tabs>
-<div class="animate-switch-container" ng-switch on="selectedIndex">
-    <div class="animate-switch" ng-switch-when="0">
+<div cg-busy="loadingPromise" style="min-width:300px">
+<material-tabs>
+    <material-tab label="Animations">
         <material-radio-group ng-model="$parent.radioGroup">
-			<material-radio-button noink ng-repeat="animation in animations" ng-value="animation.raw_string">{{animation.name}}</material-radio-button>
-    </div>
-    <div class="animate-switch" ng-switch-when="1" layout="vertical" style="margin-left:15px" >
-    	TODO
-    </div>
+            <material-radio-button noink ng-repeat="animation in animations track by animation.name" ng-value="animation.raw_string">     {{animation.name}}
+            </material-radio-button>
+        </material-radio-group>
+    </material-tab>
+</material-tabs>
 </div>
 <div>
 	<material-button style="float:left; margin:5px;" ng-click="close()">Cancel</material-button>

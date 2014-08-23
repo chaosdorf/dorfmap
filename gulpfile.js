@@ -5,32 +5,37 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     concat = require('gulp-concat'),
     cssmin = require('gulp-cssmin');
+    recess = require('gulp-recess');
 
 gulp.task('lint', function() {
-  return gulp.src('src/js/*.js')
+  gulp.src('src/js/*.js')
     .pipe(jshint())
     .pipe(jshint.reporter(stylish))
     .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('scripts', function() {
-  // Single point of entry (make sure not to src ALL your files, browserify will figure it out for you)
-  gulp.src(['src/js/overview-angular.js'])
+  gulp.src(['src/js/*.js'])
   .pipe(browserify({
     insertGlobals: true,
     debug: false
   }))
-  // Bundle to a single file
   .pipe(concat('dorfmap.min.js'))
-  // Output it to our dist folder
   .pipe(gulp.dest('public/js'));
 });
 
+gulp.task('csslint', function() {
+    gulp.src('src/css/*.css')
+    .pipe(recess({noOverqualifying: false, strictPropertyOrder: false}))
+    .pipe(recess.reporter(stylish))
+    .pipe(recess.reporter('fail'));
+});
+
 gulp.task('css', function() {
- gulp.src('src/css/*.css')
+ gulp.src(['src/css/*.css', 'src/css/libs/*.css'])
     .pipe(cssmin())
     .pipe(concat('dorfmap.min.css'))
     .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('default', ['lint','scripts','css']);
+gulp.task('default', ['lint', 'csslint', 'scripts','css']);

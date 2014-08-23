@@ -97,13 +97,6 @@
 		margin-bottom: 1em;
 	}
 
-	#rgbcolor {
-		font-size: 120%;
-		height: 6em;
-		width: 20em;
-		text-align: center;
-	}
-
 	.overview {
 		background-image: url(/static/map.png);
 		width: 2202px;
@@ -115,7 +108,6 @@
 	.popup {
 		visibility: hidden;
 		position: absolute;
-		top: 0px;
 		left: 30px;
 		z-index: 1;
 		border: 1px solid gray;
@@ -124,16 +116,9 @@
 		min-width: 300px;
 	}
 	
-	*:hover > .popup {
+	:hover > .popup {
 		visibility: visible;
 	}
-
-/*
-	.overview > *:hover {
-		background-color: gray;
-		opacity: .20;
-	}
-*/
 
 	.overview .popup a {
 		color: #000099;
@@ -209,8 +194,6 @@
 
 	.animate-switch-container {
 	    background:white;
-	    border:0px solid black;
-	    height:350px;
 	    opacity: 1.0;
 	    overflow-y:scroll;
 	    overflow-x:hidden;
@@ -220,18 +203,4 @@
 	    -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
 	    transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
 	    position:absolute;
-	}
-
-	.animate-switch.ng-leave.ng-leave-active,
-	.animate-switch.ng-enter {
-	    top:-300px;
-	}
-	.animate-switch.ng-leave,
-	.animate-switch.ng-enter.ng-enter-active {
-	    top:0;
-	}
-
-	.animate-switch.ng-leave
-	{
-	    z-index: 100;
 	}

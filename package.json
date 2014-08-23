@@ -8,12 +8,12 @@
   "devDependencies": {
     "angular": "^1.2.21",
     "angular-animate": "^1.2.16",
-    "browserify": "^5.10.1",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.3.4",
+    "gulp-csslint": "^0.1.5",
     "gulp-cssmin": "^0.1.6",
     "gulp-jshint": "^1.8.4",
-    "gulp-uglify": "^0.3.1",
+    "gulp-recess": "^1.0.0",
     "gulp-util": "^3.0.0",
     "jshint-stylish": "^0.4.0"
   }
