@@ -208,12 +208,12 @@
 
 
 	.animate-switch-container {
-	    position:relative;
 	    background:white;
 	    border:0px solid black;
-	    height:300px;
+	    height:350px;
 	    opacity: 1.0;
-	    overflow:hidden;
+	    overflow-y:scroll;
+	    overflow-x:hidden;
 	}
 
 	.animate-switch {
