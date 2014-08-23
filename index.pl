@@ -394,10 +394,10 @@ sub device_image {
 		$suffix = '_off';
 	}
 
-	if ( $state and ( $state == 1 or $state == 255 ) ) {
+	if ( defined $state and ( $state == 1 or $state == 255 ) ) {
 		$suffix = '_on';
 	}
-	elsif ( $state and $state == 0 ) {
+	elsif ( defined $state and $state == 0 ) {
 		$suffix = '_off';
 	}
 
@@ -1110,6 +1110,8 @@ get '/ajax/has_location/:id' => sub {
 
 get '/ajax/menu' => sub {
 	my ($self) = @_;
+
+	load_presets();
 
 	$self->render(
 		json => {
