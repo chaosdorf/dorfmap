@@ -33,7 +33,6 @@ my $bgdata_prefix = '/srv/www/bgdata';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
-my (@killswitches);
 
 # ref (1):
 # some browsers send unsolicited HEAD requests e.g. when updating their
@@ -274,12 +273,6 @@ sub load_coordinates {    #{{{
 		$coordinates->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
 			  and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
-
-		if (    $coordinates->{$id}->{type}
-			and $coordinates->{$id}->{type} eq 'killswitch' )
-		{
-			push( @killswitches, $id );
-		}
 	}
 	return;
 }    #}}}
@@ -343,7 +336,7 @@ sub device_actionlink {
 
 	given ($type) {
 		when ('blinkenlight') { $action = 'blinkencontrol' }
-		when ( [qw[charwrite killswitch]] )      { $action = $type }
+		when ('charwrite')    { $action = $type }
 		when ( [qw[phone printer server wifi]] ) { $action = 'on' }
 		when ('light_au') { $action = 'toggle' }
 	}
@@ -517,17 +510,6 @@ sub infotext {
 	);
 	$buf .= '</ul>';
 
-	for my $cb (@killswitches) {
-		if ( get_device($cb) == 0 ) {
-			$buf
-			  .= sprintf(
-				'<img src="/static/warning.png" alt="!" /> Bus Circuit Breaker '
-				  . '<a href="/killswitch/%s">%s</a> is disconnected - '
-				  . 'some devices will not work<br/>',
-				$cb, $cb );
-		}
-	}
-
 	for my $h ( keys %{$coordinates} ) {
 		if ( exists $coordinates->{$h}->{dorfmap}
 			and device_status($h) == 0 )
@@ -561,21 +543,6 @@ sub json_status {
 	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
 		$ret->{charwrite_text} = get_device( $id, text => 1 );
 	}
-
-	return $ret;
-}
-
-sub killswitch {
-	my ($cb) = @_;
-
-	my $ret
-	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($cb), $cb );
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
-		device_image($cb), $cb, $cb, $cb );
-
-	$ret .= '</a>';
 
 	return $ret;
 }
@@ -783,11 +750,6 @@ $shortcuts->{shutdown} = sub {
 			next;
 		}
 
-		# do not trip circuit breakers
-		if ( $type ~~ [qw[killswitch]] ) {
-			next;
-		}
-
 		if ( $type eq 'blinkenlight' ) {
 			my $path   = $remotemap->{$device};
 			my $addrhi = int( $coordinates->{$device}->{address} / 255 );
@@ -903,7 +865,6 @@ helper statusimage => sub {
 		when ('amp')          { return amp($location) }
 		when ('blinkenlight') { return blinkenlight($location) }
 		when ('charwrite')    { return charwrite($location) }
-		when ('killswitch')   { return killswitch($location) }
 		when ('light')        { return light( $location, 1 ) }
 		when ('light_au')     { return light( $location, 2 ) }
 		when ('light_ro')     { return light( $location, 0 ) }
@@ -1349,58 +1310,6 @@ get '/get_power_consumption' => sub {
 	);
 
 	return;
-};
-
-get '/killswitch/:device' => sub {
-	my ($self) = @_;
-	my $device = $self->stash('device');
-	my $action = $self->param('action');
-
-	my $controlpath = $remotemap->{$device};
-
-	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => 'caution',
-			layers      => \@dd_layers,
-		);
-		return;
-	}
-
-	# see (1)
-	if ( $action and $self->req->method eq 'GET' ) {
-		if ( $action eq 'on' ) {
-			set_device( $device, 1 );
-		}
-		elsif ( $action eq 'off' ) {
-			set_device( $device, 0 );
-		}
-	}
-
-	$self->respond_to(
-		any => {
-			template    => 'killswitch',
-			about       => 1,
-			coordinates => {},
-			device      => $device,
-			status      => get_device($device),
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-		},
-		json => {
-			json => {
-				status => get_device($device),
-			}
-		},
-	);
 };
 
 get '/list/all' => sub {
