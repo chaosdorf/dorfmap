@@ -1,0 +1,69 @@
+#!/bin/sh -e
+
+mkdir -p /tmp/donationprint1
+chmod 777 /tmp/donationprint1
+for i in $(seq 1 13); do
+	echo 0 > /tmp/donationprint1/$i
+	chmod 666 /tmp/donationprint1/$i
+done
+
+mkdir -p /tmp/donationprint2
+chmod 777 /tmp/donationprint2
+for i in commands; do
+	echo 0 > /tmp/donationprint2/$i
+	chmod 666 /tmp/donationprint2/$i
+done
+
+mkdir -p /tmp/feedback1
+chmod 777 /tmp/feedback1
+for i in $(seq 1 13); do
+	echo 0 > /tmp/feedback1/$i
+	chmod 666 /tmp/feedback1/$i
+done
+
+mkdir -p /tmp/feedback2
+chmod 777 /tmp/feedback2
+for i in bin1 bin3 bin5 bin6 pwm0 pwm1 pwm2; do
+	echo 0 > /tmp/feedback2/$i
+	chmod 666 /tmp/feedback2/$i
+done
+
+# circuit breaker feedback1
+echo 1 > /tmp/feedback2/bin3
+
+mkdir -p /tmp/feedback3
+chmod 777 /tmp/feedback3
+for i in $(seq 1 12); do
+	echo 0 > /tmp/feedback3/$i
+	chmod 666 /tmp/feedback3/$i
+done
+
+mkdir -p /tmp/feedback4
+chmod 777 /tmp/feedback4
+for i in commands; do
+	echo 0 > /tmp/feedback4/$i
+	chmod 666 /tmp/feedback4/$i
+done
+
+mkdir -p /tmp/feedback5
+chmod 777 /tmp/feedback5
+for i in $(seq 1 8); do
+	echo 0 > /tmp/feedback5/$i
+	chmod 666 /tmp/feedback5/$i
+done
+
+mkdir -p /tmp/feedback6
+chmod 777 /tmp/feedback6
+for i in bin0 bin1 bin3 bin5 bin6 bin7 pwm0 pwm1 pwm2; do
+	echo 0 > /tmp/feedback6/$i
+	chmod 666 /tmp/feedback6/$i
+done
+
+echo clock > /tmp/donationprint1/7segment1.mode
+chmod 666 /tmp/donationprint1/7segment1.mode
+
+echo power > /tmp/feedback1/7segment2.mode
+chmod 666 /tmp/feedback1/7segment2.mode
+
+echo ' avg' > /tmp/feedback1/7segment3.mode
+chmod 666 /tmp/feedback1/7segment3.mode
