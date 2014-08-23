@@ -1210,6 +1210,7 @@ get '/m/:name' => sub {
 			);
 		}
 		when ('presets') {
+			load_presets();
 			$self->render(
 				'mobile-list',
 				layout => 'mobile',
@@ -1313,7 +1314,7 @@ get '/presets/apply/:name' => sub {
 		}
 	}
 
-	$self->redirect_to( $self->param('m') ? '/m' : '/' );
+	$self->redirect_to('/');
 	return;
 };
 
