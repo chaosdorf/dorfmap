@@ -1,15 +1,15 @@
 
 
-<div id="{{lamp.name}}" class="lamp" ng-class="lamp.class()" ng-style="lamp.style()">
-	<img ng-hide="lamp.type==='rtext' || lamp.type==='infoarea'" ng-class="lamp.imageClass()" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}"/>
+<div id="{{lamp.name}}" class="lamp" class="{{lamp.class()}}" ng-style="lamp.style()">
+	<img ng-hide="lamp.type==='rtext' || lamp.type==='infoarea'" class="{{lamp.imageClass()}}" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}"/>
 	<div class="{{lamp.statusClass()}}" ng-show="lamp.status_text">
 		<div ng-bind-html="lamp.status_text"></div>
 		<div ng-show="lamp.rate_delay > 0">  (rate limited - wait <span ng-bind="lamp.rate_delay" ></span> seconds)</div>
 	</div>
 </div>
 <div ng-repeat="dup in lamp.duplicates">
-	<div id="{{lamp.name}}_dup{{$index+1}}" class="lamp" ng-class="lamp.class()" ng-style="lamp.style(dup)">
-		<img ng-hide="lamp.type=='rtext'" ng-class="lamp.imageClass()" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}"/>
+	<div id="{{lamp.name}}_dup{{$index+1}}" class="lamp" class="{{lamp.class()}}" ng-style="lamp.style(dup)">
+		<img ng-hide="lamp.type=='rtext'" class="{{lamp.imageClass()}}" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}"/>
 		<div class="{{lamp.statusClass()}}" ng-show="lamp.status_text">
 			<div ng-bind-html="lamp.status_text"></div>
 			<div ng-show="lamp.rate_delay > 0">  (rate limited - wait <span ng-bind="lamp.rate_delay" ></span> seconds)

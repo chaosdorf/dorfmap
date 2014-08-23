@@ -206,7 +206,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                             overview.lamps[key].status_text=data[key].status_text;
                         }
                         if (typeof(overview.lamps[key].status_text) == "string")
-                            overview.lamps[key].status_text=$sce.trustAsHtml(overview.lamps[key].status_text.split(" (rate")[0]);
+                            overview.lamps[key].status_text=$sce.trustAsHtml(overview.lamps[key].status_text);
 
                         if (!overview.lamps[key].status)
                             overview.lamps[key].status=0;
