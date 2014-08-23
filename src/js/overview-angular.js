@@ -1,7 +1,5 @@
-'use strict';
 var angular = require('angular');
 require('angular-animate');
-require('./libs/angular-animate-stylers.js')
 require('./libs/angular-busy.min.js');
 require('./libs/angular-material.min.js');
 
@@ -19,6 +17,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 }
 
 (function(){
+    'use strict';
     var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy']);
 
 
@@ -101,12 +100,12 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                 var l = overview.lamps[key];
                                 if (dup)
                                     l=dup;
-                                style['left']=l.x1+'px';
-                                style['top']=l.y1+'px';
+                                style.left=l.x1+'px';
+                                style.top=l.y1+'px';
                                 if (l.x2!=32)
-                                    style['width']=l.x2+'px';
+                                    style.width=l.x2+'px';
                                 if (l.y2!=32)
-                                    style['height']=l.y2+'px';
+                                    style.height=l.y2+'px';
                                 return style;
                             };
                             overview.lamps[key].statusClass=function() {
@@ -153,7 +152,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                                                 $scope.loadingPromise=$http.get('/ajax/charwrite').success(function(data) {
                                                     $scope.modes=data;
                                                     $scope.radioGroup="custom";
-                                                    if ($scope.modes.map(function(m){return m.name}).indexOf($scope.lamp.charwrite_text)!=-1)
+                                                    if ($scope.modes.map(function(m){return m.name;}).indexOf($scope.lamp.charwrite_text)!=-1)
                                                         $scope.radioGroup=$scope.lamp.charwrite_text;
                                                 });
                                                 $scope.customModes=['date','clock','hosts','power'];
@@ -225,8 +224,8 @@ function rateDelayUpdate(lamp, amount, $interval) {
         $interval(this.update, 20000);
 
         this.filteredLamps=function() {
-            return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer})
-            .map(function(key) {return overview.lamps[key]});
+            return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer;})
+            .map(function(key) {return overview.lamps[key];});
         };
     }]);
 

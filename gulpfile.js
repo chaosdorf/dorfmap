@@ -1,8 +1,17 @@
 var gulp = require('gulp'),
+    jshint = require('gulp-jshint'),
+    stylish = require('jshint-stylish'),
     gutil = require('gulp-util'),
     browserify = require('gulp-browserify'),
     concat = require('gulp-concat'),
     cssmin = require('gulp-cssmin');
+
+gulp.task('lint', function() {
+  return gulp.src('src/js/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish))
+    .pipe(jshint.reporter('fail'));
+});
 
 gulp.task('scripts', function() {
   // Single point of entry (make sure not to src ALL your files, browserify will figure it out for you)
@@ -24,4 +33,4 @@ gulp.task('css', function() {
     .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('default', ['scripts','css']);
+gulp.task('default', ['lint','scripts','css']);
