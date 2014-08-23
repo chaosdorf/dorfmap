@@ -401,45 +401,6 @@ sub device_image {
 	return "static/${prefix}${suffix}.png";
 }
 
-sub amp {
-	my ($id) = @_;
-
-	return
-	  sprintf(
-'<a href="%s" id="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, $id, device_image($id), 'amp', 'amp' );
-}
-
-sub blinkenlight {
-	my ($light) = @_;
-
-	my $ret = sprintf( '<a href="%s" id="link%s">', device_actionlink($light),
-		$light );
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
-		device_image($light), $light, $light, $light );
-
-	$ret .= '</a>';
-
-	return $ret;
-}
-
-sub charwrite {
-	my ($id) = @_;
-
-	my $ret
-	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($id), $id );
-
-	$ret
-	  .= sprintf(
-'<img src="/static/charwrite.png" class="charwrite %s" id="img%s" alt="%s" />',
-		$id, $id, $id );
-	$ret .= '</a>';
-
-	return $ret;
-}
-
 sub estimated_power_consumption {
 	my $consumption = sum map { $coordinates->{$_}->{watts} // 0 }
 	  grep { status_number($_) and status_number($_) > 0 } keys %{$coordinates};
@@ -547,64 +508,6 @@ sub json_status {
 	return $ret;
 }
 
-sub light {
-	my ( $light, $is_rw ) = @_;
-
-	my $ret = q{};
-
-	if ($is_rw) {
-		$ret .= sprintf( '<a href="%s" id="link%s" class="toggle">',
-			device_actionlink($light), $light );
-	}
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="light ro %s" alt="%s" />',
-		device_image($light), $light, $light, $light, $light );
-
-	if ($is_rw) {
-		$ret .= sprintf('</a>');
-	}
-
-	return $ret;
-}
-
-sub muninlink {
-	my ( $plugin, $name ) = @_;
-
-	return
-	  sprintf(
-'<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
-		$plugin, $name // $plugin );
-}
-
-sub pingdevice {
-	my ( $type, $host, $label ) = @_;
-
-	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
-		return
-		  sprintf(
-'<a href="/on/%s" id="link%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
-			$host, $host, device_image($host), $host, $type, $host, $label,
-			$host );
-	}
-	else {
-		return
-		  sprintf(
-			'<img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" />',
-			device_image($host), $host, $type, $host, $label, $host, );
-	}
-
-}
-
-sub pump {
-	my ($id) = @_;
-
-	return
-	  sprintf(
-'<a href="%s" class="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, $id, device_image($id), 'pump', 'pump' );
-}
-
 sub status_number {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
@@ -677,22 +580,6 @@ sub auto_text {
 		( -e "/tmp/automatic_${id}" ) ? q{} : '(deaktiviert)',
 	);
 
-}
-
-sub wikilink {
-	my ($site) = @_;
-	my $name   = $site;
-	my $image  = undef;
-
-	if ( $name =~ s{ ^ Host : }{}ox ) {
-		$image = '/static/host.png';
-	}
-
-	return sprintf(
-		'%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
-		$image ? "<img src=\"/$image\" alt=\"wl\" />" : q{},
-		$site, $name
-	);
 }
 
 #}}}
@@ -827,19 +714,6 @@ helper has_location => sub {
 	return $ret;
 };
 
-helper statusclass => sub {
-	my ( $self, $type, $location ) = @_;
-
-	if ( $type eq 'door' ) {
-		return slurp('/srv/www/doorstatus') || 'unknown';
-	}
-	if ( $type eq 'rtext' ) {
-		return 'rtext';
-	}
-
-	return q{};
-};
-
 helper statuslink => sub {
 	my ( $self, $type ) = @_;
 
@@ -856,25 +730,6 @@ helper status_image => sub {
 	my ( $self, $location ) = @_;
 
 	return device_image($location);
-};
-
-helper statusimage => sub {
-	my ( $self, $type, $location ) = @_;
-
-	given ($type) {
-		when ('amp')          { return amp($location) }
-		when ('blinkenlight') { return blinkenlight($location) }
-		when ('charwrite')    { return charwrite($location) }
-		when ('light')        { return light( $location, 1 ) }
-		when ('light_au')     { return light( $location, 2 ) }
-		when ('light_ro')     { return light( $location, 0 ) }
-		when ('pump')         { return pump($location) }
-		when ( [qw[phone printer server wifi]] ) {
-			return pingdevice( $type, $location, $location )
-		}
-	}
-
-	return q{};
 };
 
 helper statustext => sub {
@@ -1301,45 +1156,6 @@ get '/list/all' => sub {
 			status => 406
 		},
 	);
-	return;
-};
-
-get '/list/readables' => sub {
-	my ($self) = @_;
-
-	my @readables
-	  = grep { $coordinates->{$_}->{path} ne 'none' } keys %{$coordinates};
-
-	$self->respond_to(
-		json => { json => { devices => \@readables } },
-		txt => { text => join( "\n", @readables ) },
-		any => {
-			data   => 'not acceptable. use json or txt',
-			status => 406
-		},
-	);
-
-	return;
-};
-
-get '/list/writables' => sub {
-	my ($self) = @_;
-
-	my @writables = grep {
-		      $coordinates->{$_}->{path} ne 'none'
-		  and $coordinates->{$_}->{type} !~ m{ _ (?: ro | au ) $ }ox
-	  }
-	  keys %{$coordinates};
-
-	$self->respond_to(
-		json => { json => { devices => \@writables } },
-		txt => { text => join( "\n", @writables ) },
-		any => {
-			data   => 'not acceptable. use json or txt.',
-			status => 406
-		},
-	);
-
 	return;
 };
 
