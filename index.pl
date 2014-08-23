@@ -1087,7 +1087,6 @@ get '/ajax/menu' => sub {
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-	my $layer = $self->param('layer') // 'control';
 
 	my $red     = $self->param('red');
 	my $green   = $self->param('green');
@@ -1113,19 +1112,8 @@ get '/blinkencontrol/:device' => sub {
 	}
 
 	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => $layer,
-			layers      => \@dd_layers,
-		);
-		return;
+
+		# TODO
 	}
 
 	if (    length($command) == 0
@@ -1174,26 +1162,10 @@ get '/blinkencontrol/:device' => sub {
 		$bc_presets = load_blinkencontrol();
 	}
 
-	$self->respond_to(
-		any => {
-			template => 'blinkencontrol' . ( $mobile ? '-m' : q{} ),
-			about => !$mobile,
-			coordinates => {},
-			device      => $device,
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-			bc_presets  => $bc_presets,
-		},
-		json => {
-			json => {
-				red    => 0,
-				green  => 0,
-				blue   => 0,
-				speed  => 0,
-				opmode => 0,
-			}
-		},
+	$self->render(
+		'mobile-blinkencontrol',
+		layout     => 'mobile',
+		bc_presets => $bc_presets,
 	);
 };
 
@@ -1215,27 +1187,14 @@ post '/ajax/charwrite' => sub {
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-	my $layer  = $self->param('layer') // 'control';
-	my $mobile = $self->param('m')     // q{};
 
 	my $text = $self->param('disptext');
 
 	my $controlpath = $remotemap->{$device};
 
 	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => $layer,
-			layers      => \@dd_layers,
-		);
-		return;
+
+		# TODO
 	}
 
 	# see (1)
@@ -1246,21 +1205,10 @@ get '/charwrite/:device' => sub {
 		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
 	}
 
-	$self->respond_to(
-		any => {
-			template => 'charwrite' . ( $mobile ? '-m' : q{} ),
-			about => !$mobile,
-			coordinates => {},
-			device      => $device,
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-		},
-		json => {
-			json => {
-				text => scalar $self->param('disptext'),
-			}
-		},
+	$self->render(
+		'mobile-charwrite',
+		layout => 'mobile',
+		device => $device,
 	);
 };
 
@@ -1420,7 +1368,7 @@ get '/m' => sub {
 	}
 
 	$self->render(
-		'overview-m',
+		'mobile-main',
 		layout      => 'mobile',
 		version     => $VERSION,
 		areas       => \%areas,
@@ -1439,28 +1387,18 @@ get '/m/:name' => sub {
 	given ($name) {
 		when ('actions') {
 			$self->render(
-				'mlist',
-				layout      => 'mobile',
-				about       => 0,
-				label       => 'Actions',
-				items       => \@dd_shortcuts,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
+				'mobile-list',
+				layout => 'mobile',
+				label  => 'Actions',
+				items  => \@dd_shortcuts,
 			);
 		}
 		when ('presets') {
 			$self->render(
-				'mlist',
-				layout      => 'mobile',
-				about       => 0,
-				label       => 'Presets',
-				items       => \@dd_presets,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
+				'mobile-list',
+				layout => 'mobile',
+				label  => 'Presets',
+				items  => \@dd_presets,
 			);
 		}
 		default {
@@ -1524,14 +1462,10 @@ any '/presets' => sub {
 
 	$self->render(
 		'presets',
-		about       => 1,
-		coordinates => {},
-		errors      => [],
-		presetdata  => $presets,
-		presets     => \@dd_presets,
-		toggles     => \@toggles,
-		version     => $VERSION,
-		refresh     => 0,
+		errors     => [],
+		presetdata => $presets,
+		presets    => \@dd_presets,
+		toggles    => \@toggles,
 	);
 
 	return;
