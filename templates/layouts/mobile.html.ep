@@ -7,7 +7,6 @@
 
 	%= stylesheet '/static/css/mobile.css'
 	%= javascript '/static/js/jquery-2.1.1.min.js'
-	%= javascript '/static/js/angular.min.js'
 </head>
 <body>
 

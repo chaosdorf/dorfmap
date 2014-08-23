@@ -6,7 +6,9 @@ $(document).ready(function() {
 			$.get('/toggle/'+link.attr('id'), {m: 1}, function(data) {
 				$.getJSON("/list/all.json", {}, function(data) {
 					$.each(data, function(k, v) {
-						$('#'+k).css('background-image', 'url(/'+v["image"]+')')
+						if (v["type"] != null) {
+							$('#'+k).css('background-image', 'url(/'+v["image"]+')')
+						}
 					});
 				});
 			});
@@ -16,7 +18,9 @@ $(document).ready(function() {
 	(function imgrefresh() {
 		$.getJSON("/list/all.json", {}, function(data) {
 			$.each(data, function(k, v) {
-				$('#'+k).css('background-image', 'url(/'+v["image"]+')')
+				if (v["type"] != null) {
+					$('#'+k).css('background-image', 'url(/'+v["image"]+')')
+				}
 			});
 		});
 		setTimeout(imgrefresh, 5000);
