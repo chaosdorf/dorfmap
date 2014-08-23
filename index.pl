@@ -1111,6 +1111,8 @@ get '/ajax/has_location/:id' => sub {
 get '/ajax/menu' => sub {
 	my ($self) = @_;
 
+	load_presets();
+
 	$self->render(
 		json => {
 			shortcuts => \@dd_shortcuts,
