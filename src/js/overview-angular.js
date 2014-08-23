@@ -1,7 +1,11 @@
+//var io = require('socket.io-client');
+//global.window.io=io;
 var angular = require('angular');
+//require('angular-socket-io');
 require('angular-animate');
 require('./libs/angular-busy.min.js');
 require('./libs/angular-material.js');
+
 
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
@@ -18,13 +22,18 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
 (function(){
     'use strict';
-    var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy']);
+    var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
+
+    app.factory('socket', function (socketFactory) {
+        return socketFactory();
+    });
 
 
 
     app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
+
         map.menu={};
         map.menu.clicked=function (type) {
             type.hide=true;
@@ -64,6 +73,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
     app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', function($http, $scope, $sce, $interval, $materialDialog) {
         var overview = this;
         overview.lamps={};
+
+
+
 
         this.update=function() {
             var httpGet = $http.get('/list/all.json').success(
