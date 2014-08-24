@@ -46,4 +46,4 @@ gulp.task('jade', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('default', ['lint', 'csslint', 'scripts','css']);
+gulp.task('default', ['jade', 'lint', 'csslint', 'scripts','css']);
