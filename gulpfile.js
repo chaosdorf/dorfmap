@@ -18,9 +18,9 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
   gulp.src(['src/js/*.js'])
   .pipe(browserify({
-    //transform: [[{ global: true }, 'uglifyify']],
+    transform: [[{ global: true, beautify: false, mangle: false }, 'uglifyify']],
     insertGlobals: true,
-    debug: true
+    debug: false
   }))
   .pipe(concat('dorfmap.min.js'))
   .pipe(gulp.dest('public/js'));
