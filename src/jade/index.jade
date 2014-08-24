@@ -1,0 +1,30 @@
+doctype html
+html(ng-app="dorfmap")
+  head
+    title dorfmap
+    meta(charset="UTF-8")
+    meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/static/css/dorfmap.min.css" type="text/css")
+    script(src='/static/js/dorfmap.min.js')
+  body
+    .about
+      span
+        a(href="https://github.com/chaosdorf/dorfmap") dorfmap
+        |  -
+      span
+        a(href="https://wiki.chaosdorf.de/Lichtsteuerung")  about
+        |  -
+      span
+        a("https://wiki.chaosdorf.de/Lichtsteuerung#API")  API
+        |  -
+      span
+        a(href="/space_api.json")  spaceAPI
+    .content(ng-controller="MapController as map")
+      .dropdownwrapper(cg-busy="map.loadingPromise")
+        .dropdowncontainer(layout="horizontal",layout-align="space-around", cg-busy="{promise:shutdownPromise,message:'Shutting down.'}")
+          dropdownmenu(header="'Actions'", data="map.menu.shortcuts")
+          dropdownmenu(header="'Presets'", data="map.menu.presets")
+          dropdownmenu(header="'Layer'", data="map.menu.layers")
+      .overview(ng-controller="OverviewController as overview")
+        div(ng-repeat="lamp in overview.filteredLamps() track by lamp.name")
+          lamp

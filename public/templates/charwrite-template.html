@@ -1,13 +1,1 @@
-<material-dialog>
-<div cg-busy="loadingPromise">
-<material-radio-group ng-model="radioGroup">
-<material-radio-button noink ng-repeat="mode in modes" ng-value="mode.name">{{mode.description}}</material-radio-button>
-<material-radio-button noink value="custom">Custom</material-radio-button>
-<input type="text" placeholder="{{lamp.charwrite_text}}" ng-focus="radioGroup='custom'" ng-model="lamp.newText" ng-maxlength="10" maxlength="10" style="width:6em; margin:0 0 15px 50px;"></input>
-</material-radio-group>
-<div>
-	<material-button style="float:left; margin:5px;" ng-click="close()">Cancel</material-button>
-	<material-button style="float:right; margin:5px;" ng-click="save()">Save</material-button>
-</div>
-</div>
-</material-dialog>
+<material-dialog><div cg-busy="loadingPromise"><material-radio-group ng-model="radioGroup"><material-radio-button noink="noink" ng-repeat="mode in modes" ng-value="mode.name">{{mode.description}}</material-radio-button><material-radio-button noink="noink" value="custom">Custom</material-radio-button><input type="text" placeholder="{{lamp.charwrite_text}}" ng-focus="radioGroup='custom'" ng-model="lamp.newText" maxlength="10" style="width:6em, margin:0 0 15px 50px;"/></material-radio-group></div><div><material-button style="float:left;margin:5px;" ng-click="close()">Cancel</material-button><material-button style="float:right;margin:5px;" ng-click="save()">Save</material-button></div></material-dialog>
