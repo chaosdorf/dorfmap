@@ -33,7 +33,29 @@ my $bgdata_prefix = '/srv/www/bgdata';
 
 my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
-my (@killswitches);
+
+my @charwrite_modes = (
+	{
+		name        => 'blank',
+		description => 'Blank',
+	},
+	{
+		name        => 'clock',
+		description => 'Clock',
+	},
+	{
+		name        => 'date',
+		description => 'Date',
+	},
+	{
+		name        => 'hosts',
+		description => 'Online Hosts',
+	},
+	{
+		name        => 'power',
+		description => 'Power Consumption',
+	},
+);
 
 # ref (1):
 # some browsers send unsolicited HEAD requests e.g. when updating their
@@ -274,12 +296,6 @@ sub load_coordinates {    #{{{
 		$coordinates->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
 			  and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
-
-		if (    $coordinates->{$id}->{type}
-			and $coordinates->{$id}->{type} eq 'killswitch' )
-		{
-			push( @killswitches, $id );
-		}
 	}
 	return;
 }    #}}}
@@ -343,7 +359,7 @@ sub device_actionlink {
 
 	given ($type) {
 		when ('blinkenlight') { $action = 'blinkencontrol' }
-		when ( [qw[charwrite killswitch]] )      { $action = $type }
+		when ('charwrite')    { $action = $type }
 		when ( [qw[phone printer server wifi]] ) { $action = 'on' }
 		when ('light_au') { $action = 'toggle' }
 	}
@@ -406,45 +422,6 @@ sub device_image {
 	}
 
 	return "static/${prefix}${suffix}.png";
-}
-
-sub amp {
-	my ($id) = @_;
-
-	return
-	  sprintf(
-'<a href="%s" id="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, $id, device_image($id), 'amp', 'amp' );
-}
-
-sub blinkenlight {
-	my ($light) = @_;
-
-	my $ret = sprintf( '<a href="%s" id="link%s">', device_actionlink($light),
-		$light );
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="blinklight %s" alt="%s" />',
-		device_image($light), $light, $light, $light );
-
-	$ret .= '</a>';
-
-	return $ret;
-}
-
-sub charwrite {
-	my ($id) = @_;
-
-	my $ret
-	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($id), $id );
-
-	$ret
-	  .= sprintf(
-'<img src="/static/charwrite.png" class="charwrite %s" id="img%s" alt="%s" />',
-		$id, $id, $id );
-	$ret .= '</a>';
-
-	return $ret;
 }
 
 sub estimated_power_consumption {
@@ -517,17 +494,6 @@ sub infotext {
 	);
 	$buf .= '</ul>';
 
-	for my $cb (@killswitches) {
-		if ( get_device($cb) == 0 ) {
-			$buf
-			  .= sprintf(
-				'<img src="/static/warning.png" alt="!" /> Bus Circuit Breaker '
-				  . '<a href="/killswitch/%s">%s</a> is disconnected - '
-				  . 'some devices will not work<br/>',
-				$cb, $cb );
-		}
-	}
-
 	for my $h ( keys %{$coordinates} ) {
 		if ( exists $coordinates->{$h}->{dorfmap}
 			and device_status($h) == 0 )
@@ -563,79 +529,6 @@ sub json_status {
 	}
 
 	return $ret;
-}
-
-sub killswitch {
-	my ($cb) = @_;
-
-	my $ret
-	  = sprintf( '<a href="%s" id="link%s">', device_actionlink($cb), $cb );
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="killswitch %s" alt="%s" />',
-		device_image($cb), $cb, $cb, $cb );
-
-	$ret .= '</a>';
-
-	return $ret;
-}
-
-sub light {
-	my ( $light, $is_rw ) = @_;
-
-	my $ret = q{};
-
-	if ($is_rw) {
-		$ret .= sprintf( '<a href="%s" id="link%s" class="toggle">',
-			device_actionlink($light), $light );
-	}
-
-	$ret
-	  .= sprintf( '<img src="/%s" id="img%s" class="light ro %s" alt="%s" />',
-		device_image($light), $light, $light, $light, $light );
-
-	if ($is_rw) {
-		$ret .= sprintf('</a>');
-	}
-
-	return $ret;
-}
-
-sub muninlink {
-	my ( $plugin, $name ) = @_;
-
-	return
-	  sprintf(
-'<a href="https://intern.chaosdorf.de/munin/chaosdorf.dn42/figurehead.chaosdorf.dn42/%s.html">%s</a>',
-		$plugin, $name // $plugin );
-}
-
-sub pingdevice {
-	my ( $type, $host, $label ) = @_;
-
-	if ( exists $gpiomap->{$host} or exists $remotemap->{$host} ) {
-		return
-		  sprintf(
-'<a href="/on/%s" id="link%s"><img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" /></a>',
-			$host, $host, device_image($host), $host, $type, $host, $label,
-			$host );
-	}
-	else {
-		return
-		  sprintf(
-			'<img src="/%s" id="img%s" class="%s ro %s" title="%s" alt="%s" />',
-			device_image($host), $host, $type, $host, $label, $host, );
-	}
-
-}
-
-sub pump {
-	my ($id) = @_;
-
-	return
-	  sprintf(
-'<a href="%s" class="link%s" class="toggle"><img id="img%s" src="/%s" class="%s" title="%s" alt="amp" /></a>',
-		device_actionlink($id), $id, $id, device_image($id), 'pump', 'pump' );
 }
 
 sub status_number {
@@ -712,22 +605,6 @@ sub auto_text {
 
 }
 
-sub wikilink {
-	my ($site) = @_;
-	my $name   = $site;
-	my $image  = undef;
-
-	if ( $name =~ s{ ^ Host : }{}ox ) {
-		$image = '/static/host.png';
-	}
-
-	return sprintf(
-		'%s<a href="https://wiki.chaosdorf.de/%s">%s</a>',
-		$image ? "<img src=\"/$image\" alt=\"wl\" />" : q{},
-		$site, $name
-	);
-}
-
 #}}}
 
 #{{{ Shortcuts
@@ -780,11 +657,6 @@ $shortcuts->{shutdown} = sub {
 		# delayed poweroff so the shutdown announcement has sufficient time
 		if ( $type ~~ [qw[amp]] ) {
 			push( @delayed, $device );
-			next;
-		}
-
-		# do not trip circuit breakers
-		if ( $type ~~ [qw[killswitch]] ) {
 			next;
 		}
 
@@ -865,19 +737,6 @@ helper has_location => sub {
 	return $ret;
 };
 
-helper statusclass => sub {
-	my ( $self, $type, $location ) = @_;
-
-	if ( $type eq 'door' ) {
-		return slurp('/srv/www/doorstatus') || 'unknown';
-	}
-	if ( $type eq 'rtext' ) {
-		return 'rtext';
-	}
-
-	return q{};
-};
-
 helper statuslink => sub {
 	my ( $self, $type ) = @_;
 
@@ -894,26 +753,6 @@ helper status_image => sub {
 	my ( $self, $location ) = @_;
 
 	return device_image($location);
-};
-
-helper statusimage => sub {
-	my ( $self, $type, $location ) = @_;
-
-	given ($type) {
-		when ('amp')          { return amp($location) }
-		when ('blinkenlight') { return blinkenlight($location) }
-		when ('charwrite')    { return charwrite($location) }
-		when ('killswitch')   { return killswitch($location) }
-		when ('light')        { return light( $location, 1 ) }
-		when ('light_au')     { return light( $location, 2 ) }
-		when ('light_ro')     { return light( $location, 0 ) }
-		when ('pump')         { return pump($location) }
-		when ( [qw[phone printer server wifi]] ) {
-			return pingdevice( $type, $location, $location )
-		}
-	}
-
-	return q{};
 };
 
 helper statustext => sub {
@@ -1043,30 +882,7 @@ post '/ajax/blinkencontrol' => sub {
 get '/ajax/charwrite' => sub {
 	my ($self) = @_;
 
-	$self->render(
-		json => [
-			{
-				name        => 'blank',
-				description => 'Blank',
-			},
-			{
-				name        => 'clock',
-				description => 'Clock',
-			},
-			{
-				name        => 'date',
-				description => 'Date',
-			},
-			{
-				name        => 'hosts',
-				description => 'Online Hosts',
-			},
-			{
-				name        => 'power',
-				description => 'Power Consumption',
-			},
-		]
-	);
+	$self->render( json => \@charwrite_modes );
 };
 
 get '/ajax/infoarea' => sub {
@@ -1126,7 +942,6 @@ get '/ajax/menu' => sub {
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-	my $layer = $self->param('layer') // 'control';
 
 	my $red     = $self->param('red');
 	my $green   = $self->param('green');
@@ -1152,19 +967,8 @@ get '/blinkencontrol/:device' => sub {
 	}
 
 	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => $layer,
-			layers      => \@dd_layers,
-		);
-		return;
+
+		# TODO
 	}
 
 	if (    length($command) == 0
@@ -1213,26 +1017,10 @@ get '/blinkencontrol/:device' => sub {
 		$bc_presets = load_blinkencontrol();
 	}
 
-	$self->respond_to(
-		any => {
-			template => 'blinkencontrol' . ( $mobile ? '-m' : q{} ),
-			about => !$mobile,
-			coordinates => {},
-			device      => $device,
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-			bc_presets  => $bc_presets,
-		},
-		json => {
-			json => {
-				red    => 0,
-				green  => 0,
-				blue   => 0,
-				speed  => 0,
-				opmode => 0,
-			}
-		},
+	$self->render(
+		'mobile-blinkencontrol',
+		layout     => 'mobile',
+		bc_presets => $bc_presets,
 	);
 };
 
@@ -1254,27 +1042,14 @@ post '/ajax/charwrite' => sub {
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-	my $layer  = $self->param('layer') // 'control';
-	my $mobile = $self->param('m')     // q{};
 
 	my $text = $self->param('disptext');
 
 	my $controlpath = $remotemap->{$device};
 
 	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => $layer,
-			layers      => \@dd_layers,
-		);
-		return;
+
+		# TODO
 	}
 
 	# see (1)
@@ -1285,21 +1060,11 @@ get '/charwrite/:device' => sub {
 		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
 	}
 
-	$self->respond_to(
-		any => {
-			template => 'charwrite' . ( $mobile ? '-m' : q{} ),
-			about => !$mobile,
-			coordinates => {},
-			device      => $device,
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-		},
-		json => {
-			json => {
-				text => scalar $self->param('disptext'),
-			}
-		},
+	$self->render(
+		'mobile-charwrite',
+		layout => 'mobile',
+		device => $device,
+		modes  => \@charwrite_modes,
 	);
 };
 
@@ -1351,58 +1116,6 @@ get '/get_power_consumption' => sub {
 	return;
 };
 
-get '/killswitch/:device' => sub {
-	my ($self) = @_;
-	my $device = $self->stash('device');
-	my $action = $self->param('action');
-
-	my $controlpath = $remotemap->{$device};
-
-	if ( not $controlpath ) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => ['no such device'],
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => 'caution',
-			layers      => \@dd_layers,
-		);
-		return;
-	}
-
-	# see (1)
-	if ( $action and $self->req->method eq 'GET' ) {
-		if ( $action eq 'on' ) {
-			set_device( $device, 1 );
-		}
-		elsif ( $action eq 'off' ) {
-			set_device( $device, 0 );
-		}
-	}
-
-	$self->respond_to(
-		any => {
-			template    => 'killswitch',
-			about       => 1,
-			coordinates => {},
-			device      => $device,
-			status      => get_device($device),
-			errors      => [],
-			version     => $VERSION,
-			refresh     => 0,
-		},
-		json => {
-			json => {
-				status => get_device($device),
-			}
-		},
-	);
-};
-
 get '/list/all' => sub {
 	my ($self) = @_;
 	my $devices = {};
@@ -1447,45 +1160,6 @@ get '/list/all' => sub {
 	return;
 };
 
-get '/list/readables' => sub {
-	my ($self) = @_;
-
-	my @readables
-	  = grep { $coordinates->{$_}->{path} ne 'none' } keys %{$coordinates};
-
-	$self->respond_to(
-		json => { json => { devices => \@readables } },
-		txt => { text => join( "\n", @readables ) },
-		any => {
-			data   => 'not acceptable. use json or txt',
-			status => 406
-		},
-	);
-
-	return;
-};
-
-get '/list/writables' => sub {
-	my ($self) = @_;
-
-	my @writables = grep {
-		      $coordinates->{$_}->{path} ne 'none'
-		  and $coordinates->{$_}->{type} !~ m{ _ (?: ro | au ) $ }ox
-	  }
-	  keys %{$coordinates};
-
-	$self->respond_to(
-		json => { json => { devices => \@writables } },
-		txt => { text => join( "\n", @writables ) },
-		any => {
-			data   => 'not acceptable. use json or txt.',
-			status => 406
-		},
-	);
-
-	return;
-};
-
 get '/m' => sub {
 	my ($self) = @_;
 
@@ -1511,7 +1185,7 @@ get '/m' => sub {
 	}
 
 	$self->render(
-		'overview-m',
+		'mobile-main',
 		layout      => 'mobile',
 		version     => $VERSION,
 		areas       => \%areas,
@@ -1530,28 +1204,19 @@ get '/m/:name' => sub {
 	given ($name) {
 		when ('actions') {
 			$self->render(
-				'mlist',
-				layout      => 'mobile',
-				about       => 0,
-				label       => 'Actions',
-				items       => \@dd_shortcuts,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
+				'mobile-list',
+				layout => 'mobile',
+				label  => 'Actions',
+				items  => \@dd_shortcuts,
 			);
 		}
 		when ('presets') {
+			load_presets();
 			$self->render(
-				'mlist',
-				layout      => 'mobile',
-				about       => 0,
-				label       => 'Presets',
-				items       => \@dd_presets,
-				coordinates => {},
-				errors      => [],
-				version     => $VERSION,
-				refresh     => 0,
+				'mobile-list',
+				layout => 'mobile',
+				label  => 'Presets',
+				items  => \@dd_presets,
 			);
 		}
 		default {
@@ -1615,14 +1280,10 @@ any '/presets' => sub {
 
 	$self->render(
 		'presets',
-		about       => 1,
-		coordinates => {},
-		errors      => [],
-		presetdata  => $presets,
-		presets     => \@dd_presets,
-		toggles     => \@toggles,
-		version     => $VERSION,
-		refresh     => 0,
+		errors     => [],
+		presetdata => $presets,
+		presets    => \@dd_presets,
+		toggles    => \@toggles,
 	);
 
 	return;
@@ -1654,7 +1315,7 @@ get '/presets/apply/:name' => sub {
 		}
 	}
 
-	$self->redirect_to( $self->param('m') ? '/m' : '/' );
+	$self->redirect_to('/');
 	return;
 };
 

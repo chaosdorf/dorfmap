@@ -1,0 +1,15 @@
+<ul class="mlist charwrite">
+<li><a href="/m"><span>&larr; back</span></a></li>
+<li class="header">set mode</li>
+% for my $mode (@{$modes}) {
+<li><a href="?disptext=<%= $mode->{name} %>"><span><%= $mode->{description} %></span></a></li>
+% }
+<li class="header">set custom text</li>
+<li>
+%= form_for "/charwrite/$device" => begin
+%= text_field 'disptext';
+%= hidden_field m => 1;
+%= submit_button 'apply';
+%= end
+</li>
+</ul> <!-- mlist -->
