@@ -17,6 +17,7 @@
     "gulp-recess": "^1.0.0",
     "gulp-util": "^3.0.0",
     "jshint-stylish": "^0.4.0",
-    "socket.io-client": "^1.0.6"
+    "socket.io-client": "^1.0.6",
+    "uglifyify": "^2.5.0"
   }
 }

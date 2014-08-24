@@ -17,6 +17,7 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
   gulp.src(['src/js/*.js'])
   .pipe(browserify({
+    transform: [[{ global: true }, 'uglifyify']],
     insertGlobals: true,
     debug: false
   }))

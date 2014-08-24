@@ -22,12 +22,13 @@
 </div>
 
 <div class="content" ng-controller="MapController as map">
-
-<div layout="horizontal" layout-align="start" class="dropdowncontainer" cg-busy="map.loadingPromise">
-<dropdownmenu header="'Actions'" data="map.menu.shortcuts"></dropdownmenu>
-<dropdownmenu header="'Presets'" data="map.menu.presets"></dropdownmenu>
-<dropdownmenu header="'Layer'" data="map.menu.layers"></dropdownmenu>
-</div>
+	<div class="dropdownwrapper" cg-busy="map.loadingPromise">
+		<div layout="horizontal" layout-align="space-around" class="dropdowncontainer" cg-busy="{promise:shutdownPromise,message:'Shutting down.'}">
+			<dropdownmenu header="'Actions'" data="map.menu.shortcuts"></dropdownmenu>
+			<dropdownmenu header="'Presets'" data="map.menu.presets"></dropdownmenu>
+			<dropdownmenu header="'Layer'" data="map.menu.layers"></dropdownmenu>
+		</div>
+	</div>
 	<div class="overview" ng-controller="OverviewController as overview">
 		<div ng-repeat="lamp in overview.filteredLamps() track by lamp.name">
 			<lamp></lamp>

@@ -1,8 +1,8 @@
-<div class="dropdown">
-	<div class="dropdownheader">
-		<a href="/m/{{header|lowercase}}"><material-button class="material-button-raised material-button-colored">{{header}}</material-button></a>
+<div flex class="dropdown">
+	<div class="dropdownheader" ng-mouseenter="data.hide=false" ng-mouseleave="data.hide=true">
+		<material-button class="material-button-raised material-button-colored">{{header}}</material-button>
 	</div>
-	<div ng-hide="data.length==0 || data.hide" layout="vertical" class="dropdownmenu" ng-style="data.style">
+	<div ng-hide="data.length==0 || data.hide" layout="vertical" class="dropdownmenu" ng-style="data.style" ng-mouseenter="data.hide=false" ng-mouseleave="data.hide=true">
 	    <material-button style="width:100%;text-transform:none;" class="material-button-flat" ng-click="data.function(d[1])" ng-repeat="d in data">{{d[1]}}</material-button>
 	</div>
 </div>

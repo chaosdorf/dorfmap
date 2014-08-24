@@ -53,22 +53,19 @@
 		display: inline-block;
 	}
 
+	.dropdownwrapper {
+		z-index:5;
+		width:20em;
+	}
+
 	.dropdownheader {
-		padding-left: 0.5em;
-		padding-right:0.5em;
+		padding-left: 1em;
+		padding-right:1em;
 	}
 
 	.dropdown > .dropdownmenu {
-		visibility: hidden;
-		position: absolute;
-		z-index: 1;
 		background-color: white;
 		border: 1px solid black;
-	}
-
-	.dropdown:hover .dropdownmenu,
-	.dropdown .dropdownmenu:hover {
-		visibility: visible;
 	}
 
 	.dropdownmenu a {
@@ -103,6 +100,7 @@
 		height: 648px;
 		position: absolute;
 		left: 5px;
+		top:2.5em;
 	}
 
 	.popup {

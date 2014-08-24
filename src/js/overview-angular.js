@@ -28,54 +28,53 @@ function rateDelayUpdate(lamp, amount, $interval) {
         return socketFactory();
     });
 
-
-
     app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
 
         map.menu={};
-        map.menu.clicked=function (type) {
+        map.menu.clicked=function(type) {
             type.hide=true;
-            $timeout(function() {
-                type.hide=false;
-            }, 300);
+        };
+        $scope.leave=function(data) {
+            $timeout(function() {data.hide=true;},300);
         };
         $http.get('/ajax/menu.json').success(function(data) {
             Object.keys(data).forEach(function(key) {
                 map.menu[key]=data[key];
-                map.menu[key].hide=false;
+                map.menu[key].hide=true;
                 $scope.$emit("update");
             });
             map.menu.shortcuts.function=function(action) {
                 map.menu.clicked(map.menu.shortcuts);
                 $http.get('/action/'+action).success(function() {
                     var timeout = 0;
-                    if (action.indexOf('amps')==-1)
+                    if (action.indexOf('amps')===-1)
                         timeout=500;
-                    $scope.$emit('update');
+                    if (action==="shutdown")
+                        $scope.$emit('shutdown');
+                    else
+                        $timeout(function() {
+                            $scope.$emit('update');
+                        }, timeout);
                 });
             };
-            map.menu.shortcuts.style={};
-            map.menu.shortcuts.style['margin-left']="-4px";
             map.menu.presets.function=function() {
                 map.menu.clicked(map.menu.presets);
+                $http.get('/presets/apply/'+action).success(function() {
+                    $scope.$emit('update');
+                });
             };
             map.menu.layers.function=function(layer) {
                 map.menu.clicked(map.menu.layers);
                 map.layer=layer;
             };
-            map.menu.layers.style={};
-            map.menu.layers.style['margin-left']="4px";
         });
     }]);
 
-    app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', function($http, $scope, $sce, $interval, $materialDialog) {
+    app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout) {
         var overview = this;
         overview.lamps={};
-
-
-
 
         this.update=function() {
             var httpGet = $http.get('/list/all.json').success(
@@ -231,7 +230,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
             );
             if (!$scope.map.loadingPromise)
                 $scope.map.loadingPromise=httpGet;
+            return httpGet;
         };
+        $scope.$parent.$on('shutdown', function() { $scope.$parent.shutdownPromise = overview.update();});
         $scope.$parent.$on('update', overview.update);
         $interval(this.update, 20000);
 
