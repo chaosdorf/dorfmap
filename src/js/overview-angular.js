@@ -1,7 +1,7 @@
-//var io = require('socket.io-client');
-//global.window.io=io;
+var io = require('socket.io-client');
+global.window.io=io;
 var angular = require('angular');
-//require('angular-socket-io');
+require('angular-socket-io');
 require('angular-animate');
 require('./libs/angular-busy.min.js');
 require('./libs/angular-material.js');
