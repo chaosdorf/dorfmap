@@ -92,19 +92,19 @@ function rateDelayUpdate(lamp, amount, $interval) {
                             overview.lamps[key].imageClass=function() { return overview.lamps[key].canAccess() ? "lampimage":""; };
                             overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";};
                             overview.lamps[key].image=function() {
-                                if (key=="dorfdoor") return "/static/dorfdoor.png";
+                                if (key=="dorfdoor") return "/static/images/dorfdoor.png";
                                 var statusName=overview.lamps[key].status===1?"on":"off";
                                 if (key==="hackcenter_blau")
-                                    return "/static/hackcenter_blau_"+statusName+".png";
+                                    return "/static/images/hackcenter_blau_"+statusName+".png";
                                 if (overview.lamps[key].isAuto()) {
                                     var autoPrefix=overview.lamps[key].auto===0?"no":"";
                                     if (overview.lamps[key].status===-1)
-                                        return "/static/light_"+autoPrefix+"auto.png";
-                                    return "/static/light_"+statusName+"_"+autoPrefix+"auto.png";
+                                        return "/static/images/light_"+autoPrefix+"auto.png";
+                                    return "/static/images/light_"+statusName+"_"+autoPrefix+"auto.png";
                                 }
                                 if (overview.lamps[key].status===-1)
-                                    return '/static/'+overview.lamps[key].type+".png";
-                                return '/static/'+overview.lamps[key].type+"_"+statusName+".png";
+                                    return '/static/images/'+overview.lamps[key].type+".png";
+                                return '/static/images/'+overview.lamps[key].type+"_"+statusName+".png";
                             };
                             overview.lamps[key].style=function(dup) {
                                 var style={};
