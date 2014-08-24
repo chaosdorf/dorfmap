@@ -513,6 +513,45 @@ sub infotext {
 	return $buf;
 }
 
+sub json_blinkencontrol {
+	my ($device) = @_;
+	my $current_string = get_device( $device, text => 1 );
+	my $bc_presets = load_blinkencontrol();
+
+	$bc_presets->{blinkencontrol1}->{Off} = '32,0,0,0';
+
+	my $current_name
+	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
+	keys %{ $bc_presets->{blinkencontrol1} };
+	my $active_preset;
+
+	if ($current_name) {
+		$active_preset = {
+			name       => $current_name,
+			raw_string => $current_string,
+		};
+	}
+
+	my @json_presets;
+
+	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
+		my $string = $bc_presets->{blinkencontrol1}->{$bc_preset};
+		$string =~ s{ \s+ $ }{}ox;
+		push(
+			@json_presets,
+			{
+				name       => $bc_preset,
+				raw_string => $string,
+			}
+		);
+	}
+
+	return {
+		active  => $active_preset,
+		presets => \@json_presets,
+	};
+}
+
 sub json_status {
 	my ( $id, $embed ) = @_;
 
@@ -805,45 +844,9 @@ get '/action/:action' => sub {
 
 get '/ajax/blinkencontrol' => sub {
 	my ($self) = @_;
+	my $device = $self->param('device');
 
-	my $device         = $self->param('device');
-	my $current_string = get_device( $device, text => 1 );
-	my $bc_presets     = load_blinkencontrol();
-
-	$bc_presets->{blinkencontrol1}->{Off} = '32,0,0,0';
-
-	my $current_name
-	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
-	keys %{ $bc_presets->{blinkencontrol1} };
-	my $active_preset;
-
-	if ($current_name) {
-		$active_preset = {
-			name       => $current_name,
-			raw_string => $current_string,
-		};
-	}
-
-	my @json_presets;
-
-	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
-		my $string = $bc_presets->{blinkencontrol1}->{$bc_preset};
-		$string =~ s{ \s+ $ }{}ox;
-		push(
-			@json_presets,
-			{
-				name       => $bc_preset,
-				raw_string => $string,
-			}
-		);
-	}
-
-	$self->render(
-		json => {
-			active  => $active_preset,
-			presets => \@json_presets,
-		},
-	);
+	$self->render( json => json_blinkencontrol($device) );
 };
 
 post '/ajax/blinkencontrol' => sub {
@@ -1019,8 +1022,8 @@ get '/blinkencontrol/:device' => sub {
 
 	$self->render(
 		'mobile-blinkencontrol',
-		layout     => 'mobile',
-		bc_presets => $bc_presets,
+		layout  => 'mobile',
+		bc_data => json_blinkencontrol($device),
 	);
 };
 
