@@ -4,8 +4,9 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     browserify = require('gulp-browserify'),
     concat = require('gulp-concat'),
-    cssmin = require('gulp-cssmin');
-    recess = require('gulp-recess');
+    cssmin = require('gulp-cssmin'),
+    recess = require('gulp-recess'),
+    jade = require('gulp-jade');
 
 gulp.task('lint', function() {
   gulp.src('src/js/*.js')
@@ -17,9 +18,9 @@ gulp.task('lint', function() {
 gulp.task('scripts', function() {
   gulp.src(['src/js/*.js'])
   .pipe(browserify({
-    transform: [[{ global: true }, 'uglifyify']],
+    //transform: [[{ global: true }, 'uglifyify']],
     insertGlobals: true,
-    debug: false
+    debug: true
   }))
   .pipe(concat('dorfmap.min.js'))
   .pipe(gulp.dest('public/js'));
@@ -37,6 +38,12 @@ gulp.task('css', function() {
     .pipe(cssmin())
     .pipe(concat('dorfmap.min.css'))
     .pipe(gulp.dest('public/css'));
+});
+
+gulp.task('jade', function() {
+  gulp.src(['src/jade/*.jade','src/jade/templates/*.jade'],{base: 'src/jade'})
+    .pipe(jade())
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('default', ['lint', 'csslint', 'scripts','css']);

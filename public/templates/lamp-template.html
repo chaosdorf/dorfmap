@@ -1,5 +1,3 @@
-
-
 <div id="{{lamp.name}}" class="lamp" class="{{lamp.class()}}" ng-style="lamp.style()">
 	<img ng-hide="lamp.type==='rtext' || lamp.type==='infoarea'" class="{{lamp.imageClass()}}" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}"/>
 	<div class="{{lamp.statusClass()}}" ng-show="lamp.status_text">
