@@ -1,8 +1,13 @@
 <ul class="mlist blinkencontrol">
 <li><a href="/m"><span>&larr; back</span></a></li>
 <li class="header">set animation</li>
-% for my $cb_preset ( keys %{ $bc_presets->{blinkencontrol1} } ) {
-<li><a href="?command=<%= $bc_presets->{blinkencontrol1}->{$cb_preset} %>&amp;m=1"><span><%= $cb_preset %></span></a></li>
+% for my $preset ( @{ $bc_data->{presets} } ) {
+% my $class = q{};
+% if ($bc_data->{active} and $preset->{name} eq $bc_data->{active}->{name}) {
+% $class = 'active';
+% }
+<li><a href="?command=<%= $preset->{raw_string} %>&amp;m=1"><span class="<%= $class %>"><%= $preset->{name} %></span></a>
+</li>
 % }
 <li class="header">set steady color</li>
 <li class="preset">
