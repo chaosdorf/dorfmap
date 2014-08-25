@@ -400,7 +400,7 @@ sub device_image {
 		$prefix = 'light';
 	}
 
-	if ( -e "public/${id}_on.png" and -e "public/${id}_off.png" ) {
+	if ( -e "public/images/${id}_on.png" and -e "public/images/${id}_off.png" ) {
 		$prefix = $id;
 	}
 
@@ -421,7 +421,7 @@ sub device_image {
 		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
 	}
 
-	return "static/${prefix}${suffix}.png";
+	return "static/images/${prefix}${suffix}.png";
 }
 
 sub estimated_power_consumption {
@@ -500,7 +500,7 @@ sub infotext {
 		{
 			my $prefix = $coordinates->{$h}->{dorfmap};
 			$buf .= sprintf(
-'<img style="float: left;" src="/static/warning.png" alt="!" /> %s is offline — '
+'<img style="float: left;" src="/static/images/warning.png" alt="!" /> %s is offline — '
 				  . 'some devices may not work <ul><li>%s</li></ul><br/>',
 				$h,
 				join( '</li><li>',
@@ -549,6 +549,7 @@ sub json_blinkencontrol {
 	return {
 		active  => $active_preset,
 		presets => \@json_presets,
+		status 	=> get_device($device),
 	};
 }
 
@@ -876,10 +877,7 @@ post '/ajax/blinkencontrol' => sub {
 		system('blinkencontrol-feedback');
 	}
 
-	$self->render(
-		data   => q{},
-		status => 204
-	);
+	$self->render( json => json_blinkencontrol($device) );
 };
 
 get '/ajax/charwrite' => sub {

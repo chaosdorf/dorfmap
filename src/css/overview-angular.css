@@ -95,7 +95,7 @@
 	}
 
 	.overview {
-		background-image: url(/static/map.png);
+		background-image: url(/static/images/map.png);
 		width: 2202px;
 		height: 648px;
 		position: absolute;
@@ -113,7 +113,7 @@
 		opacity: .90;
 		min-width: 300px;
 	}
-	
+
 	:hover > .popup {
 		visibility: visible;
 	}
