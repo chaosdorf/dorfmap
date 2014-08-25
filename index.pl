@@ -31,7 +31,7 @@ my $auto_prefix   = '/etc/automatic_light_control';
 my $store_prefix  = '/srv/www/stored';
 my $bgdata_prefix = '/srv/www/bgdata';
 
-my @dd_layers = map { [ "/?layer=$_", $_ ] } qw(control caution wiki);
+my @dd_layers = map { { name => $_ } } qw(control caution wiki);
 my ( @dd_shortcuts, @dd_presets );
 
 my @charwrite_modes = (
@@ -211,6 +211,21 @@ sub unshutdown {
 	return;
 }
 
+sub onoff_deprecation_warning {
+	my ($self) = @_;
+
+	$self->app->log->debug('DEPRECATION WARNING');
+	$self->app->log->debug(
+		sprintf(
+			'Received a request for URL %s via %s',
+			$self->req->url->to_abs,
+			$self->req->headers->referrer,
+		)
+	);
+
+	return;
+}
+
 #}}}
 
 sub load_coordinates {    #{{{
@@ -316,13 +331,10 @@ sub load_presets {
 	if ( -e 'presets.db' ) {
 		$presets = lock_retrieve('presets.db');
 
-		@dd_presets = (
-			[ '/presets?', 'manage' ],
-			map { [ "/presets/apply/$_?", $_ ] } (
-				reverse sort {
-					$presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp}
-				} ( keys %{$presets} )
-			)
+		@dd_presets = map { { name => $_ } } (
+			reverse sort {
+				$presets->{$a}->{timestamp} <=> $presets->{$b}->{timestamp}
+			} ( keys %{$presets} )
 		);
 	}
 
@@ -400,7 +412,8 @@ sub device_image {
 		$prefix = 'light';
 	}
 
-	if ( -e "public/images/${id}_on.png" and -e "public/images/${id}_off.png" ) {
+	if ( -e "public/images/${id}_on.png" and -e "public/images/${id}_off.png" )
+	{
 		$prefix = $id;
 	}
 
@@ -649,7 +662,7 @@ sub auto_text {
 #{{{ Shortcuts
 
 sub make_shortcuts {
-	@dd_shortcuts = map { [ "/action/$_?", $_ ] } ( sort keys %{$shortcuts} );
+	@dd_shortcuts = map { { name => $_ } } ( sort keys %{$shortcuts} );
 }
 
 $shortcuts->{'amps on'} = sub {
@@ -808,6 +821,129 @@ get '/' => sub {
 	my ($self) = @_;
 
 	$self->render_static('index.html');
+	return;
+};
+
+post '/action' => sub {
+	my ($self) = @_;
+	my $params = $self->req->json;
+
+	if ( not exists $params->{action} ) {
+		$params = $self->req->params->to_hash;
+	}
+
+	my ( $action, $device ) = @{$params}{qw{action device}};
+
+	if ( not $action ) {
+		$self->render(
+			json   => { errors => ['the action argument is mandatory'] },
+			status => 400,
+		);
+		return;
+	}
+
+	if ( $action ~~ [qw[off on toggle]] ) {
+		my $id = $params->{device};
+		if ( not $id or not exists $coordinates->{$id} ) {
+			$self->render(
+				json   => { errors => ['invalid device specified'] },
+				status => 400,
+			);
+			return;
+		}
+	}
+
+	given ($action) {
+		when ('off') {
+			my $id = $params->{device};
+			if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+				if ( -e "/tmp/automatic_${id}" ) {
+					unlink("/tmp/automatic_${id}");
+				}
+			}
+			else {
+				set_device( $id, 0 );
+			}
+			$self->render( json => json_status($id) );
+		}
+		when ('on') {
+			my $id = $params->{device};
+			if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+				spew( "/tmp/automatic_${id}", q{} );
+			}
+			else {
+				unshutdown;
+				set_device( $id, 1 );
+			}
+			$self->render( json => json_status($id) );
+		}
+		when ('preset') {
+			my $preset = $params->{preset};
+
+			load_presets();
+
+			if ( not exists $presets->{$preset} ) {
+				$self->render(
+					json   => { errors => ['invalid preset requested'] },
+					status => 400,
+				);
+				return;
+			}
+
+			$presets->{$preset}->{timestamp} = time();
+			$presets->{$preset}->{usecount}++;
+			save_presets();
+
+			for my $id ( keys %{$coordinates} ) {
+				if ( exists $presets->{$preset}->{$id}
+					and $presets->{$preset}->{$id} != -1 )
+				{
+					set_device( $id, $presets->{$preset}->{$id} );
+				}
+			}
+			$self->render(
+				json   => {},
+				status => 204
+			);
+		}
+		when ('shortcut') {
+			my $shortcut = $params->{shortcut};
+			if ( not exists $shortcuts->{$shortcut} ) {
+				$self->render(
+					json   => { errors => ['invalid shortcut requested'] },
+					status => 400,
+				);
+				return;
+			}
+			my @errors = &{ $shortcuts->{$shortcut} }($self);
+			$self->render(
+				json => { errors => \@errors },
+			);
+		}
+		when ('toggle') {
+			my $id = $params->{device};
+			if ( $coordinates->{$id}->{type} eq 'light_au' ) {
+				if ( -e "/tmp/automatic_${id}" ) {
+					unlink("/tmp/automatic_${id}");
+				}
+				else {
+					spew( "/tmp/automatic_${id}", q{} );
+				}
+			}
+			else {
+				unshutdown;
+				my $state = get_device($id);
+				set_device( $id, $state ^ 1 );
+			}
+			$self->render( json => json_status($id) );
+		}
+		default {
+			$self->render(
+				json   => { errors => ['invalid action requested'] },
+				status => 400,
+			);
+		}
+	}
 	return;
 };
 
@@ -1399,6 +1535,8 @@ get '/toggle/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
+	onoff_deprecation_warning($self);
+
 	# see (1)
 	if ( $self->req->method ne 'GET' ) {
 		$self->redirect_to('/');
@@ -1438,6 +1576,8 @@ get '/off/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
 
+	onoff_deprecation_warning($self);
+
 	# see (1)
 	if ( $self->req->method ne 'GET' ) {
 		$self->redirect_to('/');
@@ -1468,6 +1608,8 @@ get '/off/:id' => sub {
 get '/on/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
+
+	onoff_deprecation_warning($self);
 
 	# see (1)
 	if ( $self->req->method ne 'GET' ) {
