@@ -25,12 +25,18 @@ function rateDelayUpdate(lamp, amount, $interval) {
     var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
 
     app.factory('socket', function (socketFactory) {
-        return socketFactory();
+        return socketFactory({
+          ioSocket: io.connect('/ws')
+        });
     });
 
     app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
         var map = this;
         map.layer=getURLParameter('layer') || 'control';
+
+        socket.on(msg, function () {
+          alert(msg);
+        });
 
         map.menu={};
         map.menu.clicked=function(type) {
@@ -72,7 +78,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
         });
     }]);
 
-    app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout) {
+    app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', 'socket', function($http, $scope, $sce, $interval, $materialDialog, socket) {
         var overview = this;
         overview.lamps={};
 
