@@ -4,16 +4,14 @@
 % }
 <li class="header menu" id="Actions">Actions</li>
 % for my $shortcut (@{$shortcuts}) {
-<li class="child_Actions"><a href="<%= $shortcut->[0] %>&amp;m=1"><span><%= $shortcut->[1] %></span></a></li>
+% my $name = $shortcut->{name};
+<li class="child_Actions"><a href="/action/<%= $name %>?&amp;m=1"><span><%= $name %></span></a></li>
 % }
 <li class="header menu" id="Presets">Presets</li>
+<li class="child_Presets"><a href="/presets?&amp;m=1" class="special"><span>manage</span></a></li>
 % for my $preset (@{$presets}) {
-% if ($preset->[1] eq 'manage') {
-<li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1" class="special"><span><%= $preset->[1] %></span></a></li>
-% }
-% else {
-<li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1"><span><%= $preset->[1] %></span></a></li>
-% }
+% my $name = $preset->{name};
+<li class="child_Presets"><a href="/presets/apply/<%= $name %>?&amp;m=1"><span><%= $name %></span></a></li>
 % }
 % for my $area (sort keys %{$areas}) {
 <li class="header" id="<%= $area %>"><%= $area %></li>

@@ -3,8 +3,8 @@ $(document).ready(function() {
 		$(this).click(function(e) {
 			e.preventDefault()
 			link = $(this)
-			$.get('/toggle/'+link.attr('id'), {m: 1}, function(data) {
-				$.getJSON("/list/all.json", {}, function(data) {
+			$.post('/action', {action: 'toggle', device: link.attr('id')}, function(data) {
+				$.getJSON('/list/all.json', {}, function(data) {
 					$.each(data, function(k, v) {
 						if (v["type"] != null) {
 							$('#'+k).css('background-image', 'url(/'+v["image"]+')')
