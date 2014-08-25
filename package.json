@@ -1,14 +1,15 @@
 {
   "name": "dorfmap",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "dorfmap",
   "dependencies": {
-    "gulp": "^3.8.7"
-  },
-  "devDependencies": {
     "angular": "^1.2.21",
     "angular-animate": "^1.2.16",
     "angular-socket-io": "^0.6.0",
+    "socket.io-client": "^1.0.6"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.7",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.3.4",
     "gulp-csslint": "^0.1.5",
@@ -18,7 +19,6 @@
     "gulp-recess": "^1.0.0",
     "gulp-util": "^3.0.0",
     "jshint-stylish": "^0.4.0",
-    "socket.io-client": "^1.0.6",
     "uglifyify": "^2.5.0"
   }
 }
