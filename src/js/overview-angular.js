@@ -26,7 +26,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
   app.factory('socket', ['socketFactory', function (socketFactory) {
     return socketFactory({
-      ioSocket: io.connect('localhost:3001')
+      //ioSocket: io.connect('localhost:3001')
     });
   }]);
 
