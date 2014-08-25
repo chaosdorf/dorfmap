@@ -168,7 +168,7 @@ sub get_device {
 			  =~ s{ [^\s,]+,([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^\s,]+ }{$1,$2,$3,$4}gx;
 		}
 		else {
-			if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n }ox ) {
+			if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n \d+ \n \d+ \n push $ }ox ) {
 				$state = 0;
 			}
 			else {
