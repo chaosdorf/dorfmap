@@ -549,6 +549,7 @@ sub json_blinkencontrol {
 	return {
 		active  => $active_preset,
 		presets => \@json_presets,
+		status 	=> get_device($device),
 	};
 }
 
@@ -876,10 +877,7 @@ post '/ajax/blinkencontrol' => sub {
 		system('blinkencontrol-feedback');
 	}
 
-	$self->render(
-		data   => q{},
-		status => 204
-	);
+	$self->render( json => json_blinkencontrol($device) );
 };
 
 get '/ajax/charwrite' => sub {
