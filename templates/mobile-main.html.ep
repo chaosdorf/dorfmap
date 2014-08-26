@@ -20,9 +20,12 @@
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
-% given (status_number($location)) {
-%     when ([1, 255]) { $class = 'on' }
-%     when (0) { $class = 'off' }
+% my $status = status_number($location);
+% if ($status == 1) {
+%   $class = 'on';
+% }
+% elsif ($status == 0) {
+%   $class = 'off';
 % }
 % if ($type ~~ [qw[amp light light_au pump printer]]) {
 %     $class .= ' toggle';
