@@ -15,8 +15,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
   lamp.rateDelayActive=true;
   $interval(function() {
     --lamp.rate_delay;
-    if (lamp.rate_delay <= 0)
+    if (lamp.rate_delay <= 0) {
       lamp.rateDelayActive=false;
+    }
   },1000,amount);
 }
 
@@ -49,15 +50,18 @@ function rateDelayUpdate(lamp, amount, $interval) {
         map.menu.clicked(map.menu.shortcuts);
         $http.get('/action/'+action).success(function() {
           var timeout = 0;
-          if (action.indexOf('amps')===-1)
+          if (action.indexOf('amps')===-1) {
             timeout=500;
-          if (action==="shutdown")
+          }
+          if (action==="shutdown") {
             $scope.$emit('shutdown');
-          else
+          }
+          else {
             $timeout(function() {
               $scope.$emit('update');
             }, timeout);
-        });
+          });
+        }
       };
       map.menu.presets.function=function() {
         map.menu.clicked(map.menu.presets);
@@ -89,42 +93,44 @@ function rateDelayUpdate(lamp, amount, $interval) {
               !overview.lamps[key].blocked;
             };
             overview.lamps[key].imageClass=function() { return overview.lamps[key].canAccess() ? "lampimage":""; };
-            overview.lamps[key].isAuto=function() {return overview.lamps[key].type==="light_au";};
+            overview.lamps[key].isAuto=function() { return overview.lamps[key].type==="light_au"; };
             overview.lamps[key].image=function() {
               if (key=="dorfdoor") return "/static/images/dorfdoor.png";
               var statusName=overview.lamps[key].status===1?"on":"off";
-              if (key==="hackcenter_blau")
-                return "/static/images/hackcenter_blau_"+statusName+".png";
+              if (key==="hackcenter_blau") return "/static/images/hackcenter_blau_"+statusName+".png";
               if (overview.lamps[key].isAuto()) {
                 var autoPrefix=overview.lamps[key].auto===0?"no":"";
-                if (overview.lamps[key].status===-1)
-                  return "/static/images/light_"+autoPrefix+"auto.png";
+                if (overview.lamps[key].status===-1) return "/static/images/light_"+autoPrefix+"auto.png";
                 return "/static/images/light_"+statusName+"_"+autoPrefix+"auto.png";
               }
-              if (overview.lamps[key].status===-1)
-                return '/static/images/'+overview.lamps[key].type+".png";
+              if (overview.lamps[key].status===-1) return '/static/images/'+overview.lamps[key].type+".png";
               return '/static/images/'+overview.lamps[key].type+"_"+statusName+".png";
             };
             overview.lamps[key].style=function(dup) {
               var style={};
               var l = overview.lamps[key];
-              if (dup)
+              if (dup) {
                 l=dup;
+              }
               style.left=l.x1+'px';
               style.top=l.y1+'px';
-              if (l.x2!=32)
+              if (l.x2!=32) {
                 style.width=l.x2+'px';
-              if (l.y2!=32)
+              }
+              if (l.y2!=32) {
                 style.height=l.y2+'px';
+              }
               return style;
             };
             overview.lamps[key].statusClass=function() {
-              if (overview.lamps[key].type!="infoarea" && overview.lamps[key].type!="rtext")
+              if (overview.lamps[key].type!="infoarea" && overview.lamps[key].type!="rtext") {
                 return "popup";
+              }
             };
             overview.lamps[key].class=function(){
-              if (key==="dorfdoor")
+              if (key==="dorfdoor") {
                 return overview.lamps[key].status === 0 ? "closed" : "open";
+              }
               return overview.lamps[key].type==='rtext'?'rtext':'';
             };
             overview.lamps[key].toggle=function($event) {
@@ -137,8 +143,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                       $scope.lamp=overview.lamps[key];
                       $scope.loadingPromise=$http.get('ajax/blinkencontrol?device='+key).success(function(data) {
                         $scope.animations=data.presets;
-                        if (data.active)
+                        if (data.active) {
                           $scope.animations.selected=data.active.raw_string;
+                        }
                       });
                       $scope.close = function() {
                         $hideDialog();
@@ -162,40 +169,42 @@ function rateDelayUpdate(lamp, amount, $interval) {
                       $scope.loadingPromise=$http.get('/ajax/charwrite').success(function(data) {
                         $scope.modes=data;
                         $scope.radioGroup="custom";
-                        if ($scope.modes.map(function(m){return m.name;}).indexOf($scope.lamp.charwrite_text)!=-1)
+                        if ($scope.modes.map(function(m){return m.name;}).indexOf($scope.lamp.charwrite_text)!=-1) {
                           $scope.radioGroup=$scope.lamp.charwrite_text;
-                        });
-                        $scope.customModes=['date','clock','hosts','power'];
-                        $scope.close = function() {
-                          $scope.lamp.newText='';
-                          $hideDialog();
-                        };
-                        $scope.save = function() {
-                          if ($scope.radioGroup === "custom")
-                            $scope.radioGroup=$scope.lamp.newText;
-                            $http.post("/ajax/charwrite", {device:$scope.lamp.name,text:$scope.radioGroup}).success(function() {
-                              $scope.lamp.charwrite_text=$scope.radioGroup;
-                            });
-                            $scope.close();
-                          };
-                        }]
+                        }
                       });
+                      $scope.customModes=['date','clock','hosts','power'];
+                      $scope.close = function() {
+                        $scope.lamp.newText='';
+                        $hideDialog();
+                      };
+                      $scope.save = function() {
+                        if ($scope.radioGroup === "custom") {
+                          $scope.radioGroup=$scope.lamp.newText;
+                        }
+                        $http.post("/ajax/charwrite", {device:$scope.lamp.name,text:$scope.radioGroup}).success(function() {
+                          $scope.lamp.charwrite_text=$scope.radioGroup;
+                        });
+                        $scope.close();
+                      };
+                    }]
+                  });
+                  return;
+                }
+                overview.lamps[key].blocked=true;
+                $http.get('/toggle/'+key+'?ajax=1').success(function(data){
+                  var oldStatus = overview.lamps[key].status;
+                  overview.lamps[key].status=parseInt(data.status);
+                  overview.lamps[key].auto=data.auto;
+                  overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
+                  if (((oldStatus === overview.lamps[key].status) || (oldStatus==1 && overview.lamps[key].status===0)) && data.rate_delay>0) {
+                    overview.lamps[key].rate_delay=data.rate_delay;
+                    overview.lamps[key].blocked=false;
+                    if (!overview.lamps[key].rateDelayActive) {
+                      rateDelayUpdate(overview.lamps[key],data.rate_delay, $interval);
+                    }
                     return;
                   }
-                  overview.lamps[key].blocked=true;
-                  $http.get('/toggle/'+key+'?ajax=1').success(function(data){
-                    var oldStatus = overview.lamps[key].status;
-                    overview.lamps[key].status=parseInt(data.status);
-                    overview.lamps[key].auto=data.auto;
-                    overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
-                    if (((oldStatus === overview.lamps[key].status) || (oldStatus==1 && overview.lamps[key].status===0)) && data.rate_delay>0) {
-                      overview.lamps[key].rate_delay=data.rate_delay;
-                      overview.lamps[key].blocked=false;
-                      if (!overview.lamps[key].rateDelayActive) {
-                        rateDelayUpdate(overview.lamps[key],data.rate_delay, $interval);
-                      }
-                      return;
-                    }
                   if (overview.lamps[key].isAuto()) {
                     var unsafeStatusText = overview.lamps[key].status_text.toString();
                     if (overview.lamps[key].auto==1 && unsafeStatusText.indexOf("(deaktiviert)")!=-1) {
@@ -214,20 +223,23 @@ function rateDelayUpdate(lamp, amount, $interval) {
             overview.lamps[key].rate_delay=data[key].rate_delay;
             overview.lamps[key].status_text=data[key].status_text;
           }
-          if (typeof(overview.lamps[key].status_text) == "string")
+          if (typeof(overview.lamps[key].status_text) == "string") {
             overview.lamps[key].status_text=$sce.trustAsHtml(overview.lamps[key].status_text);
-
-          if (!overview.lamps[key].status)
+          }
+          if (!overview.lamps[key].status) {
             overview.lamps[key].status=0;
-          else
+          }
+          else {
             overview.lamps[key].status=parseInt(overview.lamps[key].status);
+          }
           if (overview.lamps[key].status === 0 && !overview.lamps[key].rateDelayActive && overview.lamps[key].rate_delay > 0) {
             rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval);
           }
         });
       });
-      if (!$scope.map.loadingPromise)
+      if (!$scope.map.loadingPromise) {
         $scope.map.loadingPromise=httpGet;
+      }
       return httpGet;
     };
     $scope.$parent.$on('shutdown', function() { $scope.$parent.shutdownPromise = overview.update();});
@@ -236,14 +248,14 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
     this.filteredLamps=function() {
       return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer;})
-              .map(function(key) {return overview.lamps[key];});
+      .map(function(key) {return overview.lamps[key];});
     };
   }]);
 
   app.directive('lamp', function() {
     return {
       restrict:'E',
-        templateUrl:'/static/templates/lamp-template.html'
+      templateUrl:'/static/templates/lamp-template.html'
     };
   });
 
