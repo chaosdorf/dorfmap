@@ -25,9 +25,11 @@ function rateDelayUpdate(lamp, amount, $interval) {
   'use strict';
   var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
 
-  app.factory('socket', function (socketFactory) {
-    return socketFactory();
-  });
+  app.factory('socket', ['socketFactory', function (socketFactory) {
+    return socketFactory({
+      //ioSocket: io.connect('localhost:3001')
+    });
+  }]);
 
   app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
     var map = this;
@@ -60,8 +62,8 @@ function rateDelayUpdate(lamp, amount, $interval) {
             $timeout(function() {
               $scope.$emit('update');
             }, timeout);
-          });
-        }
+          }
+        });
       };
       map.menu.presets.function=function() {
         map.menu.clicked(map.menu.presets);
@@ -76,14 +78,24 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
   }]);
 
-  app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout) {
+  app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', 'socket', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout, socket) {
     var overview = this;
     overview.lamps={};
+
+    socket.on('toggle',function(data){
+      overview.lamps[data.name].update(data, true);
+    });
+
+    //UNCOMMENT THIS TO DISABLE WEBSOCKETS
+    //socket.removeAllListeners().destroy()
 
     this.update=function() {
       var httpGet = $http.get('/list/all.json').success(function(data){
         Object.keys(data).forEach(function(key) {
           if (!overview.lamps[key]) {
+            if (typeof(data[key].status_text)==="string") {
+              data[key].status_text=$sce.trustAsHtml(data.status_text);
+            }
             overview.lamps[key]=data[key];
             overview.lamps[key].rateDelayActive=false;
             overview.lamps[key].blocked=false;
@@ -91,6 +103,32 @@ function rateDelayUpdate(lamp, amount, $interval) {
               return  overview.lamps[key].is_writable &&
               overview.lamps[key].rate_delay <=0 &&
               !overview.lamps[key].blocked;
+            };
+            overview.lamps[key].update=function(data, complete) {
+              if (data) {
+                overview.lamps[key].status=data.status;
+                overview.lamps[key].type=data.type;
+                if (data.status===0) {
+                  overview.lamps[key].rate_delay=data.rate_delay;
+                }
+                if (typeof(data.status_text) === "string") {
+                  overview.lamps[key].status_text=$sce.trustAsHtml(data.status_text);
+                  if (data.infoarea) {
+                    overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
+                  }
+                }
+              }
+              if (complete) {
+                if (!overview.lamps[key].status) {
+                  overview.lamps[key].status=0;
+                }
+                else {
+                  overview.lamps[key].status=parseInt(overview.lamps[key].status);
+                }
+                if (overview.lamps[key].status === 0 && !overview.lamps[key].rateDelayActive && overview.lamps[key].rate_delay > 0) {
+                  rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval);
+                }
+              }
             };
             overview.lamps[key].imageClass=function() { return overview.lamps[key].canAccess() ? "lampimage":""; };
             overview.lamps[key].isAuto=function() { return overview.lamps[key].type==="light_au"; };
@@ -218,23 +256,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
               }
             };
           } else {
-            overview.lamps[key].status=data[key].status;
-            overview.lamps[key].type=data[key].type;
-            overview.lamps[key].rate_delay=data[key].rate_delay;
-            overview.lamps[key].status_text=data[key].status_text;
+            overview.lamps[key].update(data[key], false);
           }
-          if (typeof(overview.lamps[key].status_text) == "string") {
-            overview.lamps[key].status_text=$sce.trustAsHtml(overview.lamps[key].status_text);
-          }
-          if (!overview.lamps[key].status) {
-            overview.lamps[key].status=0;
-          }
-          else {
-            overview.lamps[key].status=parseInt(overview.lamps[key].status);
-          }
-          if (overview.lamps[key].status === 0 && !overview.lamps[key].rateDelayActive && overview.lamps[key].rate_delay > 0) {
-            rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval);
-          }
+          overview.lamps[key].update(null, true);
         });
       });
       if (!$scope.map.loadingPromise) {
@@ -244,7 +268,6 @@ function rateDelayUpdate(lamp, amount, $interval) {
     };
     $scope.$parent.$on('shutdown', function() { $scope.$parent.shutdownPromise = overview.update();});
     $scope.$parent.$on('update', overview.update);
-    $interval(this.update, 20000);
 
     this.filteredLamps=function() {
       return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer;})

@@ -1,0 +1,3 @@
+[submodule "dorfmap-websockets"]
+	path = dorfmap-websockets
+	url = git@github.com:chaosdorf/dorfmap-websockets.git

@@ -21,7 +21,7 @@ html(ng-app="dorfmap")
         a(href="/space_api.json")  spaceAPI
     .content(ng-controller="MapController as map")
       .dropdownwrapper(cg-busy="map.loadingPromise")
-        .dropdowncontainer(layout="horizontal",layout-align="space-around", cg-busy="{promise:shutdownPromise,message:'Shutting down.'}")
+        .dropdowncontainer(layout="horizontal",layout-align="center", cg-busy="{promise:shutdownPromise,message:'Shutting down.'}")
           dropdownmenu(header="'Actions'", data="map.menu.shortcuts")
           dropdownmenu(header="'Presets'", data="map.menu.presets")
           dropdownmenu(header="'Layer'", data="map.menu.layers")
