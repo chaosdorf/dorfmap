@@ -62,8 +62,8 @@ function rateDelayUpdate(lamp, amount, $interval) {
             $timeout(function() {
               $scope.$emit('update');
             }, timeout);
-          });
-        }
+          }
+        });
       };
       map.menu.presets.function=function() {
         map.menu.clicked(map.menu.presets);
@@ -85,6 +85,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
     socket.on('toggle',function(data){
       overview.lamps[data.name].update(data, true);
     });
+
+    //UNCOMMENT THIS TO DISABLE WEBSOCKETS
+    //socket.removeAllListeners().destroy()
 
     this.update=function() {
       var httpGet = $http.get('/list/all.json').success(function(data){
