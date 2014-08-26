@@ -232,6 +232,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                 overview.lamps[key].blocked=true;
                 $http.get('/toggle/'+key+'?ajax=1').success(function(data){
                   var oldStatus = overview.lamps[key].status;
+                  data.name=key;
+                  data.type=overview.lamps[key].type;
+                  socket.emit('toggle', data);
                   overview.lamps[key].status=parseInt(data.status);
                   overview.lamps[key].auto=data.auto;
                   overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
