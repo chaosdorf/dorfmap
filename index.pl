@@ -706,7 +706,7 @@ $shortcuts->{shutdown} = sub {
 			my $addrlo = $coordinates->{$device}->{address} % 255;
 
 			spew( "${path}/commands",
-				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\n" );
+				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\npush\n" );
 
 			if ( $path =~ m{donationprint}o ) {
 				system('blinkencontrol-donationprint');
