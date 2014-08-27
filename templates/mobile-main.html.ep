@@ -22,21 +22,38 @@
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
+% my $real_link;
 % given (status_number($location)) {
 %     when ([1, 255]) { $class = 'on' }
 %     when (0) { $class = 'off' }
 % }
-% if ($type ~~ [qw[amp light light_au pump printer]]) {
+% if ($type eq 'blinkenlight') {
+%     $real_link = "/blinkencontrol/${location}?m=1";
+% }
+% elsif ($type eq 'charwrite') {
+%     $real_link = "/charwrite/${location}?m=1";
+% }
+% elsif ($type ~~ [qw[amp light light_au pump printer]]) {
 %     $class .= ' toggle';
 % }
 % my $mname = $location;
 % $mname =~ s{ ^ $area _? }{}ix;
 <li class="child_<%= $area %>">
+% if ($real_link) {
+<a class=<%= $class %> fakelink" href="<%= $real_link %>"
+% }
+% else {
 <span class="<%= $class %> fakelink"
+% }
 id="<%= $location %>"
 style="background-image:url(/<%=status_image($location)%>);">
 <span><%== statustext($type, $location); %></span>
+% if ($real_link) {
+</a>
+% }
+% else {
 </span>
+% }
 </li>
 % }
 % }
