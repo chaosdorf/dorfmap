@@ -1,6 +1,0 @@
-<ul class="mlist">
-<li class="header"><%= $label %></li>
-% for my $item (@{$items}) {
-<li><a href="<%= $item->[0] %>"> <%= $item->[1] %> </a> </li>
-% }
-</ul> <!-- mlist -->

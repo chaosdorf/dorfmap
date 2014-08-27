@@ -1336,35 +1336,6 @@ get '/m' => sub {
 	return;
 };
 
-get '/m/:name' => sub {
-	my ($self) = @_;
-	my $name = $self->stash('name');
-
-	given ($name) {
-		when ('actions') {
-			$self->render(
-				'mobile-list',
-				layout => 'mobile',
-				label  => 'Actions',
-				items  => \@dd_shortcuts,
-			);
-		}
-		when ('presets') {
-			load_presets();
-			$self->render(
-				'mobile-list',
-				layout => 'mobile',
-				label  => 'Presets',
-				items  => \@dd_presets,
-			);
-		}
-		default {
-			$self->redirect_to('/m');
-		}
-	}
-	return;
-};
-
 any '/presets' => sub {
 	my ($self) = @_;
 	my $action = $self->param('action') // q{};
