@@ -32,7 +32,9 @@ ul.mlist li {
 	border-color: #666666 #666666 #333333 #333333;
 	border-style: solid;
 }
-ul.mlist li a {
+ul.mlist li a,
+ul.mlist li span.fakelink {
+	cursor: pointer;
 	padding: 10px;
 	font-size: 16px;
 	color: #ffffff;
@@ -41,19 +43,21 @@ ul.mlist li a {
 	background-position:5px 10px;
 	background-repeat: no-repeat;
 }
-ul.mlist li.preset a {
+ul.mlist li.preset span.fakelink {
 	float: left;
 	width: 10%;
 }
 ul.mlist div.preset-end {
 	clear: both;
 }
-ul.mlist li a span {
+ul.mlist li a span,
+ul.mlist li span.fakelink span {
 	margin-left: 40px;
 	display: inline-block;
 	vertical-align: middle;
 }
-ul.mlist li a img {
+ul.mlist li a img,
+ul.mlist li span.fakelink img {
 	vertical-align: middle;
 }
 

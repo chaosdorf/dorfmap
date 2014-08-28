@@ -4,41 +4,56 @@
 % }
 <li class="header menu" id="Actions">Actions</li>
 % for my $shortcut (@{$shortcuts}) {
-<li class="child_Actions"><a href="<%= $shortcut->[0] %>&amp;m=1"><span><%= $shortcut->[1] %></span></a></li>
+% my $name = $shortcut->{name};
+<li class="child_Actions runshortcut">
+<span class="fakelink"><span><%= $name %></span></span>
+</li>
 % }
 <li class="header menu" id="Presets">Presets</li>
+<li class="child_Presets"><a href="/presets?&amp;m=1" class="special"><span>manage</span></a></li>
 % for my $preset (@{$presets}) {
-% if ($preset->[1] eq 'manage') {
-<li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1" class="special"><span><%= $preset->[1] %></span></a></li>
-% }
-% else {
-<li class="child_Presets"><a href="<%= $preset->[0] %>&amp;m=1"><span><%= $preset->[1] %></span></a></li>
-% }
+%   my $name = $preset->{name};
+<li class="child_Presets runpreset">
+<span class="fakelink"><span><%= $name %></span></span>
+</li>
 % }
 % for my $area (sort keys %{$areas}) {
 <li class="header" id="<%= $area %>"><%= $area %></li>
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
-% my $status = status_number($location);
-% if ($status == 1) {
-%   $class = 'on';
+% my $real_link;
+% given (status_number($location)) {
+%     when ([1, 255]) { $class = 'on' }
+%     when (0) { $class = 'off' }
 % }
-% elsif ($status == 0) {
-%   $class = 'off';
+% if ($type eq 'blinkenlight') {
+%     $real_link = "/blinkencontrol/${location}?m=1";
 % }
-% if ($type ~~ [qw[amp light light_au pump printer]]) {
+% elsif ($type eq 'charwrite') {
+%     $real_link = "/charwrite/${location}?m=1";
+% }
+% elsif ($type ~~ [qw[amp light light_au pump printer]]) {
 %     $class .= ' toggle';
 % }
 % my $mname = $location;
 % $mname =~ s{ ^ $area _? }{}ix;
 <li class="child_<%= $area %>">
-<a class="<%= $class %>"
+% if ($real_link) {
+<a class=<%= $class %> fakelink" href="<%= $real_link %>"
+% }
+% else {
+<span class="<%= $class %> fakelink"
+% }
 id="<%= $location %>"
-style="background-image:url(/<%=status_image($location)%>);"
-href="<%= statuslink($location) %>?m=1">
+style="background-image:url(/<%=status_image($location)%>);">
 <span><%== statustext($type, $location); %></span>
+% if ($real_link) {
 </a>
+% }
+% else {
+</span>
+% }
 </li>
 % }
 % }
