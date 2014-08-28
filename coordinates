@@ -99,7 +99,7 @@ hackcenter_regal      600   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3 address=8 RGB-Streifen
 
 
-[layer=control type=amp ratelimit=30 watts=12]
+[layer=control type=amp ratelimit=30]
 amp0                 150  590    0    0 amp0 \
   area=Schleuse   Rear
 amp0                 350  590    0    0 amp0 \
@@ -117,31 +117,31 @@ amp3                 890  370    0    0 amp3 \
 
 [layer=control]
 phone                   6   24    0    0 none \
-  type=phone area=Lounge watts=4
+  type=phone area=Lounge
 
 clc1160               842   60    0    0 none \
-  type=printer area=Hackcenter watts=200
+  type=printer area=Hackcenter
 hp2100                386   60    0    0 donationprint1/4 \
-  type=printer area=Lounge watts=15 HP2100 (geht nach 45min automatisch aus)
+  type=printer area=Lounge HP2100 (geht nach 45min automatisch aus)
 
 dashpi                883  300    0    0 none \
-  type=server area=Hackcenter watts=4
+  type=server area=Hackcenter
 donationprint          70  390    0    0 none \
-  type=server area=Lounge watts=4 dorfmap=donationprint
+  type=server area=Lounge dorfmap=donationprint
 edge                 1232  400    0    0 none \
   type=server area=Serverraum
 feedback               64  585    0    0 none \
-  type=server area=Schleuse watts=4 dorfmap=feedback
+  type=server area=Schleuse dorfmap=feedback
 hyperion             1232  361    0    0 none \
   type=server area=Serverraum dorfmap=amp
 door                   35  585    0    0 none \
-  type=server area=Schleuse watts=8
+  type=server area=Schleuse
 
 ap-hackcenter         420  210    0    0 none \
-  type=wifi watts=5
+  type=wifi
 ap-hackcenter2        420  178    0    0 none \
-  type=wifi watts=5
+  type=wifi
 hinterzimmer          1428  120    0    0 none \
-  type=wifi watts=5
+  type=wifi
 nomspace              1130  268    0    0 none \
-  type=wifi watts=5
+  type=wifi
