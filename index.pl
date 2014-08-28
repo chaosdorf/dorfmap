@@ -119,6 +119,15 @@ sub set_device {
 		return 1;
 	}
 
+	# do not allow users to turn off a printer (they are automatically
+	# turned off after a while)
+	if (    $coordinates->{$id}->{type} eq 'printer'
+		and $value == 0
+		and not $opt{force} )
+	{
+		return 1;
+	}
+
 	spew( $tsfile, $value );
 
 	if ( exists $gpiomap->{$id} ) {
@@ -168,7 +177,9 @@ sub get_device {
 			  =~ s{ [^\s,]+,([^,]+),([^,]+),([^,]+),([^,]+),[^,]+,[^\s,]+ }{$1,$2,$3,$4}gx;
 		}
 		else {
-			if ( $state =~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n \d+ \n \d+ \n push $ }ox ) {
+			if ( $state
+				=~ m{ ^ .* \n .* \n 0 \n 0 \n 0 \n \d+ \n \d+ \n push $ }ox )
+			{
 				$state = 0;
 			}
 			else {
@@ -203,7 +214,8 @@ sub unshutdown {
 
 		for my $device ( keys %{$coordinates} ) {
 			if ( exists $coordinates->{$device}->{default} ) {
-				set_device( $device, $coordinates->{$device}->{default} );
+				set_device( $device, $coordinates->{$device}->{default},
+					force => 1 );
 			}
 		}
 	}
@@ -562,7 +574,7 @@ sub json_blinkencontrol {
 	return {
 		active  => $active_preset,
 		presets => \@json_presets,
-		status 	=> get_device($device),
+		status  => get_device($device),
 	};
 }
 
@@ -735,7 +747,7 @@ $shortcuts->{shutdown} = sub {
 			push( @errors, "please turn off printer ${device}" );
 		}
 		elsif ( $type eq 'charwrite' ) {
-			set_device( $device, q{ }, force => 1 );
+			set_device( $device, 'blank', force => 1 );
 		}
 		else {
 			set_device( $device, 0, force => 1 );
@@ -1607,7 +1619,6 @@ get '/on/:id' => sub {
 
 	return;
 };
-
 
 #}}}
 
