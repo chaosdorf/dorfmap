@@ -2,4 +2,4 @@
   .dropdownheader(ng-mouseenter="data.hide=false",ng-mouseleave="data.hide=true")
     material-button.material-button-raised.material-button-colored {{header}}
   .dropdownmenu(ng-hide="data.length==0||data.hide",layout="vertical",ng-style="data.style",ng-mouseenter="data.hide=false",ng-mouseleave="data.hide=true")
-    material-button.material-button-flat(style="width:100%;text-transform:none",ng-click="data.function(d[1])", ng-repeat="d in data") {{d[1]}}
+    material-button.material-button-flat(style="width:100%;text-transform:none",ng-click="data.function(d.name)", ng-repeat="d in data") {{d.name}}

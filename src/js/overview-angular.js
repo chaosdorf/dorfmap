@@ -46,11 +46,10 @@ function rateDelayUpdate(lamp, amount, $interval) {
       Object.keys(data).forEach(function(key) {
         map.menu[key]=data[key];
         map.menu[key].hide=true;
-        $scope.$emit("update");
       });
       map.menu.shortcuts.function=function(action) {
         map.menu.clicked(map.menu.shortcuts);
-        $http.get('/action/'+action).success(function() {
+        $http.post('/action', { action:'shortcut',shortcut:action }).success(function() {
           var timeout = 0;
           if (action.indexOf('amps')===-1) {
             timeout=500;
@@ -67,7 +66,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
       };
       map.menu.presets.function=function() {
         map.menu.clicked(map.menu.presets);
-        $http.get('/presets/apply/'+action).success(function() {
+        $http.post('/action', {action: 'preset', preset: action}).success(function() {
           $scope.$emit('update');
         });
       };
@@ -75,6 +74,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
         map.menu.clicked(map.menu.layers);
         map.layer=layer;
       };
+      $scope.$emit('update');
     });
   }]);
 
@@ -87,14 +87,14 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
 
     //UNCOMMENT THIS TO DISABLE WEBSOCKETS
-    //socket.removeAllListeners().destroy()
+    socket.removeAllListeners().destroy();
 
     this.update=function() {
       var httpGet = $http.get('/list/all.json').success(function(data){
         Object.keys(data).forEach(function(key) {
           if (!overview.lamps[key]) {
             if (typeof(data[key].status_text)==="string") {
-              data[key].status_text=$sce.trustAsHtml(data.status_text);
+              data[key].status_text=$sce.trustAsHtml(data[key].status_text);
             }
             overview.lamps[key]=data[key];
             overview.lamps[key].rateDelayActive=false;
@@ -230,7 +230,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   return;
                 }
                 overview.lamps[key].blocked=true;
-                $http.get('/toggle/'+key+'?ajax=1').success(function(data){
+                $http.post('/action', {action:'toggle',device:key}).success(function(data){
                   var oldStatus = overview.lamps[key].status;
                   data.name=key;
                   data.type=overview.lamps[key].type;
