@@ -62,10 +62,24 @@ ul.mlist li span.fakelink img {
 }
 
 ul.mlist li.header {
+	cursor: pointer;
 	padding: 15px 10px 10px;
 	font-size: 16px;
 	font-weight: bold;
 	font-size: 120%;
+}
+
+ul.mlist li.header .indicator {
+	color: #999999;
+	font-family: Monospace;
+}
+
+ul.mlist li.header .collapsed-indicator:before {
+	content: "▶ ";
+}
+
+ul.mlist li.header .expanded-indicator:before {
+	content: "▼ ";
 }
 
 ul.mlist li input {

@@ -2,14 +2,14 @@
 % if (not $self->browser->mobile) {
 <li><a href="/"><span>Desktop View</span></a></li>
 % }
-<li class="header menu" id="Actions">Actions</li>
+<li class="header menu" id="Actions"><span class="collapsed-indicator indicator"></span>Actions</li>
 % for my $shortcut (@{$shortcuts}) {
 % my $name = $shortcut->{name};
 <li class="child_Actions runshortcut">
 <span class="fakelink"><span><%= $name %></span></span>
 </li>
 % }
-<li class="header menu" id="Presets">Presets</li>
+<li class="header menu" id="Presets"><span class="collapsed-indicator indicator"></span>Presets</li>
 <li class="child_Presets"><a href="/presets?&amp;m=1" class="special"><span>manage</span></a></li>
 % for my $preset (@{$presets}) {
 %   my $name = $preset->{name};
@@ -18,7 +18,7 @@
 </li>
 % }
 % for my $area (sort keys %{$areas}) {
-<li class="header" id="<%= $area %>"><%= $area %></li>
+<li class="header" id="<%= $area %>"><span class="collapsed-indicator indicator"></span><%= $area %></li>
 % for my $location (@{ $areas->{$area} }) {
 % my $type = $coordinates->{$location}->{type};
 % my $class = q{};
