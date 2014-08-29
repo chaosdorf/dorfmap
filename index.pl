@@ -128,6 +128,15 @@ sub set_device {
 		return 1;
 	}
 
+	# do not allow users to do anything with a device marked as user_readonly
+	if ( $coordinates->{$id}->{user_readonly} and not $opt{force} ) {
+		return 1;
+	}
+
+	if ( $coordinates->{$id}->{inverted} ) {
+		$value ^= 1;
+	}
+
 	spew( $tsfile, $value );
 
 	if ( exists $gpiomap->{$id} ) {
@@ -204,6 +213,10 @@ sub get_device {
 		$state = slurp("${store_prefix}/amp.${id}") ? 1 : 0;
 	}
 
+	if ( $coordinates->{$id}->{inverted} ) {
+		$state ^= 1;
+	}
+
 	return $state;
 }
 
@@ -219,21 +232,6 @@ sub unshutdown {
 			}
 		}
 	}
-
-	return;
-}
-
-sub onoff_deprecation_warning {
-	my ($self) = @_;
-
-	$self->app->log->debug('DEPRECATION WARNING');
-	$self->app->log->debug(
-		sprintf(
-			'Received a request for URL %s via %s',
-			$self->req->url->to_abs,
-			$self->req->headers->referrer,
-		)
-	);
 
 	return;
 }
@@ -322,7 +320,8 @@ sub load_coordinates {    #{{{
 		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$coordinates->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
-			  and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
+			  and $id !~ m{ _ (?: au | r o ) $}ox
+			  and not $coordinates->{$id}->{user_readonly} ) ? 1 : 0;
 	}
 	return;
 }    #}}}
@@ -960,37 +959,6 @@ post '/action' => sub {
 	return;
 };
 
-get '/action/:action' => sub {
-	my ($self) = @_;
-	my $action = $self->stash('action');
-	my $layer = $self->param('layer') // 'control';
-	my @errors = ('no such action');
-
-	# see (1)
-	if ( exists $shortcuts->{$action} and $self->req->method eq 'GET' ) {
-		@errors = &{ $shortcuts->{$action} }($self);
-	}
-
-	if (@errors) {
-		$self->render(
-			'overview',
-			about       => 1,
-			version     => $VERSION,
-			coordinates => $coordinates,
-			shortcuts   => \@dd_shortcuts,
-			errors      => \@errors,
-			presets     => \@dd_presets,
-			refresh     => 0,
-			layer       => $layer,
-			layers      => \@dd_layers,
-		);
-	}
-	else {
-		$self->redirect_to('/');
-	}
-	return;
-};
-
 get '/ajax/blinkencontrol' => sub {
 	my ($self) = @_;
 	my $device = $self->param('device');
@@ -1418,36 +1386,6 @@ any '/presets' => sub {
 	return;
 };
 
-get '/presets/apply/:name' => sub {
-	my ($self) = @_;
-	my $name = $self->stash('name');
-
-	# see (1)
-	if ( $self->req->method ne 'GET' ) {
-		$self->redirect_to( $self->param('m') ? '/m' : '/' );
-		return;
-	}
-
-	load_presets();
-
-	if ( exists $presets->{$name}->{timestamp} ) {
-		$presets->{$name}->{timestamp} = time();
-		$presets->{$name}->{usecount}++;
-		save_presets();
-	}
-
-	for my $id ( keys %{$coordinates} ) {
-		if ( exists $presets->{$name}->{$id}
-			and $presets->{$name}->{$id} != -1 )
-		{
-			set_device( $id, $presets->{$name}->{$id} );
-		}
-	}
-
-	$self->redirect_to('/');
-	return;
-};
-
 post '/set' => sub {
 	my ($self) = @_;
 
@@ -1519,114 +1457,6 @@ get '/space_api' => sub {
 			status => 406
 		},
 	);
-};
-
-get '/toggle/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	onoff_deprecation_warning($self);
-
-	# see (1)
-	if ( $self->req->method ne 'GET' ) {
-		$self->redirect_to('/');
-		return;
-	}
-
-	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
-		if ( -e "/tmp/automatic_${id}" ) {
-			unlink("/tmp/automatic_${id}");
-		}
-		else {
-			spew( "/tmp/automatic_${id}", q{} );
-		}
-		return;
-	}
-	else {
-		unshutdown;
-	}
-
-	my $state = get_device($id);
-	my $res = set_device( $id, $state ^ 1 );
-
-	if ( $self->param('ajax') ) {
-		$self->render( json => json_status($id) );
-	}
-	elsif ($res) {
-		$self->redirect_to('/');
-	}
-	else {
-		$self->redirect_to('/?error=no+such+device');
-	}
-
-	return;
-};
-
-get '/off/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	onoff_deprecation_warning($self);
-
-	# see (1)
-	if ( $self->req->method ne 'GET' ) {
-		$self->redirect_to('/');
-		return;
-	}
-
-	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
-		if ( -e "/tmp/automatic_${id}" ) {
-			unlink("/tmp/automatic_${id}");
-		}
-	}
-
-	my $res = set_device( $id, 0 );
-
-	if ( $self->param('ajax') ) {
-		$self->render( json => json_status($id) );
-	}
-	elsif ($res) {
-		$self->redirect_to('/');
-	}
-	else {
-		$self->redirect_to('/?error=no+such+device');
-	}
-
-	return;
-};
-
-get '/on/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	onoff_deprecation_warning($self);
-
-	# see (1)
-	if ( $self->req->method ne 'GET' ) {
-		$self->redirect_to('/');
-		return;
-	}
-
-	if ( $coordinates->{$id}->{type} eq 'light_au' ) {
-		spew( "/tmp/automatic_${id}", q{} );
-		$self->redirect_to('/');
-		return;
-	}
-
-	unshutdown;
-	my $res = set_device( $id, 1 );
-
-	if ( $self->param('ajax') ) {
-		$self->render( json => json_status($id) );
-	}
-	elsif ($res) {
-		$self->redirect_to('/');
-	}
-	else {
-		$self->redirect_to('/?error=no+such+device');
-	}
-
-	return;
 };
 
 #}}}
