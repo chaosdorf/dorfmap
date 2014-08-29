@@ -128,7 +128,12 @@ sub set_device {
 		return 1;
 	}
 
-	if ($coordinates->{$id}->{inverted}) {
+	# do not allow users to do anything with a device marked as user_readonly
+	if ( $coordinates->{$id}->{user_readonly} and not $opt{force} ) {
+		return 1;
+	}
+
+	if ( $coordinates->{$id}->{inverted} ) {
 		$value ^= 1;
 	}
 
@@ -208,7 +213,7 @@ sub get_device {
 		$state = slurp("${store_prefix}/amp.${id}") ? 1 : 0;
 	}
 
-	if ($coordinates->{$id}->{inverted}) {
+	if ( $coordinates->{$id}->{inverted} ) {
 		$state ^= 1;
 	}
 
@@ -315,7 +320,8 @@ sub load_coordinates {    #{{{
 		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$coordinates->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
-			  and $id !~ m{ _ (?: au | r o ) $}ox ) ? 1 : 0;
+			  and $id !~ m{ _ (?: au | r o ) $}ox
+			  and not $coordinates->{$id}->{user_readonly} ) ? 1 : 0;
 	}
 	return;
 }    #}}}
