@@ -22,69 +22,75 @@ infoarea              450  406  900  600 none \
 temp_serverraum      1265  400    0    0 none
 power_serverraum        0    0    0    0 none
 
-[layer=control ratelimit=2]
+[layer=control ratelimit=2 area=Schleuse]
 logo                  224  460    0    0 feedback2/pwm2 \
-  type=light_au area=Schleuse watts=1       Chaosdorf-Logo
-treppe_w              350  525    0    0 feedback2/bin6 \
-  type=light area=Lounge watts=10           Treppe oben
-lounge_pflanze         40  312    0    0 donationprint1/7 \
-  type=light area=Lounge watts=4            Briefkasten
-lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump area=Lounge watts=5             Bewässerungspumpe
-lounge_roehre         260  180    0    0 feedback3/2 \
-  type=light ratelimit=90 area=Lounge watts=348 layer=caution  Putzlicht
-lounge_t1a            260   60    0    0 feedback3/4   \
-  type=light area=Lounge watts=35           Sofa / Pult
-lounge_t1b             60   60    0    0 feedback3/8   \
-  type=light area=Lounge watts=4            Sofa / Whiteboard
-lounge_t1c             60  200    0    0 feedback3/3   \
-  type=light area=Lounge watts=35           Ecksofa
-lounge_t2a            260  200    0    0 feedback3/5   \
-  type=light area=Lounge watts=35           Sofa Eingang
-lounge_t2b            260  330    0    0 feedback3/6   \
-  type=light area=Lounge watts=4            Treppe unten
+  type=light_au watts=1       Chaosdorf-Logo
 lounge_t2c            150  520    0    0 feedback3/7   \
-  type=light area=Schleuse watts=35           Membershelf
-lounge_weiss          130  100    0    0 feedback3/12  \
-  type=light area=Lounge watts=35           Tisch
+  type=light watts=35           Membershelf
 outdoor                 9  438    0    0 gpio17 \
-  type=light_au area=Schleuse watts=35      Eingang außen
-roehre_blau           748   20    0    0 feedback1/2 \
-  type=light ratelimit=15 area=Hackcenter watts=20       Blaue Röhre
+  type=light_au watts=35      Eingang außen
 schaufenster            5  595    0    0 feedback2/bin1 \
-  type=light_au area=Schleuse watts=5       Schaufenster außen
+  type=light_au watts=5       Schaufenster außen
+
+[layer=control ratelimit=2 area=Lounge]
+treppe_w              350  525    0    0 feedback2/bin6 \
+  type=light watts=10           Treppe oben
+lounge_pflanze         40  312    0    0 donationprint1/7 \
+  type=light watts=4            Briefkasten
+lounge_pumpe            5  142    0    0 donationprint1/11 \
+  type=pump watts=5             Bewässerungspumpe
+lounge_roehre         260  180    0    0 feedback3/2 \
+  type=light ratelimit=90 watts=348 layer=caution  Putzlicht
+lounge_t1a            260   60    0    0 feedback3/4   \
+  type=light watts=35           Sofa / Pult
+lounge_t1b             60   60    0    0 feedback3/8   \
+  type=light watts=4            Sofa / Whiteboard
+lounge_t1c             60  200    0    0 feedback3/3   \
+  type=light watts=35           Ecksofa
+lounge_t2a            260  200    0    0 feedback3/5   \
+  type=light watts=35           Sofa Eingang
+lounge_t2b            260  330    0    0 feedback3/6   \
+  type=light watts=4            Treppe unten
+lounge_weiss          130  100    0    0 feedback3/12  \
+  type=light watts=35           Tisch
+
+[layer=control ratelimit=2 area=Hackcenter]
+roehre_blau           748   20    0    0 feedback1/2 \
+  type=light ratelimit=15 watts=20       Blaue Röhre
 lightclc1160          887   63    0    0 feedback1/3 \
-  type=light area=Hackcenter watts=15  Steharbeitsplatz CLC
+  type=light watts=15  Steharbeitsplatz CLC
 hackcenter_3spot      580  125    0    0 feedback1/12 \
-  type=light area=Hackcenter watts=105      3D-Drucker
+  type=light watts=105      3D-Drucker
 hackcenter_w          686  280    0    0 feedback1/4 \
-  type=light ratelimit=5 area=Hackcenter watts=20       Tischreihe (Spots)
+  type=light ratelimit=5 watts=20       Tischreihe (Spots)
 hackcenter_blau       535  355  894  408 feedback1/5 \
-  type=light ratelimit=7 area=Hackcenter watts=24       Tischreihe (Blau)
+  type=light ratelimit=7 watts=24       Tischreihe (Blau)
 hackcenter_spots      700  180    0    0 feedback1/6 \
-  type=light ratelimit=10 area=Hackcenter watts=30       Deckenlicht
+  type=light ratelimit=10 watts=30       Deckenlicht
 hackcenter_roehre     600  180    0    0 feedback1/7 \
-  type=light ratelimit=90 area=Hackcenter layer=caution watts=348  Putzlicht
+  type=light ratelimit=90 layer=caution watts=348  Putzlicht
 hackcenter_regal1     480   60    0    0 feedback5/1 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 1 (links)
+  type=light watts=1     LED-Streifen Regal 1 (links)
 hackcenter_regal2     515   60    0    0 feedback5/3 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 2
+  type=light watts=1     LED-Streifen Regal 2
 hackcenter_regal3     550   60    0    0 feedback5/5 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 3
+  type=light watts=1     LED-Streifen Regal 3
 hackcenter_regal4     640   60    0    0 feedback5/7 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 4
+  type=light watts=1     LED-Streifen Regal 4
 hackcenter_regal5     670   60    0    0 feedback5/8 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 5
+  type=light watts=1     LED-Streifen Regal 5
 hackcenter_regal6     705   60    0    0 feedback5/6 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 6
+  type=light watts=1     LED-Streifen Regal 6
 hackcenter_regal7     740   60    0    0 feedback5/4 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 7
+  type=light watts=1     LED-Streifen Regal 7
 hackcenter_regal8     775   60    0    0 feedback5/2 \
-  type=light area=Hackcenter watts=1     LED-Streifen Regal 8 (rechts)
+  type=light watts=1     LED-Streifen Regal 8 (rechts)
+
+[layer=control ratelimit=2 area=Nomspace]
 borg16                1280  205   0    0 feedback6/bin7 \
-  type=light area=Nomspace watts=6 default=1 Borg16
+  type=light watts=6 default=1 Borg16
 durchgang             1400  180   0    0 feedback6/bin3 \
-  type=light area=Nomspace watts=6       Durchgang Cave
+  type=light watts=6       Durchgang Cave
 
 [layer=control]
 lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
