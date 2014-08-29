@@ -1215,32 +1215,6 @@ get '/get/:id' => sub {
 	return;
 };
 
-get '/get_power_consumption' => sub {
-	my ($self) = @_;
-
-	my $power_p1 = slurp('/srv/www/flukso/30_p1');
-	my $power_p2 = slurp('/srv/www/flukso/30_p2');
-	my $power_p3 = slurp('/srv/www/flukso/30_p3');
-
-	$self->respond_to(
-		json => {
-			json => {
-				power => estimated_power_consumption,
-				p1    => $power_p1,
-				p2    => $power_p2,
-				p3    => $power_p3
-			}
-		},
-		txt => { text => estimated_power_consumption },
-		any => {
-			data   => estimated_power_consumption,
-			status => 406
-		},
-	);
-
-	return;
-};
-
 get '/list/all' => sub {
 	my ($self) = @_;
 	my $devices = {};
