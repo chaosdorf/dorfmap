@@ -27,7 +27,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
   app.factory('socket', ['socketFactory', function (socketFactory) {
     return socketFactory({
-      //ioSocket: io.connect('localhost:3001')
+      ioSocket: io.connect('172.22.26.56:3001')
     });
   }]);
 
@@ -101,7 +101,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
 
     //UNCOMMENT THIS TO DISABLE WEBSOCKETS
-    socket.removeAllListeners().destroy();
+    //socket.removeAllListeners().destroy();
 
     this.update=function() {
       var httpGet = $http.get('/list/all.json').success(function(data){
