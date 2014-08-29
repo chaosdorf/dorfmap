@@ -16,7 +16,6 @@ use Storable qw(retrieve lock_nstore lock_retrieve);
 
 no if $] >= 5.018, warnings => "experimental::smartmatch";
 
-our $VERSION = qx{git describe --dirty} || '0.03';
 my $locations   = {};
 my $coordinates = {};
 my $gpiomap     = {};
@@ -1313,7 +1312,6 @@ get '/m' => sub {
 	$self->render(
 		'mobile-main',
 		layout      => 'mobile',
-		version     => $VERSION,
 		areas       => \%areas,
 		coordinates => $coordinates,
 		shortcuts   => \@dd_shortcuts,
