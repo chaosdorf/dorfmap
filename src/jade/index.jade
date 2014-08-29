@@ -8,7 +8,7 @@ html(ng-app="dorfmap")
     script(src='/static/js/dorfmap.min.js')
   body
     .about
-      span
+      spanatom
         a(href="https://github.com/chaosdorf/dorfmap") dorfmap
         |  -
       span
@@ -22,9 +22,12 @@ html(ng-app="dorfmap")
     .content(ng-controller="MapController as map")
       .dropdownwrapper(cg-busy="map.loadingPromise")
         .dropdowncontainer(layout="horizontal",layout-align="center", cg-busy="{promise:shutdownPromise,message:'Shutting down.'}")
-          dropdownmenu(header="'Actions'", data="map.menu.shortcuts")
-          dropdownmenu(header="'Presets'", data="map.menu.presets")
-          dropdownmenu(header="'Layer'", data="map.menu.layers")
+          .dropdownheader
+            material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('shortcuts')") Actions
+          .dropdownheader
+            material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('presets')") Presets
+          .dropdownheader
+            material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('layers')") Layer
       .overview(ng-controller="OverviewController as overview")
         div(ng-repeat="lamp in overview.filteredLamps() track by lamp.name")
           lamp

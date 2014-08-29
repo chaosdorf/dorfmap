@@ -1079,11 +1079,20 @@ get '/ajax/menu' => sub {
 	load_presets();
 
 	$self->render(
-		json => {
-			shortcuts => \@dd_shortcuts,
-			presets   => \@dd_presets,
-			layers    => \@dd_layers,
-		}
+		json => [
+			{
+				name    => 'shortcuts',
+				entries => \@dd_shortcuts
+			},
+			{
+				name    => 'presets',
+				entries => \@dd_presets
+			},
+			{
+				name    => 'layers',
+				entries => \@dd_layers
+			},
+		]
 	);
 	return;
 };

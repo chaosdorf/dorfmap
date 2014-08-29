@@ -1,5 +1,5 @@
-.dropdown(flex)
-  .dropdownheader(ng-mouseenter="data.hide=false",ng-mouseleave="data.hide=true")
-    material-button.material-button-raised.material-button-colored {{header}}
-  .dropdownmenu(ng-hide="data.length==0||data.hide",layout="vertical",ng-style="data.style",ng-mouseenter="data.hide=false",ng-mouseleave="data.hide=true")
-    material-button.material-button-flat(style="width:100%;text-transform:none",ng-click="data.function(d.name)", ng-repeat="d in data") {{d.name}}
+material-dialog
+  material-tabs(selected="selectedIndex" noink, style="width:30em;")
+    material-tab(ng-repeat="menu in dropdownData",label="{{menu.name}}")
+      div(style="height:{{dropdownData.height}}px;")
+        material-button.dropdownButton(ng-repeat="d in menu.entries",ng-click="menu.function(d.name, hide)") {{d.name}}

@@ -6,7 +6,16 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     cssmin = require('gulp-cssmin'),
     recess = require('gulp-recess'),
-    jade = require('gulp-jade');
+    jade = require('gulp-jade'),
+    exec = require('gulp-exec');
+
+gulp.task('perl', function() {
+  gulp.src('index.pl')
+      .pipe(exec('perl -c <%= file.path %>'))
+      .pipe(exec('perltidy -b <%= file.path %>'))
+      .pipe(exec('rm <%= file.path %>.bak'))
+      .pipe(exec.reporter());
+});
 
 gulp.task('lint', function() {
   gulp.src('src/js/*.js')
@@ -15,7 +24,17 @@ gulp.task('lint', function() {
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('scripts', function() {
+gulp.task('scriptsDebug', function() {
+  gulp.src(['src/js/*.js'])
+  .pipe(browserify({
+    insertGlobals: true,
+    debug: true
+  }))
+  .pipe(concat('dorfmap.min.js'))
+  .pipe(gulp.dest('public/js'));
+});
+
+gulp.task('scriptsRelease', function() {
   gulp.src(['src/js/*.js'])
   .pipe(browserify({
     transform: [[{ global: true, beautify: false, mangle: false }, 'uglifyify']],
@@ -46,4 +65,7 @@ gulp.task('jade', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('default', ['jade', 'lint', 'csslint', 'scripts','css']);
+gulp.task('debug', ['perl', 'jade', 'lint', 'scriptsDebug', 'csslint', 'css']);
+gulp.task('release', ['perl','jade','lint','scriptsRelease','csslint','css']);
+
+gulp.task('default', ['debug']);

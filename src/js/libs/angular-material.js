@@ -3,7 +3,7 @@
  * WIP Banner
  */
 (function(){
-angular.module('ngMaterial', [ 'ng', 'ngAnimate', 'material.services.attrBind', 'material.services.compiler', 'material.services.position', 'material.services.registry', 'material.services.throttle', "material.components.button","material.components.card","material.components.checkbox","material.components.content","material.components.dialog","material.components.form","material.components.icon","material.components.list","material.components.radioButton","material.components.sidenav","material.components.slider","material.components.tabs","material.components.toast","material.components.toolbar","material.components.whiteframe"]);
+angular.module('ngMaterial', [ 'ng', 'ngAnimate', 'material.services.attrBind', 'material.services.compiler', 'material.services.position', 'material.services.registry', 'material.services.throttle', 'material.decorators', 'material.services.expectAria', "material.components.button","material.components.card","material.components.checkbox","material.components.content","material.components.dialog","material.components.form","material.components.icon","material.components.list","material.components.radioButton","material.components.sidenav","material.components.slider","material.components.tabs","material.components.toast","material.components.toolbar","material.components.whiteframe"]);
 angular.module('ngAnimateSequence', ['ngAnimate'])
 
   .factory('$$animateAll', function() {
@@ -188,7 +188,7 @@ angular.module('ngAnimateSequence', ['ngAnimate'])
 
           then : function(fn) {
             return addToChain(0, null, null, function(element, duration, done) {
-              fn(element, done); 
+              fn(element, done);
             });
           },
 
@@ -317,7 +317,7 @@ angular.module('ngAnimateStylers', ['ngAnimateSequence'])
     });
 
     //Web Animations API
-    $$animateStylerProvider.register('webAnimations', ['$window', '$sniffer',   
+    $$animateStylerProvider.register('webAnimations', ['$window', '$sniffer',
                                                function($window,   $sniffer) {
       // TODO(matias): figure out other styles to add here
       var specialStyles = 'transform,transition,animation'.split(',');
@@ -360,7 +360,7 @@ angular.module('ngAnimateStylers', ['ngAnimateSequence'])
             iterations : iterations
           });
           animation.onfinish = function() {
-            element.css(finalStyles); 
+            element.css(finalStyles);
             done();
           };
         }
@@ -441,7 +441,7 @@ var Util = {
   },
   /**
    * Checks if the specified element has an ancestor (ancestor being parent, grandparent, etc)
-   * with the given attribute defined. 
+   * with the given attribute defined.
    *
    * Also pass in an optional `limit` (levels of ancestry to scan), default 8.
    */
@@ -461,11 +461,34 @@ var Util = {
    * Checks if two elements have the same parent
    */
   elementIsSibling: function elementIsSibling(element, otherElement) {
-    return element.parent().length && 
+    return element.parent().length &&
       (element.parent()[0] === otherElement.parent()[0]);
-  },
+  }
 };
 
+
+var Constant = {
+  ARIA : {
+    ROLE : {
+      BUTTON : 'button',
+      CHECKBOX : 'checkbox',
+      RADIO : 'radio',
+      RADIO_GROUP : 'radiogroup'
+    },
+    PROPERTY : {
+      CHECKED : 'aria-checked',
+      HIDDEN : 'aria-hidden',
+      EXPANDED : 'aria-expanded',
+      LABEL: 'aria-label'
+    },
+    STATE: {}
+  },
+  KEY_CODE : {
+    SPACE: 32,
+    LEFT_ARROW : 37,
+    RIGHT_ARROW : 39
+  }
+};
 
 /**
  * @ngdoc module
@@ -475,17 +498,17 @@ var Util = {
  * Ink and Popup Effects
  */
 angular.module('material.animations', [
-  'ngAnimateStylers', 
-  'ngAnimateSequence', 
+  'ngAnimateStylers',
+  'ngAnimateSequence',
   'material.services.position',
   'material.services.throttle'
 ])
-  .service('$materialEffects', [ 
-    '$animateSequence', 
-    '$ripple', 
-    '$rootElement', 
-    '$position', 
-    '$$rAF', 
+  .service('$materialEffects', [
+    '$animateSequence',
+    '$ripple',
+    '$rootElement',
+    '$position',
+    '$$rAF',
     '$sniffer',
     MaterialEffects
   ]);
@@ -517,10 +540,10 @@ function MaterialEffects($animateSequence, $ripple, $rootElement, $position, $$r
                angular.isDefined( window['TweenMax'] || window['TweenLite'] ) ? 'gsap'   :
                angular.isDefined( window['jQuery'] ) ? 'jQuery' : 'default';
 
- 
+
   var isWebkit = /webkit/i.test($sniffer.vendorPrefix);
   var TRANSFORM_PROPERTY = isWebkit ? 'webkitTransform' : 'transform';
-  var TRANSITIONEND_EVENT = 'transitionend' + 
+  var TRANSITIONEND_EVENT = 'transitionend' +
     (isWebkit ? ' webkitTransitionEnd' : '');
 
   // Publish API for effects...
@@ -557,7 +580,7 @@ function MaterialEffects($animateSequence, $ripple, $rootElement, $position, $$r
       var clickPos = $position.offset(clickElement);
       startPos = translateString(
         clickPos.left - element[0].offsetWidth / 2,
-        clickPos.top - element[0].offsetHeight / 2, 
+        clickPos.top - element[0].offsetHeight / 2,
         0
       ) + ' scale(0.2)';
     } else {
@@ -567,7 +590,7 @@ function MaterialEffects($animateSequence, $ripple, $rootElement, $position, $$r
     element
       .css(TRANSFORM_PROPERTY, startPos)
       .css('opacity', 0);
-    
+
     $$rAF(function() {
       $$rAF(function() {
         element
@@ -644,7 +667,7 @@ function MaterialEffects($animateSequence, $ripple, $rootElement, $position, $$r
 
 angular.module('material.animations')
   .service('$ripple', [
-    '$$rAF', 
+    '$$rAF',
     MaterialRippleService
   ]);
 /**
@@ -1108,7 +1131,7 @@ angular.module('material.animations')
 
 /**
  * noink/nobar/nostretch directive: make any element that has one of
- * these attributes be given a controller, so that other directives can 
+ * these attributes be given a controller, so that other directives can
  * `require:` these and see if there is a `no<xxx>` parent attribute.
  *
  * @usage
@@ -1346,9 +1369,11 @@ function attrNoDirective() {
  */
 angular.module('material.components.button', [
   'material.animations',
+  'material.services.expectAria'
 ])
   .directive('materialButton', [
     'ngHrefDirective',
+    '$expectAria',
     MaterialButtonDirective
   ]);
 
@@ -1367,6 +1392,7 @@ angular.module('material.components.button', [
  * @param {string=} type Optional attribute to specific button types (useful for forms); such as 'submit', etc.
  * @param {string=} ng-ref Optional attribute to support both ARIA and link navigation
  * @param {string=} href Optional attribute to support both ARIA and link navigation
+ * @param {string=} ariaLabel Publish the button label used by screen-readers for accessibility. Defaults to the radio button's text.
  *
  * @usage
  * <hljs lang="html">
@@ -1381,7 +1407,7 @@ angular.module('material.components.button', [
  *  </material-button>
  * </hljs>
  */
-function MaterialButtonDirective(ngHrefDirectives) {
+function MaterialButtonDirective(ngHrefDirectives, $expectAria) {
   var ngHrefDirective = ngHrefDirectives[0];
   return {
     restrict: 'E',
@@ -1406,7 +1432,10 @@ function MaterialButtonDirective(ngHrefDirectives) {
         innerElement.attr('disabled', attr.ngDisabled || attr.disabled);
         innerElement.attr('form', attr.form);
       }
-      innerElement.addClass('material-button-inner');
+      innerElement
+        .addClass('material-button-inner')
+        .append(element.contents());
+
       element.append(innerElement);
 
       return function postLink(scope, element, attr, ctrl, transclude) {
@@ -1415,6 +1444,8 @@ function MaterialButtonDirective(ngHrefDirectives) {
         transclude(scope, function(clone) {
           element.append(clone);
         });
+
+        $expectAria(element, 'aria-label', element.text());
       };
     }
   };
@@ -1431,8 +1462,10 @@ function MaterialButtonDirective(ngHrefDirectives) {
 angular.module('material.components.card', [
 ])
   .directive('materialCard', [
-    materialCardDirective 
+    materialCardDirective
   ]);
+
+
 
 /**
  * @ngdoc directive
@@ -1443,6 +1476,9 @@ angular.module('material.components.card', [
  *
  * @description
  * The `<material-card>` directive is a container element used within `<material-content>` containers.
+ *
+ * Cards have constant width and variable heights; where the maximum height is limited to what can
+ * fit within a single view on a platform, but it can temporarily expand as needed
  *
  * @usage
  * <hljs lang="html">
@@ -1470,11 +1506,13 @@ function materialCardDirective() {
  * @description Checkbox module!
  */
 angular.module('material.components.checkbox', [
-  'material.animations'
+  'material.animations',
+  'material.services.expectAria'
 ])
-  .directive('materialCheckbox', [ 
+  .directive('materialCheckbox', [
     'inputDirective',
-    materialCheckboxDirective 
+    '$expectAria',
+    materialCheckboxDirective
   ]);
 
 /**
@@ -1493,25 +1531,26 @@ angular.module('material.components.checkbox', [
  * @param {string=} ngChange Angular expression to be executed when input changes due to user interaction with the input element.
  * @param {boolean=} noink Use of attribute indicates use of ripple ink effects
  * @param {boolean=} disabled Use of attribute indicates the tab is disabled: no ink effects and not selectable
+ * @param {string=} ariaLabel Publish the button label used by screen-readers for accessibility. Defaults to the checkbox's text.
  *
  * @usage
  * <hljs lang="html">
- * <material-checkbox ng-model="isChecked">
+ * <material-checkbox ng-model="isChecked" aria-label="Finished?">
  *   Finished ?
  * </material-checkbox>
  *
- * <material-checkbox noink ng-model="hasInk">
+ * <material-checkbox noink ng-model="hasInk" aria-label="No Ink Effects">
  *   No Ink Effects
  * </material-checkbox>
  *
- * <material-checkbox disabled ng-model="isDisabled">
+ * <material-checkbox disabled ng-model="isDisabled" aria-label="Disabled">
  *   Disabled
  * </material-checkbox>
  *
  * </hljs>
  *
  */
-function materialCheckboxDirective(inputDirectives) {
+function materialCheckboxDirective(inputDirectives, $expectAria) {
   var inputDirective = inputDirectives[0];
 
   var CHECKED_CSS = 'material-checked';
@@ -1520,7 +1559,7 @@ function materialCheckboxDirective(inputDirectives) {
     restrict: 'E',
     transclude: true,
     require: '?ngModel',
-    template: 
+    template:
       '<div class="material-container">' +
         '<material-ripple start="center" class="circle" material-checked="{{ checked }}" ></material-ripple>' +
         '<div class="material-icon"></div>' +
@@ -1546,17 +1585,31 @@ function materialCheckboxDirective(inputDirectives) {
     };
 
     // Reuse the original input[type=checkbox] directive from Angular core.
-    // This is a bit hacky as we need our own event listener and own render 
+    // This is a bit hacky as we need our own event listener and own render
     // function.
     attr.type = 'checkbox';
+    attr.tabIndex = 0;
     inputDirective.link(scope, {
       on: angular.noop,
       0: {}
     }, attr, [ngModelCtrl]);
 
+    // We can't chain element.attr here because of a bug with jqLite
+    element.attr(Constant.ARIA.PROPERTY.CHECKED, checked);
+    element.attr('role', attr.type);
+    element.attr('tabIndex', attr.tabIndex);
     element.on('click', listener);
+    element.on('keypress', keypressHandler);
     ngModelCtrl.$render = render;
 
+    $expectAria(element, Constant.ARIA.PROPERTY.LABEL, element.text());
+
+    function keypressHandler(ev) {
+      if(ev.which === Constant.KEY_CODE.SPACE) {
+        ev.preventDefault();
+        listener(ev);
+      }
+    }
     function listener(ev) {
       if ( Util.isDisabled(element) ) return;
 
@@ -1569,7 +1622,7 @@ function materialCheckboxDirective(inputDirectives) {
 
     function render() {
       checked = ngModelCtrl.$viewValue;
-      element.attr('aria-checked', checked);
+      element.attr(Constant.ARIA.PROPERTY.CHECKED, checked);
       if(checked) {
         element.addClass(CHECKED_CSS);
       } else {
@@ -1617,8 +1670,6 @@ angular.module('material.components.content', [
 function materialContentDirective() {
   return {
     restrict: 'E',
-    transclude: true,
-    template: '<div class="material-content" ng-transclude></div>',
     controller: angular.noop,
     link: function($scope, $element, $attr) {
       $scope.$broadcast('$materialContentLoaded', $element);
@@ -1635,6 +1686,7 @@ angular.module('material.components.dialog', [
   'material.services.compiler'
 ])
   .directive('materialDialog', [
+    '$$rAF',
     MaterialDialogDirective
   ])
   .factory('$materialDialog', [
@@ -1647,9 +1699,18 @@ angular.module('material.components.dialog', [
     MaterialDialogService
   ]);
 
-function MaterialDialogDirective() {
+function MaterialDialogDirective($$rAF) {
   return {
-    restrict: 'E'
+    restrict: 'E',
+    link: function(scope, element, attr) {
+      var node = element[0];
+      $$rAF(function() {
+        var content = node.querySelector('.dialog-content');
+        if (content && content.scrollHeight > content.clientHeight) {
+          node.classList.add('dialog-content-overflow');
+        }
+      });
+    }
   };
 }
 
@@ -1660,7 +1721,7 @@ function MaterialDialogDirective() {
  *
  * @description
  *
- * The $materialDialog service opens a dialog over top of the app. 
+ * The $materialDialog service opens a dialog over top of the app.
  *
  * See the overview page for an example.
  *
@@ -1693,11 +1754,11 @@ function MaterialDialogDirective() {
  *
  * @paramType Options
  * @param {string=} templateUrl The url of a template that will be used as the content
- * of the dialog. Restrictions: the template must have an outer `material-dialog` element. 
+ * of the dialog. Restrictions: the template must have an outer `material-dialog` element.
  * Inside, use an element with class `dialog-content` for the dialog's content, and use
  * an element with class `dialog-actions` for the dialog's actions.
  * @param {string=} template Same as templateUrl, except this is an actual template string.
- * @param {DOMClickEvent=} targetEvent A click's event object. When passed in as an option, 
+ * @param {DOMClickEvent=} targetEvent A click's event object. When passed in as an option,
  * the location of the click will be used as the starting point for the opening animation
  * of the the dialog.
  * @param {boolean=} hasBackdrop Whether there should be an opaque backdrop behind the dialog.
@@ -1737,7 +1798,7 @@ function MaterialDialogService($timeout, $materialCompiler, $rootElement, $rootS
     }, options || {});
 
     // Incase the user provides a raw dom element, always wrap it in jqLite
-    options.appendTo = angular.element(options.appendTo); 
+    options.appendTo = angular.element(options.appendTo);
 
     // Close the old dialog
     recentDialog && recentDialog.then(function(destroyDialog) {
@@ -1749,8 +1810,8 @@ function MaterialDialogService($timeout, $materialCompiler, $rootElement, $rootS
       compileData.locals.$hideDialog = destroyDialog;
 
       var scope = $rootScope.$new(true);
-      var element = compileData.link(scope); 
-      var popInTarget = options.targetEvent && options.targetEvent.target && 
+      var element = compileData.link(scope);
+      var popInTarget = options.targetEvent && options.targetEvent.target &&
         angular.element(options.targetEvent.target);
       var backdrop;
 
@@ -1829,7 +1890,7 @@ angular.module('material.components.form', [])
  * @description
  * Use the `<material-input-group>` directive as the grouping parent of an `<material-input>` elements
  *
- * @usage 
+ * @usage
  * <hljs lang="html">
  * <material-input-group>
  *   <material-input type="text" ng-model="myText">
@@ -1881,7 +1942,7 @@ function materialInputDirective() {
         return;
       }
 
-      // When the input value changes, check if it "has" a value, and 
+      // When the input value changes, check if it "has" a value, and
       // set the appropriate class on the input group
       if (ngModelCtrl) {
         //Add a $formatter so we don't use up the render function
@@ -2038,12 +2099,14 @@ function materialItemDirective() {
  * @description radioButton module!
  */
 angular.module('material.components.radioButton', [
-  'material.animations'
+  'material.animations',
+  'material.services.expectAria'
 ])
   .directive('materialRadioGroup', [
     materialRadioGroupDirective
   ])
   .directive('materialRadioButton', [
+    '$expectAria',
     materialRadioButtonDirective
   ]);
 
@@ -2069,7 +2132,7 @@ angular.module('material.components.radioButton', [
  *
  *   <material-radio-button
  *        ng-repeat="d in colorOptions"
- *        ng-value="d.value">
+ *        ng-value="d.value" aria-label="{{ d.label }}">
  *
  *          {{ d.label }}
  *
@@ -2080,11 +2143,11 @@ angular.module('material.components.radioButton', [
  *
  */
 function materialRadioGroupDirective() {
-  Controller.prototype = createControllerProto();
+  RadioGroupController.prototype = createRadioGroupControllerProto();
 
   return {
     restrict: 'E',
-    controller: Controller,
+    controller: RadioGroupController,
     require: ['materialRadioGroup', '?ngModel'],
     link: link
   };
@@ -2094,14 +2157,33 @@ function materialRadioGroupDirective() {
       ngModelCtrl = ctrls[1] || {
         $setViewValue: angular.noop
       };
+
+    function keydownListener(ev) {
+
+      if (ev.which === Constant.KEY_CODE.LEFT_ARROW) {
+        ev.preventDefault();
+        rgCtrl.selectPrevious(element);
+      }
+      else if (ev.which === Constant.KEY_CODE.RIGHT_ARROW) {
+        ev.preventDefault();
+        rgCtrl.selectNext(element);
+      }
+    }
+
     rgCtrl.init(ngModelCtrl);
+
+    element.attr({
+      'role': Constant.ARIA.ROLE.RADIO_GROUP,
+      'tabIndex': '0'
+    })
+    .on('keydown', keydownListener);
   }
 
-  function Controller() {
+  function RadioGroupController() {
     this._radioButtonRenderFns = [];
   }
 
-  function createControllerProto() {
+  function createRadioGroupControllerProto() {
     return {
       init: function(ngModelCtrl) {
         this._ngModelCtrl = ngModelCtrl;
@@ -2123,13 +2205,56 @@ function materialRadioGroupDirective() {
       },
       setViewValue: function(value, eventType) {
         this._ngModelCtrl.$setViewValue(value, eventType);
-        // update the other checkboxes as well
+        // update the other radio buttons as well
         this.render();
       },
       getViewValue: function() {
         return this._ngModelCtrl.$viewValue;
+      },
+      selectNext: function(element) {
+        return selectButton('next', element);
+      },
+      selectPrevious : function(element) {
+        return selectButton('previous', element);
       }
     };
+  }
+  /**
+   * Select the grouping parent's next or previous radio/checkbox button.
+   * NOTE: this uses the iterator.js utility function...
+   */
+  function selectButton( direction,  parent, loop ) {
+    loop = angular.isUndefined(loop) ? true : !!loop;
+
+    var buttons = iterator( findAllButtons(parent), loop );
+
+    if ( buttons.count() ) {
+      var selected = findSelectedButton(parent);
+      var target = !selected                ? buttons.first()    :
+                   (direction =='previous') ? buttons.previous( selected ) : buttons.next( selected );
+
+      if ( target ) {
+        // Activate radioButton's click listener (triggerHandler won't send an actual click event)
+        angular.element(target).triggerHandler('click');
+      }
+    }
+  }
+  /**
+   *  Find all button children for specified element
+   *   NOTE: This guarantees giving us every radio, even grandchildren, and
+   *               us getting them in the proper order.
+   */
+  function findAllButtons(element) {
+    return Array.prototype.slice.call(
+      element[0].querySelectorAll('material-radio-button')
+    );
+  }
+
+  /**
+   * Find the currently selected button element (if any)
+   */
+  function findSelectedButton(element) {
+    return element[0].querySelector('material-radio-button.material-checked');
   }
 }
 
@@ -2155,22 +2280,23 @@ function materialRadioGroupDirective() {
  *    be set when selected.*
  * @param {string} value The value to which the expression should be set when selected.
  * @param {string=} name Property name of the form under which the control is published.
+ * @param {string=} ariaLabel Publish the button label used by screen-readers for accessibility. Defaults to the radio button's text.
  *
  * @usage
  * <hljs lang="html">
  *
- * <material-radio-button value="1">
+ * <material-radio-button value="1" aria-label="Label 1">
  *   Label 1
  * </material-radio-button>
  *
- * <material-radio-button ng-model="color" ng-value="specialValue">
+ * <material-radio-button ng-model="color" ng-value="specialValue" aria-label="Green">
  *   Green
  * </material-radio-button>
  *
  * </hljs>
  *
  */
-function materialRadioButtonDirective() {
+function materialRadioButtonDirective($expectAria) {
 
   var CHECKED_CSS = 'material-checked';
 
@@ -2183,7 +2309,7 @@ function materialRadioButtonDirective() {
                 '<div class="material-off"></div>' +
                 '<div class="material-on"></div>' +
               '</div>' +
-              '<div ng-transclude class="material-label" tab-index="0"></div>',
+              '<div ng-transclude class="material-label"></div>',
     link: link
   };
 
@@ -2191,12 +2317,16 @@ function materialRadioButtonDirective() {
     var lastChecked;
 
     rgCtrl.add(render);
-    element.on('$destroy', function() {
-      rgCtrl.remove(render);
-    });
-
-    element.on('click', listener);
     attr.$observe('value', render);
+
+    element
+      .on('click', listener)
+      .on('$destroy', function() {
+        rgCtrl.remove(render);
+      })
+      .attr('role', Constant.ARIA.ROLE.RADIO);
+
+    $expectAria(element, Constant.ARIA.PROPERTY.LABEL, element.text());
 
     function listener(ev) {
       if ( Util.isDisabled(element) ) return;
@@ -2212,7 +2342,7 @@ function materialRadioButtonDirective() {
         return;
       }
       lastChecked = checked;
-      element.attr('aria-checked', checked);
+      element.attr(Constant.ARIA.PROPERTY.CHECKED, checked);
       if (checked) {
         element.addClass(CHECKED_CSS);
       } else {
@@ -2235,12 +2365,12 @@ angular.module('material.components.sidenav', [
   'material.services.registry'
 ])
   .factory('$materialSidenav', [
-    '$materialComponentRegistry', 
-    materialSidenavService 
+    '$materialComponentRegistry',
+    materialSidenavService
   ])
   .directive('materialSidenav', [
     '$timeout',
-    materialSidenavDirective 
+    materialSidenavDirective
   ])
   .controller('$materialSidenavController', [
     '$scope',
@@ -2249,9 +2379,9 @@ angular.module('material.components.sidenav', [
     '$timeout',
     '$materialSidenav',
     '$materialComponentRegistry',
-    materialSidenavController 
+    materialSidenavController
   ]);
-  
+
 /**
  * @private
  * @ngdoc object
@@ -2431,8 +2561,8 @@ function materialSidenavDirective($timeout) {
  */
 angular.module('material.components.slider', [])
   .directive('materialSlider', [
-    '$window', 
-    materialSliderDirective 
+    '$window',
+    materialSliderDirective
   ]);
 
 /**
@@ -2537,6 +2667,7 @@ function materialSliderDirective($window) {
 }
 
 
+/* Disable Tab Pagination */
 /**
  * @ngdoc module
  * @name material.components.tabs
@@ -2550,23 +2681,23 @@ angular.module('material.components.tabs', [
   'material.services.registry'
 ])
   .controller('materialTabsController', [
-    '$scope', 
-    '$attrs', 
-    '$materialComponentRegistry', 
-    '$timeout', 
-    TabsController 
+    '$scope',
+    '$attrs',
+    '$materialComponentRegistry',
+    '$timeout',
+    TabsController
   ])
   .directive('materialTabs', [
-    '$compile', 
-    '$timeout', 
-    '$materialEffects', 
+    '$compile',
+    '$timeout',
+    '$materialEffects',
     '$window',
     '$$rAF',
     TabsDirective
   ])
-  .directive('materialTab', [ 
-    '$attrBind', 
-    TabDirective  
+  .directive('materialTab', [
+    '$attrBind',
+    TabDirective
   ]);
 
 /**
@@ -2658,15 +2789,17 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
     controller: [ '$scope', '$attrs', '$materialComponentRegistry', '$timeout', TabsController ],
 
     template:
-      '<div class="tabs-header" ng-class="{\'tab-header-fit\': pagination.active, \'tab-header-center\': center}">' +
+      '<div class="tabs-header" ng-class="{\'tab-paginating\': pagination.active}">' +
 
-      '  <div class="tab-paginator" ng-if="pagination.active && pagination.hasPrev" ng-click="pagination.prev()"><span>&lt;</span></div>' +
-
-      '  <div class="tabs-header-items"></div>' +
-
-      '  <div class="tab-paginator" ng-if="pagination.active && pagination.hasNext" ng-click="pagination.next()"><span>&gt;</span></div>' +
-
+      '  <div class="tab-paginator prev" ng-if="pagination.active" ng-click="pagination.hasPrev && pagination.prev()" ng-class="{active: pagination.hasPrev}">' +
+      '  </div>' +
+      '  <div class="tabs-header-items-container">' +
+      '    <div class="tabs-header-items"></div>' +
+      '  </div>' +
+      '  <div class="tab-paginator next" ng-if="pagination.active" ng-click="pagination.hasNext && pagination.next()" ng-class="{active: pagination.hasNext}">' +
+      '  </div>' +
       '  <material-ink-bar></material-ink-bar>' +
+
       '</div>'+
       '<div class="tabs-content ng-hide"></div>'
 
@@ -2689,7 +2822,6 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
         scope.noink = angular.isDefined(attrs.noink);
         scope.nobar = angular.isDefined(attrs.nobar);
         scope.nostretch = angular.isDefined(attrs.nostretch);
-        scope.center = angular.isDefined(attrs.center);
 
         // Publish for access by nested `<material-tab>` elements
         tabsController.noink = scope.noink;
@@ -2713,8 +2845,8 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
           }
         };
 
-        var updatePagination = configurePagination();
-        var updateInk = configureInk();
+        var updatePagination = configurePagination() || angular.noop;
+        var updateInk = configureInk() || angular.noop;
         var update = $$rAF.debounce(function() {
           /* See decorators.js for raf.debounce */
           updatePagination();
@@ -2743,13 +2875,12 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
 
           // Single inkBar is used for all tabs
           var inkBar = findNode("material-ink-bar", element);
+          var headerContainer = findNode('.tabs-header-items-container', element);
 
           // Immediately place the ink bar
-          updateInkBar(true);
+          refreshInkBar(true);
 
-          return function updateInkOnNextFrame() {
-            $$rAF(updateInkBar);
-          };
+          return $$rAF.debounce(refreshInkBar);
 
           /**
            * Update the position and size of the ink bar based on the
@@ -2757,21 +2888,26 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
            * @param tab
            * @param skipAnimation
            */
-          function updateInkBar(skipAnimation) {
+          function refreshInkBar(skipAnimation) {
             var tabElement = tabsController.selectedElement();
 
-            if ( angular.isDefined(tabElement) && angular.isDefined(inkBar) ) {
+            if ( tabElement && tabElement.length && angular.isDefined(inkBar) ) {
 
-              var tabNode = tabElement[0];
-              var width = tabNode.offsetWidth;
+              var width = tabElement.prop('offsetWidth');
+              var left = headerContainer.prop('offsetLeft') + tabElement.prop('offsetLeft') +
+                (scope.headerPos || 0);
+
+              if (tabElement.hasClass('pagination-hide')) {
+                width = 0;
+              }
+
               var styles = {
                 display : width > 0 ? 'block' : 'none',
                 width: width + 'px'
               };
-              styles[$materialEffects.TRANSFORM_PROPERTY] = 
-                'translate3d(' + tabNode.offsetLeft + 'px,0,0)';
+              styles[$materialEffects.TRANSFORM_PROPERTY] = 'translate3d(' + left + 'px,0,0)';
 
-              inkBar.toggleClass('animate', !skipAnimation).css(styles);
+              inkBar.toggleClass('animate', skipAnimation !== true).css(styles);
             }
 
           }
@@ -2779,68 +2915,88 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
 
         function configurePagination() {
           // Must match tab min-width rule in _tabs.scss
-          var TAB_MIN_WIDTH = 8 * 16;
+          var TAB_MIN_WIDTH = 8 * 12;
+          // Must match (2 * width of paginators) in scss
+          var PAGINATORS_WIDTH = (8 * 4) * 2;
+
           var pagination = scope.pagination = {
             next: function() { setPage(pagination.page + 1); },
             prev: function() { setPage(pagination.page - 1); }
           };
 
           var header = findNode('.tabs-header-items', element);
+          var headerContainer = findNode('.tabs-header-items-container', element);
 
-          scope.$watch('$selIndex', function(selectedIndex) {
-            if (!pagination.active) return;
+          scope.$watch('$selIndex', paginationWatchSelectedTab);
 
-            if (selectedIndex < pagination.tabStartIndex ||
-                selectedIndex > pagination.tabEndIndex) {
-              setPage(Math.floor(selectedIndex / pagination.pageLength));
-            }
-          });
+          return refreshPagination;
 
-          return paginationUpdate;
+          function setHeaderPos(x) {
+            header.css($materialEffects.TRANSFORM_PROPERTY, 'translate3d('+x+'px,0,0)');
+            scope.headerPos = x;
+          }
 
-          function paginationUpdate() {
-            var headerWidth = header.prop('offsetWidth');
+          function refreshPagination() {
+            var tabsWidth = element.prop('offsetWidth') - PAGINATORS_WIDTH;
             var tabs = header.children();
-            var paginationIsActive = TAB_MIN_WIDTH * tabs.length > headerWidth;
-            
-            if (paginationIsActive) {
-              pagination.pages = Math.ceil((TAB_MIN_WIDTH * tabs.length) / headerWidth);
-              pagination.pageLength = Math.floor(headerWidth / TAB_MIN_WIDTH);
-            }
+            var shouldPaginate = (TAB_MIN_WIDTH * tabs.length) > tabsWidth;
 
-            //If we go from pagination to non- or back, change a few things...
-            if (paginationIsActive !== pagination.active) {
-              if (paginationIsActive) {
-                pagination.page = 0;
+            // Whether we're changing from active to inactive or vice-versa
+            var isNewState = shouldPaginate !== pagination.active;
+            pagination.active = shouldPaginate;
+
+            if (shouldPaginate) {
+              pagination.pagesCount = Math.ceil((TAB_MIN_WIDTH * tabs.length) / tabsWidth);
+              pagination.itemsPerPage = Math.max(1, Math.floor(tabs.length / pagination.pagesCount));
+              pagination.tabWidth = tabsWidth / pagination.itemsPerPage;
+              header.css('width', pagination.tabWidth * tabs.length + 'px');
+
+              if (isNewState) {
+                // If we just activated pagination, go to page 0 and watch the
+                // selected tab index to be sure we're on the same page
+                setPage(0);
               } else {
-                tabs.css('display', '');
+                setPage(Math.min(pagination.page, pagination.pagesCount - 1));
+              }
+            } else {
+              if (isNewState) {
+                setHeaderPos(0);
+                header.css('width', '');
               }
             }
-            pagination.active = paginationIsActive;
-            setPage(pagination.page);
           }
 
           function setPage(page) {
-            pagination.tabStartIndex = page * pagination.pageLength;
-            pagination.tabEndIndex = pagination.tabStartIndex + pagination.pageLength - 1;
+            var tabs = header.children();
+
+            pagination.startIndex = page * pagination.itemsPerPage;
+            pagination.endIndex = pagination.startIndex + pagination.itemsPerPage - 1;
 
             pagination.hasPrev = page > 0;
-            pagination.hasNext = page < pagination.pages;
+            pagination.hasNext = (page + 1) * pagination.itemsPerPage < tabs.length;
 
-            var tabs = header.children();
-            angular.forEach(tabs, function(node, i) {
-              var isHidden = i < pagination.tabStartIndex || i > pagination.tabEndIndex;
-              node.style.display = isHidden ?  'none' : '';
-            });
+            setHeaderPos(-page * pagination.itemsPerPage * pagination.tabWidth);
 
-            if (scope.$selIndex < pagination.tabStartIndex ||
-                scope.$selIndex > pagination.tabEndIndex) {
+            if (scope.$selIndex < pagination.startIndex ||
+                scope.$selIndex > pagination.endIndex) {
               tabsController.selectAt(
-                page > pagination.page ?  pagination.tabStartIndex : pagination.tabEndIndex
+                page > pagination.page ?  pagination.startIndex : pagination.endIndex,
+                true
               );
             }
             pagination.page = page;
+            updateInk();
           }
+
+          function paginationWatchSelectedTab(selectedIndex) {
+            if (!pagination.active) return;
+
+            if (selectedIndex < pagination.startIndex ||
+                selectedIndex > pagination.endIndex) {
+              setPage(Math.floor(selectedIndex / pagination.itemsPerPage));
+            }
+          }
+
         }
 
         /**
@@ -2852,7 +3008,7 @@ function TabsDirective($compile, $timeout, $materialEffects, $window, $$rAF) {
           var align  = attrs.tabsAlign || "top";
           var container = findNode('.tabs-content', element);
 
-          if ( align == "bottom") {
+          if (align == "bottom") {
             element.prepend(container);
           }
         }
@@ -3337,7 +3493,7 @@ function TabsController($scope, $attrs, $materialComponentRegistry, $timeout ) {
    * Select specified tab; deselect all others (if any selected)
    * @param tab
    */
-  function selectTab(tab) {
+  function selectTab(tab, noUpdate) {
     if ( tab == selected ) return;
 
     var activate = makeActivator(true),
@@ -3353,7 +3509,9 @@ function TabsController($scope, $attrs, $materialComponentRegistry, $timeout ) {
     $scope.$selIndex = String(selected.$index || list.indexOf(selected));
 
     // update the tabs ink to indicate the selected tab
-    onTabsChanged();
+    if (!noUpdate) {
+      onTabsChanged();
+    }
 
     return selected;
   }
@@ -3362,13 +3520,13 @@ function TabsController($scope, $attrs, $materialComponentRegistry, $timeout ) {
    * Select tab based on its index position
    * @param index
    */
-  function selectTabAt(index) {
+  function selectTabAt(index, noUpdate) {
     if (list.inRange(index)) {
       var matches = list.findBy("$index", index),
         it = matches ? matches[0] : null;
 
       if (it != selected) {
-        selectTab(it);
+        selectTab(it, noUpdate);
       }
     }
   }
@@ -3836,7 +3994,7 @@ function QpToastDirective() {
  * @module material.components.toast
  *
  * @description
- * Open a toast notification on any position on the screen, with an optional 
+ * Open a toast notification on any position on the screen, with an optional
  * duration.
  *
  * Only one toast notification may ever be active at any time. If a new toast is
@@ -3874,7 +4032,7 @@ function QpToastDirective() {
  * @param {string=} template Same as templateUrl, except this is an actual
  * template string.
  * @param {number=} duration How many milliseconds the toast should stay
- * active before automatically closing.  Set to 0 to disable duration. 
+ * active before automatically closing.  Set to 0 to disable duration.
  * Default: 3000.
  * @param {string=} position Where to place the toast. Available: any combination
  * of 'bottom', 'left', 'top', 'right', 'fit'. Default: 'bottom left'.
@@ -3882,7 +4040,7 @@ function QpToastDirective() {
  * The controller will be injected the local `$hideToast`, which is a function
  * used to hide the toast.
  * @param {string=} locals An object containing key/value pairs. The keys will
- * be used as names of values to inject into the controller. For example, 
+ * be used as names of values to inject into the controller. For example,
  * `locals: {three: 3}` would inject `three` into the controller with the value
  * of 3.
  * @param {object=} resolve Similar to locals, except it takes promises as values
@@ -3891,6 +4049,17 @@ function QpToastDirective() {
  */
 function QpToastService($timeout, $rootScope, $materialCompiler, $rootElement, $animate) {
   var recentToast;
+  function toastOpenClass(position) {
+    return 'material-toast-open-' +
+      (position.indexOf('top') > -1 ? 'top' : 'bottom');
+  }
+
+  // If the $rootElement is the document (<html> element), be sure to append it to the
+  // body instead.
+  var toastParent = $rootElement.find('body');
+  if ( !toastParent.length ) {
+    toastParent = $rootElement;
+  }
 
   return showToast;
 
@@ -3904,7 +4073,7 @@ function QpToastService($timeout, $rootScope, $materialCompiler, $rootElement, $
       duration: 3000,
       // [unimplemented] Whether to disable swiping
       swipeDisabled: false,
-      // Supports any combination of these class names: 'bottom top left right fit'. 
+      // Supports any combination of these class names: 'bottom top left right fit'.
       // Default: 'bottom left'
       position: 'bottom left',
     }, options || {});
@@ -3914,13 +4083,16 @@ function QpToastService($timeout, $rootScope, $materialCompiler, $rootElement, $
     recentToast = $materialCompiler.compile(options).then(function(compileData) {
       // Controller will be passed a `$hideToast` function
       compileData.locals.$hideToast = destroy;
-      
+
       var scope = $rootScope.$new();
       var element = compileData.link(scope);
+
+      var toastParentClass = toastOpenClass(options.position);
       element.addClass(options.position);
+      toastParent.addClass(toastParentClass);
 
       var delayTimeout;
-      $animate.enter(element, $rootElement, null, function() {
+      $animate.enter(element, toastParent, null, function() {
         if (options.duration) {
           delayTimeout = $timeout(destroy, options.duration);
         }
@@ -3929,6 +4101,7 @@ function QpToastService($timeout, $rootScope, $materialCompiler, $rootElement, $
       return destroy;
 
       function destroy() {
+        toastParent.removeClass(toastParentClass);
         $timeout.cancel(delayTimeout);
         $animate.leave(element, function() {
           scope.$destroy();
@@ -3989,12 +4162,12 @@ angular.module('material.components.toolbar', [
  * </div>
  * </hljs>
  *
- * @param {boolean=} scrollShrink Whether the header should shrink away as 
- * the user scrolls down, and reveal itself as the user scrolls up. 
+ * @param {boolean=} scrollShrink Whether the header should shrink away as
+ * the user scrolls down, and reveal itself as the user scrolls up.
  *
- * Note: for scrollShrink to work, the toolbar must be a sibling of a 
+ * Note: for scrollShrink to work, the toolbar must be a sibling of a
  * `material-content` element, placed before it. See the scroll shrink demo.
- */ 
+ */
 function materialToolbarDirective($$rAF, $sniffer) {
   var isWebkit = $sniffer.vendorPrefix.toLowerCase().indexOf('webkit') !==- 1;
   var TRANSFORM_PROPERTY = isWebkit ? 'webkitTransform' : 'transform';
@@ -4010,7 +4183,7 @@ function materialToolbarDirective($$rAF, $sniffer) {
 
       function setupScrollShrink() {
         //makes it take X times as long for header to dissapear
-        var HEIGHT_FACTOR = 2; 
+        var HEIGHT_FACTOR = 2;
         var height = element.prop('offsetHeight') * HEIGHT_FACTOR;
         // Current "y" position of scroll
         var y = 0;
@@ -4062,7 +4235,7 @@ function materialToolbarDirective($$rAF, $sniffer) {
 
 angular.module('material.components.whiteframe', []);
 
-angular.module('ng')
+angular.module('material.decorators', [])
 .config(['$provide', function($provide) {
   $provide.decorator('$$rAF', ['$delegate', '$rootScope', rAFDecorator]);
 
@@ -4093,7 +4266,7 @@ angular.module('ng')
         if (!alreadyQueued) {
           alreadyQueued = true;
           $$rAF(function() {
-            invokeApply ? 
+            invokeApply ?
               $rootScope.$apply(function() {
                 queueCb.apply(context, queueArgs);
               }) :
@@ -4108,12 +4281,53 @@ angular.module('ng')
   }
 }]);
 
+angular.module('material.services.expectAria', [])
+
+.service('$expectAria', [
+  '$log',
+  ExpectAriaService
+]);
+
+function ExpectAriaService($log) {
+  var messageTemplate = 'ARIA: Attribute "%s", required for accessibility, is missing on "%s"!';
+  var defaultValueTemplate = 'Default value was set: %s="%s".';
+
+  return function expect(element, attrName, defaultValue) {
+
+    var node = element[0];
+    if (!node.hasAttribute(attrName)) {
+      var hasDefault = angular.isDefined(defaultValue);
+
+      if (hasDefault) {
+        defaultValue = String(defaultValue).trim();
+        // $log.warn(messageTemplate + ' ' + defaultValueTemplate,
+        //           attrName, getTagString(node), attrName, defaultValue);
+        element.attr(attrName, defaultValue);
+      } else {
+        // $log.warn(messageTemplate, attrName, getTagString(node));
+      }
+    }
+  };
+
+  /**
+   * Gets the tag definition from a node's outerHTML
+   * @example getTagDefinition(
+   *   '<material-button foo="bar">Hello</material-button>'
+   * ) // => '<material-button foo="bar">'
+   */
+  function getTagString(node) {
+    var html = node.outerHTML;
+    var closingIndex = html.indexOf('>');
+    return html.substring(0, closingIndex + 1);
+  }
+}
+
 angular.module('material.services.attrBind', [
 ])
   .factory('$attrBind', [
-    '$parse', 
-    '$interpolate', 
-    MaterialAttrBind 
+    '$parse',
+    '$interpolate',
+    MaterialAttrBind
   ]);
 
 /**
@@ -4261,7 +4475,7 @@ function materialCompilerService($q, $http, $injector, $compile, $controller, $t
     * with the following properties:
     *
     *   - `{element}` â€“ `element` â€“ an uncompiled angular element compiled using the provided template.
-    *   
+    *
     *   - `{function(scope)}`  â€“ `link` â€“ A link function, which, when called, will compile
     *     the elmeent and instantiate options.controller.
     *
@@ -4289,7 +4503,7 @@ function materialCompilerService($q, $http, $injector, $compile, $controller, $t
     var locals = options.locals || {};
     var transformTemplate = options.transformTemplate || angular.identity;
 
-    // Take resolve values and invoke them.  
+    // Take resolve values and invoke them.
     // Resolves can either be a string (value: 'MyRegisteredAngularConst'),
     // or an invokable 'factory' of sorts: (value: function ValueGetter($dependency) {})
     angular.forEach(resolve, function(value, key) {
@@ -4353,8 +4567,8 @@ function materialCompilerService($q, $http, $injector, $compile, $controller, $t
 
 angular.module('material.services.position', [])
   .factory('$position', [
-    '$document', 
-    '$window', 
+    '$document',
+    '$window',
     MaterialPositionService
   ]);
 
@@ -4518,8 +4732,8 @@ function MaterialPositionService($document, $window) {
 angular.module('material.services.registry', [
 ])
   .factory('$materialComponentRegistry', [
-    '$log', 
-    materialComponentRegistry 
+    '$log',
+    materialComponentRegistry
   ]);
 
 /**
@@ -4586,7 +4800,7 @@ angular.module('material.services.throttle', [ ])
   .factory('$throttle', [
     '$timeout',
     '$q',
-    '$log', 
+    '$log',
     MaterialThrottleService
   ]);
   /**

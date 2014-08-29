@@ -63,25 +63,9 @@
 		padding-right:1em;
 	}
 
-	.dropdown > .dropdownmenu {
-		background-color: white;
-		border: 1px solid black;
-	}
-
-	.dropdownmenu a {
-		display: block;
-		padding-left: 0.5em;
-		padding-right: 0.5em;
-		padding-top: 0.3em;
-		padding-bottom: 0.3em;
-		border-bottom: 1px solid gray;
-	}
-	.dropdownmenu a:hover {
-		cursor:pointer;
-	}
-
-	.dropdownmenu .special {
-		border-bottom: 3px double gray;
+	.dropdownButton {
+		display:block;
+		text-transform:capitalize;
 	}
 
 	a.backlink {

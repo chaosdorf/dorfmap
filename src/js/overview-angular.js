@@ -31,48 +31,62 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
   }]);
 
-  app.controller("MapController", ['$http', '$timeout', '$scope', function ($http, $timeout, $scope) {
+  app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', function ($http, $timeout, $scope, $materialDialog) {
     var map = this;
     map.layer=getURLParameter('layer') || 'control';
-
-    map.menu={};
-    map.menu.clicked=function(type) {
-      type.hide=true;
-    };
-    $scope.leave=function(data) {
-      $timeout(function() {data.hide=true;},300);
-    };
     $http.get('/ajax/menu.json').success(function(data) {
-      Object.keys(data).forEach(function(key) {
-        map.menu[key]=data[key];
-        map.menu[key].hide=true;
-      });
-      map.menu.shortcuts.function=function(action) {
-        map.menu.clicked(map.menu.shortcuts);
-        $http.post('/action', { action:'shortcut',shortcut:action }).success(function() {
-          var timeout = 0;
-          if (action.indexOf('amps')===-1) {
-            timeout=500;
-          }
-          if (action==="shutdown") {
-            $scope.$emit('shutdown');
-          }
-          else {
-            $timeout(function() {
+      map.menu=data;
+      map.menuEntries={};
+      var max=0;
+      data.forEach(function(d, index) {
+        map.menuEntries[d.name]=index;
+        if (d.entries.length>max) {
+          max=d.entries.length;
+        }
+        if (d.name === 'shortcuts') {
+          d.function=function(action, hide) {
+            $http.post('/action', { action:'shortcut',shortcut:action }).success(function() {
+              var timeout = 0;
+              if (action.indexOf('amps')===-1) {
+                timeout=500;
+              }
+              if (action==="shutdown") {
+                $scope.$emit('shutdown');
+              }
+              else {
+                $timeout(function() {
+                  $scope.$emit('update');
+                }, timeout);
+              }
+            });
+            hide();
+          };
+        }
+        if (d.name==='presets') {
+          d.function=function(action, hide) {
+            $http.post('/action', {action: 'preset', preset: action}).success(function() {
               $scope.$emit('update');
-            }, timeout);
-          }
+            });
+            hide();
+          };
+        }
+        if (d.name==='layers') {
+          d.function=function(layer, hide) {
+            map.layer=layer;
+            hide();
+          };
+        }
+      });
+      data.height=(max)*24;
+      map.menu.dialog=function(key) {
+        $materialDialog({
+          templateUrl: '/static/templates/dropdownmenu-template.html',
+          controller: ['$scope', '$hideDialog', function($scope, $hideDialog) {
+            $scope.dropdownData=data;
+            $scope.selectedIndex=map.menuEntries[key];
+            $scope.hide = $hideDialog;
+          }]
         });
-      };
-      map.menu.presets.function=function() {
-        map.menu.clicked(map.menu.presets);
-        $http.post('/action', {action: 'preset', preset: action}).success(function() {
-          $scope.$emit('update');
-        });
-      };
-      map.menu.layers.function=function(layer) {
-        map.menu.clicked(map.menu.layers);
-        map.layer=layer;
       };
       $scope.$emit('update');
     });
@@ -285,15 +299,13 @@ function rateDelayUpdate(lamp, amount, $interval) {
     };
   });
 
-  app.directive('dropdownmenu', function() {
+  app.directive('dropdownbuttons', function() {
     return {
       restrict:'E',
-      templateUrl:'/static/templates/dropdownmenu-template.html',
       scope: {
-        action:"=",
-        header:"=",
-        data:"="
-      }
+        menu: '='
+      },
+      templateUrl:'/static/templates/dropdownbuttons-template.html'
     };
   });
 })();
