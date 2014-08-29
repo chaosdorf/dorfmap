@@ -128,6 +128,10 @@ sub set_device {
 		return 1;
 	}
 
+	if ($coordinates->{$id}->{inverted}) {
+		$value ^= 1;
+	}
+
 	spew( $tsfile, $value );
 
 	if ( exists $gpiomap->{$id} ) {
@@ -202,6 +206,10 @@ sub get_device {
 	elsif ( $id =~ m{^amp} ) {
 		$id =~ s{ [ab] $ }{}ox;
 		$state = slurp("${store_prefix}/amp.${id}") ? 1 : 0;
+	}
+
+	if ($coordinates->{$id}->{inverted}) {
+		$state ^= 1;
 	}
 
 	return $state;
