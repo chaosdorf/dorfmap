@@ -298,14 +298,4 @@ function rateDelayUpdate(lamp, amount, $interval) {
       templateUrl:'/static/templates/lamp-template.html'
     };
   });
-
-  app.directive('dropdownbuttons', function() {
-    return {
-      restrict:'E',
-      scope: {
-        menu: '='
-      },
-      templateUrl:'/static/templates/dropdownbuttons-template.html'
-    };
-  });
 })();
