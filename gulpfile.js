@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     cssmin = require('gulp-cssmin'),
     recess = require('gulp-recess'),
     jade = require('gulp-jade'),
-    exec = require('gulp-exec');
+    exec = require('gulp-exec'),
+    plainExec = require('child_process').exec;
 
 gulp.task('perl', function() {
   gulp.src('index.pl')
@@ -16,6 +17,14 @@ gulp.task('perl', function() {
       .pipe(exec('rm <%= file.path %>.bak'))
       .pipe(exec.reporter());
 });
+
+gulp.task('debugIndicator', function() {
+  plainExec('touch DEBUG_DO_NOT_COMMIT');
+});
+
+gulp.task('releaseIndicator', function() {
+  plainExec('rm -f DEBUG_DO_NOT_COMMIT');
+})
 
 gulp.task('lint', function() {
   gulp.src('src/js/*.js')
@@ -65,7 +74,7 @@ gulp.task('jade', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('debug', ['perl', 'jade', 'lint', 'scriptsDebug', 'csslint', 'css']);
-gulp.task('release', ['perl','jade','lint','scriptsRelease','csslint','css']);
+gulp.task('debug', ['debugIndicator','perl', 'jade', 'lint', 'scriptsDebug', 'csslint', 'css']);
+gulp.task('release', ['releaseIndicator','perl','jade','lint','scriptsRelease','csslint','css']);
 
 gulp.task('default', ['debug']);

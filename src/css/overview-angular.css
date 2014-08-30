@@ -54,7 +54,6 @@
 	}
 
 	.dropdownwrapper {
-		z-index:5;
 		width:20em;
 	}
 
@@ -66,6 +65,13 @@
 	.dropdownButton {
 		display:block;
 		text-transform:capitalize;
+	}
+
+	.menuDialog {
+		position:absolute;
+		left:35%;
+		top:35%;
+		background-color:white;
 	}
 
 	a.backlink {
