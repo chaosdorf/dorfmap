@@ -5,17 +5,24 @@ var gulp = require('gulp'),
     browserify = require('gulp-browserify'),
     concat = require('gulp-concat'),
     cssmin = require('gulp-cssmin'),
-    recess = require('gulp-recess'),
     jade = require('gulp-jade'),
     exec = require('gulp-exec'),
     plainExec = require('child_process').exec;
 
-gulp.task('perl', function() {
+gulp.task('perltidy', function() {
   gulp.src('index.pl')
       .pipe(exec('perl -c <%= file.path %>'))
       .pipe(exec('perltidy -b <%= file.path %>'))
       .pipe(exec('rm <%= file.path %>.bak'))
       .pipe(exec.reporter());
+});
+
+gulp.task('perlStart',function() {
+  plainExec('MOJO_MODE="development" index.pl')
+});
+
+gulp.task('perlStop',function() {
+  plainExec('hypnotoad -s index.pl')
 });
 
 gulp.task('debugIndicator', function() {
@@ -29,8 +36,7 @@ gulp.task('releaseIndicator', function() {
 gulp.task('lint', function() {
   gulp.src('src/js/*.js')
     .pipe(jshint())
-    .pipe(jshint.reporter(stylish))
-    .pipe(jshint.reporter('fail'));
+    .pipe(jshint.reporter(stylish));
 });
 
 gulp.task('scriptsDebug', function() {
@@ -54,13 +60,6 @@ gulp.task('scriptsRelease', function() {
   .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('csslint', function() {
-    gulp.src('src/css/*.css')
-    .pipe(recess({noOverqualifying: false, strictPropertyOrder: false}))
-    .pipe(recess.reporter(stylish))
-    .pipe(recess.reporter('fail'));
-});
-
 gulp.task('css', function() {
  gulp.src(['src/css/*.css', 'src/css/libs/*.css'])
     .pipe(cssmin())
@@ -74,7 +73,13 @@ gulp.task('jade', function() {
     .pipe(gulp.dest('public'));
 });
 
-gulp.task('debug', ['debugIndicator','perl', 'jade', 'lint', 'scriptsDebug', 'csslint', 'css']);
-gulp.task('release', ['releaseIndicator','perl','jade','lint','scriptsRelease','csslint','css']);
+gulp.task('watch', function() {
+  gulp.watch('src/js/*.js', ['lint', 'scriptsDebug', 'perlStart']);
+  gulp.watch('src/css/*.css', ['css', 'perlStart'])
+  gulp.watch('index.pl', ['perlStart'])
+});
+
+gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'css', 'perlStart', 'watch']);
+gulp.task('release', ['releaseIndicator','perltidy','jade','lint','scriptsRelease','css', 'perlStop']);
 
 gulp.task('default', ['debug']);

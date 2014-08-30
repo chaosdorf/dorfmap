@@ -5,6 +5,7 @@ require('angular-socket-io');
 require('angular-animate');
 require('./libs/angular-busy.min.js');
 require('./libs/angular-material.js');
+var konami = require('konami-js');
 
 
 function getURLParameter(name) {
@@ -22,6 +23,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 }
 
 (function(){
+
   'use strict';
   var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
 
@@ -32,6 +34,14 @@ function rateDelayUpdate(lamp, amount, $interval) {
   }]);
 
   app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', function ($http, $timeout, $scope, $materialDialog) {
+    new konami(function(){
+      window.location='/static/images/easter.jpg';
+      $materialDialog({
+        template:"<img src='/static/images/madeby_derf0_and_marudor.jpg'/>"
+
+      });
+    });
+
     var map = this;
     map.layer=getURLParameter('layer') || 'control';
     $http.get('/ajax/menu.json').success(function(data) {
