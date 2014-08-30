@@ -828,6 +828,7 @@ helper statustext => sub {
 
 #{{{ Routes
 
+# Entry point for legacy frontend
 get '/' => sub {
 	my ($self) = @_;
 
@@ -835,6 +836,10 @@ get '/' => sub {
 	return;
 };
 
+# Used by
+# * angular frontend
+# * legacy frontend
+# * donationprint buttond (shutdown / unshutdown only)
 post '/action' => sub {
 	my ($self) = @_;
 	my $params = $self->req->json;
@@ -958,6 +963,8 @@ post '/action' => sub {
 	return;
 };
 
+# Used by angular frontend. Returns all animations and the
+# currently active one for a given device.
 get '/ajax/blinkencontrol' => sub {
 	my ($self) = @_;
 	my $device = $self->param('device');
@@ -965,6 +972,7 @@ get '/ajax/blinkencontrol' => sub {
 	$self->render( json => json_blinkencontrol($device) );
 };
 
+# Used by angular frontend. Sets an animation.
 post '/ajax/blinkencontrol' => sub {
 	my ($self)      = @_;
 	my $device      = $self->req->json->{device};
@@ -995,12 +1003,14 @@ post '/ajax/blinkencontrol' => sub {
 	$self->render( json => json_blinkencontrol($device) );
 };
 
+# Used by angular forntend
 get '/ajax/charwrite' => sub {
 	my ($self) = @_;
 
 	$self->render( json => \@charwrite_modes );
 };
 
+# Used by angular frontend
 post '/ajax/charwrite' => sub {
 	my ($self) = @_;
 	my $device = $self->req->json->{device};
@@ -1016,6 +1026,7 @@ post '/ajax/charwrite' => sub {
 	);
 };
 
+# Used by angular frontend
 get '/ajax/menu' => sub {
 	my ($self) = @_;
 
@@ -1040,6 +1051,8 @@ get '/ajax/menu' => sub {
 	return;
 };
 
+# Used by legacy frontend to show and set blinkencontrol animations.
+# TODO set animations via POST /ajax/blinkencontrol
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
@@ -1125,6 +1138,8 @@ get '/blinkencontrol/:device' => sub {
 	);
 };
 
+# Used by legacy frontend to show and set a charwrite mode
+# TODO set mode via POST /ajax/charwrite
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
@@ -1154,6 +1169,7 @@ get '/charwrite/:device' => sub {
 	);
 };
 
+# Unused, but may be useful for external applications
 get '/get/:id' => sub {
 	my ($self) = @_;
 	my $id = $self->stash('id');
@@ -1176,6 +1192,7 @@ get '/get/:id' => sub {
 	return;
 };
 
+# Used by angular frontend and external applications (e.g. munin plugins)
 get '/list/all' => sub {
 	my ($self) = @_;
 	my $devices = {};
@@ -1220,6 +1237,7 @@ get '/list/all' => sub {
 	return;
 };
 
+# Entry point for legacy frontend
 get '/m' => sub {
 	my ($self) = @_;
 
@@ -1256,6 +1274,8 @@ get '/m' => sub {
 	return;
 };
 
+# Unused at the moment.
+# TODO refactor for angular and legacy frontends
 any '/presets' => sub {
 	my ($self) = @_;
 	my $action = $self->param('action') // q{};
@@ -1319,6 +1339,8 @@ any '/presets' => sub {
 	return;
 };
 
+# Used by external applications to set parameters which can not be polled
+# by the dorfmap (such as the UPS temperature and power consumption)
 post '/set' => sub {
 	my ($self) = @_;
 
@@ -1342,6 +1364,7 @@ post '/set' => sub {
 	);
 };
 
+# Used by external applications
 get '/space_api' => sub {
 	my ($self) = @_;
 
