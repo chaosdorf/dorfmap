@@ -583,25 +583,46 @@ sub json_blinkencontrol {
 		$bc_presets = load_blinkencontrol();
 	}
 
-	my $current_name
+	my $current_animation
 	  = first { $bc_presets->{rgb}->{animation}->{$_} eq $current_string }
 	keys %{ $bc_presets->{rgb}->{animation} };
-	my $active_preset;
+	my $current_colour
+	  = first { $bc_presets->{rgb}->{colours}->{$_} eq $current_string }
+	keys %{ $bc_presets->{rgb}->{colours} };
 
-	if ($current_name) {
+	my ( $active_preset, $active_colour );
+
+	if ($current_animation) {
 		$active_preset = {
-			name       => $current_name,
+			name       => $current_animation,
 			raw_string => $current_string,
+			type       => 'animation',
+		};
+	}
+	elsif ($current_colour) {
+		$active_preset = {
+			name       => $current_colour,
+			raw_string => $current_string,
+			type       => 'colour',
 		};
 	}
 
-	my @json_presets;
+	my ( @json_animations, @json_colours );
 
 	for my $bc_preset ( sort keys %{ $bc_presets->{rgb}->{animation} } ) {
 		my $string = $bc_presets->{rgb}->{animation}->{$bc_preset};
-		$string =~ s{ \s+ $ }{}ox;
 		push(
-			@json_presets,
+			@json_animations,
+			{
+				name       => $bc_preset,
+				raw_string => $string,
+			}
+		);
+	}
+	for my $bc_preset ( sort keys %{ $bc_presets->{rgb}->{colours} } ) {
+		my $string = $bc_presets->{rgb}->{colours}->{$bc_preset};
+		push(
+			@json_colours,
 			{
 				name       => $bc_preset,
 				raw_string => $string,
@@ -611,7 +632,8 @@ sub json_blinkencontrol {
 
 	return {
 		active  => $active_preset,
-		presets => \@json_presets,
+		presets => \@json_animations,
+		colours => \@json_colours,
 		status  => get_device($device),
 	};
 }
