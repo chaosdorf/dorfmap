@@ -367,6 +367,43 @@ sub save_presets {
 
 #}}}
 
+#{{{ Database helpers
+
+sub update_blinkencontrol_db {
+	my %opt  = @_;
+	my $from = $opt{from_version};
+	if ( not defined $from ) {
+		die('update_blinkencontrol_db requires the from_version key');
+	}
+
+	my $old_db = load_blinkencontrol();
+	my $new_db = {};
+
+	if ( $from == 0 ) {
+		for my $preset ( keys %{ $old_db->{blinkencontrol1} } ) {
+			my $content = $old_db->{blinkencontrol1}->{$preset};
+			$preset =~ tr{[0-9a-zA-Z]}{}cd;
+			$content =~ s{ \s+ $ }{}ox;
+			$new_db->{rgb}->{animation}->{$preset} = $content;
+		}
+		$new_db->{rgb}->{animation}->{Off} = '32,0,0,0';
+		$new_db->{rgb}->{colours} = {
+			red     => '8,255,0,0',
+			yellow  => '8,255,255,0',
+			green   => '8,0,255,0',
+			cyan    => '8,0,255,255',
+			blue    => '8,0,0,255',
+			magenta => '8,255,0,255',
+			white   => '8,255,255,255',
+			black   => '8,0,0,0',
+		};
+		$new_db->{version} = 1;
+	}
+	save_blinkencontrol($new_db);
+}
+
+#}}}
+
 #{{{ other helpers
 
 sub device_actionlink {
@@ -541,11 +578,14 @@ sub json_blinkencontrol {
 	my $current_string = get_device( $device, text => 1 );
 	my $bc_presets = load_blinkencontrol();
 
-	$bc_presets->{blinkencontrol1}->{Off} = '32,0,0,0';
+	if ( not $bc_presets->{version} ) {
+		update_blinkencontrol_db( from_version => 0 );
+		$bc_presets = load_blinkencontrol();
+	}
 
 	my $current_name
-	  = first { $bc_presets->{blinkencontrol1}->{$_} eq $current_string }
-	keys %{ $bc_presets->{blinkencontrol1} };
+	  = first { $bc_presets->{rgb}->{animation}->{$_} eq $current_string }
+	keys %{ $bc_presets->{rgb}->{animation} };
 	my $active_preset;
 
 	if ($current_name) {
@@ -557,8 +597,8 @@ sub json_blinkencontrol {
 
 	my @json_presets;
 
-	for my $bc_preset ( sort keys %{ $bc_presets->{blinkencontrol1} } ) {
-		my $string = $bc_presets->{blinkencontrol1}->{$bc_preset};
+	for my $bc_preset ( sort keys %{ $bc_presets->{rgb}->{animation} } ) {
+		my $string = $bc_presets->{rgb}->{animation}->{$bc_preset};
 		$string =~ s{ \s+ $ }{}ox;
 		push(
 			@json_presets,
