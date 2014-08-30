@@ -1001,43 +1001,19 @@ get '/ajax/charwrite' => sub {
 	$self->render( json => \@charwrite_modes );
 };
 
-get '/ajax/infoarea' => sub {
+post '/ajax/charwrite' => sub {
 	my ($self) = @_;
+	my $device = $self->req->json->{device};
+	my $text   = $self->req->json->{text};
 
-	$self->render( inline => infotext() );
-	return;
-};
-
-get '/ajax/statustext/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	my $result = q{};
-	if ( exists $coordinates->{$id} ) {
-		$result = $self->statustext( $coordinates->{$id}->{type}, $id );
+	if ( defined $text and defined $device ) {
+		set_device( $device, $text );
 	}
 
 	$self->render(
-		text   => $result,
-		format => 'txt'
+		data   => q{},
+		status => 204
 	);
-	return;
-};
-
-get '/ajax/rate_limit/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	$self->render( json => get_ratelimit_delay($id) );
-	return;
-};
-
-get '/ajax/has_location/:id' => sub {
-	my ($self) = @_;
-	my $id = $self->stash('id');
-
-	$self->render( json => $self->has_location($id) );
-	return;
 };
 
 get '/ajax/menu' => sub {
@@ -1146,21 +1122,6 @@ get '/blinkencontrol/:device' => sub {
 		'mobile-blinkencontrol',
 		layout  => 'mobile',
 		bc_data => json_blinkencontrol($device),
-	);
-};
-
-post '/ajax/charwrite' => sub {
-	my ($self) = @_;
-	my $device = $self->req->json->{device};
-	my $text   = $self->req->json->{text};
-
-	if ( defined $text and defined $device ) {
-		set_device( $device, $text );
-	}
-
-	$self->render(
-		data   => q{},
-		status => 204
 	);
 };
 
