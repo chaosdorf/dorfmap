@@ -35,10 +35,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
   app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', function ($http, $timeout, $scope, $materialDialog) {
     new konami(function(){
-      window.location='/static/images/easter.jpg';
+      window.location='/static/images/madeby_derf0_and_marudor.jpg';
       $materialDialog({
         template:"<img src='/static/images/madeby_derf0_and_marudor.jpg'/>"
-
       });
     });
 
