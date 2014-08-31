@@ -18,7 +18,7 @@ gulp.task('perltidy', function() {
 });
 
 gulp.task('perlStart',function() {
-  plainExec('MOJO_MODE="development" hypnotoad index.pl')
+  plainExec('MOJO_LISTEN="http://*:8081" MOJO_MODE="development" hypnotoad index.pl')
 });
 
 gulp.task('perlStop',function() {
@@ -75,8 +75,9 @@ gulp.task('jade', function() {
 
 gulp.task('watch', function() {
   gulp.watch('src/js/*.js', ['lint', 'scriptsDebug', 'perlStart']);
-  gulp.watch('src/css/*.css', ['css', 'perlStart'])
-  gulp.watch('index.pl', ['perlStart'])
+  gulp.watch('src/css/*.css', ['css', 'perlStart']);
+  gulp.watch(['src/jade/*.jade','src/jade/templates/*.jade'], ['jade','perlStart']);
+  gulp.watch('index.pl', ['perltidy','perlStart']);
 });
 
 gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'css', 'perlStart', 'watch']);
