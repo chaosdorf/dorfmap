@@ -123,53 +123,53 @@ function rateDelayUpdate(lamp, amount, $interval) {
             overview.lamps[key].rateDelayActive=false;
             overview.lamps[key].blocked=false;
             overview.lamps[key].canAccess=function() {
-              return  overview.lamps[key].is_writable &&
-              overview.lamps[key].rate_delay <=0 &&
-              !overview.lamps[key].blocked;
+              return  this.is_writable &&
+              this.rate_delay <=0 &&
+              !this.blocked;
             };
             overview.lamps[key].update=function(data, complete) {
               if (data) {
-                overview.lamps[key].status=data.status;
-                overview.lamps[key].type=data.type;
+                this.status=data.status;
+                this.type=data.type;
                 if (data.status===0) {
-                  overview.lamps[key].rate_delay=data.rate_delay;
+                  this.rate_delay=data.rate_delay;
                 }
                 if (typeof(data.status_text) === "string") {
-                  overview.lamps[key].status_text=$sce.trustAsHtml(data.status_text);
+                  this.status_text=$sce.trustAsHtml(data.status_text);
                   if (data.infoarea) {
                     overview.lamps.infoarea.status_text=$sce.trustAsHtml(data.infoarea);
                   }
                 }
               }
               if (complete) {
-                if (!overview.lamps[key].status) {
-                  overview.lamps[key].status=0;
+                if (!this.status) {
+                  this.status=0;
                 }
                 else {
-                  overview.lamps[key].status=parseInt(overview.lamps[key].status);
+                  this.status=parseInt(this.status);
                 }
-                if (overview.lamps[key].status === 0 && !overview.lamps[key].rateDelayActive && overview.lamps[key].rate_delay > 0) {
-                  rateDelayUpdate(overview.lamps[key], overview.lamps[key].rate_delay, $interval);
+                if (this.status === 0 && !this.rateDelayActive && this.rate_delay > 0) {
+                  rateDelayUpdate(this, this.rate_delay, $interval);
                 }
               }
             };
-            overview.lamps[key].imageClass=function() { return overview.lamps[key].canAccess() ? "lampimage":""; };
-            overview.lamps[key].isAuto=function() { return overview.lamps[key].type==="light_au"; };
+            overview.lamps[key].imageClass=function() { return this.canAccess() ? "lampimage":""; };
+            overview.lamps[key].isAuto=function() { return this.type==="light_au"; };
             overview.lamps[key].image=function() {
               if (key=="dorfdoor") return "/static/images/dorfdoor.png";
-              var statusName=overview.lamps[key].status===1?"on":"off";
+              var statusName=this.status===1?"on":"off";
               if (key==="hackcenter_blau") return "/static/images/hackcenter_blau_"+statusName+".png";
-              if (overview.lamps[key].isAuto()) {
-                var autoPrefix=overview.lamps[key].auto===0?"no":"";
-                if (overview.lamps[key].status===-1) return "/static/images/light_"+autoPrefix+"auto.png";
+              if (this.isAuto()) {
+                var autoPrefix=this.auto===0?"no":"";
+                if (this.status===-1) return "/static/images/light_"+autoPrefix+"auto.png";
                 return "/static/images/light_"+statusName+"_"+autoPrefix+"auto.png";
               }
-              if (overview.lamps[key].status===-1) return '/static/images/'+overview.lamps[key].type+".png";
-              return '/static/images/'+overview.lamps[key].type+"_"+statusName+".png";
+              if (this.status===-1) return '/static/images/'+this.type+".png";
+              return '/static/images/'+this.type+"_"+statusName+".png";
             };
             overview.lamps[key].style=function(dup) {
               var style={};
-              var l = overview.lamps[key];
+              var l = this;
               if (dup) {
                 l=dup;
               }
@@ -184,19 +184,19 @@ function rateDelayUpdate(lamp, amount, $interval) {
               return style;
             };
             overview.lamps[key].statusClass=function() {
-              if (overview.lamps[key].type!="infoarea" && overview.lamps[key].type!="rtext") {
+              if (this.type!="infoarea" && this.type!="rtext") {
                 return "popup";
               }
             };
             overview.lamps[key].class=function(){
               if (key==="dorfdoor") {
-                return overview.lamps[key].status === 0 ? "closed" : "open";
+                return this.status === 0 ? "closed" : "open";
               }
-              return overview.lamps[key].type==='rtext'?'rtext':'';
+              return this.type==='rtext'?'rtext':'';
             };
             overview.lamps[key].toggle=function($event) {
-              if (overview.lamps[key].canAccess()) {
-                if (overview.lamps[key].type=="blinkenlight") {
+              if (this.canAccess()) {
+                if (this.type=="blinkenlight") {
                   $materialDialog({
                     templateUrl: '/static/templates/blinkencontrol-template.html',
                     targetEvent: $event,
@@ -207,6 +207,10 @@ function rateDelayUpdate(lamp, amount, $interval) {
                         if (data.active) {
                           $scope.animations.selected=data.active.raw_string;
                         }
+                        socket.on('blinkencontrol', function(data) {
+                          $scope.animations.selected=data.raw_string;
+                          $scope.lamp.status=data.status;
+                        });
                       });
                       $scope.close = function() {
                         $hideDialog();
@@ -214,6 +218,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                       $scope.save = function() {
                         $http.post("/ajax/blinkencontrol", {device:$scope.lamp.name,raw_string:$scope.animations.selected}).success(function(data) {
                           $scope.lamp.status=data.status;
+                          socket.emit('blinkencontrol', {device:$scope.lamp.name,raw_string:$scope.animations.selected,status:data.status});
                         });
                         $scope.close();
                       };
@@ -221,7 +226,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   });
                   return;
                 }
-                if (overview.lamps[key].type=="charwrite") {
+                if (this.type=="charwrite") {
                   $materialDialog({
                     templateUrl: '/static/templates/charwrite-template.html',
                     targetEvent: $event,
@@ -252,9 +257,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   });
                   return;
                 }
-                overview.lamps[key].blocked=true;
+                this.blocked=true;
+                var oldStatus = this.status;
                 $http.post('/action', {action:'toggle',device:key}).success(function(data){
-                  var oldStatus = overview.lamps[key].status;
                   data.name=key;
                   data.type=overview.lamps[key].type;
                   socket.emit('toggle', data);
@@ -279,6 +284,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   }
                   overview.lamps[key].blocked=false;
                 });
+                if (!overview.lamps[key].isAuto()) {
+                  overview.lamps[key].status=!overview.lamps[key].status;
+                }
               }
             };
           } else {

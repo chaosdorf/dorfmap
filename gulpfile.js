@@ -18,7 +18,7 @@ gulp.task('perltidy', function() {
 });
 
 gulp.task('perlStart',function() {
-  plainExec('MOJO_MODE="development" index.pl')
+  plainExec('MOJO_MODE="development" hypnotoad index.pl')
 });
 
 gulp.task('perlStop',function() {
