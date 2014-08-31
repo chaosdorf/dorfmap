@@ -91,6 +91,6 @@ ul.mlist li input {
 ul.mlist li select {
 }
 
-ul.blinkencontrol span.active:before {
-	content: "▶ ";
+ul.blinkencontrol span.active:after {
+	content: " ◀";
 }

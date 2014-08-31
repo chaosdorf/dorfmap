@@ -603,7 +603,7 @@ sub json_blinkencontrol {
 		$active_preset = {
 			name       => $current_colour,
 			raw_string => $current_string,
-			type       => 'colour',
+			type       => 'color',
 		};
 	}
 
@@ -633,7 +633,7 @@ sub json_blinkencontrol {
 	return {
 		active  => $active_preset,
 		presets => \@json_animations,
-		colours => \@json_colours,
+		colors  => \@json_colours,
 		status  => get_device($device),
 	};
 }
