@@ -13,6 +13,7 @@ Schleuse               71  380  256  621 none
 Serverraum           1232  360 1304  451 none
 Transporterraum      1429  250 1737  365 none
 Treppe                295  356  432  522 none
+WC_vorne              955  268 1050  630 none
 
 [layer=control]
 infoarea              450  406  900  600 none \
@@ -140,6 +141,8 @@ edge                 1232  400    0    0 none \
   type=server area=Serverraum
 feedback               64  585    0    0 none \
   type=server area=Schleuse dorfmap=feedback
+flukso                925  386    0    0 none \
+  type=server area=WC_vorne
 hyperion             1232  361    0    0 none \
   type=server area=Serverraum dorfmap=amp
 door                   35  585    0    0 none \
