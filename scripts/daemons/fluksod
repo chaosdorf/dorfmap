@@ -60,6 +60,8 @@ while ( sleep(7) ) {
 
 	my %sums;
 
+	my $request_errors = 0;
+
 	for my $pair (
 		[ 'p1', 'd80587d41bebde066f003a8f60ac0d01' ],
 		[ 'p2', '2267a0503927a5f2bbf0050f657dcc55' ],
@@ -77,6 +79,10 @@ while ( sleep(7) ) {
 		  );
 
 		if ( not $res->is_success ) {
+			for my $interval (@intervals) {
+				spew( "${out_prefix}/${interval}_${name}", -1 );
+			}
+			$request_errors++;
 			next;
 		}
 
@@ -96,6 +102,11 @@ while ( sleep(7) ) {
 		}
 	}
 	for my $interval (@intervals) {
-		spew( "${out_prefix}/${interval}", $sums{$interval} );
+		if ( $request_errors < 3 ) {
+			spew( "${out_prefix}/${interval}", $sums{$interval} );
+		}
+		else {
+			spew( "${out_prefix}/${interval}", -1 );
+		}
 	}
 }
