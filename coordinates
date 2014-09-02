@@ -152,7 +152,7 @@ ap-hackcenter         420  210    0    0 none \
   type=wifi
 ap-hackcenter2        420  178    0    0 none \
   type=wifi
-hinterzimmer          1428  120    0    0 none \
+ap-hinterzimmer       1428  120    0    0 none \
   type=wifi
-nomspace              1130  268    0    0 none \
+ap-nomspace           1130  268    0    0 none \
   type=wifi
