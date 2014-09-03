@@ -1080,8 +1080,13 @@ get '/ajax/charwrite' => sub {
 # Used by angular frontend
 post '/ajax/charwrite' => sub {
 	my ($self) = @_;
-	my $device = $self->req->json->{device};
-	my $text   = $self->req->json->{text};
+	my $params = $self->req->json;
+
+	if ( not exists $params->{device} ) {
+		$params = $self->req->params->to_hash;
+	}
+
+	my ( $device, $text ) = @{$params}{qw{device text}};
 
 	if ( defined $text and defined $device ) {
 		set_device( $device, $text );
@@ -1134,13 +1139,10 @@ get '/blinkencontrol/:device' => sub {
 	);
 };
 
-# Used by legacy frontend to show and set a charwrite mode
-# TODO set mode via POST /ajax/charwrite
+# Used by legacy frontend to show the charwrite mode(s)
 get '/charwrite/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
-
-	my $text = $self->param('disptext');
 
 	my $controlpath = $remotemap->{$device};
 
@@ -1149,19 +1151,12 @@ get '/charwrite/:device' => sub {
 		# TODO
 	}
 
-	# see (1)
-	if ( defined $text and $self->req->method eq 'GET' ) {
-		set_device( $device, $text );
-	}
-	else {
-		$self->param( disptext => ( slurp($controlpath) // 'clock' ) );
-	}
-
 	$self->render(
 		'mobile-charwrite',
-		layout => 'mobile',
-		device => $device,
-		modes  => \@charwrite_modes,
+		layout   => 'mobile',
+		device   => $device,
+		disptext => ( slurp($controlpath) // 'clock' ),
+		modes    => \@charwrite_modes,
 	);
 };
 

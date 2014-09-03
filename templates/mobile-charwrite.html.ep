@@ -1,15 +1,19 @@
-<ul class="mlist charwrite">
+<ul class="mlist charwrite" data-device="<%= $device %>">
 <li><a href="/m"><span>&larr; back</span></a></li>
 <li class="header">set mode</li>
 % for my $mode (@{$modes}) {
-<li><a href="?disptext=<%= $mode->{name} %>"><span><%= $mode->{description} %></span></a></li>
+<li class="text" data-text="<%= $mode->{name} %>">
+<span class="fakelink"><span><%= $mode->{description } %></span></span>
+</li>
 % }
 <li class="header">set custom text</li>
 <li>
-%= form_for "/charwrite/$device" => begin
+%= form_for "/charwrite/$device" => (method => 'POST') => begin
 %= text_field 'disptext';
 %= hidden_field m => 1;
 %= submit_button 'apply';
 %= end
 </li>
 </ul> <!-- mlist -->
+
+%= javascript '/static/js/charwrite-m.js'
