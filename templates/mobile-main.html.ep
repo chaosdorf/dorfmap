@@ -40,7 +40,7 @@
 % $mname =~ s{ ^ $area _? }{}ix;
 <li class="child_<%= $area %>">
 % if ($real_link) {
-<a class=<%= $class %> fakelink" href="<%= $real_link %>"
+<a class="<%= $class %> fakelink" href="<%= $real_link %>"
 % }
 % else {
 <span class="<%= $class %> fakelink"
