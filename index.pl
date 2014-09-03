@@ -1036,9 +1036,14 @@ get '/ajax/blinkencontrol' => sub {
 
 # Used by angular frontend. Sets an animation.
 post '/ajax/blinkencontrol' => sub {
-	my ($self)      = @_;
-	my $device      = $self->req->json->{device};
-	my $raw_string  = $self->req->json->{raw_string};
+	my ($self) = @_;
+	my $params = $self->req->json;
+
+	if ( not exists $params->{device} ) {
+		$params = $self->req->params->to_hash;
+	}
+
+	my ( $device, $raw_string ) = @{$params}{qw{device raw_string}};
 	my $controlpath = $remotemap->{$device};
 
 	my $ctext  = q{};
@@ -1113,90 +1118,19 @@ get '/ajax/menu' => sub {
 	return;
 };
 
-# Used by legacy frontend to show and set blinkencontrol animations.
-# TODO set animations via POST /ajax/blinkencontrol
+# Used by legacy frontend to show blinkencontrol animations.
 get '/blinkencontrol/:device' => sub {
 	my ($self) = @_;
 	my $device = $self->stash('device');
 
-	my $red     = $self->param('red');
-	my $green   = $self->param('green');
-	my $blue    = $self->param('blue');
-	my $speed   = $self->param('speed') // 254;
-	my $opmode  = $self->param('opmode');
-	my $command = $self->param('command') // q{};
-	my $cmdname = $self->param('cmdname') // q{};
-	my $action  = $self->param('action') // q{};
-	my $mobile  = $self->param('m') // q{};
-	my $rawmode = 0;
-
-	my $bc_presets = load_blinkencontrol();
-
+	my $bc_presets  = load_blinkencontrol();
 	my $controlpath = $remotemap->{$device};
-
-	if ( defined $speed ) {
-		$speed = 255 - $speed;
-
-		if ( $speed == 0 ) {
-			$speed = 1;
-		}
-	}
-
-	if ( not $controlpath ) {
-
-		# TODO
-	}
-
-	if (    length($command) == 0
-		and defined $red
-		and defined $green
-		and defined $blue
-		and defined $speed )
-	{
-		$command = join( ',', $speed, $red, $green, $blue );
-	}
-
-	# see (1)
-	if ( length($command) and $self->req->method eq 'GET' ) {
-		my $ctext = q{};
-		my $id    = 0;
-		my $addr  = 1;
-
-		if ( $controlpath =~ m{feedback}o ) {
-			$addr = 8;
-		}
-
-		for my $part ( split( / /, $command ) ) {
-			my ( $speed, $red, $green, $blue ) = split( /,/, $part );
-			$ctext
-			  .= "${id}\n${speed}\n${red}\n${green}\n${blue}\n0\n${addr}\npush\n";
-			$id++;
-		}
-
-		spew( "${controlpath}/commands", $ctext );
-
-		if ( $controlpath =~ m{donationprint}o ) {
-			system('blinkencontrol-donationprint');
-		}
-		elsif ( $controlpath =~ m{feedback}o ) {
-			system('blinkencontrol-feedback');
-		}
-
-		if ( length($cmdname) ) {
-			$bc_presets->{blinkencontrol1}->{$cmdname} = $command;
-			save_blinkencontrol($bc_presets);
-		}
-	}
-	elsif ( $cmdname and $action eq 'delete' and $self->req->method eq 'GET' ) {
-		delete $bc_presets->{blinkencontrol1}->{$cmdname};
-		save_blinkencontrol($bc_presets);
-		$bc_presets = load_blinkencontrol();
-	}
 
 	$self->render(
 		'mobile-blinkencontrol',
 		layout  => 'mobile',
 		bc_data => json_blinkencontrol($device),
+		device  => $device,
 	);
 };
 

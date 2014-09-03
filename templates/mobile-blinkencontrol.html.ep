@@ -1,4 +1,4 @@
-<ul class="mlist blinkencontrol">
+<ul class="mlist blinkencontrol" data-device="<%= $device %>">
 <li><a href="/m"><span>&larr; back</span></a></li>
 <li class="header">set animation</li>
 % for my $preset ( @{ $bc_data->{presets} } ) {
@@ -8,10 +8,11 @@
 %   and $preset->{name} eq $bc_data->{active}->{name}) {
 %     $class = 'active';
 % }
-<li><a href="?command=<%= $preset->{raw_string} %>&amp;m=1"><span class="<%= $class %>"><%= $preset->{name} %></span></a>
+<li class="animation" data-name="<%= $preset->{name} %>" data-string="<%= $preset->{raw_string} %>">
+<span class="fakelink"><span class="<%= $class %>"><%= $preset->{name} %></span></span>
 </li>
 % }
-<li class="header">set steady color</li>
+<li class="header">set steady colour</li>
 % for my $preset ( @{ $bc_data->{colors} } ) {
 % my $class = q{};
 % if ($bc_data->{active}
@@ -19,7 +20,10 @@
 %   and $preset->{name} eq $bc_data->{active}->{name}) {
 %     $class = 'active';
 % }
-<li><a href="?command=<%= $preset->{raw_string} %>&amp;m=1"><span class="<%= $class %>"><%= $preset->{name} %></span></a>
+<li class="color" data-name="<%= $preset->{name} %>" data-string="<%= $preset->{raw_string} %>">
+<span class="fakelink"><span class="<%= $class %>"><%= $preset->{name} %></span></span>
 </li>
 % }
 </ul> <!-- mlist -->
+
+%= javascript '/static/js/blinkencontrol-m.js'
