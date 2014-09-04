@@ -98,8 +98,8 @@ sub set_remote {
 	my ( $path, $value ) = @_;
 
 	spew( $path, "${value}\n" );
-	my $bus = ( split( qr{ / }ox, $path ) )[2];    # /tmp/$bus/$id
-	system( 'avrshift', $bus );
+	my ($bus, $device) = ( split( qr{ / }ox, $path ) )[2,3];    # /tmp/$bus/$id
+	system( 'dorfmap_set_remote', $bus, $device );
 }
 
 sub set_device {
@@ -147,15 +147,6 @@ sub set_device {
 	}
 	elsif ( exists $remotemap->{$id} ) {
 		set_remote( $remotemap->{$id}, $value );
-	}
-	elsif ( $id =~ m{^amp..?$} ) {
-		$id =~ s{ [ab] $ }{}ox;
-		if ( $value == 1 ) {
-			system("${id}_on");
-		}
-		else {
-			system("${id}_off");
-		}
 	}
 	else {
 		return 0;
@@ -206,10 +197,6 @@ sub get_device {
 	}
 	elsif ( exists $remotemap->{$id} and -e $remotemap->{$id} ) {
 		$state = slurp( $remotemap->{$id} ) ? 1 : 0;
-	}
-	elsif ( $id =~ m{^amp} ) {
-		$id =~ s{ [ab] $ }{}ox;
-		$state = slurp("${store_prefix}/amp.${id}") ? 1 : 0;
 	}
 
 	if ( $coordinates->{$id}->{inverted} ) {
@@ -410,10 +397,6 @@ sub device_actionlink {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
 
-	if ( $type eq 'amp' ) {
-		$id =~ s{ [ab] $}{}ox;
-	}
-
 	my $action = device_status($id) ? 'off' : 'on';
 
 	given ($type) {
@@ -445,10 +428,6 @@ sub device_image {
 
 	if ( not $type ) {
 		return;
-	}
-
-	if ( $type eq 'amp' ) {
-		$id =~ s{ [ab] $}{}ox;
 	}
 
 	my $state  = device_status($id);
