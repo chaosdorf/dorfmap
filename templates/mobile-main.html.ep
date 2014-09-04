@@ -10,7 +10,6 @@
 </li>
 % }
 <li class="header menu" id="Presets"><span class="collapsed-indicator indicator"></span>Presets</li>
-<li class="child_Presets"><a href="/presets?&amp;m=1" class="special"><span>manage</span></a></li>
 % for my $preset (@{$presets}) {
 %   my $name = $preset->{name};
 <li class="child_Presets runpreset">
