@@ -298,7 +298,7 @@ sub load_coordinates {    #{{{
 		if ( $controlpath =~ m{ ^ gpio (\d+) $ }ox ) {
 			$gpiomap->{$id} = gpio($1);
 		}
-		elsif ( -d "/tmp/${controlpath}" ) {
+		elsif ( -e "/tmp/${controlpath}" ) {
 			$remotemap->{$id} = "/tmp/${controlpath}";
 		}
 
