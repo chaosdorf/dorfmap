@@ -59,6 +59,13 @@ for i in bin0 bin1 bin3 bin5 bin6 bin7 pwm0 pwm1 pwm2; do
 	chmod 666 /tmp/feedback6/$i
 done
 
+mkdir -p /tmp/hyperion1
+chmod 777 /tmp/hyperion1
+for i in 0 1 2 3; do
+	echo 0 > /tmp/hyperion1/$i
+	chmod 666 /tmp/hyperion1/$i
+done
+
 echo clock > /tmp/donationprint1/7segment1.mode
 chmod 666 /tmp/donationprint1/7segment1.mode
 
