@@ -98,7 +98,8 @@ sub set_remote {
 	my ( $path, $value ) = @_;
 
 	spew( $path, "${value}\n" );
-	my ($bus, $device) = ( split( qr{ / }ox, $path ) )[2,3];    # /tmp/$bus/$id
+	my ( $bus, $device )
+	  = ( split( qr{ / }ox, $path ) )[ 2, 3 ];    # /tmp/$bus/$id
 	system( 'dorfmap_set_remote', $bus, $device );
 }
 
@@ -1018,17 +1019,35 @@ post '/ajax/blinkencontrol' => sub {
 	my ($self) = @_;
 	my $params = $self->req->json;
 
+	my $uint8
+	  = qr{ 2 (?: [0-4][0-9] | 5[0-5] ) | [0-1][0-9][0-9] | [0-9][0-9] | [0-9] }x;
+	my $is_valid = qr{
+		^
+		(?:
+			(?: $uint8 , ){3} $uint8
+			\s
+		)*
+		(?: $uint8 , ){3} $uint8
+		$
+	}x;
+
 	if ( not exists $params->{device} ) {
 		$params = $self->req->params->to_hash;
 	}
 
-	my ( $device, $raw_string ) = @{$params}{qw{device raw_string}};
+	my ( $delete, $device, $name, $raw_string )
+	  = @{$params}{qw{delete device name raw_string}};
 	my $controlpath = $remotemap->{$device};
 
 	my $ctext  = q{};
 	my $id     = 0;
 	my $addrhi = int( $coordinates->{$device}->{address} / 255 );
 	my $addrlo = $coordinates->{$device}->{address} % 255;
+
+	if ( not $raw_string =~ $is_valid ) {
+		$self->render( json => { errors => ['invalid raw_string specified'] } );
+		return;
+	}
 
 	for my $part ( split( / /, $raw_string ) ) {
 		my ( $speed, $red, $green, $blue ) = split( /,/, $part );
