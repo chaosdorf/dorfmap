@@ -77,7 +77,7 @@ gulp.task('watch', function() {
   gulp.watch('src/js/*.js', ['lint', 'scriptsDebug', 'perlStart']);
   gulp.watch('src/css/*.css', ['css', 'perlStart']);
   gulp.watch(['src/jade/*.jade','src/jade/templates/*.jade'], ['jade','perlStart']);
-  gulp.watch('index.pl', ['perltidy','perlStart']);
+  gulp.watch('index.pl', ['perlStart']);
 });
 
 gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'css', 'perlStart', 'watch']);
