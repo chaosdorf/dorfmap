@@ -1044,9 +1044,23 @@ post '/ajax/blinkencontrol' => sub {
 	my $addrhi = int( $coordinates->{$device}->{address} / 255 );
 	my $addrlo = $coordinates->{$device}->{address} % 255;
 
+	if ( $name and $delete ) {
+		my $bc_db = load_blinkencontrol();
+		delete $bc_db->{rgb}->{animation}->{$name};
+		save_blinkencontrol($bc_db);
+		$self->render( json => json_blinkencontrol($device) );
+		return;
+	}
+
 	if ( not $raw_string =~ $is_valid ) {
 		$self->render( json => { errors => ['invalid raw_string specified'] } );
 		return;
+	}
+
+	if ( $name and $raw_string and not $delete ) {
+		my $bc_db = load_blinkencontrol();
+		$bc_db->{rgb}->{animation}->{$name} = $raw_string;
+		save_blinkencontrol($bc_db);
 	}
 
 	for my $part ( split( / /, $raw_string ) ) {
