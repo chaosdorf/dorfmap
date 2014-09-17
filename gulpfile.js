@@ -80,7 +80,15 @@ gulp.task('watch', function() {
   gulp.watch('index.pl', ['perlStart']);
 });
 
+gulp.task('copyToServer', function() {
+  plainExec('ssh root@feedback mount -o remount,rw /');
+  plainExec('rsync -aP coordinates index.pl public scripts root@feedback:/root/dorfmap');
+  plainExec('ssh root@feedback mount -o remount,ro /');
+  plainExec('ssh root@feedback dorfmap_pull');
+});
+
 gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'css', 'perlStart', 'watch']);
 gulp.task('release', ['releaseIndicator','perltidy','jade','lint','scriptsRelease','css', 'perlStop']);
+gulp.task('deploy', ['release', 'copyToServer']);
 
 gulp.task('default', ['debug']);
