@@ -11,4 +11,8 @@ obj/
 si2c-bitwrite/si2c-bitwrite
 si2c-bytewrite/si2c-bytewrite
 si2c-charwrite/si2c-charwrite
+
+public/css/dorfmap.min.css
+public/js/dorfmap.min.js
+
 node_modules/
