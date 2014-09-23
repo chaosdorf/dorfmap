@@ -39,7 +39,7 @@ treppe_w              350  525    0    0 feedback2/bin6 \
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump watts=5             Bewässerungspumpe
+  type=pump watts=5             Bewässerungspumpe (geht nach 5min automatisch aus)
 lounge_roehre         260  180    0    0 feedback3/2 \
   type=light ratelimit=90 watts=348 layer=caution  Putzlicht
 lounge_t1a            260   60    0    0 feedback3/4   \
