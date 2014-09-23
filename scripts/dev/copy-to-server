@@ -1,0 +1,6 @@
+#!/bin/sh
+
+ssh root@feedback mount -o remount,rw /
+rsync -aP coordinates index.pl public scripts root@feedback:/root/dorfmap
+ssh root@feedback mount -o remount,ro /
+ssh root@feedback dorfmap_pull
