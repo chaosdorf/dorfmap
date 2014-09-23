@@ -129,7 +129,7 @@ phone                   6   24    0    0 none \
   type=phone area=Lounge
 
 clc1160               842   60    0    0 none \
-  type=printer area=Hackcenter
+  type=printer area=Hackcenter CLC1160 (manuell)
 hp2100                386   60    0    0 donationprint1/4 \
   type=printer area=Lounge HP2100 (geht nach 45min automatisch aus)
 
