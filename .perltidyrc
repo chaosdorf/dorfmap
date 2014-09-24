@@ -1,0 +1,10 @@
+--check-syntax
+--output-line-ending=unix
+--add-semicolons
+--break-before-all-operators
+--comma-arrow-breakpoints=0
+
+--nooutdent-labels
+--tabs
+
+--iterations=2
