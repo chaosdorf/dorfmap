@@ -161,7 +161,7 @@ sub get_device {
 	my $type  = $coordinates->{$id}->{type};
 
 	if ( $opt{text} ) {
-		$state = q{},;
+		$state = q{};
 	}
 
 	if ( not $type ) {
