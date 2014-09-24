@@ -39,7 +39,7 @@ treppe_w              350  525    0    0 feedback2/bin6 \
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump watts=5             Bewässerungspumpe (geht nach 5min automatisch aus)
+  type=pump autooff=5m          Bewässerungspumpe (geht nach 5min automatisch aus)
 lounge_roehre         260  180    0    0 feedback3/2 \
   type=light ratelimit=90 watts=348 layer=caution  Putzlicht
 lounge_t1a            260   60    0    0 feedback3/4   \
@@ -131,7 +131,7 @@ phone                   6   24    0    0 none \
 clc1160               842   60    0    0 none \
   type=printer area=Hackcenter CLC1160 (manuell)
 hp2100                386   60    0    0 donationprint1/4 \
-  type=printer area=Lounge HP2100 (geht nach 45min automatisch aus)
+  type=printer autooff=45m area=Lounge HP2100 (geht nach 45min automatisch aus)
 
 dashpi                883  330    0    0 none \
   type=server area=Hackcenter
