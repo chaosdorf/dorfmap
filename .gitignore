@@ -17,3 +17,5 @@ public/index.html
 public/templates/*.html
 node_modules/
 src/css/*.css
+src/css/libs/bower/*
+src/js/libs/bower/*

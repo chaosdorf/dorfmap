@@ -8,7 +8,9 @@ var gulp = require('gulp'),
     jade = require('gulp-jade'),
     exec = require('gulp-exec'),
     plainExec = require('child_process').exec,
-    less = require('gulp-less');
+    less = require('gulp-less'),
+    bower = require('bower'),
+    fs = require('fs');
 
 gulp.task('perltidy', function() {
   gulp.src('index.pl')
@@ -94,8 +96,24 @@ gulp.task('copyToServer', function() {
   plainExec('scripts/dev/copy-to-server');
 });
 
-gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'less', 'css', 'perlStart', 'watch']);
-gulp.task('release', ['releaseIndicator','perltidy','jade','lint','scriptsRelease','less', 'css', 'perlStop']);
+gulp.task('bower', function(cb){
+  bower.commands.install([], {save: true}, {})
+    .on('end', function(installed){
+      cb();
+    });
+    var json = JSON.parse(fs.readFileSync('bower.json', 'utf-8'));
+    var keys = Object.keys(json.dependencies);
+    for (i=0;i<keys.length;i++) {
+      gulp.src('bower_components/'+keys[i]+'/'+keys[i]+'.css')
+        .pipe(gulp.dest('src/css/libs/'));
+      gulp.src('bower_components/'+keys[i]+'/'+keys[i]+'.js')
+        .pipe(gulp.dest('src/js/libs/'));
+    }
+
+});
+
+gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'bower', 'lint', 'scriptsDebug', 'less', 'css', 'perlStart', 'watch']);
+gulp.task('release', ['releaseIndicator','perltidy','jade', 'bower', 'lint','scriptsRelease','less', 'css', 'perlStop']);
 gulp.task('deploy', ['release', 'copyToServer']);
 
 gulp.task('default', ['debug']);

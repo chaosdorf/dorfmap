@@ -22,6 +22,7 @@
     "jshint-stylish": "^0.4.0",
     "uglifyify": "^2.5.0",
     "gulp-exec":"*",
-    "gulp-less":"*"
+    "gulp-less":"*",
+    "bower":"*"
   }
 }
