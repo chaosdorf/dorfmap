@@ -1,0 +1,245 @@
+.flexDisplay {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flexDirectionColumn {
+  -webkit-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+
+html {
+  font-family: Sans-Serif;
+}
+
+a {
+  color: #000066;
+  text-decoration: none;
+}
+
+div.about {
+  position: fixed;
+  top: 0.5em;
+  right: 1em;
+  font-family: Monospace;
+  color: #666666;
+  z-index: 10;
+}
+
+div.about a {
+  &:extend(html);
+  font-variant: small-caps;
+}
+
+div.content {
+  padding: 0;
+  margin: 0;
+}
+
+.errors {
+  position: absolute;
+  left: 3em;
+  top: 3em;
+  right: 3em;
+  bottom: 3em;
+  background-color: white;
+  border: 2px solid black;
+  opacity: .90;
+  color: red;
+  z-index: 100;
+}
+
+span.error {
+  color: red;
+}
+
+.dropdowncontainer {
+  padding-left:0.5em;
+  padding-top:0.5em;
+}
+
+.dropdown {
+  display: inline-block;
+}
+
+.dropdownwrapper {
+  width:20em;
+}
+
+.dropdownheader {
+  padding-left: 1em;
+  padding-right:1em;
+}
+
+.dropdownButton {
+  display:block;
+  text-transform:capitalize;
+}
+
+.menuDialog {
+  position:absolute;
+  left:35%;
+  top:35%;
+  background-color:white;
+}
+
+a.backlink {
+  display: block;
+  font-size: 150%;
+  font-family: Monospace;
+  text-decoration: none;
+  font-variant: small-caps;
+  color: black;
+  margin-bottom: 1em;
+}
+
+.overview {
+  background-image: url(/static/images/map.png);
+  width: 2202px;
+  height: 648px;
+  position: absolute;
+  left: 5px;
+  top:2.5em;
+}
+
+.popup {
+  visibility: hidden;
+  position: absolute;
+  left: 30px;
+  z-index: 1;
+  border: 1px solid gray;
+  background-color: white;
+  opacity: .90;
+  min-width: 300px;
+}
+
+:hover > .popup {
+  visibility: visible;
+}
+
+.overview .popup a {
+  color: #000099;
+  text-decoration: none;
+}
+
+.overview .open {
+  background-color: green;
+  opacity: .50;
+}
+
+.overview .closed {
+  background-color: black;
+  opacity: .50;
+}
+
+.overview .unknown {
+  background-color: red;
+}
+
+.overviewSpanBase {
+  font-size: 120%;
+  font-weight: bold;
+}
+
+.overview span.shutdownyes {
+  &:extend(.overviewSpanBase);
+  color: white;
+  background-color: blue;
+}
+
+.overview span.shutdownno {
+  &:extend(.overviewSpanBase);
+  color: white;
+  background-color: gray;
+}
+
+.overview span.onlineguests,
+.overview span.wattage {
+  &:extend(.overviewSpanBase);
+}
+
+.overview .rtext {
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.overview span.infohead {
+  display: block;
+  margin-top: 1.5em;
+}
+
+.overview span.onlinegueststext:after,
+.overview span.wattagetext:after {
+  content: ": ";
+}
+
+.lamp {
+  position:absolute;
+  width:32px;
+  height:32px;
+}
+
+.lampimage{
+  cursor: pointer;
+  -webkit-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+
+.lampimage:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+
+.animate-switch-container {
+  background:white;
+  opacity: 1.0;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+.animate-switch {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
+  position:absolute;
+}
+
+.blinkenlightTabContainer {
+  &:extend(.flexDisplay);
+  &:extend(.flexDirectionColumn);
+  overflow:scroll;
+}
+
+.blinkenlightPopupButtons {
+  &:extend(.flexDisplay);
+}
+
+.flexRight {
+  margin: 0 0 0 auto;
+}
+
+.flexLeft {
+  margin:0;
+}
+
+.blinkenlightPopupButton {
+  padding:5px;
+}
+
+material-tab,
+material-radio-group {
+  border:0!important;
+}
+
+material-tab:focus {
+  outline:0;
+}

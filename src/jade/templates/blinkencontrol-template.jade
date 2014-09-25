@@ -1,9 +1,14 @@
-material-dialog
-  div(cg-busy="loadingPromise" style="min-width:300px")
-    material-tabs
-      material-tab(label="Animations")
-        material-radio-group(ng-model="animations.selected")
-          material-radio-button(noink,ng-repeat="animation in animations track by animation.name",ng-value="animation.raw_string") {{animation.name}}
-  div
-    material-button(style="float:left;margin:5px;",ng-click="close()") Cancel
-    material-button(style="float:right;margin:5px;",ng-click="save()") Save
+material-dialog(style="min-width:300px")
+  div(cg-busy="loadingPromise")
+  material-tabs(selected="selectedIndex")
+    material-tab(label="Animations",style="font-weight: 500;font-size: 14px;")
+  .blinkenlightTabContainer(ng-switch on="selectedIndex", style="margin-top:7px;")
+    div(ng-switch-when="0")
+      material-radio-group(ng-model="animations.selected")
+        div(ng-repeat="animation in animations track by animation.name")
+          material-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
+          material-button Edit
+
+  .blinkenlightPopupButtons
+    material-button.flexLeft.blinkenlightPopupButton(ng-click="close()") Cancel
+    material-button.flexRight.blinkenlightPopupButton(ng-click="save()") Save

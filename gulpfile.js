@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     cssmin = require('gulp-cssmin'),
     jade = require('gulp-jade'),
     exec = require('gulp-exec'),
-    plainExec = require('child_process').exec;
+    plainExec = require('child_process').exec,
+    less = require('gulp-less');
 
 gulp.task('perltidy', function() {
   gulp.src('index.pl')
@@ -60,12 +61,20 @@ gulp.task('scriptsRelease', function() {
   .pipe(gulp.dest('public/js'));
 });
 
+gulp.task('less', function() {
+  gulp.src(['src/css/*.less', 'src/css/libs/*.less'])
+     .pipe(less())
+     .pipe(gulp.dest('src/css'));
+});
+
 gulp.task('css', function() {
  gulp.src(['src/css/*.css', 'src/css/libs/*.css'])
     .pipe(cssmin())
     .pipe(concat('dorfmap.min.css'))
     .pipe(gulp.dest('public/css'));
 });
+
+
 
 gulp.task('jade', function() {
   gulp.src(['src/jade/*.jade','src/jade/templates/*.jade'],{base: 'src/jade'})
@@ -75,7 +84,8 @@ gulp.task('jade', function() {
 
 gulp.task('watch', function() {
   gulp.watch('src/js/*.js', ['lint', 'scriptsDebug', 'perlStart']);
-  gulp.watch('src/css/*.css', ['css', 'perlStart']);
+  gulp.watch(['src/css/*.css','src/css/lib/*.css'], ['css', 'perlStart']);
+  gulp.watch(['src/css/*.less','src/css/lib/*.less'], ['less']);
   gulp.watch(['src/jade/*.jade','src/jade/templates/*.jade'], ['jade','perlStart']);
   gulp.watch('index.pl', ['perlStart']);
 });
@@ -87,8 +97,8 @@ gulp.task('copyToServer', function() {
   plainExec('ssh root@feedback dorfmap_pull');
 });
 
-gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'css', 'perlStart', 'watch']);
-gulp.task('release', ['releaseIndicator','perltidy','jade','lint','scriptsRelease','css', 'perlStop']);
+gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'less', 'css', 'perlStart', 'watch']);
+gulp.task('release', ['releaseIndicator','perltidy','jade','lint','scriptsRelease','less', 'css', 'perlStop']);
 gulp.task('deploy', ['release', 'copyToServer']);
 
 gulp.task('default', ['debug']);
