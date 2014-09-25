@@ -7,15 +7,13 @@
 *.map
 *.sym
 obj/
-
 si2c-bitwrite/si2c-bitwrite
 si2c-bytewrite/si2c-bytewrite
 si2c-charwrite/si2c-charwrite
-
 public/css/dorfmap.min.css
 public/js/dorfmap.min.js
 public/angular-busy.html
 public/index.html
 public/templates/*.html
-
 node_modules/
+src/css/*.css
