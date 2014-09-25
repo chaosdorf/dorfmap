@@ -41,9 +41,22 @@ my $re_other_section = qr{
 	\[
 }x;
 
-my %autooff = (
-	'/tmp/donationprint1/4'  => 45,
-	'/tmp/donationprint1/11' =>  5,
+my $re_autooff = qr{
+	^
+	(?: \S+ ) \s+ # device
+	(?: \S+ ) \s+ # x
+	(?: \S+ ) \s+ # y
+	(?: \S+ ) \s+ # w
+	(?: \S+ ) \s+ # h
+	(?<path> \S+)
+	.* autooff = (?<duration> \d+) (?<unit> [dhms])
+}x;
+
+my %units = (
+	s => 1,
+	m => 60,
+	h => 60 * 60,
+	d => 60 * 60 * 24,
 );
 
 sub slurp {
@@ -74,16 +87,7 @@ sub ping_host {
 
 while ( sleep(120) ) {
 
-	for my $device (keys %autooff) {
-		if ( -e $device and slurp($device) == 1 ) {
-			my $now = DateTime->now( time_zone => 'Europe/Berlin' )->epoch;
-			my $modified = ( stat($device) )[9];
-			if ( ( $now - $modified ) > ( $autooff{$device} * 60 ) ) {
-				spew( $device, "0\n" );
-				system('avrshift-donationprint');
-			}
-		}
-	}
+	my %autooff;
 
 	my $raw_coordinates = read_file('coordinates');
 	$raw_coordinates =~ s{\\\n}{}gs;
@@ -101,6 +105,21 @@ while ( sleep(120) ) {
 		}
 		elsif ( $in_pingdev_section and $line =~ $re_host ) {
 			ping_host( $+{host} );
+		}
+
+		if ( $line =~ $re_autooff ) {
+			my $device = '/tmp/' . $+{path};
+			my $delay  = $+{duration} * $units{ $+{unit} };
+
+			if ( -e $device and slurp($device) == 1 ) {
+				my $now = DateTime->now( time_zone => 'Europe/Berlin' )->epoch;
+				my $modified = ( stat($device) )[9];
+				if ( ( $now - $modified ) > $delay ) {
+					spew( $device, "0\n" );
+					system( 'dorfmap_set_remote',
+						( split( /\//, $device ) )[2] );
+				}
+			}
 		}
 	}
 

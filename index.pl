@@ -161,7 +161,7 @@ sub get_device {
 	my $type  = $coordinates->{$id}->{type};
 
 	if ( $opt{text} ) {
-		$state = q{},;
+		$state = q{};
 	}
 
 	if ( not $type ) {
@@ -570,17 +570,17 @@ sub json_blinkencontrol {
 	  = first { $bc_presets->{rgb}->{colours}->{$_} eq $current_string }
 	keys %{ $bc_presets->{rgb}->{colours} };
 
-	my ( $active_preset, $active_colour );
+	my $active;
 
 	if ($current_animation) {
-		$active_preset = {
+		$active = {
 			name       => $current_animation,
 			raw_string => $current_string,
 			type       => 'animation',
 		};
 	}
 	elsif ($current_colour) {
-		$active_preset = {
+		$active = {
 			name       => $current_colour,
 			raw_string => $current_string,
 			type       => 'color',
@@ -611,7 +611,7 @@ sub json_blinkencontrol {
 	}
 
 	return {
-		active  => $active_preset,
+		active  => $active,
 		presets => \@json_animations,
 		colors  => \@json_colours,
 		status  => get_device($device),

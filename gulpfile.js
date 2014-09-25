@@ -91,10 +91,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('copyToServer', function() {
-  plainExec('ssh root@feedback mount -o remount,rw /');
-  plainExec('rsync -aP coordinates index.pl public scripts root@feedback:/root/dorfmap');
-  plainExec('ssh root@feedback mount -o remount,ro /');
-  plainExec('ssh root@feedback dorfmap_pull');
+  plainExec('scripts/dev/copy-to-server');
 });
 
 gulp.task('debug', ['debugIndicator','perltidy', 'jade', 'lint', 'scriptsDebug', 'less', 'css', 'perlStart', 'watch']);
