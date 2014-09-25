@@ -33,7 +33,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
   }]);
 
-  app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', function ($http, $timeout, $scope, $materialDialog) {
+  app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog','mapCommunication', function ($http, $timeout, $scope, $materialDialog, mapCommunication) {
     new konami(function(){
       window.location='/static/images/madeby_derf0_and_marudor.jpg';
       $materialDialog({
@@ -60,11 +60,11 @@ function rateDelayUpdate(lamp, amount, $interval) {
                 timeout=500;
               }
               if (action==="shutdown") {
-                $scope.$emit('shutdown');
+                mapCommunication.shutdown();
               }
               else {
                 $timeout(function() {
-                  $scope.$emit('update');
+                  mapCommunication.update();
                 }, timeout);
               }
             });
@@ -74,7 +74,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
         if (d.name==='presets') {
           d.function=function(action, hide) {
             $http.post('/action', {action: 'preset', preset: action}).success(function() {
-              $scope.$emit('update');
+              mapCommunication.update();
             });
             hide();
           };
@@ -97,13 +97,15 @@ function rateDelayUpdate(lamp, amount, $interval) {
           }]
         });
       };
-      $scope.$emit('update');
+      mapCommunication.update();
     });
   }]);
 
-  app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', 'socket', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout, socket) {
+  app.controller('OverviewController', ['$http','$scope','$sce','$interval','$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', function($http, $scope, $sce, $interval, $materialDialog, $q, $timeout, socket, mapCommunication) {
     var overview = this;
     overview.lamps={};
+
+    mapCommunication.setOverview(this);
 
     socket.on('toggle',function(data){
       overview.lamps[data.name].update(data, true);
@@ -300,8 +302,6 @@ function rateDelayUpdate(lamp, amount, $interval) {
       }
       return httpGet;
     };
-    $scope.$parent.$on('shutdown', function() { $scope.$parent.shutdownPromise = overview.update();});
-    $scope.$parent.$on('update', overview.update);
 
     this.filteredLamps=function() {
       return Object.keys(overview.lamps).filter(function(k) {return overview.lamps[k].layer===$scope.map.layer;})
@@ -315,4 +315,18 @@ function rateDelayUpdate(lamp, amount, $interval) {
       templateUrl:'/static/templates/lamp-template.html'
     };
   });
+
+  app.factory('mapCommunication',[function mapCommunicationFactory() {
+    return {
+      shutdown: function() {
+        this.shutdownPromise = this.overview.update();
+      },
+      update: function() {
+        this.overview.update();
+      },
+      setOverview: function(overview) {
+        this.overview=overview;
+      }
+    };
+  }]);
 })();
