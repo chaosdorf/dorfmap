@@ -3,8 +3,8 @@ global.window.io=io;
 var angular = require('angular');
 require('angular-socket-io');
 require('angular-animate');
-require('./libs/angular-busy.min.js');
-require('./libs/angular-material.js');
+require('./libs/bower/angular-busy.js');
+require('./libs/bower/angular-material.js');
 var konami = require('konami-js');
 
 

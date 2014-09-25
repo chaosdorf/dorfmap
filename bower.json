@@ -1,6 +1,11 @@
 {
   "name": "dorfmap",
   "dependencies": {
-    "angular-material":"*"
+    "angular-material": "*",
+    "angular-busy": "*"
+  },
+  "resolutions": {
+    "angular-animate": "~1.2",
+    "angular": "~1.2"
   }
 }

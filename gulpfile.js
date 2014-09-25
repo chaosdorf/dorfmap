@@ -70,8 +70,8 @@ gulp.task('less', function() {
 });
 
 gulp.task('css', function() {
- gulp.src(['src/css/*.css', 'src/css/libs/*.css'])
-    .pipe(cssmin())
+ gulp.src(['src/css/*.css', 'src/css/libs/*.css','src/css/libs/bower/*.css'])
+    .pipe(cssmin({keepSpecialComments:0}))
     .pipe(concat('dorfmap.min.css'))
     .pipe(gulp.dest('public/css'));
 });
@@ -105,9 +105,9 @@ gulp.task('bower', function(cb){
     var keys = Object.keys(json.dependencies);
     for (i=0;i<keys.length;i++) {
       gulp.src('bower_components/'+keys[i]+'/'+keys[i]+'.css')
-        .pipe(gulp.dest('src/css/libs/'));
+        .pipe(gulp.dest('src/css/libs/bower/'));
       gulp.src('bower_components/'+keys[i]+'/'+keys[i]+'.js')
-        .pipe(gulp.dest('src/js/libs/'));
+        .pipe(gulp.dest('src/js/libs/bower/'));
     }
 
 });
