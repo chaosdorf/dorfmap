@@ -7,8 +7,7 @@ material-dialog(style="min-width:300px")
       material-radio-group(ng-model="animations.selected")
         div(ng-repeat="animation in animations track by animation.name")
           material-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
-          material-button Edit
-
+          //material-button Edit
   .blinkenlightPopupButtons
     material-button.flexLeft.blinkenlightPopupButton(ng-click="close()") Cancel
     material-button.flexRight.blinkenlightPopupButton(ng-click="save()") Save

@@ -27,7 +27,7 @@ gulp.task('perlStop',function() {
 });
 
 gulp.task('debugIndicator', function() {
-  plainExec('touch DEBUG_DO_NOT_COMMIT');
+  //plainExec('touch DEBUG_DO_NOT_COMMIT');
 });
 
 gulp.task('releaseIndicator', function() {
