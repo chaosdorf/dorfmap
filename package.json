@@ -2,25 +2,21 @@
   "name": "dorfmap",
   "version": "0.0.1",
   "description": "dorfmap",
-  "dependencies": {
-    "angular": "^1.2.25",
-    "angular-animate": "^1.2.16",
-    "angular-socket-io": "^0.6.0",
-    "socket.io-client": "^1.0.6",
-    "konami-js": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "bower": "*",
+    "debowerify": "^0.8.2",
     "gulp": "^3.8.7",
     "gulp-browserify": "^0.5.0",
     "gulp-concat": "^2.3.4",
     "gulp-cssmin": "^0.1.6",
+    "gulp-exec": "*",
     "gulp-jade": "^0.7.0",
     "gulp-jshint": "^1.8.4",
+    "gulp-less": "*",
     "gulp-util": "^3.0.0",
     "jshint-stylish": "^0.4.0",
     "uglifyify": "^2.5.0",
-    "gulp-exec":"*",
-    "gulp-less":"*",
-    "bower":"*"
+    "yargs":"*"
   }
 }

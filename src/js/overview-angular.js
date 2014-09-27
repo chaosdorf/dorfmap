@@ -1,11 +1,10 @@
-var io = require('socket.io-client');
-global.window.io=io;
-var angular = require('angular');
+global.window.io = require('socket.io-client');
+global.window.Hammer = require('hammerjs');
+require('angular');
 require('angular-socket-io');
 require('angular-animate');
-require('./libs/bower/angular-busy.js');
-require('./libs/bower/angular-material.js');
-var konami = require('konami-js');
+require('angular-busy');
+require('angular-material');
 
 
 function getURLParameter(name) {
@@ -24,7 +23,6 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
 (function(){
 
-  'use strict';
   var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
 
   app.factory('socket', ['socketFactory', function (socketFactory) {
@@ -34,12 +32,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
   }]);
 
   app.controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog','mapCommunication', function ($http, $timeout, $scope, $materialDialog, mapCommunication) {
-    new konami(function(){
-      window.location='/static/images/madeby_derf0_and_marudor.jpg';
-      $materialDialog({
-        template:"<img src='/static/images/madeby_derf0_and_marudor.jpg'/>"
-      });
-    });
+
 
     var map = this;
     map.layer=getURLParameter('layer') || 'control';
