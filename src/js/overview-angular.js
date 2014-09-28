@@ -3,7 +3,6 @@ global.window.Hammer = require('hammerjs');
 require('angular');
 require('angular-socket-io');
 require('angular-animate');
-require('angular-busy');
 require('angular-material');
 
 
@@ -23,7 +22,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
 
 (function(){
 
-  var app = angular.module('dorfmap', ['ngMaterial', 'cgBusy', 'btford.socket-io']);
+  var app = angular.module('dorfmap', ['ngMaterial', 'btford.socket-io']);
 
   app.factory('socket', ['socketFactory', function (socketFactory) {
     return socketFactory({

@@ -20,8 +20,8 @@ html(ng-app="dorfmap")
       span
         a(href="/space_api.json")  spaceAPI
     .content(ng-controller="MapController as map")
-      .dropdownwrapper(cg-busy="map.loadingPromise")
-        .dropdowncontainer(layout="horizontal",layout-align="center", cg-busy="{promise:shutdownPromise,message:'Shutting down.'}")
+      .dropdownwrapper
+        .dropdowncontainer(layout="horizontal",layout-align="center")
           .dropdownheader
             material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('shortcuts')") Actions
           .dropdownheader
