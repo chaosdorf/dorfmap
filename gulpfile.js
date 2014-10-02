@@ -13,6 +13,7 @@ debowerify = require('debowerify'),
 livereload = require('gulp-livereload'),
 beautify = require('gulp-beautify'),
 coffee = require('gulp-coffee'),
+insert = require('gulp-insert'),
 bower = require('bower'),
 fs = require('fs');
 
@@ -132,11 +133,16 @@ gulp.task('bower', function(cb){
     //socket-io-exception
     fs.writeFileSync('bower_components/socket.io-client/socket.io-client.js', fs.readFileSync('bower_components/socket.io-client/socket.io.js'));
     //opentip
-    gulp.src(['bower_components/opentip/src/opentip.coffee','bower_components/opentip/src/adapter-native.coffee'])
-    .pipe(coffee())
-    .pipe(concat('opentip.js'))
-    .pipe(gulp.dest('bower_components/opentip/lib/'))
-    .on('finish', function(){cb()});
+    gulp.src(['bower_components/opentip/src/opentip.coffee'])
+    .pipe(insert.append('window.Opentip=Opentip'))
+    .pipe(gulp.dest('bower_components/opentip/comp/'))
+    .on('finish',function() {
+      gulp.src(['bower_components/opentip/comp/opentip.coffee','bower_components/opentip/src/adapter-native.coffee'])
+      .pipe(coffee())
+      .pipe(concat('opentip.js'))
+      .pipe(gulp.dest('bower_components/opentip/lib/'))
+      .on('finish', function(){cb()});
+    })
   });
 });
 

@@ -1,9 +1,5 @@
 .lamp(id="{{lamp.name}}",class="{{lamp.class()}}",ng-style="lamp.style()")
   img(ng-hide="lamp.type==='rtext' || lamp.type==='infoarea'",class="{{lamp.imageClass()}}", ng-click="lamp.toggle($event)", ng-src="{{lamp.image()}}")
-
-  //div(class="{{lamp.statusClass()}}", ng-show="lamp.status_text")
-    div(ng-bind-html="lamp.status_text")
-    span(ng-show="lamp.rate_delay>0")  (rate limited - wait <span ng-bind="lamp.rate_delay" ></span> seconds)
 div(ng-repeat="dup in lamp.duplicates")
   .lamp(id="{{lamp.name}}_dup{{$index+1}}", class="{{lamp.class()}}", ng-style="lamp.style(dup)")
     img(class="{{lamp.imageClass()}}", ng-hide="lamp.type==='rtext'", ng-click="lamp.toggle()",ng-src="{{lamp.image()}}")

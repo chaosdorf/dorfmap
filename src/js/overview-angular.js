@@ -338,15 +338,30 @@ function rateDelayUpdate(lamp, amount, $interval) {
       restrict: 'E',
       templateUrl: '/static/templates/lamp-template.html',
       link: function (scope, element, attrs) {
-        scope.tip = new Opentip(element[0]);
+
+        if (scope.lamp.type !== 'infoarea') {
+          scope.tip = new Opentip(element[0]);
+        } else {
+          scope.element = element;
+        }
       },
       controller: ['$scope', function ($scope) {
         $scope.$watch('lamp.status_text', function (newval) {
           if (newval) {
+            if ($scope.lamp.type === 'infoarea') {
+              $scope.element.children().html(newval);
+              return;
+            }
             if ($scope.rate_delay > 0) {
               $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
             } else {
-              $scope.lamp.tooltipText = newval.$$unwrapTrustedValue();
+              if ($scope.lamp.status_text) {
+                if ($scope.lamp.status_text.$$unwrapTrustedValue) {
+                  $scope.lamp.tooltipText = $scope.lamp.status_text.$$unwrapTrustedValue();
+                } else {
+                  $scope.lamp.tooltipText = $scope.lamp.status_text;
+                }
+              }
             }
           }
         });
@@ -354,7 +369,13 @@ function rateDelayUpdate(lamp, amount, $interval) {
           if (newval > 0) {
             $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
           } else {
-            $scope.lamp.tooltipText = $scope.lamp.status_text.$$unwrapTrustedValue();
+            if ($scope.lamp.status_text) {
+              if ($scope.lamp.status_text.$$unwrapTrustedValue) {
+                $scope.lamp.tooltipText = $scope.lamp.status_text.$$unwrapTrustedValue();
+              } else {
+                $scope.lamp.tooltipText = $scope.lamp.status_text;
+              }
+            }
           }
         });
         $scope.$watch('lamp.tooltipText', function (newval) {
