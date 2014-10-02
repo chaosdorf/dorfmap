@@ -1,26 +1,3 @@
-.flexDisplay {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -moz-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.flexDirectionColumn {
-  -webkit-box-direction: normal;
-  -webkit-box-orient: vertical;
-  -webkit-flex-direction: column;
-  -moz-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-
-
-html {
-  font-family: Sans-Serif;
-}
-
 a {
   color: #000066;
   text-decoration: none;
@@ -190,13 +167,11 @@ a.backlink {
 
 .lampimage{
   cursor: pointer;
-  -webkit-transition: all 0.2s linear;
   transition: all 0.2s linear;
 }
 
 .lampimage:hover {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+      transform: scale(1.1);
 }
 
 
@@ -208,19 +183,17 @@ a.backlink {
 }
 
 .animate-switch {
-  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
   transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.25s;
   position:absolute;
 }
 
 .blinkenlightTabContainer {
-  &:extend(.flexDisplay);
-  &:extend(.flexDirectionColumn);
+  display: flex;
   overflow:auto;
 }
 
 .blinkenlightPopupButtons {
-  &:extend(.flexDisplay);
+  display: flex;
 }
 
 .flexRight {

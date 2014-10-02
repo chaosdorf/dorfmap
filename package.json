@@ -7,16 +7,18 @@
     "bower": "*",
     "debowerify": "^0.8.2",
     "gulp": "^3.8.7",
+    "gulp-autoprefixer": "^1.0.1",
+    "gulp-beautify": "^1.1.0",
     "gulp-browserify": "^0.5.0",
+    "gulp-coffee": "^2.2.0",
     "gulp-concat": "^2.3.4",
+    "gulp-csscomb": "^3.0.2",
     "gulp-cssmin": "^0.1.6",
     "gulp-exec": "*",
     "gulp-jade": "^0.7.0",
-    "gulp-jshint": "^1.8.4",
     "gulp-less": "*",
+    "gulp-livereload": "*",
     "gulp-util": "^3.0.0",
-    "gulp-livereload":"*",
-    "jshint-stylish": "^0.4.0",
     "uglifyify": "^2.5.0"
   }
 }
