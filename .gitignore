@@ -22,3 +22,4 @@ src/js/libs/bower/*
 bower_components
 index.pl.bak
 .vendor
+npm-debug.log

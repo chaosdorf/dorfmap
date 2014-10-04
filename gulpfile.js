@@ -125,10 +125,23 @@ gulp.task('css', ['less'], function() {
 
 
 gulp.task('jade', ['bower'], function() {
-  return gulp.src([srcPath.jade])
+  var q = Q.defer();
+  var promises = [];
+  promises.push(q);
+  gulp.src([srcPath.jade])
   .pipe(jade())
   .pipe(gulp.dest(pubPath.jade))
-  .on('finish', function(){livereload.changed();});
+  .on('finish', function(){q.resolve();});
+  var q = Q.defer();
+  promises.push(q.promise);
+  gulp.src(['src/js/**/Templates/**/*.jade'])
+  .pipe(jade())
+  .pipe(gulp.dest(pubPath.jade))
+  .on('finish', function(){q.resolve()})
+
+  return Q.all(promises).then(function() {
+    livereload.changed();
+  });
 });
 
 gulp.task('watch', function() {
