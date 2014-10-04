@@ -21,3 +21,4 @@ src/css/libs/bower/*
 src/js/libs/bower/*
 bower_components
 index.pl.bak
+.vendor

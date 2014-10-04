@@ -1,12 +1,3 @@
-global.window.io = require('socket.io-client');
-global.window.Hammer = require('hammerjs');
-require('angular');
-require('angular-socket-io');
-require('angular-animate');
-require('angular-material');
-require('opentip');
-
-
 function getURLParameter(name) {
   return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
 }
@@ -106,7 +97,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
     });
   }]);
 
-  app.controller('OverviewController', ['$http', '$scope', '$sce', '$interval', '$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', function ($http, $scope, $sce, $interval, $materialDialog, $q, $timeout, socket, mapCommunication) {
+  app.controller('OverviewController', ['$http', '$scope', '$interval', '$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', function ($http, $scope, $interval, $materialDialog, $q, $timeout, socket, mapCommunication) {
     var overview = this;
     overview.lamps = {};
 
@@ -123,7 +114,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
         Object.keys(data).forEach(function (key) {
           if (!overview.lamps[key]) {
             if (typeof(data[key].status_text) === "string") {
-              data[key].status_text = $sce.trustAsHtml(data[key].status_text);
+              data[key].status_text = data[key].status_text;
             }
             overview.lamps[key] = data[key];
             overview.lamps[key].rateDelayActive = false;
@@ -139,9 +130,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   this.rate_delay = data.rate_delay;
                 }
                 if (typeof(data.status_text) === "string") {
-                  this.status_text = $sce.trustAsHtml(data.status_text);
+                  this.status_text = data.status_text;
                   if (data.infoarea)  {
-                    overview.lamps.infoarea.status_text = $sce.trustAsHtml(data.infoarea);
+                    overview.lamps.infoarea.status_text = data.infoarea;
                   }
                 }
               }
@@ -288,7 +279,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   socket.emit('toggle', data);
                   overview.lamps[key].status = parseInt(data.status);
                   overview.lamps[key].auto = data.auto;
-                  overview.lamps.infoarea.status_text = $sce.trustAsHtml(data.infoarea);
+                  overview.lamps.infoarea.status_text = data.infoarea;
                   if (((oldStatus === overview.lamps[key].status) || (oldStatus == 1 && overview.lamps[key].status === 0)) && data.rate_delay > 0) {
                     overview.lamps[key].rate_delay = data.rate_delay;
                     overview.lamps[key].blocked = false;
@@ -300,9 +291,9 @@ function rateDelayUpdate(lamp, amount, $interval) {
                   if (overview.lamps[key].isAuto()) {
                     var unsafeStatusText = overview.lamps[key].status_text.toString();
                     if (overview.lamps[key].auto == 1 && unsafeStatusText.indexOf("(deaktiviert)") != -1) {
-                      overview.lamps[key].status_text = $sce.trustAsHtml(unsafeStatusText.replace(" (deaktiviert)", ""));
+                      overview.lamps[key].status_text = unsafeStatusText.replace(" (deaktiviert)", "");
                     } else if (overview.lamps[key].auto === 0 && unsafeStatusText.indexOf("(deaktiviert)") === -1) {
-                      overview.lamps[key].status_text = $sce.trustAsHtml(unsafeStatusText + " (deaktiviert)");
+                      overview.lamps[key].status_text = unsafeStatusText + " (deaktiviert)";
                     }
                   }
                   overview.lamps[key].blocked = false;
@@ -338,12 +329,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
       restrict: 'E',
       templateUrl: '/static/templates/lamp-template.html',
       link: function (scope, element, attrs) {
-
-        if (scope.lamp.type !== 'infoarea') {
-          scope.tip = new Opentip(element[0]);
-        } else {
-          scope.element = element;
-        }
+        scope.element = element;
       },
       controller: ['$scope', function ($scope) {
         $scope.$watch('lamp.status_text', function (newval) {
@@ -356,11 +342,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
               $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
             } else {
               if ($scope.lamp.status_text) {
-                if ($scope.lamp.status_text.$$unwrapTrustedValue) {
-                  $scope.lamp.tooltipText = $scope.lamp.status_text.$$unwrapTrustedValue();
-                } else {
-                  $scope.lamp.tooltipText = $scope.lamp.status_text;
-                }
+                $scope.lamp.tooltipText = $scope.lamp.status_text;
               }
             }
           }
@@ -370,11 +352,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
             $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
           } else {
             if ($scope.lamp.status_text) {
-              if ($scope.lamp.status_text.$$unwrapTrustedValue) {
-                $scope.lamp.tooltipText = $scope.lamp.status_text.$$unwrapTrustedValue();
-              } else {
-                $scope.lamp.tooltipText = $scope.lamp.status_text;
-              }
+              $scope.lamp.tooltipText = $scope.lamp.status_text;
             }
           }
         });
@@ -382,8 +360,10 @@ function rateDelayUpdate(lamp, amount, $interval) {
           if (newval && newval !== "") {
             if ($scope.tip) {
               $scope.tip.activate();
-              $scope.tip.setContent(newval);
+            } else {
+              $scope.tip = new Opentip($scope.element[0]);
             }
+            $scope.tip.setContent(newval);
           } else {
             if ($scope.tip) {
               $scope.tip.deactivate();
