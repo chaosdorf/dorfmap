@@ -357,7 +357,7 @@ function rateDelayUpdate(lamp, amount, $interval) {
           }
         });
         $scope.$watch('lamp.tooltipText', function (newval) {
-          if (newval && newval !== "") {
+          if (newval && newval !== "" && $scope.lamp.type != "infoarea") {
             if ($scope.tip) {
               $scope.tip.activate();
             } else {
