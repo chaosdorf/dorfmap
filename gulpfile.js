@@ -168,7 +168,7 @@ gulp.task('watch', function() {
   gulp.watch(srcPath.js, ['js', 'perlStart']);
   gulp.watch([srcPath.css], ['css', 'perlStart']);
   gulp.watch([srcPath.less], ['less']);
-  gulp.watch([srcPath.jade], ['jade','perlStart']);
+  gulp.watch([srcPath.jade,'src/js/**/Templates/**/*.jade'], ['jade','perlStart']);
   gulp.watch('index.pl', ['perlStart']);
 });
 

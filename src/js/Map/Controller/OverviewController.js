@@ -114,7 +114,17 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                   controller: function ($scope, $hideDialog, $http) {
                     $scope.lamp = overview.lamps[key];
                     $scope.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success(function (data) {
+                      data.presets = data.presets.map(function(animation) {
+                        animation.Edit = function() {
+                          $scope.animations.editing = true;
+                          $scope.animations.label = animation.name;
+                          $scope.animations.newRawString = animation.raw_string;
+                          $scope.animations.animation = animation.name;
+                        };
+                        return animation;
+                      });
                       $scope.animations = data.presets;
+                      $scope.animations.label = "Animations";
                       if (data.active) {
                         $scope.animations.selected = data.active.raw_string;
                       }
@@ -123,21 +133,30 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                         $scope.lamp.status = data.status;
                       });
                     });
+
                     $scope.close = function () {
                       $hideDialog();
                     };
+                    $scope.back = function() {
+                      $scope.animations.editing=false;
+                      $scope.animations.label="Animations";
+                    };
                     $scope.save = function () {
-                      $http.post("/ajax/blinkencontrol", {
-                        device: $scope.lamp.name,
-                        raw_string: $scope.animations.selected
-                      }).success(function (data) {
-                        $scope.lamp.status = data.status;
-                        socket.emit('blinkencontrol', {
+                      if (!$scope.animations.editing) {
+                        $http.post("/ajax/blinkencontrol", {
                           device: $scope.lamp.name,
-                          raw_string: $scope.animations.selected,
-                          status: data.status
+                          raw_string: $scope.animations.selected
+                        }).success(function (data) {
+                          $scope.lamp.status = data.status;
+                          socket.emit('blinkencontrol', {
+                            device: $scope.lamp.name,
+                            raw_string: $scope.animations.selected,
+                            status: data.status
+                          });
                         });
-                      });
+                      } else {
+
+                      }
                       $scope.close();
                     };
                   }
