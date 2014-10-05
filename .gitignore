@@ -23,3 +23,6 @@ bower_components
 index.pl.bak
 .vendor
 npm-debug.log
+public/js/dorfmap.min.js.gz
+public/js/dorfmap.min.js.map.gz
+public/Map/Templates/*

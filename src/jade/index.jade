@@ -3,8 +3,8 @@ html(ng-app="Map")
   head
     title dorfmap
     meta(charset="UTF-8")
-    meta(name="viewport",content="width=device-width, initial-scale=1.0")
-    link(rel="stylesheet", href="/static/css/dorfmap.min.css" type="text/css")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="/static/css/dorfmap.min.css" type="text/css")
     script(src='/static/js/dorfmap.min.js')
   body
     .about
@@ -19,9 +19,9 @@ html(ng-app="Map")
         |  -
       span
         a(href="/space_api.json")  spaceAPI
-    .content(ng-controller="MapController as map")
+    .content(ng-controller="MapController as map" )
       .dropdownwrapper
-        .dropdowncontainer(layout="horizontal",layout-align="center")
+        .dropdowncontainer(layout="horizontal" layout-align="center" cg-busy="map.loadingPromise")
           .dropdownheader
             material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('shortcuts')") Actions
           .dropdownheader

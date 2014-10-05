@@ -6,6 +6,7 @@
     "socket.io-client": "*",
     "angular-material": "*",
     "angular-socket-io": "*",
+    "angular-busy": "git@github.com:CodeScaleInc/angular-busy.git",
     "opentip": "*",
     "jquery": "*"
   },

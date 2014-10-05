@@ -10,17 +10,18 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
   }
 
   var overview = this;
-  overview.lamps = {};
+  this.lamps = {};
 
   mapCommunication.setOverview(this);
 
   socket.on('toggle', function (data) {
-    overview.lamps[data.name].update(data, true);
-  });
+    this.lamps[data.name].update(data, true);
+  }.bind(this));
 
   //UNCOMMENT THIS TO DISABLE WEBSOCKETS
   //socket.removeAllListeners().destroy();
   this.update = function () {
+    var t = $q.defer();
     var httpGet = $http.get('/list/all.json').success(function (data) {
       Object.keys(data).forEach(function (key) {
         if (!overview.lamps[key]) {

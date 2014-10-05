@@ -1,1 +1,1 @@
-angular.module('Map', ['ngMaterial', 'btford.socket-io']);
+angular.module('Map', ['ngMaterial', 'btford.socket-io', 'cgBusy']);

@@ -1,23 +1,22 @@
-angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', 'mapCommunication', function ($http, $timeout, $scope, $materialDialog, mapCommunication) {
+angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', 'mapCommunication', '$q', function ($http, $timeout, $scope, $materialDialog, mapCommunication,$q) {
   function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
   }
 
-  var map = this;
-  map.layer = getURLParameter('layer') || 'control';
+
+
+  this.layer = getURLParameter('layer') || 'control';
   $http.get('/ajax/menu.json').success(function (data) {
-    map.menu = data;
-    map.menuEntries = {};
+    this.menu = data;
+    this.menuEntries = {};
     var max = 0;
     data.forEach(function (d, index) {
-      map.menuEntries[d.name] = index;
+      this.menuEntries[d.name] = index;
       if (d.entries.length > max) {
         max = d.entries.length;
       }
       if (d.name === 'shortcuts') {
-        d.
-
-        function = function (action, hide) {
+        d.function = function (action, hide) {
           $http.post('/action', {
             action: 'shortcut',
             shortcut: action
@@ -39,9 +38,7 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
         };
       }
       if (d.name === 'presets') {
-        d.
-
-        function = function (action, hide) {
+        d.function = function (action, hide) {
           $http.post('/action', {
             action: 'preset',
             preset: action
@@ -52,25 +49,23 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
         };
       }
       if (d.name === 'layers') {
-        d.
-
-        function = function (layer, hide) {
-          map.layer = layer;
+        d.function = function (layer, hide) {
+          this.layer = layer;
           hide();
-        };
+        }.bind(this);
       }
-    });
+    }.bind(this));
     data.height = (max) * 24;
-    map.menu.dialog = function (key) {
+    this.menu.dialog = function (key) {
       $materialDialog({
         templateUrl: '/static/Map/Templates/dropdownmenu.html',
         controller: ['$scope', '$hideDialog', function ($scope, $hideDialog) {
           $scope.dropdownData = data;
-          $scope.selectedIndex = map.menuEntries[key];
+          $scope.selectedIndex = this.menuEntries[key];
           $scope.hide = $hideDialog;
-        }]
+        }.bind(this)]
       });
-    };
+    }.bind(this);
     mapCommunication.update();
-  });
+  }.bind(this));
 }]);

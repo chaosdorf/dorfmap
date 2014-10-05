@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
 prefixer = require('gulp-autoprefixer'),
-csscomb = require('gulp-csscomb'),
 uglify = require('gulp-uglify'),
 source = require('vinyl-source-stream'),
 streamify = require('gulp-streamify'),
@@ -15,16 +14,17 @@ plainExec = require('child_process').exec,
 less = require('gulp-less'),
 debowerify = require('debowerify'),
 livereload = require('gulp-livereload'),
-beautify = require('gulp-beautify'),
+jshint = require('gulp-jshint'),
 coffee = require('gulp-coffee'),
 insert = require('gulp-insert'),
-remember = require('gulp-remember'),
 newer = require('gulp-newer'),
+gzip = require('gulp-gzip'),
 bower = require('bower'),
 del = require('del'),
 fs = require('fs'),
 Q = require('q');
 
+livereload({auto:false});
 
 //config paths
 var srcBase="src/";
@@ -58,16 +58,15 @@ gulp.task('js', ['bower'], function() {
   .pipe(newer('.vendor/ref/'))
   .pipe(gulp.dest('.vendor/'))
   .on('finish', function() {
-
     if (fs.existsSync('./.vendor/require.js')) {
       var bundle = browserify('./.vendor/require.js', {
         fast: true
       });
       bundle=bundle.bundle();
       bundle
-      .pipe(source('./.vendor/vendor.js'))
-      .pipe(streamify(uglify({mangle:false})))
-      .pipe(gulp.dest('./'))
+      .pipe(source('./vendor.js'))
+      .pipe(gutil.env.type==='deploy'?streamify(uglify({mangle:false})):gutil.noop())
+      .pipe(gulp.dest('./.vendor/'))
       .on('finish',function(){
         qr.resolve();
       });
@@ -76,13 +75,19 @@ gulp.task('js', ['bower'], function() {
     }
     q.resolve();
   });
+  gutil.env.error=false;
   qr.promise.then(function() {
     gulp.src([srcPath.js], {base: 'src/js/'})
-    .pipe(beautify({indentSize: 2}))
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jshint.reporter('fail'))
+    .on('error', swallowError)
     .pipe(gulp.dest('src/js/'))
     .on ('finish', function() {
       gulp.src(['.vendor/vendor.js',srcPath.js,'!src/js/require.js'], {base: 'src/js/'})
       .pipe(gutil.env.type==='deploy' ? concat('dorfmap.min.js') : concatSource('dorfmap.min.js',{sourcesContent:true}))
+      .pipe(gulp.dest('public/js/'))
+      .pipe(gzip())
       .pipe(gulp.dest('public/js/'))
       .on('finish',function(){
         q3.resolve();
@@ -91,12 +96,17 @@ gulp.task('js', ['bower'], function() {
     });
     q2.resolve();
   });
-  return Q.all(promises);
+  return Q.all(promises).then(function() {
+    if (!gutil.env.error) {
+      livereload.changed();
+    }
+  });
 })
 
-gulp.task('less', ['bower'], function(cb) {
-  gulp.src(srcPath.less, {base:'src/css/'})
+gulp.task('less', ['bower'], function() {
+  return gulp.src(srcPath.less, {base:'src/css/'})
   .pipe(less({strictMath:true,strictUnit:true}))
+  .on('error', swallowError)
   .pipe(prefixer([
     'Android >= 4',
     'Chrome >= 30',
@@ -106,12 +116,12 @@ gulp.task('less', ['bower'], function(cb) {
     'Opera >= 24',
     'Safari >= 6']
   ))
-  .pipe(gulp.dest(pubPath.less))
-  .on('finish',function(){cb()});
+  .on('error', swallowError)
+  .pipe(gulp.dest(pubPath.less));
 });
 
 gulp.task('css', ['less'], function() {
-  var depCss = ['angular-material/angular-material.css', 'opentip/css/opentip.css'];
+  var depCss = ['angular-material/angular-material.css', 'opentip/css/opentip.css','angular-busy/dist/angular-busy.css'];
   depCss=depCss.map(function(c) {return 'bower_components/'+c});
   depCss.unshift(srcPath.css);
 
@@ -119,10 +129,10 @@ gulp.task('css', ['less'], function() {
   .pipe(cssmin({keepSpecialComments:0}))
   .pipe(concat('dorfmap.min.css'))
   .pipe(gulp.dest(pubPath.css.pub))
-  .on('finish', function(){livereload.changed();});
+  .on('finish', function() {
+    livereload.changed();
+  });
 });
-
-
 
 gulp.task('jade', ['bower'], function() {
   var q = Q.defer();
@@ -130,6 +140,7 @@ gulp.task('jade', ['bower'], function() {
   promises.push(q);
   gulp.src([srcPath.jade])
   .pipe(jade())
+  .on('error', swallowError)
   .pipe(gulp.dest(pubPath.jade))
   .on('finish', function(){q.resolve();});
   var q = Q.defer();
@@ -138,13 +149,14 @@ gulp.task('jade', ['bower'], function() {
   .pipe(jade())
   .pipe(gulp.dest(pubPath.jade))
   .on('finish', function(){q.resolve()})
-
   return Q.all(promises).then(function() {
     livereload.changed();
   });
 });
 
 gulp.task('watch', function() {
+  gutil.env.watch=true;
+  livereload({auto:true});
   livereload.listen();
   gulp.watch(srcPath.js, ['js', 'perlStart']);
   gulp.watch([srcPath.css], ['css', 'perlStart']);
@@ -178,6 +190,7 @@ gulp.task('bower', function(cb){
 
 gulp.task('clean',function(){
   plainExec('rm -rf bower_components');
+  plainExec('rm -rf .vendor');
   gutil.env.type='deploy';
 });
 
@@ -187,3 +200,13 @@ gulp.task('release', ['clean','perltidy','jade','js', 'css', 'perlStop']);
 gulp.task('deploy', ['copyToServer']);
 
 gulp.task('default', ['debug']);
+
+function swallowError(error) {
+  gutil.env.error=true;
+  console.log(error.toString());
+  if (gutil.env.watch) {
+    this.emit('end');
+  } else {
+    throw error;
+  }
+}
