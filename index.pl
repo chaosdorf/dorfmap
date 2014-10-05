@@ -742,7 +742,7 @@ $shortcuts->{'amps off'} = sub {
 $shortcuts->{makeprivate} = sub {
 	my ($self) = @_;
 
-	system(qw(ssh private@door));
+	system(qw(ssh -i /etc/dorfmap/private.key private@door));
 
 	return $?;
 };
