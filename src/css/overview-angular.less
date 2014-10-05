@@ -17,7 +17,7 @@ div.about a {
   font-variant: small-caps;
 }
 
-div.content {
+.content {
   padding: 0;
   margin: 0;
 }
@@ -35,7 +35,7 @@ div.content {
   z-index: 100;
 }
 
-span.error {
+.error {
   color: red;
 }
 
@@ -69,7 +69,7 @@ span.error {
   background-color:white;
 }
 
-a.backlink {
+.backlink {
   display: block;
   font-size: 150%;
   font-family: Monospace;
@@ -127,20 +127,20 @@ a.backlink {
   font-weight: bold;
 }
 
-.overview span.shutdownyes {
+.overview .shutdownyes {
   &:extend(.overviewSpanBase);
   color: white;
   background-color: blue;
 }
 
-.overview span.shutdownno {
+.overview .shutdownno {
   &:extend(.overviewSpanBase);
   color: white;
   background-color: gray;
 }
 
-.overview span.onlineguests,
-.overview span.wattage {
+.overview .onlineguests,
+.overview .wattage {
   &:extend(.overviewSpanBase);
 }
 
@@ -149,13 +149,13 @@ a.backlink {
   font-weight: bold;
 }
 
-.overview span.infohead {
+.overview .infohead {
   display: block;
   margin-top: 1.5em;
 }
 
-.overview span.onlinegueststext:after,
-.overview span.wattagetext:after {
+.overview .onlinegueststext:after,
+.overview .wattagetext:after {
   content: ": ";
 }
 

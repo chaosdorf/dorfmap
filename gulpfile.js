@@ -1,4 +1,5 @@
 var gulp = require('gulp'),
+csslint = require('gulp-csslint'),
 prefixer = require('gulp-autoprefixer'),
 uglify = require('gulp-uglify'),
 source = require('vinyl-source-stream'),
@@ -106,6 +107,12 @@ gulp.task('js', ['bower'], function() {
 gulp.task('less', ['bower'], function() {
   return gulp.src(srcPath.less, {base:'src/css/'})
   .pipe(less({strictMath:true,strictUnit:true}))
+  .on('error', swallowError)
+  .pipe(csslint({
+    "important": false,
+    "outline-none": false
+  }))
+  .pipe(csslint.reporter())
   .on('error', swallowError)
   .pipe(prefixer([
     'Android >= 4',
