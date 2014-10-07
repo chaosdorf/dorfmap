@@ -108,10 +108,10 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
           overview.lamps[key].toggle = function ($event) {
             if (this.canAccess()) {
               if (this.type == "blinkenlight") {
-                $materialDialog({
+                $materialDialog.show({
                   templateUrl: '/static/Map/Templates/blinkencontrol.html',
                   targetEvent: $event,
-                  controller: function ($scope, $hideDialog, $http) {
+                  controller: function ($scope, $http) {
                     $scope.lamp = overview.lamps[key];
                     $scope.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success(function (data) {
                       data.presets = data.presets.map(function(animation) {
@@ -135,7 +135,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     });
 
                     $scope.close = function () {
-                      $hideDialog();
+                      $materialDialog.hide();
                     };
                     $scope.back = function() {
                       $scope.animations.editing=false;
@@ -155,7 +155,13 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                           });
                         });
                       } else {
-
+                        $http.post("/ajax/blinkencontrol", {
+                          device: $scope.lamp.name,
+                          name: $scope.animations.animation,
+                          raw_string: $scope.animations.newRawString,
+                        }).success(function(data) {
+                          $scope.lamp.status = data.status;
+                        });
                       }
                       $scope.close();
                     };
@@ -164,10 +170,10 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                 return;
               }
               if (this.type == "charwrite") {
-                $materialDialog({
+                $materialDialog.show({
                   templateUrl: '/static/Map/Templates/charwrite.html',
                   targetEvent: $event,
-                  controller: ['$scope', '$hideDialog', '$http', function ($scope, $hideDialog, $http) {
+                  controller: ['$scope', '$http', function ($scope, $http) {
                     $scope.lamp = overview.lamps[key];
                     $scope.loadingPromise = $http.get('/ajax/charwrite').success(function (data) {
                       $scope.modes = data;
@@ -181,7 +187,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     $scope.customModes = ['date', 'clock', 'hosts', 'power'];
                     $scope.close = function () {
                       $scope.lamp.newText = '';
-                      $hideDialog();
+                      $materialDialog.hide();
                     };
                     $scope.save = function () {
                       if ($scope.radioGroup === "custom") {

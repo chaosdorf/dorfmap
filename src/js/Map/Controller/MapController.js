@@ -16,7 +16,7 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
         max = d.entries.length;
       }
       if (d.name === 'shortcuts') {
-        d.function = function (action, hide) {
+        d.function = function (action) {
           $http.post('/action', {
             action: 'shortcut',
             shortcut: action
@@ -34,35 +34,34 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
               }, timeout);
             }
           });
-          hide();
+          $materialDialog.hide();
         };
       }
       if (d.name === 'presets') {
-        d.function = function (action, hide) {
+        d.function = function (action) {
           $http.post('/action', {
             action: 'preset',
             preset: action
           }).success(function () {
             mapCommunication.update();
           });
-          hide();
+          $materialDialog.hide();
         };
       }
       if (d.name === 'layers') {
-        d.function = function (layer, hide) {
+        d.function = function (layer) {
           this.layer = layer;
-          hide();
+          $materialDialog.hide();
         }.bind(this);
       }
     }.bind(this));
     data.height = (max) * 24;
     this.menu.dialog = function (key) {
-      $materialDialog({
+      $materialDialog.show({
         templateUrl: '/static/Map/Templates/dropdownmenu.html',
-        controller: ['$scope', '$hideDialog', function ($scope, $hideDialog) {
+        controller: ['$scope', function ($scope) {
           $scope.dropdownData = data;
           $scope.selectedIndex = this.menuEntries[key];
-          $scope.hide = $hideDialog;
         }.bind(this)]
       });
     }.bind(this);

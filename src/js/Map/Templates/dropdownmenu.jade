@@ -1,6 +1,6 @@
 material-dialog
   div.menuDialog
-    material-tabs(selected="selectedIndex" noink, style="width:30em;")
-      material-tab(ng-repeat="menu in dropdownData",label="{{menu.name}}")
+    material-tabs(selected="selectedIndex" noink style="width:30em;")
+      material-tab(ng-repeat="menu in dropdownData" label="{{menu.name}}")
         div
-          material-button.dropdownButton(ng-repeat="d in menu.entries",ng-click="menu.function(d.name, hide)") {{d.name}}
+          material-button.dropdownButton(ng-repeat="d in menu.entries" ng-click="menu.function(d.name)") {{d.name}}
