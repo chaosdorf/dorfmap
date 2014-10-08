@@ -4,7 +4,7 @@
     "angular": "*",
     "angular-animate": "*",
     "socket.io-client": "*",
-    "angular-material": "git@github.com:angular/bower-material.git#5e475b08d801d712a9c2069e3d938e74821c90c5",
+    "angular-material": "0.4.0",
     "angular-socket-io": "*",
     "angular-busy": "git@github.com:CodeScaleInc/angular-busy.git",
     "opentip": "*",

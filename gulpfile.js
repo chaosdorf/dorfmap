@@ -29,7 +29,7 @@ livereload({auto:false});
 
 //config paths
 var srcBase="src/";
-var srcPath = {base:srcBase,css:srcBase+'css/**/*.css',less:srcBase+'css/**/*.less',js:srcBase+'js/**/*.js',jade:srcBase+'jade/**/*.jade'};
+var srcPath = {base:srcBase,css:srcBase+'**/*.css',less:srcBase+'**/*.less',js:srcBase+'js/**/*.js',jade:srcBase+'jade/**/*.jade'};
 var pubBase="public/";
 var pubPath = {base:pubBase,css:{pub:pubBase+'css/',bower:srcBase+'css/bower/'},less:srcPath.base+'css',js:pubBase+'js/',jade:pubBase};
 
@@ -110,7 +110,8 @@ gulp.task('less', ['bower'], function() {
   .on('error', swallowError)
   .pipe(csslint({
     "important": false,
-    "outline-none": false
+    "outline-none": false,
+    "adjoining-classes":false
   }))
   .pipe(csslint.reporter())
   .on('error', swallowError)
