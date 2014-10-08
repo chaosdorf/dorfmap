@@ -1,8 +1,0 @@
-material-dialog
-  material-content
-    material-toolbar(ng-class="toolbarClass" ng-show="toolbarTemplate")
-      .material-toolbar-tools(ng-bind-html="toolbarTemplate")
-    maerial-content(ng-bind-html="template")
-  material-content.dialogsActions(layout="horizontal")
-    material-button.material-theme-green(flex ng-click="done('ok')") {{okLabel}}
-    material-button.material-theme-red.dialog-close(flex ng-click="done('no')") {{closeLabel}}
