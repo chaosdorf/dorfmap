@@ -523,7 +523,7 @@ sub status_info {
 	if ( slurp('/srv/www/doorstatus') eq 'open' ) {
 		$json->{hackspace} = 'public';
 	}
-	if ( -e '/tmp/is_shutdown' ) {
+	elsif ( -e '/tmp/is_shutdown' ) {
 		$json->{hackspace} = 'shutdown';
 	}
 	elsif ( slurp('/srv/www/doorstatus') eq 'closed' ) {
