@@ -482,6 +482,46 @@ sub sprintf_wattage {
 	);
 }
 
+sub status_info {
+	my $json = {};
+
+	if ( slurp('/srv/www/doorstatus') eq 'open' ) {
+		$json->{hackspace} = 'public';
+	}
+	if ( -e '/tmp/is_shutdown' ) {
+		$json->{hackspace} = 'shutdown';
+	}
+	elsif ( slurp('/srv/www/doorstatus') eq 'closed' ) {
+		$json->{hackspace} = 'private';
+	}
+	else {
+		$json->{hackspace} = 'unknown';
+	}
+
+	if ( -e "${bgdata_prefix}/hosts_dynamic" ) {
+		$json->{hosts}->{dynamic} = slurp("${bgdata_prefix}/hosts_dynamic");
+		$json->{hosts}->{management}
+		  = slurp("${bgdata_prefix}/hosts_management");
+		$json->{hosts}->{total} = slurp("${bgdata_prefix}/hosts_total");
+	}
+
+	my $power_p1 = slurp('/srv/www/flukso/30_p1') // -1;
+	my $power_p2 = slurp('/srv/www/flukso/30_p2') // -1;
+	my $power_p3 = slurp('/srv/www/flukso/30_p3') // -1;
+	my $power_tot = $power_p1 + $power_p2 + $power_p3;
+
+	$json->{power}->{phase}->[0] = $power_p1 > 0  ? $power_p1  : undef;
+	$json->{power}->{phase}->[1] = $power_p2 > 0  ? $power_p2  : undef;
+	$json->{power}->{phase}->[2] = $power_p3 > 0  ? $power_p3  : undef;
+	$json->{power}->{total}      = $power_tot > 0 ? $power_tot : undef;
+
+	$json->{power}->{lights} = estimated_power_consumption();
+
+	if ( -e "${store_prefix}/power_serverraum" ) {
+		$json->{power}->{usv} = slurp("${store_prefix}/power_serverraum");
+	}
+}
+
 sub infotext {
 	my $buf;
 
@@ -627,6 +667,7 @@ sub json_status {
 		status      => status_number($id),
 		status_text => status_text($id),
 		infoarea    => infotext(),
+		info        => status_info(),
 	};
 
 	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
@@ -1196,6 +1237,7 @@ get '/get/:id' => sub {
 };
 
 # Used by angular frontend and external applications (e.g. munin plugins)
+# deprecated
 get '/list/all' => sub {
 	my ($self) = @_;
 	my $devices = {};
