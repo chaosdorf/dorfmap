@@ -1,4 +1,9 @@
 /**
+* @ngdoc module
+* @name Helper
+*/
+
+/**
 * @ngdoc service
 * @name Dialogs
 * @module Helper
@@ -8,14 +13,14 @@
 *
 */
 
-
 /**
 * @ngdoc method
 * @name Dialogs#yesNoDialog
 * @description
 * Shows a Dialog with a cancel Button and a OK Button
 *
-* @param {object}    options
+* @type {object}
+* @type {object}    options
 * @param {string}    options.okLabel             Label for the OK Button
 * @param {string}    options.closeLabel          Label for the Close Button
 * @param {string}    options.template            Template of the Content - Do not use with templateUrl
@@ -29,47 +34,53 @@
 * @param {function}  cancelCallback              Function when Dialog is canceled (clicked outside of Dialog)
 */
 
-angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', '$templateRequest', function($materialDialog,$sce,$templateCache,$templateRequest) {
+angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', '$templateRequest', '$compile', function($materialDialog,$sce,$templateCache,$templateRequest,$compile) {
     var self = this;
     angular.extend(this, {
-        multiButtonDialog: function(options, okCallback, noCallback, cancelCallback) {
+        multiButtonDialog: function(options, cancelCallback) {
             $materialDialog.show({
                 templateUrl: '/static/Helper/Templates/multiButtonDialog.html',
-                controller: ['$scope', function ($scope) {
+                controller: ['$scope', function($scope) {
                     var opt = {
                         toolbarClass: "material-theme-light",
-                        layout: "horizontal"
+                        layout: "horizontal",
+                        layoutAlign: "end",
+                        scopeExtend: {}
                     };
 
                     angular.extend(opt, options);
+
+                    if (!opt.templateUrl && opt.template) {
+                        $templateCache.put('DialogsContent', opt.template);
+                        opt.templateUrl = "DialogsContent";
+                    }
+
+                    if (!opt.toolbarTemplateUrl && opt.toolbarTemplate) {
+                        $templateCache.put('DialogsToolbarContent', opt.toolbarTemplate);
+                        opt.toolbarTemplateUrl = "DialogsToolbarContent";
+                    }
+
+                    angular.extend($scope, opt.scopeExtend);
+                    $scope.init();
 
                     if(options && opt.toolbarClass.indexOf("material-theme-") === -1) {
                         opt.toolbarClass+=" material-theme-light";
                     }
 
+                    var i=0;
                     opt.buttons.forEach(function(b) {
                         b.callback = function(callback) {
                             return function() {
-                                $materialDialog.hide(callback);
+                                if (b.close) {
+                                    $materialDialog.hide(callback);
+                                } else {
+                                    callback($scope, $materialDialog.hide);
+                                }
                             };
                         }(b.callback);
                     });
 
-                    if (opt.templateUrl) {
-                        $templateRequest(opt.templateUrl).then(function() {
-                            $scope.template = $sce.trustAsHtml($templateCache.get(opt.templateUrl));
-                        });
-                    } else if (opt.template) {
-                        opt.template = $sce.trustAsHtml(opt.template);
-                    }
 
-                    if (opt.toolbarTemplateUrl) {
-                        $templateRequest(opt.toolbarTemplateUrl).then(function() {
-                            $scope.toolbarTemplate = $sce.trustAsHtml($templateCache.get(opt.toolbarTemplateUrl));
-                        });
-                    } else if (opt.toolbarTemplate) {
-                        opt.toolbarTemplate = $sce.trustAsHtml(opt.toolbarTemplate);
-                    }
                     angular.extend($scope, {
                         done: function(action) {
                             $materialDialog.hide(action);
@@ -79,7 +90,11 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                 }]
             }).then(function(action) {
                 if (action !== undefined && action !== null) {
-                    action();
+                    action($scope);
+                }
+            }, function(action) {
+                if (cancelCallback) {
+                    cancelCallback($scope);
                 }
             });
         },
@@ -89,12 +104,12 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
             var opt = {
                 buttons: [
                 {
-                    label: okLabel,
+                    template: okLabel,
                     class: "material-theme-green",
                     callback: okCallback
                 },
                 {
-                    label: closeLabel,
+                    template: closeLabel,
                     class: "material-theme-red",
                     callback: closeCallback
                 }]

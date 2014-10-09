@@ -1,4 +1,4 @@
-angular.module('Map').controller('OverviewController', ['$http', '$scope', '$interval', '$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', function ($http, $scope, $interval, $materialDialog, $q, $timeout, socket, mapCommunication) {
+angular.module('Map').controller('OverviewController', ['$http', '$scope', '$interval', '$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', 'Dialogs', function ($http, $scope, $interval, $materialDialog, $q, $timeout, socket, mapCommunication, Dialogs) {
   function rateDelayUpdate(lamp, amount, $interval) {
     lamp.rateDelayActive = true;
     $interval(function () {
@@ -108,64 +108,74 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
           overview.lamps[key].toggle = function ($event) {
             if (this.canAccess()) {
               if (this.type == "blinkenlight") {
-                $materialDialog.show({
-                  templateUrl: '/static/Map/Templates/blinkencontrol.html',
-                  targetEvent: $event,
-                  controller: function ($scope, $http) {
-                    $scope.lamp = overview.lamps[key];
-                    $scope.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success(function (data) {
-                      data.presets = data.presets.map(function(animation) {
-                        animation.Edit = function() {
-                          $scope.animations.editing = true;
-                          $scope.animations.label = animation.name;
-                          $scope.animations.newRawString = animation.raw_string;
-                          $scope.animations.animation = animation.name;
-                        };
-                        return animation;
-                      });
-                      $scope.animations = data.presets;
-                      $scope.animations.label = "Animations";
-                      if (data.active) {
-                        $scope.animations.selected = data.active.raw_string;
-                      }
-                      socket.on('blinkencontrol', function (data) {
-                        $scope.animations.selected = data.raw_string;
-                        $scope.lamp.status = data.status;
+
+                var back = function(scope, close) {
+                  if (!scope.animations.editing) {
+                    close();
+                  } else {
+                    scope.animations.editing = false;
+                    scope.title="Animations";
+                  }
+                };
+                var save = function (scope) {
+                  if (!scope.animations.editing) {
+                    $http.post("/ajax/blinkencontrol", {
+                      device: $scope.lamp.name,
+                      raw_string: $scope.animations.selected
+                    }).success(function (data) {
+                      $scope.lamp.status = data.status;
+                      socket.emit('blinkencontrol', {
+                        device: $scope.lamp.name,
+                        raw_string: $scope.animations.selected,
+                        status: data.status
                       });
                     });
-
-                    $scope.close = function () {
-                      $materialDialog.hide();
-                    };
-                    $scope.back = function() {
-                      $scope.animations.editing=false;
-                      $scope.animations.label="Animations";
-                    };
-                    $scope.save = function () {
-                      if (!$scope.animations.editing) {
-                        $http.post("/ajax/blinkencontrol", {
-                          device: $scope.lamp.name,
-                          raw_string: $scope.animations.selected
-                        }).success(function (data) {
-                          $scope.lamp.status = data.status;
-                          socket.emit('blinkencontrol', {
-                            device: $scope.lamp.name,
-                            raw_string: $scope.animations.selected,
-                            status: data.status
-                          });
-                        });
-                      } else {
-                        $http.post("/ajax/blinkencontrol", {
-                          device: $scope.lamp.name,
-                          name: $scope.animations.animation,
-                          raw_string: $scope.animations.newRawString,
-                        }).success(function(data) {
-                          $scope.lamp.status = data.status;
-                        });
-                      }
-                      $scope.close();
-                    };
+                  } else {
+                    $http.post("/ajax/blinkencontrol", {
+                      device: $scope.lamp.name,
+                      name: $scope.animations.animation,
+                      raw_string: $scope.animations.newRawString,
+                    }).success(function(data) {
+                      $scope.lamp.status = data.status;
+                    });
                   }
+                };
+
+                Dialogs.multiButtonDialog({
+                  toolbarTemplate: "{{title}}",
+                  templateUrl: '/static/Map/Templates/blinkencontrol.html',
+                  scopeExtend: {
+                    init: function() {
+                      this.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success(function (data) {
+                        data.presets = data.presets.map(function(animation) {
+                          animation.Edit = function() {
+                            this.animations.editing = true;
+                            this.title = animation.name;
+                            this.animations.newRawString = animation.raw_string;
+                            this.animations.animation = animation.name;
+                          }.bind(this);
+                          return animation;
+                        }.bind(this));
+                        this.animations = data.presets;
+                        this.title = "Animations";
+                        if (data.active) {
+                          this.animations.selected = data.active.raw_string;
+                        }
+                        socket.on('blinkencontrol', function (data) {
+                          this.animations.selected = data.raw_string;
+                          this.lamp.status = data.status;
+                        }.bind(this));
+                      }.bind(this));
+                    }
+                  },
+                  buttons: [{
+                    label: 'Cancel',
+                    callback: back,
+                    close: false
+                  }, {
+                    label: 'Save',
+                    callback: save
+                  }]
                 });
                 return;
               }

@@ -1,20 +1,8 @@
-material-dialog(style="min-width:300px" cg-busy="loadingPromise")
-  material-tabs(selected="selectedIndex")
-    material-tab(style="font-weight: 500;font-size: 14px;")
-      material-tab-label
-        div(ng-bind="animations.label")
-  .blinkenlightTabContainer(ng-switch on="selectedIndex", style="margin-top:7px;")
-    .blinkenlightAnimationsTab(ng-switch-when="0")
-      material-radio-group(ng-model="animations.selected" ng-hide="animations.editing")
-        div(ng-repeat="animation in animations track by animation.name" layout="horizontal" layout-align="space-between")
-          material-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
-          material-button.blinkenlightEditButton(ng-click="animation.Edit()" ng-hide="animation.name==='Off'") {{animation.name==='Off' ? "New" : "Edit"}}
-      div(ng-show="animations.editing")
-          material-input-group
-            label(for="rawString") Raw String
-            material-input(id="rawString" type="text" ng-model="animations.newRawString" style="width:100%")
-
-  .blinkenlightPopupButtons
-    material-button.flexLeft.blinkenlightPopupButton(ng-click="close()" ng-hide="animations.editing") Cancel
-    material-button.flexLeft.blinkenlightPopupButton(ng-click="back()" ng-hide="!animations.editing") Back
-    material-button.flexRight.blinkenlightPopupButton(ng-click="save()") Save
+material-radio-group(ng-model="animations.selected" ng-hide="animations.editing")
+  div(ng-repeat="animation in animations track by animation.name" layout="horizontal" layout-align="space-between")
+    material-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
+    material-button.blinkenlightEditButton(ng-click="animation.Edit()" ng-hide="animation.name==='Off'") {{animation.name==='Off' ? "New" : "Edit"}}
+div(ng-show="animations.editing")
+    material-input-group
+      label(for="rawString") Raw String
+      material-input(id="rawString" type="text" ng-model="animations.newRawString" style="width:100%")
