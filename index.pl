@@ -482,6 +482,41 @@ sub sprintf_wattage {
 	);
 }
 
+sub status_devices {
+	my $devices = {};
+
+	for my $id ( keys %{$coordinates} ) {
+		my $type = $coordinates->{$id}->{type} // q{};
+		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
+		{
+			next;
+		}
+		$devices->{$id}->{name}        = $id;
+		$devices->{$id}->{x1}          = $coordinates->{$id}->{x1};
+		$devices->{$id}->{y1}          = $coordinates->{$id}->{y1};
+		$devices->{$id}->{x2}          = $coordinates->{$id}->{x2};
+		$devices->{$id}->{y2}          = $coordinates->{$id}->{y2};
+		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
+		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
+		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
+		$devices->{$id}->{status}      = status_number($id);
+		$devices->{$id}->{auto}        = ( -e "/tmp/automatic_${id}" ? 1 : 0 );
+		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
+		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
+		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
+		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
+		$devices->{$id}->{status_text} = status_text($id);
+		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
+		$devices->{$id}->{image}       = device_image($id);
+
+		if ( $type eq 'charwrite' ) {
+			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
+		}
+	}
+
+	return $devices;
+}
+
 sub status_info {
 	my $json = {};
 
@@ -520,6 +555,8 @@ sub status_info {
 	if ( -e "${store_prefix}/power_serverraum" ) {
 		$json->{power}->{usv} = slurp("${store_prefix}/power_serverraum");
 	}
+
+	return $json;
 }
 
 sub infotext {
@@ -1240,40 +1277,9 @@ get '/get/:id' => sub {
 # deprecated
 get '/list/all' => sub {
 	my ($self) = @_;
-	my $devices = {};
-
-	for my $id ( keys %{$coordinates} ) {
-		my $type = $coordinates->{$id}->{type} // q{};
-		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
-		{
-			next;
-		}
-		$devices->{$id}->{name}        = $id;
-		$devices->{$id}->{x1}          = $coordinates->{$id}->{x1};
-		$devices->{$id}->{y1}          = $coordinates->{$id}->{y1};
-		$devices->{$id}->{x2}          = $coordinates->{$id}->{x2};
-		$devices->{$id}->{y2}          = $coordinates->{$id}->{y2};
-		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
-		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
-		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
-		$devices->{$id}->{status}      = status_number($id);
-		$devices->{$id}->{auto}        = ( -e "/tmp/automatic_${id}" ? 1 : 0 );
-		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
-		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
-		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
-		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
-		$devices->{$id}->{status_text}
-		  = $self->statustext( $coordinates->{$id}->{type}, $id );
-		$devices->{$id}->{rate_delay} = get_ratelimit_delay($id);
-		$devices->{$id}->{image}      = device_image($id);
-
-		if ( $type eq 'charwrite' ) {
-			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
-		}
-	}
 
 	$self->respond_to(
-		json => { json => $devices },
+		json => { json => status_devices() },
 		any  => {
 			data   => 'Not Acceptable. Only JSON is supported.',
 			status => 406
@@ -1453,6 +1459,47 @@ get '/space_api' => sub {
 
 	$self->respond_to(
 		json => { json => \%json },
+		any  => {
+			data   => 'not acceptables. use json',
+			status => 406
+		},
+	);
+};
+
+get '/status/all' => sub {
+	my ($self) = @_;
+
+	$self->respond_to(
+		json => {
+			json => {
+				devices => status_devices(),
+				info    => status_info()
+			}
+		},
+		any => {
+			data   => 'not acceptables. use json',
+			status => 406
+		},
+	);
+};
+
+get '/status/devices' => sub {
+	my ($self) = @_;
+
+	$self->respond_to(
+		json => { json => status_devices() },
+		any  => {
+			data   => 'not acceptables. use json',
+			status => 406
+		},
+	);
+};
+
+get '/status/info' => sub {
+	my ($self) = @_;
+
+	$self->respond_to(
+		json => { json => status_info() },
 		any  => {
 			data   => 'not acceptables. use json',
 			status => 406
