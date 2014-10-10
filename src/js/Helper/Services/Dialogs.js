@@ -69,12 +69,15 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
 
                     var i=0;
                     opt.buttons.forEach(function(b) {
+                        if (b.flex) {
+                            b.class+=" dialogsButtonFlex";
+                        }
                         b.callback = function(callback) {
                             return function() {
                                 if (b.close) {
                                     $materialDialog.hide(callback);
                                 } else {
-                                    callback($scope, $materialDialog.hide);
+                                    callback($scope, b, $materialDialog.hide);
                                 }
                             };
                         }(b.callback);
@@ -106,12 +109,14 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                 {
                     template: okLabel,
                     class: "material-theme-green",
-                    callback: okCallback
+                    callback: okCallback,
+                    flex: true
                 },
                 {
                     template: closeLabel,
                     class: "material-theme-red",
-                    callback: closeCallback
+                    callback: closeCallback,
+                    flex:true
                 }]
             };
             angular.extend(opt, options);
