@@ -94,6 +94,19 @@ sub get_ratelimit_delay {
 	return ( $coordinates->{$id}->{ratelimit} - ( $now - $last_use ) );
 }
 
+sub door_set_private {
+	system(qw(ssh -i /etc/dorfmap/private.key private@door));
+
+	if ( $? != 0 ) {
+		spew(
+			"ssh private\@door returned $?",
+			'/tmp/dorfmap-err/door_set_private'
+		);
+	}
+
+	return;
+}
+
 sub set_remote {
 	my ( $path, $value ) = @_;
 
@@ -820,9 +833,8 @@ $shortcuts->{'amps off'} = sub {
 $shortcuts->{makeprivate} = sub {
 	my ($self) = @_;
 
-	system(qw(ssh -i /etc/dorfmap/private.key private@door));
-
-	return $?;
+	door_set_private();
+	return;
 };
 
 $shortcuts->{shutdown} = sub {
@@ -872,7 +884,7 @@ $shortcuts->{shutdown} = sub {
 		}
 	}
 
-	system(qw(ssh private@door));
+	door_set_private();
 
 	for my $device (@delayed) {
 		set_device( $device, 0, force => 1 );
