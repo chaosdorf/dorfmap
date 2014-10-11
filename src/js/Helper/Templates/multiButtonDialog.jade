@@ -4,4 +4,4 @@ material-dialog
       .material-toolbar-tools(ng-include="toolbarTemplateUrl")
     maerial-content(ng-include="templateUrl")
   material-content.dialogsActions(layout="{{layout}}" layout-align="{{layoutAlign}}")
-    material-button(ng-repeat="button in buttons" ng-click="button.callback()" ng-class="button.class" {{button.label}}
+    material-button(ng-repeat="button in buttons" ng-click="button.callback()" ng-class="button.class") {{button.label}}
