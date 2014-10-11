@@ -7,6 +7,7 @@ streamify = require('gulp-streamify'),
 gutil = require('gulp-util'),
 browserify = require('browserify'),
 concat = require('gulp-concat'),
+clean = require('gulp-clean'),
 concatSource = require('gulp-concat-sourcemap'),
 cssmin = require('gulp-cssmin'),
 jade = require('gulp-jade'),
@@ -45,7 +46,7 @@ gulp.task('perlStart',function() {
 });
 
 gulp.task('perlStop',function() {
-  plainExec('hypnotoad -s index.pl')
+  plainExec('hypnotoad -s index.pl');
 });
 
 gulp.task('js', ['bower'], function() {
@@ -102,7 +103,7 @@ gulp.task('js', ['bower'], function() {
       livereload.changed();
     }
   });
-})
+});
 
 gulp.task('less', ['bower'], function() {
   return gulp.src(srcPath.less, {base:'src/css/'})
@@ -130,7 +131,7 @@ gulp.task('less', ['bower'], function() {
 
 gulp.task('css', ['less'], function() {
   var depCss = ['angular-material/angular-material.css', 'opentip/css/opentip.css','angular-busy/dist/angular-busy.css'];
-  depCss=depCss.map(function(c) {return 'bower_components/'+c});
+  depCss=depCss.map(function(c) {return 'bower_components/'+c;});
   depCss.unshift(srcPath.css);
 
   return gulp.src(depCss)
@@ -139,6 +140,8 @@ gulp.task('css', ['less'], function() {
   .pipe(gulp.dest(pubPath.css.pub))
   .on('finish', function() {
     livereload.changed();
+    gulp.src(srcPath.css)
+    .pipe(clean());
   });
 });
 
@@ -151,12 +154,12 @@ gulp.task('jade', ['bower'], function() {
   .on('error', swallowError)
   .pipe(gulp.dest(pubPath.jade))
   .on('finish', function(){q.resolve();});
-  var q = Q.defer();
+  q = Q.defer();
   promises.push(q.promise);
   gulp.src(['src/js/**/Templates/**/*.jade'])
   .pipe(jade())
   .pipe(gulp.dest(pubPath.jade))
-  .on('finish', function(){q.resolve()})
+  .on('finish', function(){q.resolve();});
   return Q.all(promises).then(function() {
     livereload.changed();
   });
@@ -191,8 +194,8 @@ gulp.task('bower', function(cb){
       .pipe(coffee())
       .pipe(concat('opentip.js'))
       .pipe(gulp.dest('bower_components/opentip/lib/'))
-      .on('finish', function(){cb()});
-    })
+      .on('finish', function(){cb();});
+    });
   });
 });
 

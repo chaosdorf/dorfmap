@@ -21,13 +21,13 @@ html(ng-app="Map")
         a(href="/space_api.json")  spaceAPI
     .content(ng-controller="MapController as map" )
       .dropdownwrapper
-        .dropdowncontainer(layout="horizontal" layout-align="center" cg-busy="map.loadingPromise")
+        material-content.dropdowncontainer(layout="horizontal" layout-align="center" cg-busy="map.loadingPromise")
           .dropdownheader
             material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('shortcuts')") Actions
           .dropdownheader
             material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('presets')") Presets
           .dropdownheader
             material-button.material-button-raised.material-button-colored(ng-click="map.menu.dialog('layers')") Layer
-      .overview(ng-controller="OverviewController as overview")
+      material-content.overview(ng-controller="OverviewController as overview")
         div(ng-repeat="lamp in overview.filteredLamps() track by lamp.name")
           lamp
