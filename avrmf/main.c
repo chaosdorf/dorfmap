@@ -4,8 +4,6 @@
 #include <stdlib.h>
 
 /*
- * PD0: red LED
- * PD1: green LED
  * PD4: SCL out
  * PD5: SDA out
  * PD6: binary out
@@ -22,7 +20,7 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x000a)
+#define MYADDRESS (0x000b)
 
 volatile uint8_t binary_out = 0;
 volatile uint8_t pwm[3];
@@ -99,10 +97,6 @@ ISR(INT0_vect)
 		pwm[1] = (pwm[1] << 1) | (pwm[0] >> 7);
 		pwm[0] = (pwm[0] << 1) | (address >> 15);
 		address = (address << 1) | DATA_BIT;
-		if (DATA_BIT != 0)
-			PORTD |= _BV(PD0);
-		else
-			PORTD &= ~_BV(PD0);
 	}
 	else {
 		PORTD &= ~_BV(PD4);
@@ -136,10 +130,5 @@ ISR(INT1_vect)
 
 ISR(TIMER0_OVF_vect)
 {
-	static uint16_t cnt = 0;
-	if (++cnt == 0x9fff) {
-		PIND |= _BV(PD1);
-		cnt = 0;
-	}
 	asm("wdr");
 }
