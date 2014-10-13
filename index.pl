@@ -546,11 +546,14 @@ sub status_info {
 		$json->{hackspace} = 'unknown';
 	}
 
+	# We use +something() to make sure all numbers are present in the JSON
+	# file as numbers and not strings.
+
 	if ( -e "${bgdata_prefix}/hosts_dynamic" ) {
-		$json->{hosts}->{dynamic} = slurp("${bgdata_prefix}/hosts_dynamic");
+		$json->{hosts}->{dynamic} = +slurp("${bgdata_prefix}/hosts_dynamic");
 		$json->{hosts}->{management}
-		  = slurp("${bgdata_prefix}/hosts_management");
-		$json->{hosts}->{total} = slurp("${bgdata_prefix}/hosts_total");
+		  = +slurp("${bgdata_prefix}/hosts_management");
+		$json->{hosts}->{total} = +slurp("${bgdata_prefix}/hosts_total");
 	}
 
 	my $power_p1 = slurp('/srv/www/flukso/30_p1') // -1;
@@ -563,10 +566,10 @@ sub status_info {
 	$json->{power}->{phase}->[2] = $power_p3 > 0  ? $power_p3  : undef;
 	$json->{power}->{total}      = $power_tot > 0 ? $power_tot : undef;
 
-	$json->{power}->{lights} = estimated_power_consumption();
+	$json->{power}->{lights} = +estimated_power_consumption();
 
 	if ( -e "${store_prefix}/power_serverraum" ) {
-		$json->{power}->{usv} = slurp("${store_prefix}/power_serverraum");
+		$json->{power}->{usv} = +slurp("${store_prefix}/power_serverraum") + 0;
 	}
 
 	return $json;
