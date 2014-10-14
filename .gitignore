@@ -25,4 +25,4 @@ index.pl.bak
 npm-debug.log
 public/js/dorfmap.min.js.gz
 public/js/dorfmap.min.js.map.gz
-public/Map/Templates/*
+public/**/Templates/*

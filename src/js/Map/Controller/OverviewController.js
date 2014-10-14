@@ -109,7 +109,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
             if (this.canAccess()) {
               if (this.type == "blinkenlight") {
 
-                var back = function(scope, close) {
+                var back = function(scope, button, close) {
                   if (!scope.animations.editing) {
                     close();
                   } else {
@@ -117,29 +117,32 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     scope.title="Animations";
                   }
                 };
-                var save = function (scope) {
+                var save = function (scope, button, close) {
                   if (!scope.animations.editing) {
                     $http.post("/ajax/blinkencontrol", {
-                      device: $scope.lamp.name,
-                      raw_string: $scope.animations.selected
+                      device: this.name,
+                      raw_string: scope.animations.selected
                     }).success(function (data) {
                       $scope.lamp.status = data.status;
                       socket.emit('blinkencontrol', {
-                        device: $scope.lamp.name,
-                        raw_string: $scope.animations.selected,
+                        device: this.name,
+                        raw_string: scope.animations.selected,
                         status: data.status
                       });
                     });
+                    close();
                   } else {
                     $http.post("/ajax/blinkencontrol", {
-                      device: $scope.lamp.name,
-                      name: $scope.animations.animation,
-                      raw_string: $scope.animations.newRawString,
+                      device: this.name,
+                      name: scope.animations.animation,
+                      raw_string: scope.animations.newRawString,
                     }).success(function(data) {
-                      $scope.lamp.status = data.status;
+                      scope.lamp.status = data.status;
+                      scope.animations.editing = false;
+                      scope.title="Animations";
                     });
                   }
-                };
+                }.bind(this);
 
                 Dialogs.multiButtonDialog({
                   toolbarTemplate: "{{title}}",
@@ -169,7 +172,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     }
                   },
                   buttons: [{
-                    label: 'Cancel',
+                    label: '{{animations.editing ? "Back" : "Cancel"}}',
                     callback: back,
                     close: false
                   }, {

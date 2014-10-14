@@ -68,7 +68,9 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                     }
 
                     var i=0;
-                    opt.buttons.forEach(function(b) {
+                    opt.buttons.forEach(function(b, index) {
+                        $templateCache.put('b'+index, b.label);
+                        b.templateUrl = "b"+index;
                         if (b.flex) {
                             b.class+=" dialogsButtonFlex";
                         }
