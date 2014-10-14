@@ -123,7 +123,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                       device: this.name,
                       raw_string: scope.animations.selected
                     }).success(function (data) {
-                      $scope.lamp.status = data.status;
+                      scope.lamp.status = data.status;
                       socket.emit('blinkencontrol', {
                         device: this.name,
                         raw_string: scope.animations.selected,
