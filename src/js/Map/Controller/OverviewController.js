@@ -20,8 +20,8 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
 
   //UNCOMMENT THIS TO DISABLE WEBSOCKETS
   //socket.removeAllListeners().destroy();
+
   this.update = function () {
-    var t = $q.defer();
     var httpGet = $http.get('/list/all.json').success(function (data) {
       Object.keys(data).forEach(function (key) {
         if (!overview.lamps[key]) {
@@ -67,7 +67,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
             return this.type === "light_au";
           };
           overview.lamps[key].image = function () {
-            if (key == "dorfdoor") return "/static/images/dorfdoor.png";
+            if (key == "dorfdoor") { return "/static/images/dorfdoor.png"; }
             var statusName = this.status === 1 ? "on" : "off";
             if (key === "hackcenter_blau") return "/static/images/hackcenter_blau_" + statusName + ".png";
             if (this.isAuto()) {
@@ -143,7 +143,6 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     });
                   }
                 }.bind(this);
-
                 Dialogs.multiButtonDialog({
                   toolbarTemplate: "{{title}}",
                   templateUrl: '/static/Map/Templates/blinkencontrol.html',
@@ -265,6 +264,10 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
     return httpGet;
   };
 
+
+  /**
+   * @returns {Array} Lamps for selected Layer
+   */
   this.filteredLamps = function () {
     return Object.keys(overview.lamps).filter(function (k) {
       return overview.lamps[k].layer === $scope.map.layer;

@@ -34,7 +34,7 @@
 * @param {function}  cancelCallback              Function when Dialog is canceled (clicked outside of Dialog)
 */
 
-angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', '$templateRequest', '$compile', function($materialDialog,$sce,$templateCache,$templateRequest,$compile) {
+angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', function($materialDialog,$sce,$templateCache) {
     var self = this;
     angular.extend(this, {
         multiButtonDialog: function(options, cancelCallback) {
@@ -67,7 +67,6 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                         opt.toolbarClass+=" material-theme-light";
                     }
 
-                    var i=0;
                     opt.buttons.forEach(function(b, index) {
                         $templateCache.put('b'+index, b.label);
                         b.templateUrl = "b"+index;
@@ -97,7 +96,7 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                 if (action !== undefined && action !== null) {
                     action($scope);
                 }
-            }, function(action) {
+            }, function() {
                 if (cancelCallback) {
                     cancelCallback($scope);
                 }
