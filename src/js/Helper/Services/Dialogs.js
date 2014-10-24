@@ -1,165 +1,127 @@
 /**
- * @callback scopeCallback
- * @param {object}   scope          Scope of the Dialog
- * @param {function} scope.nextView Changes view of Dialog to the next one (starts at 0 if views length was exceeded)
- * @param {function} scope.prevView Changes view of Dialog to the previous one (starts at last if first was exceeded)
- * @param {function} scope.toView   Changes to view specified (as 0 based index)
- */
+* @ngdoc module
+* @name Helper
+*/
+
+/**
+* @ngdoc service
+* @name Dialogs
+* @module Helper
+* @description
+*
+* Helper to create some Standard use case Dialogs
+*
+*/
+
+/**
+* @ngdoc method
+* @name Dialogs#yesNoDialog
+* @description
+* Shows a Dialog with a cancel Button and a OK Button
+*
+* @type {object}
+* @type {object}    options
+* @param {string}    options.okLabel             Label for the OK Button
+* @param {string}    options.closeLabel          Label for the Close Button
+* @param {string}    options.template            Template of the Content - Do not use with templateUrl
+* @param {string}    options.templateUrl         Link to a Template for the Content - Do not use with template
+* @param {string}    options.toolbarClass        Classes for the Toolbar
+* @param {string}    options.toolbarTemplate     Template of the Toolbar - Do not use with toolbarTemplateUrl
+* @param {string}    options.toolbarTemplateUrl  Link to a Template for the Toolbar - Do not use with toolbarTemplate
+*
+* @param {function}  okCallback                  Function when OK is pressed
+* @param {function}  closeCallback               Function when Cancel is pressed
+* @param {function}  cancelCallback              Function when Dialog is canceled (clicked outside of Dialog)
+*/
+
+angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', function($materialDialog,$sce,$templateCache) {
+    var self = this;
+    angular.extend(this, {
+        multiButtonDialog: function(options, cancelCallback) {
+            $materialDialog.show({
+                templateUrl: '/static/Helper/Templates/multiButtonDialog.html',
+                controller: ['$scope', function($scope) {
+                    var opt = {
+                        toolbarClass: "material-theme-light",
+                        layout: "horizontal",
+                        layoutAlign: "end",
+                        scopeExtend: {}
+                    };
+
+                    angular.extend(opt, options);
+
+                    if (!opt.templateUrl && opt.template) {
+                        $templateCache.put('DialogsContent', opt.template);
+                        opt.templateUrl = "DialogsContent";
+                    }
+
+                    if (!opt.toolbarTemplateUrl && opt.toolbarTemplate) {
+                        $templateCache.put('DialogsToolbarContent', opt.toolbarTemplate);
+                        opt.toolbarTemplateUrl = "DialogsToolbarContent";
+                    }
+
+                    angular.extend($scope, opt.scopeExtend);
+                    $scope.init();
+
+                    if(options && opt.toolbarClass.indexOf("material-theme-") === -1) {
+                        opt.toolbarClass+=" material-theme-light";
+                    }
+
+                    opt.buttons.forEach(function(b, index) {
+                        $templateCache.put('b'+index, b.label);
+                        b.templateUrl = "b"+index;
+                        if (b.flex) {
+                            b.class+=" dialogsButtonFlex";
+                        }
+                        b.callback = function(callback) {
+                            return function() {
+                                if (b.close) {
+                                    $materialDialog.hide(callback);
+                                } else {
+                                    callback($scope, b, $materialDialog.hide);
+                                }
+                            };
+                        }(b.callback);
+                    });
 
 
-angular.module('Helper').service('Dialogs', function ($materialDialog,$sce,$templateCache) {
-  var self = this;
-  _.extend(this, {
-    /**
-     * Creates a Dialog with n Buttons
-     * @function Dialogs#multiButtonDialog
-     * @param   {object}           options                                      Options for the Dialog
-     * @param   {string}           [options.layout=horizontal]                  Layout for the Buttons
-     * @param   {string}           [options.layoutAlign=end]                    LayoutAlign for the Buttons
-     * @param   {string[]||string} [options.template]                           template for the content.
-     *                                                                        If array Template for the views
-     * @param   {string[]||string} [options.templateUrl]                        templateUrl for the content. If array templateUrls for the views. overrides options.template
-     * @param   {object[]||object} options.toolbar                              toolbar of dialog. If array toolbars for each View. If Toolbar.length < template.length fill toolbars with first one.
-     * @param   {string}           [options.toolbar.template]                   template of toolbar.
-     * @param   {string}           [options.toolbar.templateUrl]                templateUrl of toolbar. Overrides options.toolbar.template
-     * @param   {string}           [options.toolbar.class=material-theme-light] class of the toolbar
-     * @param   {object[]}         options.buttons                              Array of buttons to display
-     * @param   {string}           [options.buttons.template]                   template of Button
-     * @param   {string}           [options.buttons.templateUrl]                templateUrl of button. Overrides options.buttons.template
-     * @param   {string}           options.buttons.class                        Class of this button
-     * @param   {boolean}          options.buttons.flex                         Should this button have flex attribute in Layout?
-     * @param   {boolean}          options.buttons.close                        Should this button auto close the Dialog?
-     * @param   {number[]}         [options.buttons.views=[0]]                  Which views should show this button?
-     * @param   {function}         options.buttons.callback                     Function to fire when this button gets clicked. If close is false gets scope, button, function to hide dialog as arguments
-     * @param   {object}           [options.scopeExtend]                        extends Dialog scope by this Object.
-     * @param   {function}         [options.scopeExtend.init]                   get called on dialog creation
-     * @param   {scopeCallback}    cancelCallback                               Fired when the button is canceled. (clicked outside of dialog)
-     */
-    multiButtonDialog: function(options, cancelCallback) {
-      $materialDialog.show({
-        templateUrl: '/static/Helper/Templates/multiButtonDialog.html',
-        controller: ['$scope', function($scope) {
-          var opt = {
-            defaultToolbarClass: "material-theme-light",
-            layout: "horizontal",
-            layoutAlign: "end",
-            scopeExtend: {},
-            views: [],
-            viewIndex: 0
-          };
-
-          _.extend(opt, options);
-          opt.template = !opt.template || _.isArray(opt.template) ? opt.template : [opt.template];
-          opt.templateUrl = !opt.templateUrl || _.isArray(opt.templateUrl) ? opt.templateUrl : [opt.templateUrl];
-          opt.toolbar = !opt.toolbar || _.isArray(opt.toolbar) ? opt.toolbar : [opt.toolbar];
-
-          if (!opt.templateUrl && opt.template) {
-            _.each(opt.template, function(template, index) {
-              var view = {buttons:[]};
-              $templateCache.put('DialogsContentView'+index, template);
-              view.content = 'DialogsContentView'+index;
-
-              if (opt.toolbar.hasOwnProperty(index)) {
-                if (!opt.toolbar[index].class) {
-                  opt.toolbar[index].class = "";
+                    angular.extend($scope, {
+                        done: function(action) {
+                            $materialDialog.hide(action);
+                        }
+                    });
+                    angular.extend($scope, opt);
+                }]
+            }).then(function(action) {
+                if (action !== undefined && action !== null) {
+                    action($scope);
                 }
-                if (opt.toolbar[index].class.indexOf("material-theme-")===-1) {
-                  opt.toolbar[index].class+=opt.defaultToolbarClass;
+            }, function() {
+                if (cancelCallback) {
+                    cancelCallback($scope);
                 }
-                if (opt.toolbar[index].template) {
-                  $templateCache.put('DialogsToolbarContent'+index, opt.toolbar[index].template);
-                  opt.toolbar[index].templateUrl = "DialogsToolbarContent"+index;
-                }
-              } else {
-                opt.toolbar.push(opt.toolbar[0]);
-              }
-              view.toolbar = opt.toolbar[index];
-              opt.views.push(view);
             });
-          }
-
-          _.each(opt.buttons, function(button, index) {
-            if (!button.hasOwnProperty('templateUrl') && button.hasOwnProperty('template')) {
-              $templateCache.put('DialogsButton'+index, button.template);
-              button.templateUrl = 'DialogsButton'+index;
-            }
-            if (!button.hasOwnProperty('views')) {
-              button.views=[0];
-            }
-            button.callback = function(callback) {
-              return function() {
-                if (button.close) {
-                  $materialDialog.hide(callback);
-                } else {
-                  callback($scope,button,$materialDialog.hide);
-                }
-              };
-            }(button.callback);
-            _.each(button.views, function(viewIndex) {
-              opt.views[viewIndex].buttons.push(button);
-            });
-          });
-
-          $scope.previousViewIndex = 0;
-          $scope.$watch('viewIndex', function(newVal, oldVal) {
-            $scope.previousViewIndex = oldVal;
-          });
-          $scope.previousView = function() {
-            $scope.viewIndex = ($scope.viewIndex-1) % $scope.views.length;
-          };
-          $scope.nextView = function() {
-            $scope.viewIndex = ($scope.viewIndex+1) % $scope.views.length;
-          };
-          $scope.toView = function(viewIndex) {
-            $scope.viewIndex = viewIndex;
-          };
-
-          _.extend($scope, opt.scopeExtend);
-          if ($scope.init) {
-            $scope.init();
-          }
-
-          _.extend($scope, opt);
-        }]
-      }).then(function(action) {
-        if (action !== undefined && action !== null) {
-          action();
+        },
+        yesNoDialog: function(options, okCallback, closeCallback, cancelCallback) {
+            var okLabel = "Ok";
+            var closeLabel = "Abbrechen";
+            var opt = {
+                buttons: [
+                {
+                    template: okLabel,
+                    class: "material-theme-green",
+                    callback: okCallback,
+                    flex: true
+                },
+                {
+                    template: closeLabel,
+                    class: "material-theme-red",
+                    callback: closeCallback,
+                    flex:true
+                }]
+            };
+            angular.extend(opt, options);
+            self.multiButtonDialog(opt, cancelCallback);
         }
-      }, function() {
-        if (cancelCallback) {
-          cancelCallback();
-        }
-      });
-    },
-    /**
-     * Shows simple Dialog with yes and no button
-     * @param {Object}   options            Options of Dialog
-     * @param {string}   options.closeLabel Label for Close Button
-     * @param {string}   options.okLabel    Label for Ok Button
-     * @param {function} okCallback         Gets Called when ok is clicked
-     * @param {function} closeCallback      Gets Called when close is clicked
-     * @param {function} cancelCallback     Gets Called when Dialog is canceled
-     */
-    yesNoDialog: function(options, okCallback, closeCallback, cancelCallback) {
-      var okLabel = "Ok";
-      var closeLabel = "Abbrechen";
-      var opt = {
-        buttons: [ {
-          template: options.closeLabel || closeLabel,
-          class: "material-theme-red",
-          callback: closeCallback,
-          flex: true,
-          close: true
-        }, {
-          template: options.okLabel || okLabel,
-          class: "material-theme-green",
-          callback: okCallback,
-          flex: true,
-          close: true
-        }]
-      };
-      _.extend(opt, options);
-      self.multiButtonDialog(opt, cancelCallback);
-    }
-  });
-});
+    });
+}]);
