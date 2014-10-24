@@ -26,3 +26,8 @@ npm-debug.log
 public/js/dorfmap.min.js.gz
 public/js/dorfmap.min.js.map.gz
 public/**/Templates/*
+.bowerrc
+.gitconfig
+.npmrc
+**/.brackets.json
+test

@@ -1,5 +1,6 @@
 global.io = require('socket.io-client');
 global.Hammer = require('hammerjs');
+global._ = require('underscore');
 require('angular');
 require('angular-socket-io');
 require('angular-animate');
