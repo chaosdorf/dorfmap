@@ -6,10 +6,10 @@
     "socket.io-client": "*",
     "angular-material": "0.4.0",
     "angular-socket-io": "*",
-    "angular-busy": "git@github.com:CodeScaleInc/angular-busy.git",
     "opentip": "*",
     "jquery": "^2.1.1",
-    "angular-aria": "~1.3.0-rc.4"
+    "angular-aria": "~1.3.0-rc.4",
+    "angular-busy": "~4.1.1"
   },
   "resolutions": {
     "angular": "^1.3.0-rc.4",
