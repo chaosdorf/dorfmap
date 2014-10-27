@@ -1,4 +1,4 @@
-angular.module('Map').controller('OverviewController', ['$http', '$scope', '$interval', '$materialDialog', '$q', '$timeout', 'socket', 'mapCommunication', 'Dialogs', function ($http, $scope, $interval, $materialDialog, $q, $timeout, socket, mapCommunication, Dialogs) {
+angular.module('Map').controller('OverviewController', ['$http', '$scope', '$interval', '$mdDialog', '$q', '$timeout', 'socket', 'mapCommunication', 'Dialogs', function ($http, $scope, $interval, $mdDialog, $q, $timeout, socket, mapCommunication, Dialogs) {
   function rateDelayUpdate(lamp, amount, $interval) {
     lamp.rateDelayActive = true;
     $interval(function () {
@@ -182,7 +182,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                 return;
               }
               if (this.type == "charwrite") {
-                $materialDialog.show({
+                $mdDialog.show({
                   templateUrl: '/static/Map/Templates/charwrite.html',
                   targetEvent: $event,
                   controller: ['$scope', '$http', function ($scope, $http) {
@@ -199,7 +199,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     $scope.customModes = ['date', 'clock', 'hosts', 'power'];
                     $scope.close = function () {
                       $scope.lamp.newText = '';
-                      $materialDialog.hide();
+                      $mdDialog.hide();
                     };
                     $scope.save = function () {
                       if ($scope.radioGroup === "custom") {

@@ -1,8 +1,7 @@
-material-dialog
-  material-content
-    material-toolbar(ng-class="toolbarClass" ng-show="toolbarTemplate")
-      .material-toolbar-tools(ng-include="toolbarTemplateUrl")
-    material-content(ng-include="templateUrl")
-  material-content.dialogsActions(layout="{{layout}}" layout-align="{{layoutAlign}}")
-    material-button(ng-repeat="button in buttons" ng-click="button.callback()" ng-class="button.class")
+md-dialog
+  md-toolbar(ng-class="toolbarClass" ng-show="toolbarTemplate")
+    .md-toolbar-tools(ng-include="toolbarTemplateUrl")
+  md-content(ng-include="templateUrl")
+  md-content.dialogsActions(layout="{{layout}}" layout-align="{{layoutAlign}}")
+    md-button(ng-repeat="button in buttons" ng-click="button.callback()" ng-class="button.class")
       div(ng-include="button.templateUrl")

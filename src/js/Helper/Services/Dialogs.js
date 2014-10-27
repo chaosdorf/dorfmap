@@ -34,15 +34,15 @@
 * @param {function}  cancelCallback              Function when Dialog is canceled (clicked outside of Dialog)
 */
 
-angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templateCache', function($materialDialog,$sce,$templateCache) {
+angular.module('Helper').service('Dialogs', ['$mdDialog', '$sce', '$templateCache', function($mdDialog,$sce,$templateCache) {
     var self = this;
     angular.extend(this, {
         multiButtonDialog: function(options, cancelCallback) {
-            $materialDialog.show({
+            $mdDialog.show({
                 templateUrl: '/static/Helper/Templates/multiButtonDialog.html',
                 controller: ['$scope', function($scope) {
                     var opt = {
-                        toolbarClass: "material-theme-light",
+                        toolbarClass: "md-theme-light",
                         layout: "horizontal",
                         layoutAlign: "end",
                         scopeExtend: {}
@@ -63,8 +63,8 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                     angular.extend($scope, opt.scopeExtend);
                     $scope.init();
 
-                    if(options && opt.toolbarClass.indexOf("material-theme-") === -1) {
-                        opt.toolbarClass+=" material-theme-light";
+                    if(options && opt.toolbarClass.indexOf("md-theme-") === -1) {
+                        opt.toolbarClass+=" md-theme-light";
                     }
 
                     opt.buttons.forEach(function(b, index) {
@@ -76,9 +76,9 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                         b.callback = function(callback) {
                             return function() {
                                 if (b.close) {
-                                    $materialDialog.hide(callback);
+                                    $mdDialog.hide(callback);
                                 } else {
-                                    callback($scope, b, $materialDialog.hide);
+                                    callback($scope, b, $mdDialog.hide);
                                 }
                             };
                         }(b.callback);
@@ -87,7 +87,7 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
 
                     angular.extend($scope, {
                         done: function(action) {
-                            $materialDialog.hide(action);
+                            $mdDialog.hide(action);
                         }
                     });
                     angular.extend($scope, opt);
@@ -109,13 +109,13 @@ angular.module('Helper').service('Dialogs', ['$materialDialog', '$sce', '$templa
                 buttons: [
                 {
                     template: okLabel,
-                    class: "material-theme-green",
+                    class: "md-theme-green",
                     callback: okCallback,
                     flex: true
                 },
                 {
                     template: closeLabel,
-                    class: "material-theme-red",
+                    class: "md-theme-red",
                     callback: closeCallback,
                     flex:true
                 }]

@@ -1,8 +1,6 @@
-material-radio-group(ng-model="animations.selected" ng-hide="animations.editing")
+md-radio-group(ng-model="animations.selected" ng-hide="animations.editing")
   div(ng-repeat="animation in animations track by animation.name" layout="horizontal" layout-align="space-between")
-    material-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
-    material-button.blinkenlightEditButton(ng-click="animation.Edit()" ng-hide="animation.name==='Off'") {{animation.name==='Off' ? "New" : "Edit"}}
+    md-radio-button(noink,ng-value="animation.raw_string") {{animation.name}}
+    md-button.blinkenlightEditButton(ng-click="animation.Edit()" ng-hide="animation.name==='Off'") {{animation.name==='Off' ? "New" : "Edit"}}
 div(ng-show="animations.editing")
-    material-input-group
-      label(for="rawString") Raw String
-      material-input(id="rawString" type="text" ng-model="animations.newRawString" style="width:100%")
+    md-text-float(label="rawString" ng-model="animations.newRawString" style="width:100%")

@@ -1,4 +1,4 @@
-angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope', '$materialDialog', 'mapCommunication', function ($http, $timeout, $scope, $materialDialog, mapCommunication) {
+angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope', '$mdDialog', 'mapCommunication', function ($http, $timeout, $scope, $mdDialog, mapCommunication) {
   function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [, ""])[1].replace(/\+/g, '%20')) || null;
   }
@@ -34,7 +34,7 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
               }, timeout);
             }
           });
-          $materialDialog.hide();
+          $mdDialog.hide();
         };
       }
       if (d.name === 'presets') {
@@ -45,19 +45,19 @@ angular.module('Map').controller("MapController", ['$http', '$timeout', '$scope'
           }).success(function () {
             mapCommunication.update();
           });
-          $materialDialog.hide();
+          $mdDialog.hide();
         };
       }
       if (d.name === 'layers') {
         d.function = function (layer) {
           this.layer = layer;
-          $materialDialog.hide();
+          $mdDialog.hide();
         }.bind(this);
       }
     }.bind(this));
     data.height = (max) * 24;
     this.menu.dialog = function (key) {
-      $materialDialog.show({
+      $mdDialog.show({
         templateUrl: '/static/Map/Templates/dropdownmenu.html',
         controller: ['$scope', function ($scope) {
           $scope.dropdownData = data;
