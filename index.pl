@@ -47,10 +47,6 @@ my @charwrite_modes = (
 		description => 'Date',
 	},
 	{
-		name        => 'hosts',
-		description => 'Online Hosts',
-	},
-	{
 		name        => 'power',
 		description => 'Power Consumption',
 	},
