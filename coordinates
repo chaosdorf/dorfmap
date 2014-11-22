@@ -134,16 +134,18 @@ dashpi                883  330    0    0 none \
   type=server area=Hackcenter
 donationprint          70  390    0    0 none \
   type=server area=Lounge dorfmap=donationprint
-edge                 1232  410    0    0 none \
-  type=server area=Serverraum
+door                   35  585    0    0 none \
+  type=server area=Schleuse
+endymion             1264  370    0    0 none \
+  type=server area=Schleuse
 feedback               64  585    0    0 none \
   type=server area=Schleuse dorfmap=feedback
 flukso                925  386    0    0 none \
   type=server area=WC_vorne
 helios               1232  370    0    0 none \
   type=server area=Serverraum dorfmap=amp
-door                   35  585    0    0 none \
-  type=server area=Schleuse
+selene               1232  410    0    0 none \
+  type=server area=Serverraum
 
 ap-hackcenter         420  210    0    0 none \
   type=wifi
