@@ -58,7 +58,7 @@ lounge_weiss          130  100    0    0 feedback3/12  \
 [layer=control ratelimit=2 area=Hackcenter]
 roehre_blau           748   20    0    0 feedback1/2 \
   type=light ratelimit=15 watts=20       Blaue Röhre
-lightclc1160          890  110    0    0 feedback1/3 \
+lightclc1160          890   64    0    0 feedback1/3 \
   type=light watts=15  Steharbeitsplatz CLC
 hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light watts=105      3D-Drucker
