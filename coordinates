@@ -125,8 +125,6 @@ amp3                 890  370    0    0 helios1/3 \
   area=Hackcenter Hackcenter
 
 [layer=control]
-clc1160               890   60    0    0 none \
-  type=printer area=Hackcenter CLC1160 (manuell)
 hp2100                830   60    0    0 feedback1/9 \
   type=printer autooff=45m area=Lounge HP2100 (geht nach 45min automatisch aus)
 
