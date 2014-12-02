@@ -61,7 +61,7 @@ roehre_blau           748   20    0    0 feedback1/2 \
 lightclc1160          890   64    0    0 feedback1/3 \
   type=light watts=15  Steharbeitsplatz CLC
 hackcenter_3spot      580  125    0    0 feedback1/12 \
-  type=light watts=105      3D-Drucker
+  type=light watts=105      Hackcenter Spiegelsäule
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light ratelimit=5 watts=20       Tischreihe (Spots)
 hackcenter_blau       535  355  894  408 feedback1/5 \
