@@ -964,7 +964,7 @@ helper statustext => sub {
 get '/' => sub {
 	my ($self) = @_;
 
-	$self->render_static('index.html');
+	$self->reply->static('index.html');
 	return;
 };
 
@@ -1275,7 +1275,7 @@ get '/get/:id' => sub {
 			}
 		},
 		txt => { text => status_number($id) . "\n" },
-		png => sub    { $self->render_static( device_image($id) ) },
+		png => sub    { $self->reply->static( device_image($id) ) },
 		any => {
 			data   => status_number($id),
 			status => 406
