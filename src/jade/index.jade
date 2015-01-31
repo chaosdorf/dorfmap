@@ -23,11 +23,11 @@ html(ng-app="Map")
       .dropdownwrapper
         md-content.dropdowncontainer(layout="horizontal" layout-align="center" cg-busy="map.loadingPromise")
           .dropdownheader
-            md-button.md-button-raised.md-button-colored(ng-click="map.menu.dialog('shortcuts')") Actions
+            md-button.md-raised.md-primary(ng-click="map.menu.dialog('shortcuts')") Actions
           .dropdownheader
-            md-button.md-button-raised.md-button-colored(ng-click="map.menu.dialog('presets')") Presets
+            md-button.md-raised.md-primary(ng-click="map.menu.dialog('presets')") Presets
           .dropdownheader
-            md-button.md-button-raised.md-button-colored(ng-click="map.menu.dialog('layers')") Layer
+            md-button.md-raised.md-primary(ng-click="map.menu.dialog('layers')") Layer
       md-content.overview(ng-controller="OverviewController as overview")
         div(ng-repeat="lamp in overview.filteredLamps() track by lamp.name")
           lamp

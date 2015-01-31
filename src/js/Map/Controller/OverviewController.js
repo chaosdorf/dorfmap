@@ -19,7 +19,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
   }.bind(this));
 
   //UNCOMMENT THIS TO DISABLE WEBSOCKETS
-  //socket.removeAllListeners().destroy();
+  socket.removeAllListeners().destroy();
 
   this.update = function () {
     var httpGet = $http.get('/list/all.json').success(function (data) {
