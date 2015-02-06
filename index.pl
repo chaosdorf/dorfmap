@@ -1459,7 +1459,7 @@ get '/space_api' => sub {
 				type => 'rss',
 			},
 			calendar => {
-				url  => 'http://flux.derf0.net/cccd.ics',
+				url  => 'https://chaosdorf.de/~derf/cccd.ics',
 				type => 'ical',
 			},
 		},
