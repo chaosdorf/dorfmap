@@ -120,8 +120,8 @@ ISR(INT0_vect)
 			PORTB = binary_1
 				& ( _BV(0) | _BV(1) | _BV(5) | _BV(6) | _BV(7) );
 
-			PORTD = binary_2
-				& ( _BV(0) | _BV(1) | _BV(4) | _BV(6) );
+			PORTD = _BV(PD2) | _BV(PD3) | (binary_2
+				& ( _BV(0) | _BV(1) | _BV(4) | _BV(6) ));
 
 
 			OCR0A = pwm[0];
