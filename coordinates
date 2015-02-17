@@ -36,6 +36,8 @@ schaufenster            5  595    0    0 feedback2/bin1 \
 [layer=control ratelimit=2 area=Lounge]
 treppe_w              350  525    0    0 feedback2/bin6 \
   type=light watts=10           Treppe oben
+treppe_bild           350  590    0    0 feedback7/bin5 \
+  type=light watts=5            Treppe Bild
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
@@ -111,7 +113,7 @@ hackcenter_regal      600   60    0    0 feedback4 \
 [layer=control type=amp ratelimit=30]
 amp0                 150  590    0    0 helios1/0 \
   area=Schleuse   Rear
-amp0                 350  590    0    0 helios1/0 \
+amp0                 400  590    0    0 helios1/0 \
   area=Schleuse   Rear
 amp1                 200   12    0    0 helios1/1 \
   area=Lounge     Center + Subwoofer
