@@ -33,11 +33,15 @@ outdoor                 9  438    0    0 gpio17 \
 schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_au watts=5       Schaufenster außen
 
-[layer=control ratelimit=2 area=Lounge]
+[layer=control ratelimit=2 area=Treppe]
 treppe_w              350  525    0    0 feedback2/bin6 \
-  type=light watts=10           Treppe oben
+  type=light watts=10           Deckenlicht
 treppe_bild           350  590    0    0 feedback7/bin5 \
-  type=light watts=5            Treppe Bild
+  type=light watts=5            Bild
+lounge_t2b            260  330    0    0 feedback3/6   \
+  type=light watts=4            Unten
+
+[layer=control ratelimit=2 area=Lounge]
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
@@ -52,8 +56,6 @@ lounge_t1c             60  200    0    0 feedback3/3   \
   type=light watts=35           Ecksofa
 lounge_t2a            260  200    0    0 feedback3/5   \
   type=light watts=35           Sofa Eingang
-lounge_t2b            260  330    0    0 feedback3/6   \
-  type=light watts=4            Treppe unten
 lounge_weiss          130  100    0    0 feedback3/12  \
   type=light watts=35           Tisch
 
