@@ -164,7 +164,7 @@ gulp.task('clean',function(){
 });
 
 gulp.task('debug', ['perltidy', 'js', 'css', 'perlStart', 'watch']);
-gulp.task('release', ['clean','perltidy', 'js', 'css', 'perlStop']);
+gulp.task('release', ['clean','bower', 'perltidy', 'js', 'css', 'perlStop']);
 gulp.task('deploy', ['copyToServer']);
 
 gulp.task('default', ['debug']);
