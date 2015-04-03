@@ -1,4 +1,4 @@
-angular.module('Map').controller('OverviewController', ['$http', '$scope', '$interval', '$mdDialog', '$q', '$timeout', 'socket', 'mapCommunication', 'Dialogs', function ($http, $scope, $interval, $mdDialog, $q, $timeout, socket, mapCommunication, Dialogs) {
+angular.module('Map').controller('OverviewController', function ($http, $scope, $interval, $mdDialog, $q, $timeout, mapCommunication, Dialogs, socket) {
   function rateDelayUpdate(lamp, amount, $interval) {
     lamp.rateDelayActive = true;
     $interval(function () {
@@ -14,18 +14,17 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
 
   mapCommunication.setOverview(this);
 
-  socket.on('toggle', function (data) {
-    this.lamps[data.name].update(data, true);
-  }.bind(this));
-
-  //UNCOMMENT THIS TO DISABLE WEBSOCKETS
-  socket.removeAllListeners().destroy();
+  socket.on('toggle', data => {
+    $scope.$apply(() => {
+      this.lamps[data.name].update(data, true);
+    });
+  });
 
   this.update = function () {
     var httpGet = $http.get('/list/all.json').success(function (data) {
-      Object.keys(data).forEach(function (key) {
+      Object.keys(data).forEach((key) => {
         if (!overview.lamps[key]) {
-          if (typeof(data[key].status_text) === "string") {
+          if (typeof data[key].status_text === 'string') {
             data[key].status_text = data[key].status_text;
           }
           overview.lamps[key] = data[key];
@@ -34,16 +33,16 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
           overview.lamps[key].canAccess = function () {
             return this.is_writable && this.rate_delay <= 0 && !this.blocked;
           };
-          overview.lamps[key].update = function (data, complete) {
+          overview.lamps[key].update = function(data, complete) {
             if (data) {
               this.status = data.status;
               this.type = data.type;
-              if (data.status === 0)  {
+              if (data.status === 0) {
                 this.rate_delay = data.rate_delay;
               }
-              if (typeof(data.status_text) === "string") {
+              if (typeof data.status_text === 'string') {
                 this.status_text = data.status_text;
-                if (data.infoarea)  {
+                if (data.infoarea) {
                   overview.lamps.infoarea.status_text = data.infoarea;
                 }
               }
@@ -51,8 +50,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
             if (complete) {
               if (!this.status) {
                 this.status = 0;
-              }
-              else {
+              } else {
                 this.status = parseInt(this.status);
               }
               if (this.status === 0 && !this.rateDelayActive && this.rate_delay > 0) {
@@ -61,22 +59,24 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
             }
           };
           overview.lamps[key].imageClass = function () {
-            return this.canAccess() ? "lampimage" : "";
+            return this.canAccess() ? 'lampimage' : '';
           };
           overview.lamps[key].isAuto = function () {
-            return this.type === "light_au";
+            return this.type === 'light_au';
           };
           overview.lamps[key].image = function () {
-            if (key == "dorfdoor") { return "/static/images/dorfdoor.png"; }
-            var statusName = this.status === 1 ? "on" : "off";
-            if (key === "hackcenter_blau") return "/static/images/hackcenter_blau_" + statusName + ".png";
-            if (this.isAuto()) {
-              var autoPrefix = this.auto === 0 ? "no" : "";
-              if (this.status === -1) return "/static/images/light_" + autoPrefix + "auto.png";
-              return "/static/images/light_" + statusName + "_" + autoPrefix + "auto.png";
+            if (key == 'dorfdoor') {
+              return '/static/images/dorfdoor.png';
             }
-            if (this.status === -1) return '/static/images/' + this.type + ".png";
-            return '/static/images/' + this.type + "_" + statusName + ".png";
+            var statusName = this.status === 1 ? 'on' : 'off';
+            if (key === 'hackcenter_blau') return '/static/images/hackcenter_blau_' + statusName + '.png';
+            if (this.isAuto()) {
+              var autoPrefix = this.auto === 0 ? 'no' : '';
+              if (this.status === -1) return '/static/images/light_' + autoPrefix + 'auto.png';
+              return '/static/images/light_' + statusName + '_' + autoPrefix + 'auto.png';
+            }
+            if (this.status === -1) return '/static/images/' + this.type + '.png';
+            return '/static/images/' + this.type + '_' + statusName + '.png';
           };
           overview.lamps[key].style = function (dup) {
             var style = {};
@@ -95,36 +95,36 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
             return style;
           };
           overview.lamps[key].statusClass = function () {
-            if (this.type != "infoarea" && this.type != "rtext") {
-              return "popup";
+            if (this.type != 'infoarea' && this.type != 'rtext') {
+              return 'popup';
             }
           };
-          overview.lamps[key].class = function () {
-            if (key === "dorfdoor") {
-              return this.status === 0 ? "closed" : "open";
+          overview.lamps[key]['class'] = function () {
+            if (key === 'dorfdoor') {
+              return this.status === 0 ? 'closed' : 'open';
             }
             return this.type === 'rtext' ? 'rtext' : '';
           };
           overview.lamps[key].toggle = function ($event) {
             if (this.canAccess()) {
-              if (this.type == "blinkenlight") {
+              if (this.type == 'blinkenlight') {
 
-                var back = function(scope, button, close) {
+                var back = function back(scope, button, close) {
                   if (!scope.animations.editing) {
                     close();
                   } else {
                     scope.animations.editing = false;
-                    scope.title="Animations";
+                    scope.title = 'Animations';
                   }
                 };
-                var save = function (scope, button, close) {
+                var save = (function (scope, button, close) {
                   if (!scope.animations.editing) {
-                    $http.post("/ajax/blinkencontrol", {
+                    $http.post('/ajax/blinkencontrol', {
                       device: this.name,
                       raw_string: scope.animations.selected
                     }).success(function (data) {
                       this.status = data.status;
-                      socket.emit('blinkencontrol', {
+                      socket.send('blinkencontrol', {
                         device: this.name,
                         raw_string: scope.animations.selected,
                         status: data.status
@@ -132,42 +132,41 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     });
                     close();
                   } else {
-                    $http.post("/ajax/blinkencontrol", {
+                    $http.post('/ajax/blinkencontrol', {
                       device: this.name,
                       name: scope.animations.animation,
-                      raw_string: scope.animations.newRawString,
-                    }).success(function(data) {
+                      raw_string: scope.animations.newRawString }).success(function (data) {
                       scope.lamp.status = data.status;
                       scope.animations.editing = false;
-                      scope.title="Animations";
+                      scope.title = 'Animations';
                     });
                   }
-                }.bind(this);
+                }).bind(this);
                 Dialogs.multiButtonDialog({
-                  toolbarTemplate: "{{title}}",
+                  toolbarTemplate: '{{title}}',
                   templateUrl: '/static/Map/Templates/blinkencontrol.html',
                   scopeExtend: {
-                    init: function() {
-                      this.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success(function (data) {
-                        data.presets = data.presets.map(function(animation) {
-                          animation.Edit = function() {
+                    init: function init() {
+                      this.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success((function (data) {
+                        data.presets = data.presets.map((function (animation) {
+                          animation.Edit = (function () {
                             this.animations.editing = true;
                             this.title = animation.name;
                             this.animations.newRawString = animation.raw_string;
                             this.animations.animation = animation.name;
-                          }.bind(this);
+                          }).bind(this);
                           return animation;
-                        }.bind(this));
+                        }).bind(this));
                         this.animations = data.presets;
-                        this.title = "Animations";
+                        this.title = 'Animations';
                         if (data.active) {
                           this.animations.selected = data.active.raw_string;
                         }
-                        socket.on('blinkencontrol', function (data) {
+                        socket.on('blinkencontrol', (data) => {
                           this.animations.selected = data.raw_string;
                           this.lamp.status = data.status;
-                        }.bind(this));
-                      }.bind(this));
+                        });
+                      }).bind(this));
                     }
                   },
                   buttons: [{
@@ -181,7 +180,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                 });
                 return;
               }
-              if (this.type == "charwrite") {
+              if (this.type == 'charwrite') {
                 $mdDialog.show({
                   templateUrl: '/static/Map/Templates/charwrite.html',
                   targetEvent: $event,
@@ -189,7 +188,7 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                     $scope.lamp = overview.lamps[key];
                     $scope.loadingPromise = $http.get('/ajax/charwrite').success(function (data) {
                       $scope.modes = data;
-                      $scope.radioGroup = "custom";
+                      $scope.radioGroup = 'custom';
                       if ($scope.modes.map(function (m) {
                         return m.name;
                       }).indexOf($scope.lamp.charwrite_text) != -1) {
@@ -202,10 +201,10 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                       $mdDialog.hide();
                     };
                     $scope.save = function () {
-                      if ($scope.radioGroup === "custom") {
+                      if ($scope.radioGroup === 'custom') {
                         $scope.radioGroup = $scope.lamp.newText;
                       }
-                      $http.post("/ajax/charwrite", {
+                      $http.post('/ajax/charwrite', {
                         device: $scope.lamp.name,
                         text: $scope.radioGroup
                       }).success(function () {
@@ -225,11 +224,11 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
               }).success(function (data) {
                 data.name = key;
                 data.type = overview.lamps[key].type;
-                socket.emit('toggle', data);
+                socket.send('toggle', data);
                 overview.lamps[key].status = parseInt(data.status);
                 overview.lamps[key].auto = data.auto;
                 overview.lamps.infoarea.status_text = data.infoarea;
-                if (((oldStatus === overview.lamps[key].status) || (oldStatus == 1 && overview.lamps[key].status === 0)) && data.rate_delay > 0) {
+                if ((oldStatus === overview.lamps[key].status || oldStatus == 1 && overview.lamps[key].status === 0) && data.rate_delay > 0) {
                   overview.lamps[key].rate_delay = data.rate_delay;
                   overview.lamps[key].blocked = false;
                   if (!overview.lamps[key].rateDelayActive) {
@@ -239,10 +238,10 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
                 }
                 if (overview.lamps[key].isAuto()) {
                   var unsafeStatusText = overview.lamps[key].status_text.toString();
-                  if (overview.lamps[key].auto == 1 && unsafeStatusText.indexOf("(deaktiviert)") != -1) {
-                    overview.lamps[key].status_text = unsafeStatusText.replace(" (deaktiviert)", "");
-                  } else if (overview.lamps[key].auto === 0 && unsafeStatusText.indexOf("(deaktiviert)") === -1) {
-                    overview.lamps[key].status_text = unsafeStatusText + " (deaktiviert)";
+                  if (overview.lamps[key].auto == 1 && unsafeStatusText.indexOf('(deaktiviert)') != -1) {
+                    overview.lamps[key].status_text = unsafeStatusText.replace(' (deaktiviert)', '');
+                  } else if (overview.lamps[key].auto === 0 && unsafeStatusText.indexOf('(deaktiviert)') === -1) {
+                    overview.lamps[key].status_text = unsafeStatusText + ' (deaktiviert)';
                   }
                 }
                 overview.lamps[key].blocked = false;
@@ -264,7 +263,6 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
     return httpGet;
   };
 
-
   /**
    * @returns {Array} Lamps for selected Layer
    */
@@ -275,4 +273,4 @@ angular.module('Map').controller('OverviewController', ['$http', '$scope', '$int
       return overview.lamps[key];
     });
   };
-}]);
+});

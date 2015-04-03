@@ -1,0 +1,10 @@
+<md-radio-group ng-model="animations.selected" ng-hide="animations.editing">
+  <div ng-repeat="animation in animations track by animation.name" layout="horizontal" layout-align="space-between">
+    <md-radio-button noink ng-value="animation.raw_string" ng-bind="animation.name"></md-radio-button>
+    <md-button class="blinkenlightEditButton" ng-click="animation.Edit()" ng-hide="animation.name === 'Off" ng-bind="animation.name === 'Off' ? 'New' : 'Edit'"></md-button>
+    <md-input-container flex>
+      <label>rawString</label>
+      <input ng-model="animation.newRawString">
+    </md-input-container>
+  </div>
+</md-radio-group>

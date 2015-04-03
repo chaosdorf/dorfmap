@@ -1,0 +1,11 @@
+.dialogsActions > .md-button {
+  border-radius: 0;
+}
+.dialogsButtonFlex {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.md-button {
+  height: 100%;
+}

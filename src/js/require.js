@@ -1,8 +1,7 @@
-global.io = require('socket.io-client');
+'use strict';
+
 require('angular');
-require('angular-socket-io');
 require('angular-animate');
 require('angular-aria');
 require('angular-material');
 require('angular-busy');
-require('opentip');

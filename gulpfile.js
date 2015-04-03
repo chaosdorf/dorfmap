@@ -1,43 +1,43 @@
 var gulp = require('gulp'),
-csslint = require('gulp-csslint'),
-prefixer = require('gulp-autoprefixer'),
-uglify = require('gulp-uglify'),
-source = require('vinyl-source-stream'),
-streamify = require('gulp-streamify'),
-gutil = require('gulp-util'),
-browserify = require('browserify'),
-concat = require('gulp-concat'),
-clean = require('gulp-clean'),
-concatSource = require('gulp-concat-sourcemap'),
-cssmin = require('gulp-cssmin'),
-jade = require('gulp-jade'),
-exec = require('gulp-exec'),
-plainExec = require('child_process').exec,
-less = require('gulp-less'),
-livereload = require('gulp-livereload'),
-jshint = require('gulp-jshint'),
-coffee = require('gulp-coffee'),
-insert = require('gulp-insert'),
-newer = require('gulp-newer'),
-gzip = require('gulp-gzip'),
-bower = require('bower'),
-del = require('del'),
-fs = require('fs'),
-Q = require('q');
+    plugins = require('gulp-load-plugins')(),
+    browserify = require('browserify'),
+    livereload = require('gulp-livereload'),
+    plainExec = require('child_process').exec,
+    del = require('del'),
+    source = require('vinyl-source-stream'),
+    bower = require('bower'),
+    Q = require('q');
 
-livereload({auto:false});
+livereload({
+  auto: false
+});
 
 //config paths
-var srcBase="src/";
-var srcPath = {base:srcBase,css:srcBase+'**/*.css',less:srcBase+'**/*.less',js:srcBase+'js/**/*.js',jade:srcBase+'jade/**/*.jade'};
-var pubBase="public/";
-var pubPath = {base:pubBase,css:{pub:pubBase+'css/',bower:srcBase+'css/bower/'},less:srcPath.base+'css',js:pubBase+'js/',jade:pubBase};
+var srcBase = "src/";
+var srcPath = {
+  base: srcBase,
+  css: srcBase + '**/*.css',
+  less: srcBase + '**/*.less',
+  js: srcBase + 'js/**/*.js',
+  html: srcBase + 'js/**/*.html'
+};
+
+var pubBase = "public/";
+var pubPath = {
+  base: pubBase,
+  css: {
+    pub: pubBase + 'css/',
+    bower: srcBase + 'css/bower/'
+  },
+  less: srcPath.base + 'css', 
+  js: pubBase + 'js/',
+};
 
 gulp.task('perltidy', function() {
   return gulp.src('index.pl')
-  .pipe(exec('perl -c <%= file.path %>'))
-  .pipe(exec('perltidy -b <%= file.path %>'))
-  .pipe(exec('rm <%= file.path %>.bak'));
+    .pipe(plugins.exec('perl -c <%= file.path %>'))
+    .pipe(plugins.exec('perltidy -b <%= file.path %>'))
+    .pipe(plugins.exec('rm <%= file.path %>.bak'));
 });
 
 gulp.task('perlStart',function() {
@@ -49,56 +49,41 @@ gulp.task('perlStop',function() {
 });
 
 gulp.task('js', ['bower'], function() {
-  var q = Q.defer();
   var q2 = Q.defer();
   var q3 = Q.defer();
   var qr = Q.defer();
-  var promises = [q.promise,q2.promise,q3.promise];
-  gulp.src('src/js/require.js')
-  .pipe(gulp.dest('.vendor/ref/'))
-  .pipe(newer('.vendor/ref/'))
-  .pipe(gulp.dest('.vendor/'))
-  .on('finish', function() {
-    if (fs.existsSync('./.vendor/require.js')) {
-      var bundle = browserify('./.vendor/require.js', {
-        fast: true
-      });
-      bundle=bundle.bundle();
-      bundle
-      .pipe(source('./vendor.js'))
-      .pipe(gutil.env.type==='deploy'?streamify(uglify({mangle:false})):gutil.noop())
-      .pipe(gulp.dest('./.vendor/'))
-      .on('finish',function(){
-        qr.resolve();
-      });
-    } else {
-      qr.resolve();
-    }
-    q.resolve();
+  var promises = [q2.promise,q3.promise];
+  var bundle = browserify('./src/js/require.js', {
+    fast: true
   });
-  gutil.env.error=false;
+  bundle = bundle.bundle();
+  bundle
+    .pipe(source('./vendor.js'))
+    .pipe(plugins.if(plugins.util.env.type === 'deploy', plugins.streamify(plugins.uglify({
+    mangle:false
+  }))))
+    .pipe(gulp.dest('public/js/'))
+    .on('finish', function(){
+    qr.resolve();
+  });
+  plugins.util.env.error = false;
   qr.promise.then(function() {
-    gulp.src([srcPath.js], {base: 'src/js/'})
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'))
-    .on('error', swallowError)
-    .pipe(gulp.dest('src/js/'))
-    .on ('finish', function() {
-      gulp.src(['.vendor/vendor.js',srcPath.js,'!src/js/require.js'], {base: 'src/js/'})
-      .pipe(gutil.env.type==='deploy' ? concat('dorfmap.min.js') : concatSource('dorfmap.min.js',{sourcesContent:true}))
+    console.log('foo');
+    gulp.src([srcPath.js, '!**/require.js'], {base: 'src/js/'})
+      .pipe(plugins.if(plugins.util.env.type !== 'deploy', plugins.sourcemaps.init()))
+      .pipe(plugins.babel())
+      .pipe(plugins.concat('dorfmap.min.js'))
+      .pipe(plugins.if(plugins.util.env.type !== 'deploy', plugins.sourcemaps.write()))
       .pipe(gulp.dest('public/js/'))
-      .pipe(gzip())
-      .pipe(gulp.dest('public/js/'))
-      .on('finish',function(){
-        q3.resolve();
-        del('.vendor/require.js');
-      });
+      .on('finish', function() {
+      q3.resolve();
+      console.log('foo');
+      del('.vendor/require.js');
     });
     q2.resolve();
   });
   return Q.all(promises).then(function() {
-    if (!gutil.env.error) {
+    if (!plugins.util.env.error) {
       livereload.changed();
     }
   });
@@ -106,72 +91,60 @@ gulp.task('js', ['bower'], function() {
 
 gulp.task('less', ['bower'], function() {
   return gulp.src(srcPath.less, {base:'src/css/'})
-  .pipe(less({strictMath:true,strictUnit:true}))
-  .on('error', swallowError)
-  .pipe(csslint({
+    .pipe(plugins.less({strictMath:true, strictUnit:true}))
+    .on('error', swallowError)
+    .pipe(plugins.csslint({
     "important": false,
     "outline-none": false,
     "adjoining-classes":false
   }))
-  .pipe(csslint.reporter())
-  .on('error', swallowError)
-  .pipe(prefixer([
-    'Android >= 4',
-    'Chrome >= 30',
-    'Firefox >= 24', // Firefox 24 is the latest ESR
-    'Explorer >= 9',
-    'iOS >= 6',
-    'Opera >= 24',
-    'Safari >= 6']
-  ))
-  .on('error', swallowError)
-  .pipe(gulp.dest(pubPath.less));
+    .pipe(plugins.csslint.reporter())
+    .on('error', swallowError)
+    .pipe(plugins.autoprefixer())
+    .on('error', swallowError)
+    .pipe(gulp.dest(pubPath.less));
+});
+
+gulp.task('html', ['bower'], function() {
+  var q1 = Q.defer();
+  var q2 = Q.defer();
+  var promises = [q1.promise, q2.promise];
+
+  gulp.src('src/*.html')
+    .pipe(gulp.dest('public/'))
+    .on('finish', function() {
+    q1.resolve();
+  });
+
+  gulp.src('src/js/**/*.html')
+    .pipe(plugins.angularTemplatecache())
+    .pipe(gulp.dest('public/js/'))
+    .on('finish', function() {
+    q2.resolve();
+  });
+
+  return Q.all(promises);
 });
 
 gulp.task('css', ['less'], function() {
-  var depCss = ['angular-material/angular-material.css', 'opentip/css/opentip.css','angular-busy/dist/angular-busy.css'];
-  depCss=depCss.map(function(c) {return 'bower_components/'+c;});
+  var depCss = ['angular-material/angular-material.css', 'angular-busy/dist/angular-busy.css'];
+  depCss = depCss.map(function(c) {return 'bower_components/'+c;});
   depCss.unshift(srcPath.css);
 
   return gulp.src(depCss)
-  .pipe(cssmin({keepSpecialComments:0}))
-  .pipe(concat('dorfmap.min.css'))
-  .pipe(gulp.dest(pubPath.css.pub))
-  .on('finish', function() {
-    livereload.changed();
-    gulp.src(srcPath.css)
-    .pipe(clean());
-  });
-});
-
-gulp.task('jade', ['bower'], function() {
-  var q = Q.defer();
-  var promises = [];
-  promises.push(q);
-  gulp.src([srcPath.jade])
-  .pipe(jade())
-  .on('error', swallowError)
-  .pipe(gulp.dest(pubPath.jade))
-  .on('finish', function(){q.resolve();});
-  q = Q.defer();
-  promises.push(q.promise);
-  gulp.src(['src/js/**/Templates/**/*.jade'])
-  .pipe(jade())
-  .pipe(gulp.dest(pubPath.jade))
-  .on('finish', function(){q.resolve();});
-  return Q.all(promises).then(function() {
-    livereload.changed();
-  });
+    .pipe(plugins.cssmin({keepSpecialComments:0}))
+    .pipe(plugins.concat('dorfmap.min.css'))
+    .pipe(gulp.dest(pubPath.css.pub));
 });
 
 gulp.task('watch', function() {
-  gutil.env.watch=true;
+  plugins.util.env.watch=true;
   livereload({auto:true});
   livereload.listen();
   gulp.watch(srcPath.js, ['js', 'perlStart']);
   gulp.watch([srcPath.css], ['css', 'perlStart']);
   gulp.watch([srcPath.less], ['less']);
-  gulp.watch([srcPath.jade,'src/js/**/Templates/**/*.jade'], ['jade','perlStart']);
+  gulp.watch([srcPath.html], ['html', 'perlStart']);
   gulp.watch('index.pl', ['perlStart']);
 });
 
@@ -180,40 +153,26 @@ gulp.task('copyToServer', ['release'], function() {
 });
 
 gulp.task('bower', function(cb){
-  bower.commands.install([], {save: true}, {})
-  .on('end', function(installed){
-    //socket-io-exception
-    fs.writeFileSync('bower_components/socket.io-client/socket.io-client.js', fs.readFileSync('bower_components/socket.io-client/socket.io.js'));
-    //opentip
-    gulp.src(['bower_components/opentip/src/opentip.coffee'])
-    .pipe(insert.append('window.Opentip=Opentip'))
-    .pipe(gulp.dest('bower_components/opentip/comp/'))
-    .on('finish',function() {
-      gulp.src(['bower_components/opentip/comp/opentip.coffee','bower_components/opentip/src/adapter-native.coffee'])
-      .pipe(coffee())
-      .pipe(concat('opentip.js'))
-      .pipe(gulp.dest('bower_components/opentip/lib/'))
-      .on('finish', function(){cb();});
-    });
-  });
+  bower.commands.install([], {save: true}, {});
+  cb();
 });
 
 gulp.task('clean',function(){
   plainExec('rm -rf bower_components');
   plainExec('rm -rf .vendor');
-  gutil.env.type='deploy';
+  plugins.util.env.type='deploy';
 });
 
-gulp.task('debug', ['perltidy', 'jade', 'js', 'css', 'perlStart', 'watch']);
-gulp.task('release', ['clean','perltidy','jade','js', 'css', 'perlStop']);
+gulp.task('debug', ['perltidy', 'js', 'css', 'perlStart', 'watch']);
+gulp.task('release', ['clean','perltidy', 'js', 'css', 'perlStop']);
 gulp.task('deploy', ['copyToServer']);
 
 gulp.task('default', ['debug']);
 
 function swallowError(error) {
-  gutil.env.error=true;
+  plugins.util.env.error=true;
   console.log(error.toString());
-  if (gutil.env.watch) {
+  if (plugins.util.env.watch) {
     this.emit('end');
   } else {
     throw error;

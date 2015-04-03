@@ -1,1 +1,3 @@
-angular.module('Map', ['ngMaterial', 'btford.socket-io', 'cgBusy', 'Helper']);
+'use strict';
+
+angular.module('Map', ['ngMaterial', 'cgBusy', 'Helper']);

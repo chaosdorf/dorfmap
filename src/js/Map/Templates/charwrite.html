@@ -1,0 +1,12 @@
+<md-dialog cg-busy="loadingPromise">
+  <md-radio-group ng-model="radioGroup">
+    <md-radio-button noink ng-repeat="mode in modes" ng-value="mode.name" ng-bind="mode.description"></md-radio-button>
+    <md-radio-button noink value="custom">Custom</md-radio-button>
+    <md-input-container flex>
+      <label></label>
+      <input ng-model="lamp.charwrite_text">
+    </md-input-container>
+    <md-button style="float: left; padding: 5px;" ng-click="close()"></md-button>
+    <md-button style="float: right; padding: 5px;" ng-click="save()"></md-button>
+  </md-radio-group>
+</md-dialog>

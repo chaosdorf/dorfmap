@@ -1,6 +1,0 @@
-md-dialog
-  div.menuDialog
-    md-tabs(selected="selectedIndex" style="width:30em;")
-      md-tab(ng-repeat="menu in dropdownData" label="{{menu.name}}")
-        div
-          md-button.dropdownButton(ng-repeat="d in menu.entries" ng-click="menu.function(d.name)") {{d.name}}

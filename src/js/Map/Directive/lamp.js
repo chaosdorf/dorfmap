@@ -1,8 +1,10 @@
+'use strict';
+
 angular.module('Map').directive('lamp', function () {
   return {
     restrict: 'E',
     templateUrl: '/static/Map/Templates/lamp.html',
-    link: function (scope, element, attrs) {
+    link: function link(scope, element) {
       scope.element = element;
     },
     controller: ['$scope', function ($scope) {
@@ -27,20 +29,6 @@ angular.module('Map').directive('lamp', function () {
         } else {
           if ($scope.lamp.status_text) {
             $scope.lamp.tooltipText = $scope.lamp.status_text;
-          }
-        }
-      });
-      $scope.$watch('lamp.tooltipText', function (newval) {
-        if (newval && newval !== "" && $scope.lamp.type != "infoarea") {
-          if ($scope.tip) {
-            $scope.tip.activate();
-          } else {
-            $scope.tip = new Opentip($scope.element[0]);
-          }
-          $scope.tip.setContent(newval);
-        } else {
-          if ($scope.tip) {
-            $scope.tip.deactivate();
           }
         }
       });

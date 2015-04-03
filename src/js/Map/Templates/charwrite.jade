@@ -1,8 +1,0 @@
-md-dialog(cg-busy="loadingPromise")
-  md-radio-group(ng-model="radioGroup")
-    md-radio-button(noink ng-repeat="mode in modes" ng-value="mode.name") {{mode.description}}
-    md-radio-button(noink value="custom") Custom
-    input(type="text" placeholder="{{lamp.charwrite_text}}" ng-focus="radioGroup='custom'" ng-model="lamp.newText" maxlength="10" style="width:6em; margin:0 0 0 15px;")
-  div
-    md-button(style="float:left;padding:5px;",ng-click="close()") Cancel
-    md-button(style="float:right;padding:5px;",ng-click="save()") Save

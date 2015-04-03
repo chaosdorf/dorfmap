@@ -1,7 +1,0 @@
-md-dialog
-  md-toolbar(ng-class="toolbarClass" ng-show="toolbarTemplate")
-    .md-toolbar-tools(ng-include="toolbarTemplateUrl")
-  md-content(ng-include="templateUrl")
-  md-content.dialogsActions(layout="{{layout}}" layout-align="{{layoutAlign}}")
-    md-button(ng-repeat="button in buttons" aria-label="" ng-click="button.callback()" ng-class="button.class")
-      div(ng-include="button.templateUrl")
