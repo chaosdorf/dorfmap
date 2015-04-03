@@ -68,7 +68,6 @@ gulp.task('js', ['bower'], function() {
   });
   plugins.util.env.error = false;
   qr.promise.then(function() {
-    console.log('foo');
     gulp.src([srcPath.js, '!**/require.js'], {base: 'src/js/'})
       .pipe(plugins.if(plugins.util.env.type !== 'deploy', plugins.sourcemaps.init()))
       .pipe(plugins.babel())
@@ -77,7 +76,6 @@ gulp.task('js', ['bower'], function() {
       .pipe(gulp.dest('public/js/'))
       .on('finish', function() {
       q3.resolve();
-      console.log('foo');
       del('.vendor/require.js');
     });
     q2.resolve();
