@@ -163,8 +163,8 @@ gulp.task('clean',function(){
   plugins.util.env.type='deploy';
 });
 
-gulp.task('debug', ['perltidy', 'js', 'css', 'perlStart', 'watch']);
-gulp.task('release', ['clean','bower', 'perltidy', 'js', 'css', 'perlStop']);
+gulp.task('debug', ['perltidy', 'html', 'js', 'css', 'perlStart', 'watch']);
+gulp.task('release', ['clean', 'html', 'bower', 'perltidy', 'js', 'css', 'perlStop']);
 gulp.task('deploy', ['copyToServer']);
 
 gulp.task('default', ['debug']);
