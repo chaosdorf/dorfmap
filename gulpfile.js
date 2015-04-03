@@ -151,8 +151,8 @@ gulp.task('copyToServer', ['release'], function() {
 });
 
 gulp.task('bower', function(cb){
-  bower.commands.install([], {save: true}, {});
-  cb();
+  bower.commands.install([], {save: true}, {})
+  .on('end', cb);
 });
 
 gulp.task('clean',function(){
