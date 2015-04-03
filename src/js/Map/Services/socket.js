@@ -1,5 +1,5 @@
 angular.module('Map').factory('socket', function () {
-  var primus = new Primus('http://localhost:3001');
+  var primus = new Primus('http://dorfmap.chaosdorf.dn42');
   class SocketFactory {
     static on(ident, fn) {
       primus.on(ident, fn);
