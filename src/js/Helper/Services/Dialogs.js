@@ -38,7 +38,7 @@ angular.module('Helper').service('Dialogs', function ($mdDialog, $sce, $template
   angular.extend(this, {
     multiButtonDialog: function multiButtonDialog(options, cancelCallback) {
       $mdDialog.show({
-        templateUrl: '/static/Helper/Templates/multiButtonDialog.html',
+        templateUrl: 'Helper/Templates/multiButtonDialog.html',
         controller: function ($scope) {
           var opt = {
             toolbarClass: 'md-theme-light',

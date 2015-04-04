@@ -57,7 +57,7 @@ angular.module('Map').controller('MapController', function ($http, $timeout, $sc
     data.height = max * 24;
     this.menu.dialog = key => {
       $mdDialog.show({
-        templateUrl: '/static/Map/Templates/dropdownmenu.html',
+        templateUrl: 'Map/Templates/dropdownmenu.html',
         controller: ($scope) => {
           $scope.dropdownData = data;
           $scope.selectedIndex = this.menuEntries[key];

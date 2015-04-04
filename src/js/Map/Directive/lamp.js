@@ -1,9 +1,7 @@
-'use strict';
-
 angular.module('Map').directive('lamp', function () {
   return {
     restrict: 'E',
-    templateUrl: '/static/Map/Templates/lamp.html',
+    templateUrl: 'Map/Templates/lamp.html',
     link: function link(scope, element) {
       scope.element = element;
     },
@@ -15,7 +13,7 @@ angular.module('Map').directive('lamp', function () {
             return;
           }
           if ($scope.rate_delay > 0) {
-            $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
+            $scope.lamp.tooltipText = $scope.lamp.status_text + ' (' + newval + 's)';
           } else {
             if ($scope.lamp.status_text) {
               $scope.lamp.tooltipText = $scope.lamp.status_text;
@@ -25,7 +23,7 @@ angular.module('Map').directive('lamp', function () {
       });
       $scope.$watch('lamp.rate_delay', function (newval) {
         if (newval > 0) {
-          $scope.lamp.tooltipText = $scope.lamp.status_text + ' (rate limited - wait ' + newval + ' seconds)';
+          $scope.lamp.tooltipText = $scope.lamp.status_text + ' (' + newval + 's)';
         } else {
           if ($scope.lamp.status_text) {
             $scope.lamp.tooltipText = $scope.lamp.status_text;

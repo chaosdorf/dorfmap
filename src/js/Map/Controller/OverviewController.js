@@ -117,12 +117,12 @@ angular.module('Map').controller('OverviewController', function ($http, $scope, 
                     scope.title = 'Animations';
                   }
                 };
-                var save = (function (scope, button, close) {
+                var save = (scope, button, close) => {
                   if (!scope.animations.editing) {
                     $http.post('/ajax/blinkencontrol', {
                       device: this.name,
                       raw_string: scope.animations.selected
-                    }).success(function (data) {
+                    }).success(data => {
                       this.status = data.status;
                       socket.send('blinkencontrol', {
                         device: this.name,
@@ -141,22 +141,22 @@ angular.module('Map').controller('OverviewController', function ($http, $scope, 
                       scope.title = 'Animations';
                     });
                   }
-                }).bind(this);
+                };
                 Dialogs.multiButtonDialog({
                   toolbarTemplate: '{{title}}',
-                  templateUrl: '/static/Map/Templates/blinkencontrol.html',
+                  templateUrl: 'Map/Templates/blinkencontrol.html',
                   scopeExtend: {
-                    init: function init() {
-                      this.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success((function (data) {
-                        data.presets = data.presets.map((function (animation) {
-                          animation.Edit = (function () {
+                    init() {
+                      this.loadingPromise = $http.get('ajax/blinkencontrol?device=' + key).success((data) => {
+                        data.presets = data.presets.map(animation => {
+                          animation.Edit = () => {
                             this.animations.editing = true;
                             this.title = animation.name;
                             this.animations.newRawString = animation.raw_string;
                             this.animations.animation = animation.name;
-                          }).bind(this);
+                          };
                           return animation;
-                        }).bind(this));
+                        });
                         this.animations = data.presets;
                         this.title = 'Animations';
                         if (data.active) {
@@ -166,7 +166,7 @@ angular.module('Map').controller('OverviewController', function ($http, $scope, 
                           this.animations.selected = data.raw_string;
                           this.lamp.status = data.status;
                         });
-                      }).bind(this));
+                      });
                     }
                   },
                   buttons: [{
@@ -182,7 +182,7 @@ angular.module('Map').controller('OverviewController', function ($http, $scope, 
               }
               if (this.type == 'charwrite') {
                 $mdDialog.show({
-                  templateUrl: '/static/Map/Templates/charwrite.html',
+                  templateUrl: 'Map/Temlates/charwrite.html',
                   targetEvent: $event,
                   controller: ['$scope', '$http', function ($scope, $http) {
                     $scope.lamp = overview.lamps[key];

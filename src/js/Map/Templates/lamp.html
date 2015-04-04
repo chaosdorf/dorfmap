@@ -1,7 +1,10 @@
 <div id="{{::lamp.name}}" class="{{::lamp.class()}} lamp" ng-style="lamp.style()">
   <img ng-hide="lamp.type == 'rtext' || lamp.type === 'infoarea'" class="{{::lamp.imageClass()}}" ng-click="lamp.toggle($event)" ng-src="{{lamp.image()}}">
-  
-  <div id="{{::lamp.name}}_dup{{::($index+1)}}" class="lamp {{::lamp.class()}}" ng-style="lamp.style(dup)">
-    <img class="{{lamp.imageClass()}}" ng-hide="lamp.type === 'rtext" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}">
+  <md-tooltip ng-if="lamp.tooltipText">{{lamp.tooltipText}}</md-tooltip>
+  <div ng-repeat="dup in lamp.duplicates">
+    <div id="{{::lamp.name}}_dup{{::($index+1)}}" class="lamp {{::lamp.class()}}" ng-style="lamp.style(dup)">
+      <md-tooltip ng-if="lamp.tooltipText">{{lamp.tooltipText}}</md-tooltip>
+      <img class="{{lamp.imageClass()}}" ng-hide="lamp.type === 'rtext'" ng-click="lamp.toggle()" ng-src="{{lamp.image()}}">
+    </div>
   </div>
 </div>

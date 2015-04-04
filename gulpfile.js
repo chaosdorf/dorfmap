@@ -115,7 +115,9 @@ gulp.task('html', ['bower'], function() {
   });
 
   gulp.src('src/js/**/*.html')
-    .pipe(plugins.angularTemplatecache())
+    .pipe(plugins.angularTemplatecache({
+    standalone: true
+  }))
     .pipe(gulp.dest('public/js/'))
     .on('finish', function() {
     q2.resolve();
@@ -152,7 +154,7 @@ gulp.task('copyToServer', ['release'], function() {
 
 gulp.task('bower', function(cb){
   bower.commands.install([], {save: true}, {})
-  .on('end', function() {
+    .on('end', function() {
     cb();
   });
 });
