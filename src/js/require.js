@@ -5,3 +5,4 @@ require('angular-animate');
 require('angular-aria');
 require('angular-material');
 require('angular-busy');
+require('angular-tooltips');

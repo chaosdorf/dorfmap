@@ -1,3 +1,1 @@
-'use strict';
-
-angular.module('Map', ['ngMaterial', 'cgBusy', 'Helper', 'templates']);
+angular.module('Map', ['ngMaterial', 'cgBusy', 'Helper', 'templates', '720kb.tooltips']);

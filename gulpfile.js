@@ -127,7 +127,7 @@ gulp.task('html', ['bower'], function() {
 });
 
 gulp.task('css', ['less'], function() {
-  var depCss = ['angular-material/angular-material.css', 'angular-busy/dist/angular-busy.css'];
+  var depCss = ['angular-material/angular-material.css', 'angular-busy/dist/angular-busy.css', 'angular-tooltips/dist/angular-tooltips.min.css'];
   depCss = depCss.map(function(c) {return 'bower_components/'+c;});
   depCss.unshift(srcPath.css);
 
