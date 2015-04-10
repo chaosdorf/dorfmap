@@ -118,7 +118,7 @@ hackcenter_regal      600   60    0    0 feedback4 \
 amp0                 150  590    0    0 helios1/0 \
   area=Schleuse   Rear
 amp0                 400  590    0    0 helios1/0 \
-  area=Treppe     Rear
+  area=Schleuse   Rear
 amp1                 200   12    0    0 helios1/1 \
   area=Lounge     Center + Subwoofer
 amp2                  48   12    0    0 helios1/2 \
