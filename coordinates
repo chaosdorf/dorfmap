@@ -38,6 +38,8 @@ treppe_w              350  525    0    0 feedback2/bin6 \
   type=light watts=10           Deckenlicht
 treppe_bild           350  590    0    0 feedback7/bin5 \
   type=light watts=5            Bild
+treppe_garderobe      400  440    0    0 feedback7/bin6 \
+  type=light watts=5            Garderobe
 lounge_t2b            260  330    0    0 feedback3/6   \
   type=light watts=4            Unten
 
