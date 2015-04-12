@@ -1,16 +1,17 @@
 {
   "name": "dorfmap",
   "dependencies": {
-    "angular": "1.4.0-beta.6",
-    "angular-animate": "1.4.0-beta.6",
-    "angular-aria": "1.4.0-beta.6",
+    "angular": "1.4.0-rc.0",
+    "angular-animate": "1.4.0-rc.0",
+    "angular-aria": "1.4.0-rc.0",
+    "angular-sanitize": "1.4.0-rc.0",
     "angular-material": "0.8.3",
     "angular-busy": "4.1.2",
     "angular-tooltips": "https://github.com/marudor/angular-tooltips.git#master"
   },
   "resolutions": {
-    "angular-aria": "1.4.0-beta.6",
-    "angular-animate": "1.4.0-beta.6",
-    "angular": "1.4.0-beta.6"
+    "angular-aria": "1.4.0-rc.0",
+    "angular-animate": "1.4.0-rc.0",
+    "angular": "1.4.0-rc.0"
   }
 }
