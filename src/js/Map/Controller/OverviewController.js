@@ -182,7 +182,7 @@ angular.module('Map').controller('OverviewController', function ($http, $scope, 
               }
               if (this.type == 'charwrite') {
                 $mdDialog.show({
-                  templateUrl: 'Map/Temlates/charwrite.html',
+                  templateUrl: 'Map/Templates/charwrite.html',
                   targetEvent: $event,
                   controller: ['$scope', '$http', function ($scope, $http) {
                     $scope.lamp = overview.lamps[key];

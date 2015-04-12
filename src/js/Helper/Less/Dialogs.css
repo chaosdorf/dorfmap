@@ -1,4 +1,12 @@
-.dialogsActions > .md-button {
+.dialogActions {
+  -webkit-order: 2;
+      -ms-flex-order: 2;
+          order: 2;
+  -webkit-transform: translateY(-24px);
+      -ms-transform: translateY(-24px);
+          transform: translateY(-24px);
+}
+.dialogActions > .md-button {
   border-radius: 0;
 }
 .dialogsButtonFlex {
@@ -8,4 +16,8 @@
 }
 .md-button {
   height: 100%;
+}
+.margin {
+  margin: 15px!important;
+  padding: 0!important;
 }

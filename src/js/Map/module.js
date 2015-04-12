@@ -1,1 +1,1 @@
-angular.module('Map', ['ngMaterial', 'cgBusy', 'Helper', 'templates', '720kb.tooltips']);
+angular.module('Map', ['ngMaterial', 'cgBusy', 'Helper', 'templates', '720kb.tooltips', 'ngSanitize']);

@@ -4,7 +4,8 @@
   </md-toolbar>                    
   <md-content ng-include="templateUrl"></md-content>
   <div class="dialogActions" layout="{{::layout}}" layout-align="{{::layoutAlign}}">
-    <md-button ng-repeat="button in buttons track by $index" aria-label="" ng-click="button.callback()" ng-class="button.class" ng-include="::button.templateUrl">
+    <md-button ng-repeat="button in buttons track by $index" aria-label="" ng-click="button.callback()" ng-class="button.class">
+      <div ng-include="::button.templateUrl"></div>
     </md-button>
   </div>
 </md-dialog>
