@@ -1521,6 +1521,15 @@ get '/status/info' => sub {
 
 #}}}
 
+# {{{ Hooks
+
+hook before_render => sub {
+	my ($self, $args) = @_;
+	$self->res->headers->access_control_allow_origin('*');
+};
+
+# }}}
+
 app->config(
 	hypnotoad => {
 		accept_interval => 0.2,
