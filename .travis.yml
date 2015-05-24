@@ -1,0 +1,7 @@
+sudo: false
+language: node_js
+node_js:
+- "iojs"
+script: npm run travis
+env:
+- NO_WATCH_TESTS=1
