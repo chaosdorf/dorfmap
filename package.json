@@ -38,6 +38,7 @@
     "react": "^0.13.3",
     "react-router": "^0.13.3",
     "react-tap-event-plugin": "^0.1.6",
+    "react-tooltip": "^0.2.2",
     "when": "^3.7.3"
   }
 }

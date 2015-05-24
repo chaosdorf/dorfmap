@@ -47,6 +47,17 @@ class LampStore extends EventEmitter {
     _.extend(dup, duplicate);
     return dup;
   }
+  async toggleLamp(lamp) {
+    const result = await axios.post('http://localhost:3000/action', {
+      action: 'toggle',
+      device: lamp.name
+    });
+    console.log(result);
+  }
+  updateDevice(device) {
+    this.devices = this.devices.set(device.name, device);
+    this.emit('deviceUpdate', device);
+  }
 }
 
 export default new LampStore();

@@ -1,13 +1,37 @@
 import './lamp.less';
 import lampStore from '../../Stores/lampStore.js';
 
-import { Tooltip } from 'material-ui';
 
 @autoBind
 export default class extends React.Component {
   state = {
     tooltip: false,
-    tooltipDup: false
+    tooltipDup: false,
+    delay: 0,
+    lamp: this.props.lamp
+  }
+  componentDidMount() {
+    lampStore.on('deviceUpdate', this.deviceUpdate);
+  }
+  componentWillUnmount() {
+    lampStore.off('deviceUpdate', this.deviceUpdate);
+  }
+  deviceUpdate(lamp) {
+    if (lamp.name === this.state.lamp.name) {
+      this.setState({
+        lamp
+      });
+    }
+  }
+  getTooltipText(lamp) {
+    let text = lamp.status_text;
+    if (!text) {
+      return null;
+    }
+    if (this.state.delay > 0) {
+      return `${text} (${this.state.delay}s)`;
+    }
+    return lamp.status_text;
   }
   getDuplicate(lamp, image, className) {
     if (!lamp.duplicates) {
@@ -22,38 +46,20 @@ export default class extends React.Component {
       height: lamp.y2 + 'px'
     };
     return (
-      <div name={lamp.name}
+      <img
+        onClick={this.toggle}
+        data-tip={lamp.status_text}
+        name={lamp.name}
         className={className}
         style={dupStyle}
-        onMouseEnter={this.mouseEnterDup}
-        onMouseLeave={this.mouseLeaveDup}>
-        <img src={image}/>
-        <Tooltip show={this.state.tooltipDup} label={lamp.status_text}/>
-      </div>
+        src={image}/>
     );
   }
-  mouseEnterDup() {
-    this.setState({
-      tooltipDup: true
-    });
-  }
-  mouseLeaveDup() {
-    this.setState({
-      tooltipDup: false
-    });
-  }
-  mouseEnter() {
-    this.setState({
-      tooltip: true
-    });
-  }
-  mouseLeave() {
-    this.setState({
-      tooltip: false
-    });
+  toggle() {
+    lampStore.toggleLamp(this.state.lamp);
   }
   render() {
-    const lamp = this.props.lamp;
+    const lamp = this.state.lamp;
     const style = {
       left: lamp.x1 + 'px',
       top: lamp.y1 + 'px',
@@ -75,16 +81,18 @@ export default class extends React.Component {
       writeable: lamp.is_writable && lamp.rate_delay <= 0
     });
     const image = lampStore.getImage(lamp);
+    const tooltipText = {
+      'data-tip': this.getTooltipText(lamp)
+    };
     return (
       <div>
-        <div name={lamp.name}
+        <img
+          onClick={this.toggle}
+          {...tooltipText}
+          name={lamp.name}
           className={className}
           style={style}
-          onMouseEnter={this.mouseEnter}
-          onMouseLeave={this.mouseLeave}>
-          <img src={image}/>
-          <Tooltip show={this.state.tooltip} label={lamp.status_text}/>
-        </div>
+          src={image}/>
         {this.getDuplicate(lamp, image, className)}
       </div>
     );
