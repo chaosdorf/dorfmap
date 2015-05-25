@@ -62,7 +62,7 @@ hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light watts=105      Hackcenter Spiegelsäule
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light ratelimit=5 watts=20       Tischreihe (Spots)
-hackcenter_blau       535  355  894  408 feedback1/5 \
+hackcenter_blau       531  376  890  390 feedback1/5 \
   type=light ratelimit=7 watts=24       Tischreihe (Blau)
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light ratelimit=10 watts=30       Deckenlicht

@@ -7,6 +7,9 @@ global._ = require('lodash');
 global.classNames = require('classnames');
 require('./main.less');
 
+import reactTapEvent from 'react-tap-event-plugin';
+reactTapEvent();
+
 function boundMethod(target, key, descriptor) {
   const fn = descriptor.value;
 

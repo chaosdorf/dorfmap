@@ -1,5 +1,5 @@
 import './vendor.js';
-import { routes } from './config.js';
+import { routes } from './routes.js';
 import Router from 'react-router';
 
 

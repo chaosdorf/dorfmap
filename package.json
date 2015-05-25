@@ -5,8 +5,9 @@
   "main": "webpack.config.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot -d --content-base public/ --history-api-fallback",
-    "prod": "webpack -p",
-    "travis": "npm run prod"
+    "prod": "NODE_ENV=production webpack -p",
+    "travis": "npm run prod",
+    "deploy": "npm run prod; sh scripts/dev/copy-to-server"
   },
   "author": "marudor",
   "license": "MIT",
@@ -28,7 +29,7 @@
   },
   "dependencies": {
     "axios": "^0.5.4",
-    "babel-runtime": "^5.4.3",
+    "babel-runtime": "^5.4.7",
     "classnames": "^2.1.1",
     "eventemitter3": "^1.1.0",
     "immutable": "^3.7.3",
@@ -37,7 +38,7 @@
     "material-ui": "^0.7.5",
     "react": "^0.13.3",
     "react-router": "^0.13.3",
-    "react-tap-event-plugin": "^0.1.6",
+    "react-tap-event-plugin": "^0.1.7",
     "react-tooltip": "^0.2.2",
     "when": "^3.7.3"
   }

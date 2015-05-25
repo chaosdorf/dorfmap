@@ -1205,16 +1205,17 @@ get '/ajax/menu' => sub {
 	$self->render(
 		json => [
 			{
-				name    => 'shortcuts',
-				entries => \@dd_shortcuts
+				name    => 'actions',
+				entries => [sort keys $shortcuts]
 			},
 			{
 				name    => 'presets',
-				entries => \@dd_presets
+				entries => [sort keys $presets]
 			},
 			{
 				name    => 'layers',
-				entries => \@dd_layers
+				entries =>
+				 [map { $_->{name} } @dd_layers]
 			},
 		]
 	);
@@ -1515,6 +1516,13 @@ get '/status/info' => sub {
 	);
 };
 
+options '*' => sub {
+	my $self = shift;
+	$self->res->headers->access_control_allow_origin('*');
+
+	$self->respond_to(any => { data => q{}, status => 200 });
+};
+
 #}}}
 
 # {{{ Hooks
@@ -1522,6 +1530,8 @@ get '/status/info' => sub {
 hook before_render => sub {
 	my ($self, $args) = @_;
 	$self->res->headers->access_control_allow_origin('*');
+	$self->res->headers->header('Access-Control-Allow-Methods' => 'POST');
+	$self->res->headers->header('Access-Control-Allow-Headers' => 'Content-Type');
 };
 
 # }}}

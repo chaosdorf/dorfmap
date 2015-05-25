@@ -9,7 +9,7 @@ import Tooltip from 'react-tooltip';
 @autoBind
 export default class extends React.Component {
   state = {
-    lamps: lampStore.devices.toJS()
+    lamps: {}
   }
   componentDidMount() {
     lampStore.on('lamps', this.onLamps);
@@ -23,7 +23,7 @@ export default class extends React.Component {
     });
   }
   render() {
-    const tooltip = Object.keys(this.state.lamps).length > 0 ? <Tooltip effect="solid"/> : null;
+    const tooltip = Object.keys(this.state.lamps).length > 0 ? <Tooltip ref="tooltip" effect="solid"/> : null;
     return (
       <div className="map">
         {tooltip}

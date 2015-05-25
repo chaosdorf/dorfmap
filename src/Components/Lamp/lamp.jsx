@@ -1,17 +1,17 @@
 import './lamp.less';
 import lampStore from '../../Stores/lampStore.js';
 
-
 @autoBind
 export default class extends React.Component {
   state = {
     tooltip: false,
     tooltipDup: false,
-    delay: 0,
+    delay: this.props.lamp.rate_delay,
     lamp: this.props.lamp
   }
   componentDidMount() {
     lampStore.on('deviceUpdate', this.deviceUpdate);
+    this.checkDelay();
   }
   componentWillUnmount() {
     lampStore.off('deviceUpdate', this.deviceUpdate);
@@ -19,8 +19,10 @@ export default class extends React.Component {
   deviceUpdate(lamp) {
     if (lamp.name === this.state.lamp.name) {
       this.setState({
-        lamp
+        lamp,
+        delay: lamp.rate_delay
       });
+      this.checkDelay();
     }
   }
   getTooltipText(lamp) {
@@ -32,6 +34,14 @@ export default class extends React.Component {
       return `${text} (${this.state.delay}s)`;
     }
     return lamp.status_text;
+  }
+  checkDelay() {
+    if (this.state.delay > 0) {
+      this.setState({
+        delay: this.state.delay - 1
+      });
+      setTimeout(this.checkDelay, 1000);
+    }
   }
   getDuplicate(lamp, image, className) {
     if (!lamp.duplicates) {
@@ -47,7 +57,7 @@ export default class extends React.Component {
     };
     return (
       <img
-        onClick={this.toggle}
+        onTouchTap={this.toggle}
         data-tip={lamp.status_text}
         name={lamp.name}
         className={className}
@@ -56,7 +66,9 @@ export default class extends React.Component {
     );
   }
   toggle() {
-    lampStore.toggleLamp(this.state.lamp);
+    if (this.state.delay <= 0) {
+      lampStore.toggleLamp(this.state.lamp);
+    }
   }
   render() {
     const lamp = this.state.lamp;
@@ -66,19 +78,9 @@ export default class extends React.Component {
       width: lamp.x2 + 'px',
       height: lamp.y2 + 'px'
     };
-    if (lamp.type === 'infoarea') {
-      return (
-        <div className="infoarea"
-          style={style}
-          dangerouslySetInnerHTML={{
-            __html: lamp.status_text
-          }
-        }/>
-      );
-    }
     const className = classNames({
       lamp: true,
-      writeable: lamp.is_writable && lamp.rate_delay <= 0
+      writeable: lamp.is_writable && this.state.delay <= 0
     });
     const image = lampStore.getImage(lamp);
     const tooltipText = {
@@ -87,7 +89,7 @@ export default class extends React.Component {
     return (
       <div>
         <img
-          onClick={this.toggle}
+          onTouchTap={this.toggle}
           {...tooltipText}
           name={lamp.name}
           className={className}
