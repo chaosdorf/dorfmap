@@ -312,8 +312,6 @@ sub load_coordinates {    #{{{
 			$remotemap->{$id} = "/tmp/${controlpath}";
 		}
 
-		$coordinates->{$id}->{is_readable}
-		  = ( $coordinates->{$id}->{path} ne 'none' ) ? 1 : 0;
 		$coordinates->{$id}->{is_writable}
 		  = (     $coordinates->{$id}->{path} ne 'none'
 			  and $id !~ m{ _ (?: au | r o ) $}ox
@@ -506,17 +504,15 @@ sub status_devices {
 		$devices->{$id}->{x2}          = $coordinates->{$id}->{x2};
 		$devices->{$id}->{y2}          = $coordinates->{$id}->{y2};
 		$devices->{$id}->{type}        = $coordinates->{$id}->{type};
-		$devices->{$id}->{is_readable} = $coordinates->{$id}->{is_readable};
 		$devices->{$id}->{is_writable} = $coordinates->{$id}->{is_writable};
 		$devices->{$id}->{status}      = status_number($id);
 		$devices->{$id}->{auto}        = ( -e "/tmp/automatic_${id}" ? 1 : 0 );
-		$devices->{$id}->{desc}        = $coordinates->{$id}->{text};
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
 		$devices->{$id}->{status_text} = status_text($id);
 		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
-		$devices->{$id}->{image}       = device_image($id);
+		$devices->{$id}->{image}       = device_image($id); # used only by /m
 
 		if ( $type eq 'charwrite' ) {
 			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
