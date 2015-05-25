@@ -15,10 +15,6 @@ Transporterraum      1429  250 1737  365 none
 Treppe                295  356  432  522 none
 WC_vorne              955  268 1050  630 none
 
-[layer=control]
-infoarea              450  406  900  600 none \
-  type=infoarea
-
 [layer=control type=rtext]
 temp_serverraum      1265  420    0    0 none
 power_serverraum        0    0    0    0 none
