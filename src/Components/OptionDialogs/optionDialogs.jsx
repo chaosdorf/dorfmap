@@ -1,39 +1,40 @@
 import './optionDialogs.less';
 
-import { RaisedButton, Dialog } from 'material-ui';
+import { RaisedButton } from 'material-ui';
 
 import menuStore from '../../Stores/menuStore';
-import MenuEntries from '../MenuEntries/menuEntries.jsx'
-;
 
+import OptionDialog from '../OptionDialog/optionDialog.jsx';
+
+@autoBind
 export default class extends React.Component {
   actions = {
     actions: 0,
     presets: 1,
-    layer: 2
+    layers: 2
   }
   state = {}
   handleClick(action) {
     let title;
     switch (action) {
       case this.actions.actions:
-      title = 'Actions';
+      title = 'actions';
       break;
       case this.actions.presets:
-      title = 'Presets';
+      title = 'presets';
       break;
-      case this.actions.layer:
-      title = 'Layer';
+      case this.actions.layers:
+      title = 'layers';
       break;
       default:
       break;
     }
-    const menu = menuStore.menu.get(title.toLowerCase());
+    const menu = menuStore.menu.toJS();
     this.setState({
       title,
       menu
     });
-    this.refs.optionsDialog.show();
+    this.refs.optionDialog.show();
   }
   render() {
     return (
@@ -46,16 +47,14 @@ export default class extends React.Component {
             onTouchTap={this.handleClick.bind(this, this.actions.presets)}
             label="Presets"/>
           <RaisedButton
-            onTouchTap={this.handleClick.bind(this, this.actions.layer)}
-            label="Layer"/>
+            onTouchTap={this.handleClick.bind(this, this.actions.layers)}
+            label="Layers"/>
         </div>
 
-        <Dialog
-          ref="optionsDialog"
-          modal={false}
-          title={this.state.title}>
-          <MenuEntries entries={this.state.menu}/>
-        </Dialog>
+        <OptionDialog
+          ref="optionDialog"
+          menu={this.state.menu}
+          activeType={this.state.title}/>
       </div>
     );
   }

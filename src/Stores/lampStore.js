@@ -8,10 +8,17 @@ class LampStore extends EventEmitter {
     super();
     this.getAll();
   }
+  emitLamps() {
+    this.emit('lamps', this.filterLamps(this.devices.toJS(), this.layer));
+  }
   async getAll() {
     const lamps = await axios.get(`${baseHost}/status/devices.json`);
     this.devices = Map(lamps.data);
-    this.emit('lamps', this.filterLamps(this.devices.toJS(), this.layer));
+    this.emitLamps();
+  }
+  updateLayer(layer) {
+    this.layer = layer;
+    this.emitLamps();
   }
   filterLamps(lamps, layer) {
     return _.filter(lamps, l => {
@@ -69,6 +76,13 @@ class LampStore extends EventEmitter {
   updateDevice(device) {
     this.devices = this.devices.set(device.name, device);
     this.emit('deviceUpdate', device);
+  }
+  async executeShortcut(shortcut) {
+    await axios.post(`${baseHost}/action`, {
+      action: 'shortcut',
+      shortcut
+    });
+    this.getAll();
   }
 }
 

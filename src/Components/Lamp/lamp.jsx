@@ -1,13 +1,20 @@
 import './lamp.less';
 import lampStore from '../../Stores/lampStore.js';
+import SegmentPopup from '../SegmentPopup/segmentPopup.jsx';
+
 
 @autoBind
 export default class extends React.Component {
   state = {
-    tooltip: false,
-    tooltipDup: false,
     delay: this.props.lamp.rate_delay,
     lamp: this.props.lamp
+  }
+  componentWillReceiveProps(newProps) {
+    if (newProps.lamp) {
+      this.setState({
+        lamp: newProps.lamp
+      });
+    }
   }
   componentDidMount() {
     lampStore.on('deviceUpdate', this.deviceUpdate);
@@ -15,6 +22,7 @@ export default class extends React.Component {
   }
   componentWillUnmount() {
     lampStore.off('deviceUpdate', this.deviceUpdate);
+    this.unmounted = true;
   }
   deviceUpdate(lamp) {
     if (lamp.name === this.state.lamp.name) {
@@ -37,13 +45,16 @@ export default class extends React.Component {
   }
   checkDelay() {
     if (this.state.delay > 0) {
-      this.setState({
-        delay: this.state.delay - 1
-      });
-      setTimeout(this.checkDelay, 1000);
+      if (!this.unmounted) {
+        this.setState({
+          delay: this.state.delay - 1
+        });
+        lampStore.emit('tooltipUpdate', this.target);
+        setTimeout(this.checkDelay, 1000);
+      }
     }
   }
-  getDuplicate(lamp, image, className) {
+  getDuplicate(lamp, image, className, tooltipText) {
     if (!lamp.duplicates) {
       return null;
     }
@@ -57,8 +68,11 @@ export default class extends React.Component {
     };
     return (
       <img
+        ref="duplicate"
+        onMouseEnter={this.onMouseEnter.bind(this, true)}
+        onMouseLeave={this.onMouseLeave}
         onTouchTap={this.toggle}
-        data-tip={lamp.status_text}
+        {...tooltipText}
         name={lamp.name}
         className={className}
         style={dupStyle}
@@ -66,9 +80,17 @@ export default class extends React.Component {
     );
   }
   toggle() {
-    if (this.state.delay <= 0) {
+    if (this.state.lamp.type === 'charwrite') {
+      this.refs.dialog.show();
+    } else if (this.state.delay <= 0) {
       lampStore.toggleLamp(this.state.lamp);
     }
+  }
+  onMouseEnter(dup) {
+    this.target = React.findDOMNode(React.findDOMNode(dup ? this.refs.duplicate : this.refs.normal));
+  }
+  onMouseLeave() {
+    this.target = null;
   }
   render() {
     const lamp = this.state.lamp;
@@ -86,16 +108,24 @@ export default class extends React.Component {
     const tooltipText = {
       'data-tip': this.getTooltipText(lamp)
     };
+    let dialog;
+    if (lamp.type === 'charwrite') {
+      dialog = (<SegmentPopup ref="dialog" lamp={lamp}/>);
+    }
     return (
       <div>
         <img
+          ref="normal"
           onTouchTap={this.toggle}
+          onMouseEnter={this.onMouseEnter.bind(this, false)}
+          onMouseLeave={this.onMouseLeave}
           {...tooltipText}
           name={lamp.name}
           className={className}
           style={style}
           src={image}/>
-        {this.getDuplicate(lamp, image, className)}
+        {this.getDuplicate(lamp, image, className, tooltipText)}
+        {dialog}
       </div>
     );
   }

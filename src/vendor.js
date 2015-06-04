@@ -10,6 +10,7 @@ require('./main.less');
 import reactTapEvent from 'react-tap-event-plugin';
 reactTapEvent();
 
+
 function boundMethod(target, key, descriptor) {
   const fn = descriptor.value;
 

@@ -13,17 +13,29 @@ export default class extends React.Component {
   }
   componentDidMount() {
     lampStore.on('lamps', this.onLamps);
+    lampStore.on('tooltipUpdate', this.onTooltipUpdate);
   }
   componentWillUnmount() {
     lampStore.off('lamps', this.onLamps);
+    lampStore.off('tooltipUpdate', this.onTooltipUpdate);
   }
   onLamps(lamps) {
     this.setState({
       lamps
     });
   }
+  onTooltipUpdate(target) {
+    if (target) {
+      const e = {
+        target,
+        clientX: this.refs.tooltip.state.x,
+        clientY: this.refs.tooltip.state.y
+      };
+      this.refs.tooltip.showTooltip(e);
+    }
+  }
   render() {
-    const tooltip = Object.keys(this.state.lamps).length > 0 ? <Tooltip ref="tooltip" effect="solid"/> : null;
+    const tooltip = Object.keys(this.state.lamps).length > 0 ? <Tooltip ref="tooltip"/> : null;
     return (
       <div className="map">
         {tooltip}

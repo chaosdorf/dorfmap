@@ -1,11 +1,27 @@
 import { FlatButton } from 'material-ui';
+import lampStore from '../../Stores/lampStore.js';
 import './menuEntries.less';
 
-export default class extends React.Component {
+
+class MenuEntries extends React.Component {
+  handleClick(entry) {
+    switch (this.props.type) {
+      case 'layers':
+      lampStore.updateLayer(entry);
+      break;
+      case 'presets':
+      lampStore.executePreset(entry);
+      break;
+      case 'actions':
+      lampStore.executeShortcut(entry);
+      break;
+    }
+    this.props.closeFn();
+  }
   render() {
     const entries = _.map(this.props.entries, entry => {
       return (
-        <FlatButton label={entry}/>
+        <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>
       );
     });
     return (
@@ -13,3 +29,9 @@ export default class extends React.Component {
     );
   }
 }
+
+MenuEntries.PropTypes = {
+  entries: React.PropTypes.array
+};
+
+export default MenuEntries;
