@@ -30,7 +30,7 @@ my $auto_prefix   = '/etc/automatic_light_control';
 my $store_prefix  = '/srv/www/stored';
 my $bgdata_prefix = '/srv/www/bgdata';
 
-my @dd_layers = map { { name => $_ } } qw(control caution wiki);
+my @dd_layers = map { { name => $_ } } qw(control caution);
 my ( @dd_shortcuts, @dd_presets );
 
 my @charwrite_modes = (

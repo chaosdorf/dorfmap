@@ -1,20 +1,3 @@
-[layer=wiki]
-
-Bikeshed              295  526  432  620 none
-dorfdoor               58  420   66  518 none \
-  type=door area=Schleuse Tür
-Hackcenter            437   57  914  392 none
-Hinterzimmer         1429   41 1737  235 none
-Kitchen              1068   41 1307  194 none
-Laptop_Lounge          44   34  434  379 none
-Maschinenraum        1752   41 2195  365 none
-Schaufenster            0  578   71  619 none
-Schleuse               71  380  256  621 none
-Serverraum           1232  360 1304  451 none
-Transporterraum      1429  250 1737  365 none
-Treppe                295  356  432  522 none
-WC_vorne              955  268 1050  630 none
-
 [layer=control ratelimit=2 area=Schleuse]
 logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au watts=1       Chaosdorf-Logo
