@@ -31,9 +31,11 @@ class LampStore extends EventEmitter {
     let status = '';
     switch (lamp.status) {
       case 0:
+      case '0':
       status = '_off';
       break;
       case 1:
+      case '1':
       status = '_on';
       break;
     }

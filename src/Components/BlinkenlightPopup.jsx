@@ -28,12 +28,12 @@ export default class BlinkenlightPopup extends React.Component {
   }
   save() {
     menuStore.saveBlinkenlight(this.props.lamp, this.state.active);
+    this.hide();
   }
   handleRadioChange = () => {
     this.setState({
       active: this.refs.radio.getCheckedValue()
     });
-    this.hide();
   }
   render() {
     return (
@@ -45,10 +45,12 @@ export default class BlinkenlightPopup extends React.Component {
           {
             _.map(this.state.presets, (preset) => {
               return (
-                <label key={preset.name} style={{lineHeight: '32px'}}>
-                  <input style={{marginRight: 5}} value={preset.raw_string} type="radio"/>
-                  {preset.name}
-                </label>
+                <div style={{lineHeight: '32px'}} key={preset.name}>
+                  <label>
+                    <input style={{marginRight: 5}} value={preset.raw_string} type="radio"/>
+                    {preset.name}
+                  </label>
+                </div>
               );
             })
           }
