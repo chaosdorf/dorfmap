@@ -2,7 +2,7 @@
 <html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
   <head>
     <meta charset="UTF-8">
-    <title>{%=o.htmlWebpackPlugin.options.title || 'Webpack App'%}</title>
+    <title>{%=o.htmlWebpackPlugin.options.title || 'Dorfmap'%}</title>
     {% if (o.htmlWebpackPlugin.files.favicon) { %}
     <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">
     {% } %}
@@ -13,7 +13,7 @@
   <body>
     <div id="dorfmapWrapper"></div>
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+    <script src="/static/{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
     {% } %}
   </body>
 </html>

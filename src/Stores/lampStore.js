@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { baseHost } from '../config.js';
+import { baseHost } from 'config';
 import EventEmitter from 'eventemitter';
 import axios from 'axios';
 

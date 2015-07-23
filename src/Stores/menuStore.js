@@ -1,4 +1,4 @@
-import { baseHost } from '../config';
+import { baseHost } from 'config';
 import { Map } from 'immutable';
 import lampStore from './lampStore.js';
 import EventEmitter from 'eventemitter';
