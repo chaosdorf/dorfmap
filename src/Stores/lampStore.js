@@ -1,5 +1,7 @@
 import { Map } from 'immutable';
 import { baseHost } from '../config.js';
+import EventEmitter from 'eventemitter';
+import axios from 'axios';
 
 class LampStore extends EventEmitter {
   devices = Map()

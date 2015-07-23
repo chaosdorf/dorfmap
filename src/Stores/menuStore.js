@@ -1,6 +1,8 @@
 import { baseHost } from '../config';
 import { Map } from 'immutable';
 import lampStore from './lampStore.js';
+import EventEmitter from 'eventemitter';
+import axios from 'axios';
 
 class menuStore extends EventEmitter {
   menu = Map()
@@ -29,6 +31,17 @@ class menuStore extends EventEmitter {
       device: lamp.name,
       text: mode
     })).data;
+    await lampStore.getAll();
+    return r;
+  }
+  async getBlinkenlight(lamp) {
+    return (await axios.get(`${baseHost}/ajax/blinkencontrol?device=${lamp}`)).data;
+  }
+  async saveBlinkenlight(lamp, preset) {
+    const r = (await axios.post(`${baseHost}/ajax/blinkencontrol`, {
+      device: lamp.name,
+      raw_string: preset
+    }));
     await lampStore.getAll();
     return r;
   }

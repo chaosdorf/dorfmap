@@ -1,13 +1,24 @@
 import './lamp.less';
 import lampStore from '../../Stores/lampStore.js';
+import BlinkenlightPopup from '../BlinkenlightPopup.jsx';
 import SegmentPopup from '../SegmentPopup/segmentPopup.jsx';
+import React from 'react';
+import classNames from 'classnames';
+import Tooltip from 'rc-tooltip';
 
 
-@autoBind
 export default class extends React.Component {
   state = {
     delay: this.props.lamp.rate_delay,
     lamp: this.props.lamp
+  }
+  lampCopy = _.cloneDeep(this.props.lamp)
+  shouldComponentUpdate(nextProps, nextState) {
+    const lampUpdate = !_.isEqual(nextProps.lamp, this.lampCopy);
+    if (lampUpdate) {
+      this.lampCopy = _.cloneDeep(nextProps.lamp);
+    }
+    return lampUpdate || nextState.delay !== this.state.delay;
   }
   componentWillReceiveProps(newProps) {
     if (newProps.lamp) {
@@ -24,8 +35,9 @@ export default class extends React.Component {
     lampStore.off('deviceUpdate', this.deviceUpdate);
     this.unmounted = true;
   }
-  deviceUpdate(lamp) {
+  deviceUpdate = (lamp) => {
     if (lamp.name === this.state.lamp.name) {
+      this.lampCopy = _.cloneDeep(lamp);
       this.setState({
         lamp,
         delay: lamp.rate_delay
@@ -43,13 +55,12 @@ export default class extends React.Component {
     }
     return lamp.status_text;
   }
-  checkDelay() {
+  checkDelay = () => {
     if (this.state.delay > 0) {
       if (!this.unmounted) {
         this.setState({
           delay: this.state.delay - 1
         });
-        lampStore.emit('tooltipUpdate', this.target);
         setTimeout(this.checkDelay, 1000);
       }
     }
@@ -67,29 +78,33 @@ export default class extends React.Component {
       height: lamp.y2 + 'px'
     };
     return (
-      <img
-        ref="duplicate"
-        onMouseEnter={this.onMouseEnter.bind(this, true)}
-        onMouseLeave={this.onMouseLeave}
-        onTouchTap={this.toggle}
-        {...tooltipText}
-        name={lamp.name}
-        className={className}
-        style={dupStyle}
-        src={image}/>
+      <Tooltip
+        overlay={tooltipText}>
+        <img
+          ref="duplicate"
+          onMouseEnter={this.onMouseEnter.bind(this, true)}
+          onMouseLeave={this.onMouseLeave}
+          onTouchTap={this.toggle}
+          name={lamp.name}
+          className={className}
+          style={dupStyle}
+          src={image}/>
+      </Tooltip>
     );
   }
-  toggle() {
+  toggle = () => {
     if (this.state.lamp.type === 'charwrite') {
+      this.refs.dialog.show();
+    } else if (this.state.lamp.type === 'blinkenlight') {
       this.refs.dialog.show();
     } else if (this.state.delay <= 0) {
       lampStore.toggleLamp(this.state.lamp);
     }
   }
-  onMouseEnter(dup) {
+  onMouseEnter = (dup) => {
     this.target = React.findDOMNode(React.findDOMNode(dup ? this.refs.duplicate : this.refs.normal));
   }
-  onMouseLeave() {
+  onMouseLeave = () => {
     this.target = null;
   }
   render() {
@@ -105,25 +120,27 @@ export default class extends React.Component {
       writeable: lamp.is_writable && this.state.delay <= 0
     });
     const image = lampStore.getImage(lamp);
-    const tooltipText = {
-      'data-tip': this.getTooltipText(lamp)
-    };
     let dialog;
     if (lamp.type === 'charwrite') {
       dialog = (<SegmentPopup ref="dialog" lamp={lamp}/>);
+    } else if (lamp.type === 'blinkenlight') {
+      dialog = (<BlinkenlightPopup ref="dialog" lamp={lamp}/>);
     }
+    const tooltipText = this.getTooltipText(lamp);
+    const img = (<img
+      ref="normal"
+      onTouchTap={this.toggle}
+      onMouseEnter={this.onMouseEnter.bind(this, false)}
+      onMouseLeave={this.onMouseLeave}
+      name={lamp.name}
+      className={className}
+      style={style}
+      src={image}/>);
     return (
       <div>
-        <img
-          ref="normal"
-          onTouchTap={this.toggle}
-          onMouseEnter={this.onMouseEnter.bind(this, false)}
-          onMouseLeave={this.onMouseLeave}
-          {...tooltipText}
-          name={lamp.name}
-          className={className}
-          style={style}
-          src={image}/>
+        {tooltipText ? <Tooltip overlay={tooltipText}>
+          {img}
+        </Tooltip> : img}
         {this.getDuplicate(lamp, image, className, tooltipText)}
         {dialog}
       </div>

@@ -1,15 +1,9 @@
-import {Route, DefaultRoute, RouteHandler} from 'react-router';
+/* eslint no-unused-vars: 0 */
+
+import React from 'react';
+import {Route} from 'react-router';
 import Dorfmap from './Components/Dorfmap/dorfmap.jsx';
 
-class App extends React.Component {
-  render() {
-    return (<RouteHandler/>);
-  }
-}
-
-
-export const routes = (
-  <Route handler={App} path="/">
-    <DefaultRoute handler={Dorfmap}/>
-  </Route>
+export default (
+  <Route handler={Dorfmap}/>
 );

@@ -1,7 +1,7 @@
 import { FlatButton } from 'material-ui';
 import lampStore from '../../Stores/lampStore.js';
 import './menuEntries.less';
-
+import React from 'react';
 
 class MenuEntries extends React.Component {
   handleClick(entry) {

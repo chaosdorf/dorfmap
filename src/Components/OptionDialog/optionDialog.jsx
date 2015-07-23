@@ -1,11 +1,10 @@
 import { Dialog, Tabs, Tab } from 'material-ui';
 
-import MenuEntries from '../MenuEntries/menuEntries.jsx'
-;
+import MenuEntries from '../MenuEntries/menuEntries.jsx';
+import React from 'react';
 
-@autoBind
 class OptionDialog extends React.Component {
-  closeDialog() {
+  closeDialog = () => {
     this.refs.optionDialog.dismiss();
   }
   show() {
@@ -20,7 +19,7 @@ class OptionDialog extends React.Component {
       <Dialog
         ref="optionDialog"
         modal={false}
-        contentInnerStyle={{padding: '0'}}>
+        bodyStyle={{padding: 0}}>
         <Tabs key={selectedIndex} initialSelectedIndex={selectedIndex} ref="tabs">
           {_.map(this.props.menu, (entries, type) => {
             return (

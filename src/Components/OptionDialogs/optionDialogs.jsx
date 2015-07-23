@@ -1,12 +1,10 @@
 import './optionDialogs.less';
-
 import { RaisedButton } from 'material-ui';
-
 import menuStore from '../../Stores/menuStore';
-
 import OptionDialog from '../OptionDialog/optionDialog.jsx';
+import React from 'react';
 
-@autoBind
+
 export default class extends React.Component {
   actions = {
     actions: 0,

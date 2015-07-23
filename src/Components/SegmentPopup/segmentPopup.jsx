@@ -1,9 +1,8 @@
 import { Dialog, FlatButton, TextField } from 'material-ui';
 import RadioGroup from 'react-radio-group';
-
+import React from 'react';
 import menuStore from '../../Stores/menuStore.js';
 
-@autoBind
 export default class extends React.Component {
   state = {
     disabled: false,
@@ -15,7 +14,7 @@ export default class extends React.Component {
   componentWillUnmount() {
     menuStore.off('charwriteModes', this.updateModes);
   }
-  updateModes(modes) {
+  updateModes = (modes) => {
     const lamp = this.props.lamp;
     let value = lamp.charwrite_text;
     let customTxt = '';
@@ -29,7 +28,7 @@ export default class extends React.Component {
       customTxt
     });
   }
-  hide() {
+  hide = () => {
     this.refs.segmentDialog.dismiss();
   }
   show() {
@@ -50,17 +49,17 @@ export default class extends React.Component {
     });
     this.hide();
   }
-  setCustom() {
+  setCustom = () => {
     this.setState({
       value: 'custom'
     });
   }
-  handleChange() {
+  handleChange = () => {
     this.setState({
       customTxt: this.refs.custom.getValue()
     });
   }
-  handleRadioChange() {
+  handleRadioChange = () => {
     this.setState({
       value: this.refs.radio.getCheckedValue()
     });
@@ -96,7 +95,7 @@ export default class extends React.Component {
         <div>
           <FlatButton label="Abbrechen" onClick={this.hide}/>
           <FlatButton disabled={this.state.disabled}
-            label="Speichern" onClick={this.save}/>
+            label="Speichern" onClick={::this.save}/>
         </div>
       </Dialog>
     );

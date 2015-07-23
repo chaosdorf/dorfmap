@@ -1,0 +1,10 @@
+constructor	/Users/marudor/Documents/programming/dorfmap/src/Stores/menuStore.js	/^  constructor() {$/;"	function	line:12
+constructor	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  constructor() {$/;"	function	line:9
+emitLamps	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  emitLamps() {$/;"	function	line:13
+updateLayer	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  updateLayer(layer) {$/;"	function	line:21
+filterLamps	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  filterLamps(lamps, layer) {$/;"	function	line:25
+getImage	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  getImage(lamp) {$/;"	function	line:30
+switch	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^    switch (lamp.status) {$/;"	function	line:32
+switch	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^    switch (lamp.type) {$/;"	function	line:41
+getDuplicate	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  getDuplicate(duplicate, lamp) {$/;"	function	line:62
+updateDevice	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  updateDevice(device) {$/;"	function	line:78

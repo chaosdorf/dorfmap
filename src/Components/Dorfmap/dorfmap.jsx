@@ -1,6 +1,7 @@
 import AboutHeader from '../AboutHeader/aboutHeader.jsx';
 import OptionDialogs from '../OptionDialogs/optionDialogs.jsx';
 import Map from '../Map/map.jsx';
+import React from 'react';
 
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 const themeManager = new ThemeManager();

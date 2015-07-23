@@ -1,0 +1,39 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+.about	/Users/marudor/Documents/programming/dorfmap/src/Components/AboutHeader/aboutHeader.less	/^.about {$/;"	function	line:1
+a	/Users/marudor/Documents/programming/dorfmap/src/Components/AboutHeader/aboutHeader.less	/^  a {$/;"	function	line:8
+.lamp, .infoarea	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^.lamp, .infoarea {$/;"	function	line:1
+.mui-tooltip 	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^  .mui-tooltip {$/;"	function	line:3
+&.mui-is-shown	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^    &.mui-is-shown {$/;"	function	line:5
+.lamp	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^.lamp {$/;"	function	line:12
+&.writeable	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^  &.writeable {$/;"	function	line:13
+&:hover	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^    &:hover {$/;"	function	line:16
+.reactTooltip	/Users/marudor/Documents/programming/dorfmap/src/Components/Lamp/lamp.less	/^.reactTooltip {$/;"	function	line:23
+.map	/Users/marudor/Documents/programming/dorfmap/src/Components/Map/map.less	/^.map {$/;"	function	line:1
+.menuEntries	/Users/marudor/Documents/programming/dorfmap/src/Components/MenuEntries/menuEntries.less	/^.menuEntries {$/;"	function	line:1
+.optionDialogs	/Users/marudor/Documents/programming/dorfmap/src/Components/OptionDialogs/optionDialogs.less	/^.optionDialogs {$/;"	function	line:1
+html	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^<html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>$/;"	function	line:2
+head	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^  <head>$/;"	function	line:3
+meta	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <meta charset="UTF-8">$/;"	function	line:4
+title	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <title>{%=o.htmlWebpackPlugin.options.title || 'Webpack App'%}<\/title>$/;"	function	line:5
+link	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">$/;"	function	line:7
+link	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">$/;"	function	line:10
+body	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^  <body>$/;"	function	line:13
+div	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <div id="dorfmapWrapper"><\/div>$/;"	function	line:14
+script	/Users/marudor/Documents/programming/dorfmap/src/index.html	/^    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"><\/script>$/;"	function	line:16
+render	/Users/marudor/Documents/programming/dorfmap/src/main.js	/^  render() {$/;"	function	line:9
+html	/Users/marudor/Documents/programming/dorfmap/src/main.less	/^html {$/;"	function	line:4
+constructor	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  constructor() {$/;"	function	line:7
+emitLamps	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  emitLamps() {$/;"	function	line:13
+updateLayer	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  updateLayer(layer) {$/;"	function	line:21
+filterLamps	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  filterLamps(lamps, layer) {$/;"	function	line:25
+getImage	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  getImage(lamp) {$/;"	function	line:30
+switch	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^    switch (lamp.status) {$/;"	function	line:32
+switch	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^    switch (lamp.type) {$/;"	function	line:41
+getDuplicate	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  getDuplicate(duplicate, lamp) {$/;"	function	line:62
+updateDevice	/Users/marudor/Documents/programming/dorfmap/src/Stores/lampStore.js	/^  updateDevice(device) {$/;"	function	line:78
+constructor	/Users/marudor/Documents/programming/dorfmap/src/Stores/menuStore.js	/^  constructor() {$/;"	function	line:8
