@@ -1,9 +1,9 @@
 import './vendor.js';
-import {RouteHandler} from 'react-router';
+import React from 'react';
 import Router from 'react-router';
 import routes from './routes.js';
-import React from 'react';
 import taps from 'react-tap-event-plugin';
+import {RouteHandler} from 'react-router';
 taps();
 
 class App extends React.Component {
