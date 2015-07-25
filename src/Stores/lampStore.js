@@ -81,6 +81,13 @@ class LampStore extends EventEmitter {
     this.devices = this.devices.set(device.name, device);
     this.emit('deviceUpdate', device);
   }
+  async executePreset(preset) {
+    await axios.post(`${baseHost}/action`, {
+      action: 'preset',
+      preset
+    });
+    this.getAll();
+  }
   async executeShortcut(shortcut) {
     await axios.post(`${baseHost}/action`, {
       action: 'shortcut',

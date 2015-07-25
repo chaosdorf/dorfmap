@@ -3,7 +3,11 @@ import { Dialog, Tabs, Tab } from 'material-ui';
 import MenuEntries from '../MenuEntries/menuEntries.jsx';
 import React from 'react';
 
-class OptionDialog extends React.Component {
+export default class OptionDialog extends React.Component {
+  static propTypes = {
+    menu: React.PropTypes.object,
+    activeType: React.PropTypes.string
+  }
   closeDialog = () => {
     this.refs.optionDialog.dismiss();
   }
@@ -33,10 +37,3 @@ class OptionDialog extends React.Component {
     );
   }
 }
-
-OptionDialog.propTypes = {
-  menu: React.PropTypes.object,
-  activeType: React.PropTypes.string
-};
-
-export default OptionDialog;
