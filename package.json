@@ -13,7 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
-    "babel-eslint": "^3.1.4",
+    "babel-eslint": "^4.0.0",
     "babel-loader": "^5.0.0",
     "css-loader": "^0.15.0",
     "eslint": "^0.24.0",
@@ -32,7 +32,6 @@
   "dependencies": {
     "axios": "^0.5.4",
     "babel-runtime": "^5.4.7",
-    "classnames": "^2.1.1",
     "eventemitter3": "^1.1.0",
     "immutable": "^3.7.3",
     "lodash": "^3.8.0",
