@@ -95,8 +95,6 @@ static void apply_pwm(void)
 ISR(INT0_vect)
 {
 	if (CLOCK_HI) {
-		PORTD |= _BV(PD4);
-
 		// rising clock: read data
 		binary_1 = (binary_1 << 1) | (binary_2 >> 7);
 		binary_2 = (binary_2 << 1) | (pwm[3] >> 7);
@@ -112,8 +110,6 @@ ISR(INT0_vect)
 			PORTA &= ~_BV(PA0);
 	}
 	else {
-		PORTD &= ~_BV(PD4);
-
 		if (DATA_HI && (address == MYADDRESS)) {
 			// falling clock, data is high: end of transmission
 
@@ -131,14 +127,6 @@ ISR(INT0_vect)
 			apply_pwm();
 		}
 	}
-}
-
-ISR(INT1_vect)
-{
-	if (DATA_HI)
-		PORTD |= _BV(PD5);
-	else
-		PORTD &= ~_BV(PD5);
 }
 
 ISR(TIMER0_OVF_vect)
