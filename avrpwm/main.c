@@ -19,7 +19,7 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x000c)
+#define MYADDRESS (0x000d)
 
 volatile uint8_t binary_1 = 0;
 volatile uint8_t binary_2 = 0;
