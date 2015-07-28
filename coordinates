@@ -22,7 +22,7 @@ lounge_t2b            260  330    0    0 feedback3/6   \
 lounge_pflanze         40  312    0    0 donationprint1/7 \
   type=light watts=4            Briefkasten
 lounge_pumpe            5  142    0    0 donationprint1/11 \
-  type=pump autooff=5m          Bewässerungspumpe (geht nach 5min automatisch aus)
+  type=pump autooff=2m          Bewässerungspumpe (geht nach 5min automatisch aus)
 lounge_roehre         260  180    0    0 feedback3/2 \
   type=light ratelimit=90 watts=348 layer=caution  Putzlicht
 lounge_t1a            260   60    0    0 feedback3/4   \
