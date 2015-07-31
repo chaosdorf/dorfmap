@@ -1,5 +1,6 @@
 /*.db
 .dep/
+*.o
 *.eep
 *.elf
 *.hex
