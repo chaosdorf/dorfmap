@@ -37,15 +37,15 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
-	DDRA = 0x03;
+	DDRA = _BV(0);
 	DDRB = 0xff;
 	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
 	PORTB = 0;
 	PORTD = _BV(PD2) | _BV(PD3);
 
-	MCUCR |= _BV(ISC10) | _BV(ISC00);
-	GIMSK |= _BV(INT1)  | _BV(INT0);
+	MCUCR |= _BV(ISC00);
+	GIMSK |= _BV(INT0);
 
 	/* disabled fast PWM on OC0A and OC0B, interrupt on overflow*/
 	TCCR0A = _BV(WGM01) | _BV(WGM00);
@@ -131,10 +131,5 @@ ISR(INT0_vect)
 
 ISR(TIMER0_OVF_vect)
 {
-	static uint16_t cnt = 0;
-	if (++cnt == 0x9fff) {
-		PINA |= _BV(PA1);
-		cnt = 0;
-	}
 	asm("wdr");
 }
