@@ -6,10 +6,10 @@
 
 #include "rs232.h"
 
-#define CLOCK_LO ( ( PIND & _BV(PD2 ) ) == 0 )
-#define CLOCK_HI ( ( PIND & _BV(PD2 ) ) != 0 )
-#define DATA_LO ( ( PIND & _BV(PD3 ) ) == 0 )
-#define DATA_HI ( ( PIND & _BV(PD3 ) ) != 0 )
+#define CLOCK_LO ( ( PIND & _BV(PD2) ) == 0 )
+#define CLOCK_HI ( ( PIND & _BV(PD2) ) != 0 )
+#define DATA_LO ( ( PIND & _BV(PD3) ) == 0 )
+#define DATA_HI ( ( PIND & _BV(PD3) ) != 0 )
 #define DATA_BIT ( ( PIND & _BV(PD3) ) >> PD3 )
 
 volatile uint8_t buf[8];
