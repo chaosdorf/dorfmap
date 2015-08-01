@@ -6,6 +6,17 @@
 
 #include "rs232.h"
 
+/*
+ * PB5: status/data LED (on-board on most arduinos)
+ * PD0: RXD
+ * PD1: TXD
+ * PD2: SI2C SCL
+ * PD3: SI2C SDA
+ */
+
+/*
+ * PD2 and PD3 are connected directly (no optokopplers)
+ */
 #define CLOCK_LO ( ( PIND & _BV(PD2) ) == 0 )
 #define CLOCK_HI ( ( PIND & _BV(PD2) ) != 0 )
 #define DATA_LO ( ( PIND & _BV(PD3) ) == 0 )
