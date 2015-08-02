@@ -6,7 +6,7 @@
 
 #include "rs232.h"
 
-#include "dorfmap_config.h"
+#include "../dorfmap_config.h"
 
 /*
  * PB5: status/data LED (on-board on most arduinos)
