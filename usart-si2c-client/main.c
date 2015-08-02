@@ -6,6 +6,8 @@
 
 #include "rs232.h"
 
+#include "dorfmap_config.h"
+
 /*
  * PB5: status/data LED (on-board on most arduinos)
  * PD0: RXD
@@ -23,13 +25,16 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) != 0 )
 #define DATA_BIT ( ( PIND & _BV(PD3) ) >> PD3 )
 
-volatile uint8_t buf[8];
+#define BUF_SIZE 8
+#define BUF_MAX ((BUF_SIZE)-1)
+
+volatile uint8_t buf[BUF_SIZE];
 volatile uint8_t done;
 
 char * charmap[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
 	"A", "B", "C", "D", "E", "F" };
 
-void byte_to_serial(uint8_t byte)
+inline void byte_to_serial(uint8_t byte)
 {
 	uint8_t nibble1 = (byte & 0xf0) >> 4;
 	uint8_t nibble2 = byte & 0x0f;
@@ -37,6 +42,21 @@ void byte_to_serial(uint8_t byte)
 	_serputs(charmap[nibble1]);
 	_serputs(charmap[nibble2]);
 	_serputs(" ");
+}
+
+inline void translate_addr(uint8_t hi, uint8_t lo)
+{
+	_serputs("addr=");
+	byte_to_serial(hi);
+	byte_to_serial(lo);
+	_serputs("(");
+	if ((hi > 0) || (lo > num_devices)) {
+		_serputs("  INVALID DEVICE   ");
+	}
+	else {
+		_serputs(devices_00[lo]);
+	}
+	_serputs(") ");
 }
 
 int main(void)
@@ -59,7 +79,9 @@ int main(void)
 	{
 		if (done) {
 			done = 0;
-			for (i = 7; i >= 0; i--)
+			translate_addr(buf[1], buf[0]);
+			_serputs("data=");
+			for (i = BUF_MAX; i >= 2; i--)
 				byte_to_serial(buf[i]);
 			_serputs("\r\n");
 		}
@@ -70,8 +92,10 @@ int main(void)
 
 ISR(INT0_vect)
 {
-	uint8_t i;
 	if (CLOCK_HI) {
+		/*
+		 * a loop would be too slow
+		 */
 		buf[7] = (buf[7] << 1) | (buf[6] >> 7);
 		buf[6] = (buf[6] << 1) | (buf[5] >> 7);
 		buf[5] = (buf[5] << 1) | (buf[4] >> 7);
