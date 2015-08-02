@@ -21,6 +21,6 @@ void _usart_init(void){ //USART init
     #else       // U2X-Modus nicht erforderlich
         UCSR0A &= ~(1 << U2X0);
     #endif
-    UCSR0B |= (1<<RXEN0)|(1<<TXEN0)|(1<<RXCIE0);  //RX und TX enabled, Interrupt bei RX enabled
+    UCSR0B |= (1<<RXEN0)|(1<<TXEN0);  //RX und TX enabled
     UCSR0C = (1<<UCSZ01)|(1<<UCSZ00);
 }
