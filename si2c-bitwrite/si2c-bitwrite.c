@@ -15,7 +15,7 @@ void writepin(char *pinstr, char val)
 	fh = fopen(pinstr, "w");
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
-	usleep(1);
+	usleep(250);
 }
 
 int main(int argc, char **argv)

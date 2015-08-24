@@ -82,7 +82,7 @@ void writepin(char *pinstr, char val)
 	fh = fopen(pinstr, "w");
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
-	usleep(1);
+	usleep(250);
 }
 
 static void writebyte(unsigned char byte)
