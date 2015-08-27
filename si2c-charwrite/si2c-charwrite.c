@@ -96,14 +96,28 @@ static void writebyte(unsigned char byte)
 	}
 }
 
+static unsigned char firsttofirst(unsigned char byte)
+{
+	return (
+			((byte & 0x01) << 3) |
+			((byte & 0x02) << 1) |
+			((byte & 0x04) >> 1) |
+			((byte & 0x08) >> 3) |
+			((byte & 0x10) << 3) |
+			((byte & 0x20) << 1) |
+			((byte & 0x40) >> 1) |
+			((byte & 0x80) >> 3)
+	);
+}
+
 static unsigned char firsttosecond(unsigned char byte)
 {
 	return (
-			((byte & 0x01) << 1) |
-			((byte & 0x02) << 1) |
+			((byte & 0x01) << 2) |
+			((byte & 0x02) >> 0) |
 			((byte & 0x04) << 4) |
-			((byte & 0x08) << 0) |
-			((byte & 0x10) >> 4) |
+			((byte & 0x08) >> 3) |
+			((byte & 0x10) >> 1) |
 			((byte & 0x20) << 2) |
 			((byte & 0x40) >> 1) |
 			((byte & 0x80) >> 3)
@@ -113,10 +127,10 @@ static unsigned char firsttosecond(unsigned char byte)
 static unsigned char firsttothird(unsigned char byte)
 {
 	return (
-			((byte & 0x01) << 0) |
-			((byte & 0x02) << 0) |
-			((byte & 0x04) << 0) |
-			((byte & 0x08) << 0) |
+			((byte & 0x01) << 3) |
+			((byte & 0x02) << 1) |
+			((byte & 0x04) >> 1) |
+			((byte & 0x08) >> 3) |
 			((byte & 0x10) << 3) |
 			((byte & 0x20) << 1) |
 			((byte & 0x40) >> 1) |
@@ -127,14 +141,14 @@ static unsigned char firsttothird(unsigned char byte)
 static unsigned char firsttofourth(unsigned char byte)
 {
 	return (
-			((byte & 0x01) << 1) |
-			((byte & 0x02) << 1) |
-			((byte & 0x04) << 3) |
-			((byte & 0x08) << 0) |
-			((byte & 0x10) >> 4) |
-			((byte & 0x20) >> 1) |
-			((byte & 0x40) >> 0) |
-			((byte & 0x80) >> 0)
+			((byte & 0x01) << 2) |
+			((byte & 0x02) << 0) |
+			((byte & 0x04) << 4) |
+			((byte & 0x08) >> 3) |
+			((byte & 0x10) >> 1) |
+			((byte & 0x20) << 2) |
+			((byte & 0x40) >> 1) |
+			((byte & 0x80) >> 3)
 	);
 }
 
@@ -173,9 +187,9 @@ int main(int argc, char **argv)
 			sem_enter();
 			for (i = 0; i < 8; i++) {
 				writebyte(firsttofourth(firstseg[buf[3 + (4 * i)]] | hasdot[3 + (4 * i)] ));
-				writebyte(firsttosecond(firstseg[buf[1 + (4 * i)]] | hasdot[1 + (4 * i)] ));
-				writebyte(firstseg[buf[0 + (4 * i)] | hasdot[0 + (4 * i)] ]);
 				writebyte(firsttothird(firstseg[buf[2 + (4 * i)]] | hasdot[2 + (4 * i)] ));
+				writebyte(firsttosecond(firstseg[buf[1 + (4 * i)]] | hasdot[1 + (4 * i)] ));
+				writebyte(firsttofirst(firstseg[buf[0 + (4 * i)]] | hasdot[0 + (4 * i)] ));
 			}
 			writebyte(addrhi);
 			writebyte(addrlo);
