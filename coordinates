@@ -74,6 +74,10 @@ borg16                1280  205   0    0 feedback6/bin7 \
 durchgang             1400  180   0    0 feedback6/bin3 \
   type=light watts=6       Durchgang Cave
 
+[layer=control ratelimit=2 area=Werkstatt]
+werkstatt_hifi        1752  42    0    0 feedback8/bin0 \
+  type=switch ratelimit=60 inverted=1     HiFi-Regal
+
 [layer=control]
 lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
   type=charwrite area=Lounge default=clock  4x7Segment-Display
