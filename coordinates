@@ -2,7 +2,7 @@
 logo                  224  460    0    0 feedback2/pwm2 \
   type=light_au watts=1       Chaosdorf-Logo
 lounge_t2c            150  520    0    0 feedback3/7   \
-  type=light watts=35           Membershelf
+  type=light watts=35           Fahrrad-Aufhänger
 outdoor                 9  438    0    0 gpio17 \
   type=light_au watts=35      Eingang außen
 schaufenster            5  595    0    0 feedback2/bin1 \
