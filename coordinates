@@ -77,6 +77,8 @@ durchgang             1400  180   0    0 feedback6/bin3 \
 [layer=control ratelimit=2 area=Werkstatt]
 werkstatt_hifi        1752  42    0    0 feedback8/bin0 \
   type=switch ratelimit=60 inverted=1     HiFi-Regal
+werkstatt_hifi        1752  84    0    0 feedback8/bin0 \
+  type=light  Strobo
 
 [layer=control]
 lounge_7seg             5  70     0    0 donationprint1/7segment1.mode \
