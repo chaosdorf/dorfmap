@@ -866,12 +866,6 @@ $shortcuts->{shutdown} = sub {
 				system('blinkencontrol-feedback');
 			}
 		}
-		elsif ( $type eq 'printer'
-			and slurp("/srv/www/${device}.ping") == 1
-			and not set_device( $device, 0, force => 1 ) )
-		{
-			push( @errors, "please turn off printer ${device}" );
-		}
 		elsif ( $type eq 'charwrite' ) {
 			set_device( $device, 'blank', force => 1 );
 		}
