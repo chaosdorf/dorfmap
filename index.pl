@@ -95,8 +95,8 @@ sub door_set_private {
 
 	if ( $? != 0 ) {
 		spew(
-			"ssh private\@door returned $?",
-			'/tmp/dorfmap-err/door_set_private'
+			'/tmp/dorfmap-err/door_set_private',
+			"ssh private\@door returned $?"
 		);
 	}
 
