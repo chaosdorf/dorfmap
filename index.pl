@@ -854,8 +854,6 @@ $shortcuts->{shutdown} = sub {
 	my @errors;
 	my @delayed;
 
-	system('shutdown-announce');
-
 	spew( $shutdownfile, q{} );
 
 	for my $device ( keys %{$coordinates} ) {
@@ -874,13 +872,6 @@ $shortcuts->{shutdown} = sub {
 
 			spew( "${path}/commands",
 				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\npush\n" );
-
-			if ( $path =~ m{donationprint}o ) {
-				system('blinkencontrol-donationprint');
-			}
-			elsif ( $path =~ m{feedback}o ) {
-				system('blinkencontrol-feedback');
-			}
 		}
 		elsif ( $type eq 'charwrite' ) {
 			set_device( $device, 'blank', force => 1 );
@@ -889,7 +880,7 @@ $shortcuts->{shutdown} = sub {
 			set_device(
 				$device, 0,
 				force    => 1,
-				buffered => 1
+				buffered => 1,
 			);
 		}
 	}
@@ -901,6 +892,8 @@ $shortcuts->{shutdown} = sub {
 	}
 
 	set_buffered_remotes();
+	system('blinkencontrol-donationprint');
+	system('blinkencontrol-feedback');
 
 	if ( $? != 0 ) {
 		push( @errors,
