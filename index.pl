@@ -855,6 +855,7 @@ $shortcuts->{shutdown} = sub {
 	my @delayed;
 
 	spew( $shutdownfile, q{} );
+	door_set_private();
 
 	for my $device ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$device}->{type};
@@ -884,8 +885,6 @@ $shortcuts->{shutdown} = sub {
 			);
 		}
 	}
-
-	door_set_private();
 
 	for my $device (@delayed) {
 		set_device( $device, 0, force => 1 );
