@@ -22,6 +22,7 @@ my $gpiomap     = {};
 my $presets     = {};
 my $remotemap   = {};
 my $shortcuts   = {};
+my @remote_buffer;
 
 my $shutdownfile = '/tmp/is_shutdown';
 my $tsdir        = '/tmp/dorfmap-ts';
@@ -104,12 +105,27 @@ sub door_set_private {
 }
 
 sub set_remote {
-	my ( $path, $value ) = @_;
+	my ( $path, $value, %opt ) = @_;
 
 	spew( $path, "${value}\n" );
 	my ( $bus, $device )
 	  = ( split( qr{ / }ox, $path ) )[ 2, 3 ];    # /tmp/$bus/$id
-	system( 'dorfmap_set_remote', $bus, $device );
+
+	if ( $opt{buffered} ) {
+		if ( not( $bus ~~ \@remote_buffer ) ) {
+			push( @remote_buffer, $bus );
+		}
+	}
+	else {
+		system( 'dorfmap_set_remote', $bus, $device );
+	}
+}
+
+sub set_buffered_remotes {
+	for my $bus (@remote_buffer) {
+		system( 'dorfmap_set_remote', $bus );
+	}
+	@remote_buffer = ();
 }
 
 sub set_device {
@@ -156,7 +172,7 @@ sub set_device {
 		system('update_clocks');
 	}
 	elsif ( exists $remotemap->{$id} ) {
-		set_remote( $remotemap->{$id}, $value );
+		set_remote( $remotemap->{$id}, $value, %opt );
 	}
 	else {
 		return 0;
@@ -512,7 +528,7 @@ sub status_devices {
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
 		$devices->{$id}->{status_text} = status_text($id);
 		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
-		$devices->{$id}->{image}       = device_image($id); # used only by /m
+		$devices->{$id}->{image} = device_image($id);    # used only by /m
 
 		if ( $type eq 'charwrite' ) {
 			$devices->{$id}->{charwrite_text} = get_device( $id, text => 1 );
@@ -870,7 +886,11 @@ $shortcuts->{shutdown} = sub {
 			set_device( $device, 'blank', force => 1 );
 		}
 		else {
-			set_device( $device, 0, force => 1 );
+			set_device(
+				$device, 0,
+				force    => 1,
+				buffered => 1
+			);
 		}
 	}
 
@@ -879,6 +899,8 @@ $shortcuts->{shutdown} = sub {
 	for my $device (@delayed) {
 		set_device( $device, 0, force => 1 );
 	}
+
+	set_buffered_remotes();
 
 	if ( $? != 0 ) {
 		push( @errors,
@@ -1200,16 +1222,15 @@ get '/ajax/menu' => sub {
 		json => [
 			{
 				name    => 'actions',
-				entries => [sort keys $shortcuts]
+				entries => [ sort keys $shortcuts ]
 			},
 			{
 				name    => 'presets',
-				entries => [sort keys $presets]
+				entries => [ sort keys $presets ]
 			},
 			{
 				name    => 'layers',
-				entries =>
-				 [map { $_->{name} } @dd_layers]
+				entries => [ map { $_->{name} } @dd_layers ]
 			},
 		]
 	);
@@ -1514,7 +1535,12 @@ options '*' => sub {
 	my $self = shift;
 	$self->res->headers->access_control_allow_origin('*');
 
-	$self->respond_to(any => { data => q{}, status => 200 });
+	$self->respond_to(
+		any => {
+			data   => q{},
+			status => 200
+		}
+	);
 };
 
 #}}}
@@ -1522,10 +1548,11 @@ options '*' => sub {
 # {{{ Hooks
 
 hook before_render => sub {
-	my ($self, $args) = @_;
+	my ( $self, $args ) = @_;
 	$self->res->headers->access_control_allow_origin('*');
-	$self->res->headers->header('Access-Control-Allow-Methods' => 'POST');
-	$self->res->headers->header('Access-Control-Allow-Headers' => 'Content-Type');
+	$self->res->headers->header( 'Access-Control-Allow-Methods' => 'POST' );
+	$self->res->headers->header(
+		'Access-Control-Allow-Headers' => 'Content-Type' );
 };
 
 # }}}
