@@ -7390,7 +7390,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="JP12" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP13" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP14" library="pinhead" deviceset="PINHD-1X2" device=""/>
-<part name="IC3" library="uln-udn" deviceset="ULN2803A" device=""/>
+<part name="IC3" library="uln-udn" deviceset="ULN2803A" device="" value="ULN2803A"/>
 <part name="JP2" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP3" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP4" library="pinhead" deviceset="PINHD-1X2" device=""/>
@@ -7399,7 +7399,7 @@ Source: http://www.murata.com .. GRM43DR72E224KW01.pdf</description>
 <part name="JP7" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP8" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP9" library="pinhead" deviceset="PINHD-1X2" device=""/>
-<part name="IC4" library="uln-udn" deviceset="ULN2803A" device=""/>
+<part name="IC4" library="uln-udn" deviceset="ULN2803A" device="" value="ULN2803A"/>
 </parts>
 <sheets>
 <sheet>
@@ -8029,6 +8029,19 @@ use bus power. JP1 not populated</text>
 </sheets>
 <errors>
 <approved hash="104,1,-30.48,0,IC1,VCC,5V,,,"/>
+<approved hash="113,1,99.2971,10.2912,JP10,,,,,"/>
+<approved hash="113,1,99.2971,-2.40877,JP11,,,,,"/>
+<approved hash="113,1,99.2971,-15.1088,JP12,,,,,"/>
+<approved hash="113,1,99.2971,-27.8088,JP13,,,,,"/>
+<approved hash="113,1,99.2971,-40.5088,JP14,,,,,"/>
+<approved hash="113,1,99.2971,111.891,JP2,,,,,"/>
+<approved hash="113,1,99.2971,99.1912,JP3,,,,,"/>
+<approved hash="113,1,99.2971,86.4912,JP4,,,,,"/>
+<approved hash="113,1,99.2971,73.7912,JP5,,,,,"/>
+<approved hash="113,1,99.2971,61.0912,JP6,,,,,"/>
+<approved hash="113,1,99.2971,48.3912,JP7,,,,,"/>
+<approved hash="113,1,99.2971,35.6912,JP8,,,,,"/>
+<approved hash="113,1,99.2971,22.9912,JP9,,,,,"/>
 </errors>
 </schematic>
 </drawing>

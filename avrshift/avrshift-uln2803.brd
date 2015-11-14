@@ -1643,7 +1643,7 @@ design rules under a new name.</description>
 <attribute name="MPN" value="" x="15.24" y="-39.37" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="15.24" y="-39.37" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="OC_FARNELL" value="unknown" x="15.24" y="-39.37" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="NAME" x="19.05" y="41.4528" size="1.778" layer="25" ratio="10"/>
+<attribute name="NAME" x="22.86" y="14.4272" size="1.778" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="20.828" y="38.1" size="1.778" layer="27" ratio="10" rot="R270"/>
 </element>
 <element name="OK1" library="optocoupler" package="DIL04" value="PC817" x="12.7" y="22.86" smashed="yes">
@@ -1652,7 +1652,7 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="30.48" y="15.24" size="1.778" layer="27" display="off"/>
 <attribute name="OC_FARNELL" value="9707727" x="30.48" y="15.24" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="16.891" y="19.939" size="1.27" layer="27" ratio="10" rot="R90"/>
-<attribute name="NAME" x="9.779" y="20.193" size="1.27" layer="25" ratio="10" rot="R90"/>
+<attribute name="NAME" x="14.097" y="21.209" size="1.27" layer="27" ratio="10" rot="R180"/>
 </element>
 <element name="OK2" library="optocoupler" package="DIL04" value="PC817" x="6.35" y="22.86" smashed="yes">
 <attribute name="OC_NEWARK" value="97K7059" x="34.29" y="15.24" size="1.778" layer="27" display="off"/>
@@ -1660,84 +1660,128 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="34.29" y="15.24" size="1.778" layer="27" display="off"/>
 <attribute name="OC_FARNELL" value="9707727" x="34.29" y="15.24" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="10.541" y="19.939" size="1.27" layer="27" ratio="10" rot="R90"/>
-<attribute name="NAME" x="3.429" y="20.193" size="1.27" layer="25" ratio="10" rot="R90"/>
+<attribute name="NAME" x="7.747" y="21.209" size="1.27" layer="27" ratio="10" rot="R180"/>
 </element>
-<element name="IC2" library="linear" package="TO220V" value="7805TV" x="13.97" y="43.18" rot="R270"/>
-<element name="R1" library="rcl" package="0207/2V" value="1K" x="10.16" y="13.97" rot="R90"/>
-<element name="R2" library="rcl" package="0207/2V" value="1K" x="6.35" y="13.97" rot="R90"/>
-<element name="C1" library="capacitor-wima" package="C2.5-3" value="330nF" x="7.62" y="44.45" rot="R270"/>
-<element name="C2" library="capacitor-wima" package="C2.5-3" value="100nF" x="19.05" y="43.18"/>
-<element name="SJ1" library="jumper" package="SJ" value="BUSPWR" x="2.54" y="13.97" rot="MR270"/>
-<element name="SV1" library="con-harting-ml" package="ML10" value="SI2C" x="11.43" y="6.35">
+<element name="IC2" library="linear" package="TO220V" value="7805TV" x="13.97" y="43.18" smashed="yes" rot="R270">
+<attribute name="NAME" x="13.97" y="43.4848" size="1.27" layer="27" ratio="10"/>
+<attribute name="VALUE" x="6.35" y="48.26" size="1.27" layer="27" ratio="10" rot="R270"/>
+</element>
+<element name="R1" library="rcl" package="0207/2V" value="1K" x="10.16" y="13.97" smashed="yes" rot="R90">
+<attribute name="NAME" x="14.0208" y="14.224" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="12.3952" y="13.9192" size="1.27" layer="27" ratio="10" rot="R90"/>
+</element>
+<element name="R2" library="rcl" package="0207/2V" value="1K" x="6.35" y="13.97" smashed="yes" rot="R90">
+<attribute name="NAME" x="5.1308" y="14.224" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="8.5852" y="13.9192" size="1.27" layer="27" ratio="10" rot="R90"/>
+</element>
+<element name="C1" library="capacitor-wima" package="C2.5-3" value="330nF" x="7.62" y="44.45" smashed="yes" rot="R270">
+<attribute name="NAME" x="8.001" y="41.402" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="4.572" y="46.101" size="1.27" layer="27" ratio="10" rot="R270"/>
+</element>
+<element name="C2" library="capacitor-wima" package="C2.5-3" value="100nF" x="19.05" y="43.18" smashed="yes">
+<attribute name="NAME" x="17.399" y="44.958" size="1.27" layer="25" ratio="10"/>
+<attribute name="VALUE" x="17.399" y="40.132" size="1.27" layer="27" ratio="10"/>
+</element>
+<element name="SJ1" library="jumper" package="SJ" value="BUSPWR" x="2.54" y="13.97" smashed="yes" rot="MR270">
+<attribute name="NAME" x="3.683" y="12.319" size="1.27" layer="26" ratio="10" rot="MR90"/>
+<attribute name="VALUE" x="2.54" y="13.5699" size="0.02" layer="28" rot="MR270"/>
+</element>
+<element name="SV1" library="con-harting-ml" package="ML10" value="SI2C" x="11.43" y="6.35" smashed="yes">
 <attribute name="OC_NEWARK" value="unknown" x="54.61" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="54.61" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="54.61" y="1.27" size="1.778" layer="27" display="off"/>
 <attribute name="OC_FARNELL" value="unknown" x="54.61" y="1.27" size="1.778" layer="27" display="off"/>
+<attribute name="NAME" x="21.59" y="2.54" size="1.778" layer="25" ratio="10"/>
+<attribute name="VALUE" x="11.43" y="11.43" size="1.778" layer="27" ratio="10"/>
 </element>
-<element name="SJ2" library="jumper" package="SJ" value="BUSPWR" x="13.97" y="13.97" rot="MR270"/>
-<element name="R3" library="rcl" package="0207/2V" value="10K" x="15.24" y="40.64" rot="R270"/>
+<element name="SJ2" library="jumper" package="SJ" value="BUSPWR" x="13.97" y="13.97" smashed="yes" rot="MR270">
+<attribute name="NAME" x="15.113" y="12.319" size="1.27" layer="26" ratio="10" rot="MR90"/>
+<attribute name="VALUE" x="13.97" y="13.5699" size="0.02" layer="28" rot="MR270"/>
+</element>
+<element name="R3" library="rcl" package="0207/2V" value="10K" x="15.24" y="40.64" smashed="yes" rot="R270">
+<attribute name="NAME" x="16.256" y="40.6908" size="1.27" layer="25" ratio="10" rot="R270"/>
+<attribute name="VALUE" x="13.0048" y="40.6908" size="1.27" layer="27" ratio="10" rot="R270"/>
+</element>
 <element name="R15" library="rcl" package="0207/2V" value="470" x="11.43" y="31.75" smashed="yes">
-<attribute name="NAME" x="11.3792" y="32.766" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="12.7508" y="30.734" size="1.27" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="11.3792" y="29.5148" size="1.27" layer="27" ratio="10"/>
 </element>
 <element name="R18" library="rcl" package="0207/2V" value="470" x="11.43" y="36.83" smashed="yes">
-<attribute name="NAME" x="11.3792" y="37.846" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="12.7508" y="35.814" size="1.27" layer="25" ratio="10" rot="R180"/>
 <attribute name="VALUE" x="11.3792" y="34.5948" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="LED1" library="led" package="LED3MM" value="PWR" x="6.35" y="31.75" rot="R180"/>
-<element name="LED2" library="led" package="LED3MM" value="ACT" x="6.35" y="36.83" rot="R180"/>
-<element name="JP1" library="pinhead" package="1X02" value="PWR" x="2.54" y="44.45" rot="R90"/>
+<element name="LED1" library="led" package="LED3MM" value="PWR" x="6.35" y="31.75" smashed="yes" rot="R180">
+<attribute name="NAME" x="4.445" y="31.369" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="4.445" y="33.401" size="1.27" layer="27" ratio="10" rot="R180"/>
+</element>
+<element name="LED2" library="led" package="LED3MM" value="ACT" x="6.35" y="36.83" smashed="yes" rot="R180">
+<attribute name="NAME" x="4.445" y="36.449" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="4.445" y="38.481" size="1.27" layer="27" ratio="10" rot="R180"/>
+</element>
+<element name="JP1" library="pinhead" package="1X02" value="PWR" x="2.54" y="44.45" smashed="yes" rot="R90">
+<attribute name="NAME" x="3.8862" y="41.3512" size="1.27" layer="25" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="5.715" y="41.91" size="1.27" layer="27" rot="R90"/>
+</element>
 <element name="JP10" library="pinhead" package="1X02" value="" x="44.45" y="17.78" smashed="yes">
-<attribute name="NAME" x="41.8338" y="19.6088" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="19.6088" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="14.605" size="1.27" layer="27"/>
 </element>
 <element name="JP11" library="pinhead" package="1X02" value="" x="44.45" y="13.97" smashed="yes">
-<attribute name="NAME" x="41.8338" y="15.7988" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="15.7988" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="10.795" size="1.27" layer="27"/>
 </element>
 <element name="JP12" library="pinhead" package="1X02" value="" x="44.45" y="10.16" smashed="yes">
-<attribute name="NAME" x="41.8338" y="11.9888" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="11.9888" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="6.985" size="1.27" layer="27"/>
 </element>
 <element name="JP13" library="pinhead" package="1X02" value="" x="44.45" y="6.35" smashed="yes">
-<attribute name="NAME" x="41.8338" y="8.1788" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="8.1788" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="3.175" size="1.27" layer="27"/>
 </element>
 <element name="JP14" library="pinhead" package="1X02" value="" x="44.45" y="2.54" smashed="yes">
-<attribute name="NAME" x="41.8338" y="4.3688" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="4.3688" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="-0.635" size="1.27" layer="27"/>
 </element>
-<element name="IC3" library="uln-udn" package="DIL18" value="" x="34.29" y="36.83" rot="R270"/>
-<element name="JP2" library="pinhead" package="1X02" value="" x="24.13" y="45.72" rot="R180"/>
+<element name="IC3" library="uln-udn" package="DIL18" value="ULN2803A" x="34.29" y="36.83" smashed="yes" rot="R270">
+<attribute name="NAME" x="32.512" y="25.654" size="1.27" layer="25" ratio="10"/>
+<attribute name="VALUE" x="33.655" y="46.355" size="1.27" layer="27" ratio="10" rot="R270"/>
+</element>
+<element name="JP2" library="pinhead" package="1X02" value="" x="24.13" y="45.72" smashed="yes" rot="R180">
+<attribute name="NAME" x="26.7462" y="43.8912" size="1.27" layer="27" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="26.67" y="48.895" size="1.27" layer="27" rot="R180"/>
+</element>
 <element name="JP3" library="pinhead" package="1X02" value="" x="44.45" y="44.45" smashed="yes">
-<attribute name="NAME" x="41.8338" y="46.2788" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="46.2788" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="41.275" size="1.27" layer="27"/>
 </element>
 <element name="JP4" library="pinhead" package="1X02" value="" x="44.45" y="40.64" smashed="yes">
-<attribute name="NAME" x="41.8338" y="42.4688" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="42.4688" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="37.465" size="1.27" layer="27"/>
 </element>
 <element name="JP5" library="pinhead" package="1X02" value="" x="44.45" y="36.83" smashed="yes">
-<attribute name="NAME" x="41.8338" y="38.6588" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="38.6588" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="33.655" size="1.27" layer="27"/>
 </element>
 <element name="JP6" library="pinhead" package="1X02" value="" x="44.45" y="33.02" smashed="yes">
-<attribute name="NAME" x="41.8338" y="34.8488" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="34.8488" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="29.845" size="1.27" layer="27"/>
 </element>
 <element name="JP7" library="pinhead" package="1X02" value="" x="44.45" y="29.21" smashed="yes">
-<attribute name="NAME" x="41.8338" y="31.0388" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="31.0388" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="26.035" size="1.27" layer="27"/>
 </element>
 <element name="JP8" library="pinhead" package="1X02" value="" x="44.45" y="25.4" smashed="yes">
-<attribute name="NAME" x="41.8338" y="27.2288" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="27.2288" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="22.225" size="1.27" layer="27"/>
 </element>
 <element name="JP9" library="pinhead" package="1X02" value="" x="44.45" y="21.59" smashed="yes">
-<attribute name="NAME" x="41.8338" y="23.4188" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="41.8338" y="23.4188" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="41.91" y="18.415" size="1.27" layer="27"/>
 </element>
-<element name="IC4" library="uln-udn" package="DIL18" value="" x="34.29" y="12.7" rot="R270"/>
+<element name="IC4" library="uln-udn" package="DIL18" value="ULN2803A" x="34.29" y="12.7" smashed="yes" rot="R270">
+<attribute name="NAME" x="32.512" y="1.524" size="1.27" layer="25" ratio="10"/>
+<attribute name="VALUE" x="33.655" y="22.225" size="1.27" layer="27" ratio="10" rot="R270"/>
+</element>
 </elements>
 <signals>
 <signal name="GND">
