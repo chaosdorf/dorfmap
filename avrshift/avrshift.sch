@@ -5937,7 +5937,7 @@ Source: www.kingbright.com</description>
 <part name="R18" library="resistor" deviceset="R-EU_" device="0207/10" value="470"/>
 <part name="LED1" library="led" deviceset="LED" device="3MM" value="PWR"/>
 <part name="LED2" library="led" deviceset="LED" device="3MM" value="ACT"/>
-<part name="JP1" library="pinhead" deviceset="PINHD-1X2" device=""/>
+<part name="JP1" library="pinhead" deviceset="PINHD-1X2" device="" value="PWR"/>
 <part name="JP2" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP3" library="pinhead" deviceset="PINHD-1X2" device=""/>
 <part name="JP4" library="pinhead" deviceset="PINHD-1X2" device=""/>
