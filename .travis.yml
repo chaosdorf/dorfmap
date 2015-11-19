@@ -5,4 +5,3 @@ node_js:
 script: npm run travis
 env:
 - NO_WATCH_TESTS=1
-- NODE_ENV=production
