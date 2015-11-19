@@ -1,28 +1,42 @@
 import MenuEntries from './MenuEntries.jsx';
 import React from 'react';
-import { Dialog, Tabs, Tab } from 'material-ui';
+import Dialog from 'material-ui/lib/dialog';
+import { Tabs, Tab } from 'material-ui';
 
 export default class OptionDialog extends React.Component {
   static propTypes = {
+    activeType: React.PropTypes.string,
     menu: React.PropTypes.object,
-    activeType: React.PropTypes.string
+  }
+  state = {
+    open: false,
   }
   closeDialog = () => {
-    this.refs.optionDialog.dismiss();
+    this.setState({
+      open: false,
+    });
   }
   show() {
-    this.refs.optionDialog.show();
+    this.setState({
+      open: true,
+    });
+  }
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
+    });
   }
   render() {
-    const menu = this.props.menu;
-    const active = this.props.activeType;
-    const selectedIndex = _(menu).keys().indexOf(active);
+    const { menu, activeType } = this.props;
+    const { open } = this.state;
+    const selectedIndex = _(menu).keys().indexOf(activeType);
 
     return (
       <Dialog
         ref="optionDialog"
-        modal={false}
-        bodyStyle={{padding: 0}}>
+        onRequestClose={this.handleRequestClose}
+        bodyStyle={{ padding: 0 }}
+        open={open}>
         <Tabs key={selectedIndex} initialSelectedIndex={selectedIndex} ref="tabs">
           {_.map(this.props.menu, (entries, type) => {
             return (

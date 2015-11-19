@@ -4,9 +4,12 @@ import menuStore from '../Stores/menuStore.js';
 import { Dialog, FlatButton, TextField } from 'material-ui';
 
 export default class SegmentPopup extends React.Component {
+  static propTypes = {
+    lamp: React.PropTypes.object,
+  }
   state = {
     disabled: false,
-    modes: {}
+    modes: {},
   }
   componentDidMount() {
     menuStore.on('charwriteModes', this.updateModes);
@@ -25,77 +28,93 @@ export default class SegmentPopup extends React.Component {
     this.setState({
       modes,
       value,
-      customTxt
+      customTxt,
     });
   }
   hide = () => {
-    this.refs.segmentDialog.dismiss();
+    this.setState({
+      open: false,
+    });
   }
   show() {
-    this.refs.segmentDialog.show();
+    this.setState({
+      open: true,
+    });
     this.updateModes(menuStore.charwrite.toJS());
   }
   async save() {
     this.setState({
-      disabled: true
+      disabled: true,
     });
-    let mode = this.refs.radio.getCheckedValue();
+    let mode = this.state.value;
     if (mode === 'custom') {
       mode = this.refs.custom.getValue();
     }
     await menuStore.saveCharwrite(this.props.lamp, mode);
     this.setState({
-      disabled: false
+      disabled: false,
     });
     this.hide();
   }
   setCustom = () => {
     this.setState({
-      value: 'custom'
+      value: 'custom',
     });
   }
   handleChange = () => {
     this.setState({
-      customTxt: this.refs.custom.getValue()
+      customTxt: this.refs.custom.getValue(),
     });
   }
-  handleRadioChange = () => {
+  handleRadioChange = (value) => {
     this.setState({
-      value: this.refs.radio.getCheckedValue()
+      value,
+    });
+  }
+  handleRequestClose = () => {
+    this.setState({
+      open: false,
     });
   }
   render() {
-    const modes = this.state.modes;
+    const { open, modes } = this.state;
     return (
       <Dialog
         ref="segmentDialog"
-        modal={false}
-        contentStyle={{display: 'table', width: 'auto'}}>
-        <RadioGroup value={this.state.value} ref="radio" onChange={this.handleRadioChange}>
-          {_.map(modes, (name, id) => {
-            return (
-              <div style={{lineHeight: '32px'}} key={id}>
-                <label>
-                  <input style={{marginRight: '5px'}} value={id} type="radio"/>
-                  {name}
-                </label>
-              </div>
-            );
-          })}
-          <div>
-            <input value="custom" style={{marginRight: '5px'}} type="radio"/>
-            <TextField
-              ref="custom"
-              value={this.state.customTxt}
-              onChange={this.handleChange}
-              onFocus={this.setCustom}
-              hintText="Custom"/>
-          </div>
-        </RadioGroup>
+        onRequestClose={this.handleRequestClose}
+        open={open}
+        contentStyle={{ display: 'table', width: 'auto' }}>
         <div>
-          <FlatButton label="Abbrechen" onClick={this.hide}/>
-          <FlatButton disabled={this.state.disabled}
-            label="Speichern" onClick={::this.save}/>
+          <RadioGroup selectedValue={this.state.value} ref="radio" onChange={this.handleRadioChange}>
+            {Radio => (
+              <div>
+                {_.map(modes, (name, id) => {
+                  return (
+                    <div style={{ lineHeight: '32px' }} key={id}>
+                      <label>
+                        <Radio style={{ marginRight: 5 }} value={id}/>
+                        {name}
+                      </label>
+                    </div>
+                  );
+                })}
+                <div>
+                  <Radio style={{ marginRight: 5 }} value="custom"/>
+                  <TextField
+                    ref="custom"
+                    value={this.state.customTxt}
+                    onChange={this.handleChange}
+                    onFocus={this.setCustom}
+                    hintText="Custom"/>
+                </div>
+              </div>
+            )}
+          </RadioGroup>
+          <div>
+            <FlatButton label="Abbrechen" onClick={this.hide}/>
+            <FlatButton disabled={this.state.disabled}
+              label="Speichern" onClick={::this.save}/>
+          </div>
         </div>
       </Dialog>
     );

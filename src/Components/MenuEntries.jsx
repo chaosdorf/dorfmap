@@ -6,11 +6,16 @@ import Radium from 'radium';
 
 @Radium
 export default class MenuEntries extends React.Component {
+  static propTypes = {
+    closeFn: React.PropTypes.func,
+    entries: React.PropTypes.array,
+    type: React.PropTypes.string.isRequired,
+  }
   static style = {
     wrapper: {
       display: 'flex',
-      flexDirection: 'column'
-    }
+      flexDirection: 'column',
+    },
   }
   handleClick(entry) {
     switch (this.props.type) {

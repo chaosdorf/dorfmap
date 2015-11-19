@@ -1,9 +1,10 @@
-/* eslint no-unused-vars: 0 */
-
+import { createHistory } from 'history';
+import { Router, Route } from 'react-router';
 import Dorfmap from './Components/Dorfmap.jsx';
 import React from 'react';
-import {Route} from 'react-router';
 
 export default (
-  <Route handler={Dorfmap}/>
+  <Router history={createHistory()}>
+    <Route path="/" component={Dorfmap}/>
+  </Router>
 );

@@ -1,7 +1,8 @@
 sudo: false
 language: node_js
 node_js:
-- "iojs"
+- "4.2.2"
 script: npm run travis
 env:
 - NO_WATCH_TESTS=1
+- NODE_ENV=production

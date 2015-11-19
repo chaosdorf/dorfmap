@@ -12,13 +12,13 @@ export default class OptionDialogs extends React.Component {
       justifyContent: 'space-between',
       marginTop: 5,
       marginLeft: 5,
-      width: 400
-    }
+      width: 400,
+    },
   }
   actions = {
     actions: 0,
     presets: 1,
-    layers: 2
+    layers: 2,
   }
   state = {}
   handleClick(action) {
@@ -39,7 +39,7 @@ export default class OptionDialogs extends React.Component {
     const menu = menuStore.menu.toJS();
     this.setState({
       title,
-      menu
+      menu,
     });
     this.refs.optionDialog.show();
   }

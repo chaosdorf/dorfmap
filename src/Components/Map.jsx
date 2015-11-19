@@ -13,11 +13,11 @@ export default class Map extends React.Component {
       height: 648,
       marginLeft: 5,
       marginRight: 5,
-      position: 'relative'
-    }
+      position: 'relative',
+    },
   }
   state = {
-    lamps: {}
+    lamps: lampStore.filterLamps(),
   }
   componentDidMount() {
     lampStore.on('lamps', this.onLamps);
@@ -27,13 +27,15 @@ export default class Map extends React.Component {
   }
   onLamps = (lamps) => {
     this.setState({
-      lamps
+      lamps,
     });
   }
   render() {
     return (
       <div style={Map.style.wrapper}>
-        {_.map(this.state.lamps, (lamp, key) => <Lamp key={key} lamp={lamp}/>)}
+        {
+          this.state.lamps.map((lamp, key) => <Lamp key={key} lamp={lamp}/>).toArray()
+        }
       </div>
     );
   }

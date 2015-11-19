@@ -29,7 +29,7 @@ class menuStore extends EventEmitter {
   async saveCharwrite(lamp, mode) {
     const r = (await axios.post(`${baseHost}/ajax/charwrite`, {
       device: lamp.name,
-      text: mode
+      text: mode,
     })).data;
     await lampStore.getAll();
     return r;
@@ -40,7 +40,9 @@ class menuStore extends EventEmitter {
   async saveBlinkenlight(lamp, preset) {
     const r = (await axios.post(`${baseHost}/ajax/blinkencontrol`, {
       device: lamp.name,
-      raw_string: preset
+      /* eslint-disable camelcase */
+      raw_string: preset,
+      /* eslint-enable camelcase */
     }));
     await lampStore.getAll();
     return r;

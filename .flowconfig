@@ -1,0 +1,11 @@
+[ignore]
+.*node_modules/.*
+
+[include]
+
+[libs]
+interfaces/
+
+[options]
+module.name_mapper= '^eventemitter' -> 'eventemitter3'
+esproposal.decorators=ignore

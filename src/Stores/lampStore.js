@@ -1,6 +1,8 @@
+/* @flow */
+
 import { Map } from 'immutable';
 import { baseHost } from 'config';
-import EventEmitter from 'eventemitter';
+import EventEmitter from 'eventemitter3';
 import axios from 'axios';
 
 class LampStore extends EventEmitter {
@@ -11,23 +13,21 @@ class LampStore extends EventEmitter {
     this.getAll();
   }
   emitLamps() {
-    this.emit('lamps', this.filterLamps(this.devices.toJS(), this.layer));
+    this.emit('lamps', this.filterLamps(this.devices, this.layer));
   }
   async getAll() {
     const lamps = await axios.get(`${baseHost}/status/devices.json`);
     this.devices = Map(lamps.data);
-    this.emitLamps();
+    await this.emitLamps();
   }
   updateLayer(layer) {
     this.layer = layer;
     this.emitLamps();
   }
-  filterLamps(lamps, layer) {
-    return _.filter(lamps, l => {
-      return l.layer === layer;
-    });
+  filterLamps(lamps = this.devices, layer = this.layer) {
+    return lamps.filter(l => l.layer === layer);
   }
-  getImage(lamp) {
+  getImage(lamp: Object) {
     let status = '';
     switch (lamp.status) {
       case 0:
@@ -70,11 +70,13 @@ class LampStore extends EventEmitter {
   async toggleLamp(lamp) {
     const newStatus = (await axios.post(`${baseHost}/action`, {
       action: 'toggle',
-      device: lamp.name
+      device: lamp.name,
     })).data;
     lamp.status = newStatus.status;
     lamp.auto = newStatus.auto;
+    /* eslint-disable camelcase */
     lamp.rate_delay = newStatus.rate_delay;
+    /* eslint-enable camelcase */
     this.emit('deviceUpdate', lamp);
   }
   updateDevice(device) {
@@ -84,14 +86,14 @@ class LampStore extends EventEmitter {
   async executePreset(preset) {
     await axios.post(`${baseHost}/action`, {
       action: 'preset',
-      preset
+      preset,
     });
     this.getAll();
   }
   async executeShortcut(shortcut) {
     await axios.post(`${baseHost}/action`, {
       action: 'shortcut',
-      shortcut
+      shortcut,
     });
     this.getAll();
   }

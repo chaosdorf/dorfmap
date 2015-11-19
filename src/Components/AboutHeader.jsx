@@ -1,7 +1,6 @@
 import Radium from 'radium';
 import React from 'react';
 
-
 @Radium
 export default class AboutHeader extends React.Component {
   static style = {
@@ -10,13 +9,13 @@ export default class AboutHeader extends React.Component {
       top: 5,
       right: 15,
       fontFamily: 'Monospace',
-      fontSize: 'smaller'
+      fontSize: 'smaller',
     },
     link: {
       color: '#006',
       textDecoration: 'none',
-      margin: 5
-    }
+      margin: 5,
+    },
   }
   render() {
     const style = AboutHeader.style;

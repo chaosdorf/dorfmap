@@ -13,7 +13,7 @@
   <body>
     <div id="dorfmapWrapper"></div>
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-    <script src="/static/{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
     {% } %}
   </body>
 </html>
