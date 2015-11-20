@@ -7,13 +7,13 @@
     <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">
     {% } %}
     {% for (var css in o.htmlWebpackPlugin.files.css) { %}
-    <link href="{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
+    <link href="static/{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
     {% } %}
   </head>
   <body>
     <div id="dorfmapWrapper"></div>
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+    <script src="static/{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
     {% } %}
   </body>
 </html>

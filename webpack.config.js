@@ -20,6 +20,12 @@ var plugins = [
   })
 ];
 
+if (node_env === 'production') {
+  plugins.push(
+    new webpack.optimize.UglifyJsPlugin()
+  );
+}
+
 var alias = {
   eventemitter: 'eventemitter3'
 };

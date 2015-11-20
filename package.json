@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --inline --hot -d --content-base public/ --history-api-fallback",
     "build": "webpack --bail",
     "travis": "npm run build",
-    "deploy": "set NODE_ENV=production npm run build; sh scripts/dev/copy-to-server"
+    "deploy": "NODE_ENV=production npm run build; sh scripts/dev/copy-to-server"
   },
   "author": "marudor",
   "license": "MIT",
