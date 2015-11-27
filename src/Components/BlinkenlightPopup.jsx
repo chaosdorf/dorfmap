@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import { Dialog, FlatButton } from 'material-ui';
 import RadioGroup from 'react-radio-group';
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-@Radium
+@ConfiguredRadium
 @connect(state => ({
   presets: state.presets,
 }))

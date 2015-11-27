@@ -1,10 +1,10 @@
 import { RaisedButton } from 'material-ui';
 import { fetchMenues } from '../Actions/menu';
 import OptionDialog from './OptionDialog';
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-@Radium
+@ConfiguredRadium
 export default class OptionDialogs extends React.Component {
   static style = {
     dialogs: {

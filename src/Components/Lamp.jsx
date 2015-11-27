@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { toggleDevice } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 import SegmentPopup from './SegmentPopup';
 import Tooltip from 'rc-tooltip';
@@ -41,7 +41,7 @@ function getImage(lamp: Object) {
   return `static/images/${baseImage}${status}.png`;
 }
 
-@Radium
+@ConfiguredRadium
 export default class Lamp extends React.Component {
   static propTypes = {
     lamp: React.PropTypes.object.isRequired,

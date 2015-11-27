@@ -1,7 +1,7 @@
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-@Radium
+@ConfiguredRadium
 export default class AboutHeader extends React.Component {
   static style = {
     wrapper: {

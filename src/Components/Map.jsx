@@ -1,14 +1,14 @@
 import { fetchDevices } from '../Actions/devices';
 import { connect } from 'react-redux';
 import Lamp from './Lamp';
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
 
 @connect(state => ({
   lamps: state.devices,
 }))
-@Radium
+@ConfiguredRadium
 export default class Map extends React.Component {
   static propTypes = {
     lamps: React.PropTypes.array,

@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import { changeLayer, executePreset, executeShortcut } from '../Actions/devices';
 import { FlatButton } from 'material-ui';
-import Radium from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
 
-@Radium
+@ConfiguredRadium
 export default class MenuEntries extends React.Component {
   static propTypes = {
     closeFn: React.PropTypes.func,

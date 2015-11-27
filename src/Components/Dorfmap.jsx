@@ -1,10 +1,11 @@
 import AboutHeader from './AboutHeader';
 import Map from './Map';
 import OptionDialogs from './OptionDialogs';
-import Radium, { Style } from 'radium';
+import { Style } from 'radium';
+import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-@Radium
+@ConfiguredRadium
 export default class Dorfmap extends React.Component {
   static style = {
     'html': {
