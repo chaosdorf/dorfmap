@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "description": "",
   "main": "webpack.config.js",
+  "pre-commit": [
+    "lint"
+  ],
   "scripts": {
     "dev": "webpack-dev-server --inline --hot -d --content-base public/ --history-api-fallback",
     "build": "webpack --bail",
     "travis": "npm run build",
-    "deploy": "NODE_ENV=production npm run build; sh scripts/dev/copy-to-server"
+    "deploy": "npm run lint && NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
+    "lint": "eslint src/**/*.js*"
   },
   "author": "marudor",
   "license": "MIT",
@@ -41,6 +45,7 @@
     "eslint-plugin-react": "^3.9.0",
     "file-loader": "^0.8.4",
     "html-webpack-plugin": "^1.6.2",
+    "pre-commit": "^1.1.2",
     "react-transform-catch-errors": "^1.0.0",
     "react-transform-hmr": "^1.0.1",
     "redbox-react": "^1.2.0",
