@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <title>{%=o.htmlWebpackPlugin.options.title || 'Dorfmap'%}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
     {% if (o.htmlWebpackPlugin.files.favicon) { %}
     <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">
-    {% } %}
-    {% for (var css in o.htmlWebpackPlugin.files.css) { %}
-    <link href="static/{%=o.htmlWebpackPlugin.files.css[css] %}" rel="stylesheet">
     {% } %}
   </head>
   <body>
     <div id="dorfmapWrapper"></div>
     {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-    <script src="static/{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
+    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
     {% } %}
   </body>
 </html>

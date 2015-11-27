@@ -1,7 +1,8 @@
+import _ from 'lodash';
+import { Dialog, FlatButton, TextField } from 'material-ui';
+import menuStore from '../Stores/menuStore.js';
 import RadioGroup from 'react-radio-group';
 import React from 'react';
-import menuStore from '../Stores/menuStore.js';
-import { Dialog, FlatButton, TextField } from 'material-ui';
 
 export default class SegmentPopup extends React.Component {
   static propTypes = {

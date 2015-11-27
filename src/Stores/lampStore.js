@@ -1,7 +1,5 @@
-/* @flow */
-
+import _ from 'lodash';
 import { Map } from 'immutable';
-import { baseHost } from 'config';
 import EventEmitter from 'eventemitter3';
 import axios from 'axios';
 
@@ -16,8 +14,8 @@ class LampStore extends EventEmitter {
     this.emit('lamps', this.filterLamps(this.devices, this.layer));
   }
   async getAll() {
-    const lamps = await axios.get(`${baseHost}/status/devices.json`);
-    this.devices = Map(lamps.data);
+    const lamps = await axios.get(`/status/devices.json`);
+    this.devices = Map(lamps);
     await this.emitLamps();
   }
   updateLayer(layer) {
@@ -68,10 +66,10 @@ class LampStore extends EventEmitter {
     return dup;
   }
   async toggleLamp(lamp) {
-    const newStatus = (await axios.post(`${baseHost}/action`, {
+    const newStatus = (await axios.post(`/action`, {
       action: 'toggle',
       device: lamp.name,
-    })).data;
+    }));
     lamp.status = newStatus.status;
     lamp.auto = newStatus.auto;
     /* eslint-disable camelcase */
@@ -84,14 +82,14 @@ class LampStore extends EventEmitter {
     this.emit('deviceUpdate', device);
   }
   async executePreset(preset) {
-    await axios.post(`${baseHost}/action`, {
+    await axios.post(`$/action`, {
       action: 'preset',
       preset,
     });
     this.getAll();
   }
   async executeShortcut(shortcut) {
-    await axios.post(`${baseHost}/action`, {
+    await axios.post(`/action`, {
       action: 'shortcut',
       shortcut,
     });

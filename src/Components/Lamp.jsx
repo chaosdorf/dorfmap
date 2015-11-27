@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import BlinkenlightPopup from './BlinkenlightPopup.jsx';
 import lampStore from '../Stores/lampStore.js';
 import Radium from 'radium';
@@ -16,12 +17,12 @@ export default class Lamp extends React.Component {
       writeable: {
         cursor: 'pointer',
         transition: '300ms linear',
+        ':hover': {
+          transform: 'scale(1.3)',
+        },
       },
       normal: {
         position: 'absolute',
-        ':hover': {
-          transform: 'scale(1.2)',
-        },
       },
     },
   }
@@ -63,14 +64,16 @@ export default class Lamp extends React.Component {
     }
   }
   getTooltipText(lamp) {
-    const text = lamp.status_text;
+    let text = lamp.status_text;
     if (!text) {
       return null;
     }
     if (this.state.delay > 0) {
-      return `${text} (${this.state.delay}s)`;
+      text = `${text} (${this.state.delay}s)`;
     }
-    return lamp.status_text;
+    /* eslint-disable react/no-danger */
+    return <div dangerouslySetInnerHTML={{ __html: text }}/>;
+    /* eslint-enable react/no-danger */
   }
   checkDelay = () => {
     if (this.state.delay > 0) {

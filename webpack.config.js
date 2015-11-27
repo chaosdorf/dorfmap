@@ -54,7 +54,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.less$/, loader: 'style!css!autoprefixer?browsers=last 2 version!less' },
+      { test: /\.css$/, loader: 'style!css!autoprefixer?browsers=last 2 version' },
       { test: /^((?!CSS\.js$).)*(\.jsx?)$/,
         exclude: /(node_modules)/,
         loader: 'babel!eslint',

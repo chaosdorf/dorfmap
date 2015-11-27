@@ -1,7 +1,8 @@
-import React from 'react';
-import lampStore from '../Stores/lampStore.js';
+import _ from 'lodash';
 import { FlatButton } from 'material-ui';
+import lampStore from '../Stores/lampStore.js';
 import Radium from 'radium';
+import React from 'react';
 
 
 @Radium

@@ -1,8 +1,9 @@
+import _ from 'lodash';
+import { Dialog, FlatButton } from 'material-ui';
+import menuStore from '../Stores/menuStore.js';
 import RadioGroup from 'react-radio-group';
 import Radium from 'radium';
 import React from 'react';
-import menuStore from '../Stores/menuStore.js';
-import { Dialog, FlatButton } from 'material-ui';
 
 @Radium
 export default class BlinkenlightPopup extends React.Component {

@@ -10,7 +10,6 @@
     "modules": true
   },
   "globals": {
-    "_": false,
   },
   "rules": {
     "accessor-pairs": 0,

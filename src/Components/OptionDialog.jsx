@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import MenuEntries from './MenuEntries.jsx';
 import React from 'react';
 import Dialog from 'material-ui/lib/dialog';
@@ -26,6 +27,11 @@ export default class OptionDialog extends React.Component {
       open: false,
     });
   }
+  handleTabChange = () => {
+    setTimeout(() => {
+      this.refs.optionDialog._positionDialog();
+    }, 25);
+  }
   render() {
     const { menu, activeType } = this.props;
     const { open } = this.state;
@@ -37,7 +43,7 @@ export default class OptionDialog extends React.Component {
         onRequestClose={this.handleRequestClose}
         bodyStyle={{ padding: 0 }}
         open={open}>
-        <Tabs key={selectedIndex} initialSelectedIndex={selectedIndex} ref="tabs">
+        <Tabs onChange={this.handleTabChange} key={selectedIndex} initialSelectedIndex={selectedIndex} ref="tabs">
           {_.map(this.props.menu, (entries, type) => {
             return (
               <Tab label={_.capitalize(type)} key={type}>

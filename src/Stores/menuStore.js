@@ -1,4 +1,4 @@
-import { baseHost } from 'config';
+import _ from 'lodash';
 import { Map } from 'immutable';
 import lampStore from './lampStore.js';
 import EventEmitter from 'eventemitter';
@@ -13,32 +13,32 @@ class menuStore extends EventEmitter {
     this.getCharwriteModes();
   }
   async getMenuEntries() {
-    const menu = (await axios.get(`${baseHost}/ajax/menu.json`)).data;
+    const menu = (await axios.get(`/ajax/menu.json`));
     _.each(menu, menuEntry => {
       this.menu = this.menu.set(menuEntry.name, menuEntry.entries);
     });
     this.emit('menuEntries', this.menu.toJS());
   }
   async getCharwriteModes() {
-    const modes = (await axios.get(`${baseHost}/ajax/charwrite.json`)).data;
+    const modes = (await axios.get(`/ajax/charwrite.json`));
     _.each(modes, mode => {
       this.charwrite = this.charwrite.set(mode.name, mode.description);
     });
     this.emit('charwriteModes', this.charwrite.toJS());
   }
   async saveCharwrite(lamp, mode) {
-    const r = (await axios.post(`${baseHost}/ajax/charwrite`, {
+    const r = (await axios.post(`/ajax/charwrite`, {
       device: lamp.name,
       text: mode,
-    })).data;
+    }));
     await lampStore.getAll();
     return r;
   }
   async getBlinkenlight(lamp) {
-    return (await axios.get(`${baseHost}/ajax/blinkencontrol?device=${lamp}`)).data;
+    return (await axios.get(`/ajax/blinkencontrol?device=${lamp}`));
   }
   async saveBlinkenlight(lamp, preset) {
-    const r = (await axios.post(`${baseHost}/ajax/blinkencontrol`, {
+    const r = (await axios.post(`/ajax/blinkencontrol`, {
       device: lamp.name,
       /* eslint-disable camelcase */
       raw_string: preset,
