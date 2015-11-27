@@ -101,7 +101,7 @@ export default class Lamp extends React.Component {
       dupStyle.push(Lamp.style.lamp.writeable);
     }
     return (
-      <Tooltip
+      <Tooltip destroyTooltipOnHide
         overlay={tooltipText}>
         <img
           ref="duplicate"
@@ -151,7 +151,7 @@ export default class Lamp extends React.Component {
     return (
       <div>
         {
-          tooltipText ? (<Tooltip overlay={tooltipText}>
+          tooltipText ? (<Tooltip destroyTooltipOnHide overlay={tooltipText}>
             {img}
           </Tooltip>) : img
         }
