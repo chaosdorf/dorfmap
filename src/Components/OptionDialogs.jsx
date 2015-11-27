@@ -1,8 +1,8 @@
-import OptionDialog from './OptionDialog.jsx';
+import { RaisedButton } from 'material-ui';
+import { fetchMenues } from '../Actions/menu';
+import OptionDialog from './OptionDialog';
 import Radium from 'radium';
 import React from 'react';
-import menuStore from '../Stores/menuStore.js';
-import { RaisedButton } from 'material-ui';
 
 @Radium
 export default class OptionDialogs extends React.Component {
@@ -14,13 +14,16 @@ export default class OptionDialogs extends React.Component {
       marginLeft: 5,
       width: 400,
     },
-  }
+  };
   actions = {
     actions: 0,
     presets: 1,
     layers: 2,
+  };
+  state = {};
+  componentWillMount() {
+    fetchMenues();
   }
-  state = {}
   handleClick(action) {
     let title;
     switch (action) {
@@ -36,12 +39,13 @@ export default class OptionDialogs extends React.Component {
       default:
       break;
     }
-    const menu = menuStore.menu.toJS();
     this.setState({
       title,
-      menu,
+      open: true,
     });
-    this.refs.optionDialog.show();
+  }
+  handleRequestClose = () => {
+    this.setState({ open: false });
   }
   render() {
     return (
@@ -59,9 +63,9 @@ export default class OptionDialogs extends React.Component {
         </div>
 
         <OptionDialog
-          ref="optionDialog"
-          menu={this.state.menu}
-          activeType={this.state.title}/>
+          activeType={this.state.title}
+          handleRequestClose={this.handleRequestClose}
+          open={this.state.open}/>
       </div>
     );
   }

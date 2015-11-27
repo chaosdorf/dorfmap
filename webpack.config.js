@@ -16,7 +16,8 @@ var plugins = [
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(node_env)
-    }
+    },
+    IS_PRODUCTION: JSON.stringify(node_env === 'production'),
   })
 ];
 
@@ -41,6 +42,7 @@ module.exports = {
   },
   context: __dirname,
   resolve: {
+    extensions: ['', '.js', '.jsx', '.json'],
     alias,
     root: path.resolve('src')
   },

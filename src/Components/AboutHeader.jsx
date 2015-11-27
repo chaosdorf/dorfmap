@@ -5,7 +5,7 @@ import React from 'react';
 export default class AboutHeader extends React.Component {
   static style = {
     wrapper: {
-      position: 'absolute',
+      position: 'fixed',
       top: 5,
       right: 15,
       fontFamily: 'Monospace',

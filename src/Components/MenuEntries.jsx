@@ -1,6 +1,6 @@
 import _ from 'lodash';
+import { changeLayer, executePreset, executeShortcut } from '../Actions/devices';
 import { FlatButton } from 'material-ui';
-import lampStore from '../Stores/lampStore.js';
 import Radium from 'radium';
 import React from 'react';
 
@@ -21,13 +21,13 @@ export default class MenuEntries extends React.Component {
   handleClick(entry) {
     switch (this.props.type) {
       case 'layers':
-      lampStore.updateLayer(entry);
+      changeLayer(entry);
       break;
       case 'presets':
-      lampStore.executePreset(entry);
+      executePreset(entry);
       break;
       case 'actions':
-      lampStore.executeShortcut(entry);
+      executeShortcut(entry);
       break;
     }
     this.props.closeFn();

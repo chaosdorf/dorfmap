@@ -1,70 +1,55 @@
 import _ from 'lodash';
+import { connect } from 'react-redux';
 import { Dialog, FlatButton, TextField } from 'material-ui';
-import menuStore from '../Stores/menuStore.js';
+import { fetchSegmentModes, changeSegment } from '../Actions/devices';
 import RadioGroup from 'react-radio-group';
 import React from 'react';
 
+@connect(state => ({
+  modes: state.segmentModes,
+}))
 export default class SegmentPopup extends React.Component {
   static propTypes = {
     lamp: React.PropTypes.object,
+    modes: React.PropTypes.object,
+    onRequestClose: React.PropTypes.func,
+    open: React.PropTypes.bool,
   }
   state = {
-    disabled: false,
-    modes: {},
-  }
-  componentDidMount() {
-    menuStore.on('charwriteModes', this.updateModes);
-  }
-  componentWillUnmount() {
-    menuStore.off('charwriteModes', this.updateModes);
-  }
-  updateModes = (modes) => {
+
+  };
+  componentWillReceiveProps(nextProps) {
     const lamp = this.props.lamp;
     let value = lamp.charwrite_text;
     let customTxt = '';
-    if (!modes.hasOwnProperty(lamp.charwrite_text)) {
+    if (!nextProps.modes.hasOwnProperty(lamp.charwrite_text)) {
       value = 'custom';
       customTxt = lamp.charwrite_text;
     }
     this.setState({
-      modes,
       value,
       customTxt,
     });
   }
-  hide = () => {
-    this.setState({
-      open: false,
-    });
+  componentWillMount() {
+    fetchSegmentModes();
   }
-  show() {
-    this.setState({
-      open: true,
-    });
-    this.updateModes(menuStore.charwrite.toJS());
-  }
-  async save() {
-    this.setState({
-      disabled: true,
-    });
+  save = async () => {
     let mode = this.state.value;
     if (mode === 'custom') {
-      mode = this.refs.custom.getValue();
+      mode = this.state.customTxt;
     }
-    await menuStore.saveCharwrite(this.props.lamp, mode);
-    this.setState({
-      disabled: false,
-    });
-    this.hide();
-  }
+    changeSegment(this.props.lamp, mode);
+    this.props.onRequestClose();
+  };
   setCustom = () => {
     this.setState({
       value: 'custom',
     });
   }
-  handleChange = () => {
+  handleChange = (e) => {
     this.setState({
-      customTxt: this.refs.custom.getValue(),
+      customTxt: e.target.value,
     });
   }
   handleRadioChange = (value) => {
@@ -72,21 +57,16 @@ export default class SegmentPopup extends React.Component {
       value,
     });
   }
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    });
-  }
   render() {
-    const { open, modes } = this.state;
+    const { open, modes, onRequestClose } = this.props;
+    const { value, customTxt } = this.state;
     return (
       <Dialog
-        ref="segmentDialog"
-        onRequestClose={this.handleRequestClose}
+        onRequestClose={onRequestClose}
         open={open}
         contentStyle={{ display: 'table', width: 'auto' }}>
         <div>
-          <RadioGroup selectedValue={this.state.value} ref="radio" onChange={this.handleRadioChange}>
+          <RadioGroup selectedValue={value} ref="radio" onChange={this.handleRadioChange}>
             {Radio => (
               <div>
                 {_.map(modes, (name, id) => {
@@ -102,8 +82,7 @@ export default class SegmentPopup extends React.Component {
                 <div>
                   <Radio style={{ marginRight: 5 }} value="custom"/>
                   <TextField
-                    ref="custom"
-                    value={this.state.customTxt}
+                    value={customTxt}
                     onChange={this.handleChange}
                     onFocus={this.setCustom}
                     hintText="Custom"/>
@@ -112,9 +91,8 @@ export default class SegmentPopup extends React.Component {
             )}
           </RadioGroup>
           <div>
-            <FlatButton label="Abbrechen" onClick={this.hide}/>
-            <FlatButton disabled={this.state.disabled}
-              label="Speichern" onClick={::this.save}/>
+            <FlatButton label="Abbrechen" onClick={onRequestClose}/>
+            <FlatButton label="Speichern" onClick={this.save}/>
           </div>
         </div>
       </Dialog>

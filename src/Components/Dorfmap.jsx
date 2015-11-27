@@ -1,6 +1,6 @@
-import AboutHeader from './AboutHeader.jsx';
-import Map from './Map.jsx';
-import OptionDialogs from './OptionDialogs.jsx';
+import AboutHeader from './AboutHeader';
+import Map from './Map';
+import OptionDialogs from './OptionDialogs';
 import Radium, { Style } from 'radium';
 import React from 'react';
 

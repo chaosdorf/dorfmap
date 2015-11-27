@@ -1,47 +1,37 @@
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import { Dialog, FlatButton } from 'material-ui';
-import menuStore from '../Stores/menuStore.js';
 import RadioGroup from 'react-radio-group';
 import Radium from 'radium';
 import React from 'react';
 
 @Radium
+@connect(state => ({
+  presets: state.presets,
+}))
 export default class BlinkenlightPopup extends React.Component {
   static propTypes = {
-    active: React.PropTypes.bool,
     lamp: React.PropTypes.object,
-  }
+    onRequestClose: React.PropTypes.func,
+    open: React.PropTypes.bool,
+    presets: React.PropTypes.object,
+  };
   state = {}
+  cwr6
   componentWillMount() {
-    this.update();
+    fetchPresets(this.props.lamp);
   }
-  update() {
-    menuStore.getBlinkenlight(this.props.lamp.name).then(data => {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.presets && nextProps.presets[nextProps.lamp.name]) {
       this.setState({
-        presets: data.presets,
-        active: data.active && data.active.raw_string,
+        active: nextProps.presets[nextProps.lamp.name].active.raw_string,
       });
-    });
+    }
   }
-  hide = () => {
-    this.setState({
-      open: false,
-    });
-  }
-  show() {
-    this.setState({
-      open: true,
-    });
-    this.update();
-  }
-  save() {
-    menuStore.saveBlinkenlight(this.props.lamp, this.state.active);
-    this.hide();
-  }
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    });
+  save = () => {
+    saveBlinkenlight(this.props.lamp, this.state.active);
+    this.props.onRequestClose();
   }
   handleRadioChange = (value) => {
     this.setState({
@@ -49,20 +39,24 @@ export default class BlinkenlightPopup extends React.Component {
     });
   }
   render() {
-    const { open } = this.state;
+    const { onRequestClose, open, presets, lamp } = this.props;
+    const { active } = this.state;
+    if (!presets || !presets[lamp.name]) {
+      return null;
+    }
+    const actualPresets = presets[lamp.name].presets;
     return (
       <Dialog
-        onRequestClose={this.handleRequestClose}
+        onRequestClose={onRequestClose}
         open={open}
-        contentStyle={{ display: 'table', width: 'auto' }}
-        ref="blinkenlightPopup">
+        contentStyle={{ display: 'table', width: 'auto' }}>
         <div>
-          <RadioGroup selectedValue={this.state.active} ref="radio" onChange={this.handleRadioChange}>
+          <RadioGroup selectedValue={active} ref="radio" onChange={this.handleRadioChange}>
             {
               Radio => (
                 <div>
                   {
-                    _.map(this.state.presets, (preset) => {
+                    _.map(actualPresets, (preset) => {
                       return (
                         <div style={{ lineHeight: '32px' }} key={preset.name}>
                           <label>
@@ -78,9 +72,8 @@ export default class BlinkenlightPopup extends React.Component {
             }
           </RadioGroup>
           <div>
-            <FlatButton label="Abbrechen" onClick={this.hide}/>
-            <FlatButton disabled={this.state.disabled}
-              label="Speichern" onClick={::this.save}/>
+            <FlatButton label="Abbrechen" onClick={onRequestClose}/>
+            <FlatButton label="Speichern" onClick={this.save}/>
           </div>
         </div>
       </Dialog>
