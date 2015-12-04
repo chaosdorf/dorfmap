@@ -10,7 +10,8 @@
     "modules": true
   },
   "globals": {
-    "IS_PRODUCTION"
+    "IS_PRODUCTION": false,
+    "CONFIGPATH": false,
   },
   "rules": {
     "accessor-pairs": 0,

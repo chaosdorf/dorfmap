@@ -1,12 +1,15 @@
 /* eslint camelcase: 0 */
 import _ from 'lodash';
 import { createAction } from 'redux-actions';
+import { socketUpdate } from '../primus';
 import axios from 'axios';
 
-const reduceDelay = createAction('REDUCE_DELAY', device => {
+export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = true) => {
   device.rate_delay -= 1;
   if (device.rate_delay > 0) {
-    setTimeout(() => reduceDelay(device), 1000);
+    if (timeoutAgain) {
+      setTimeout(() => reduceDelay(device), 1000);
+    }
   }
   return device;
 });
@@ -32,12 +35,19 @@ export const toggleDevice = createAction('TOGGLE_DEVICE', async (device) => {
     action: 'toggle',
     device: device.name,
   });
+  socketUpdate(device.name);
   if (updatedDevice.status === 1) {
     updatedDevice.rate_delay = 0;
-  } else {
+  } else if (updateDevice.rate_delay > 0) {
     setTimeout(() => reduceDelay(device), 1000);
   }
   return Object.assign(device, updatedDevice);
+});
+
+export const updateDevice = createAction('UPDATE_DEVICE', async deviceId => {
+  const { status } = await axios.get(`/get/${deviceId}.json`);
+  status.name = deviceId;
+  return status;
 });
 
 export const fetchSegmentModes = createAction('FETCH_SEGMENT_MODES', async () => {

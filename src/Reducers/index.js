@@ -1,6 +1,5 @@
 import { handleActions } from 'redux-actions';
 
-
 function updateDevices(state) {
   state.allDevices = state.allDevices.splice(0);
   return {
@@ -28,6 +27,16 @@ export default handleActions({
     menues: payload,
   }),
   FETCH_DEVICES: updateDevicesFromPayload,
+  UPDATE_DEVICE: (state, { payload }) => {
+    const deviceIndex = state.allDevices.findIndex(d => d.name === payload.name);
+    if (deviceIndex !== -1) {
+      /* eslint-disable camelcase */
+      state.allDevices[deviceIndex].rate_delay = payload.rate_delay;
+      /* eslint-enable camelcase */
+      state.allDevices[deviceIndex].status = payload.status;
+      return updateDevices(state);
+    }
+  },
   CHANGE_LAYER: (state, { payload }) => ({
     layer: payload,
     devices: state.allDevices.filter(l => l.layer === payload),

@@ -5,6 +5,7 @@ const process = require('process');
 var webpack = require('webpack');
 
 var node_env = process.env.NODE_ENV || 'development';
+const configPath = `config.${node_env}.js`;
 
 var plugins = [
   new webpack.NoErrorsPlugin(),
@@ -18,7 +19,8 @@ var plugins = [
       NODE_ENV: JSON.stringify(node_env)
     },
     IS_PRODUCTION: JSON.stringify(node_env === 'production'),
-  })
+    CONFIGPATH: JSON.stringify(configPath),
+  }),
 ];
 
 if (node_env === 'production') {
@@ -58,14 +60,18 @@ module.exports = {
     loaders: [
       { test: /\.css$/, loader: 'style!css!autoprefixer?browsers=last 2 version' },
       { test: /^((?!CSS\.js$).)*(\.jsx?)$/,
-        exclude: /(node_modules)/,
+        exclude: /(node_modules|primusClient)/,
+        include: /src/,
         loader: 'babel!eslint',
       },
       { test: /\.(jpg|png|gif)$/, loader: 'file!image' },
       { test: /\.woff2?(\?v=.*)?$/, loader: 'url?limit=10000&minetype=application/font-woff' },
       { test: /\.(eot|ttf|svg|otf)(\?v=.*)?$/, loader: 'url' },
       { test: /\.json$/, loader: 'json' }
-    ]
+    ],
+    noParse: [
+      /primusClient\.js/,
+    ],
   },
   plugins,
 };

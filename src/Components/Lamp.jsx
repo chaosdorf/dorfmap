@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { toggleDevice } from '../Actions/devices';
+import { toggleDevice, reduceDelay } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
@@ -118,6 +118,15 @@ export default class Lamp extends React.Component {
       dialogOpen: false,
     });
   };
+  componentWillReceiveProps({ lamp }) {
+    if (lamp.status === 1) {
+      /* eslint-disable camelcase */
+      lamp.rate_delay = 0;
+    } else if (lamp.rate_delay > 0) {
+      /* eslint-enable camelcase */
+      setTimeout(() => reduceDelay(lamp, false), 1000);
+    }
+  }
   render() {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
