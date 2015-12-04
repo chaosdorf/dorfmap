@@ -11,7 +11,7 @@ import React from 'react';
 @ConfiguredRadium
 export default class Map extends React.Component {
   static propTypes = {
-    lamps: React.PropTypes.array,
+    lamps: React.PropTypes.object,
   };
   static style = {
     wrapper: {
@@ -31,7 +31,7 @@ export default class Map extends React.Component {
     return (
       <div style={Map.style.wrapper}>
         {
-          lamps.map((lamp, key) => <Lamp key={key} lamp={lamp}/>)
+          lamps.map((lamp, key) => <Lamp key={key} lamp={lamp}/>).toArray()
         }
       </div>
     );

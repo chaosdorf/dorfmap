@@ -1,7 +1,8 @@
 import { handleActions } from 'redux-actions';
+import { Map } from 'immutable';
 
-function updateDevices(state) {
-  state.allDevices = state.allDevices.splice(0);
+function updateDevices(state, { payload }) {
+  state.allDevices = state.allDevices.set(payload.name, payload);
   return {
     allDevices: state.allDevices,
     devices: state.allDevices.filter(d => d.layer === state.layer),
@@ -28,13 +29,13 @@ export default handleActions({
   }),
   FETCH_DEVICES: updateDevicesFromPayload,
   UPDATE_DEVICE: (state, { payload }) => {
-    const deviceIndex = state.allDevices.findIndex(d => d.name === payload.name);
-    if (deviceIndex !== -1) {
+    const device = state.allDevices.find(d => d.name === payload.name);
+    if (device) {
       /* eslint-disable camelcase */
-      state.allDevices[deviceIndex].rate_delay = payload.rate_delay;
+      device.rate_delay = payload.rate_delay;
       /* eslint-enable camelcase */
-      state.allDevices[deviceIndex].status = payload.status;
-      return updateDevices(state);
+      device.status = payload.status;
+      return updateDevices(state, { payload: device });
     }
   },
   CHANGE_LAYER: (state, { payload }) => ({
@@ -52,8 +53,8 @@ export default handleActions({
   EXECUTE_PRESET: updateDevicesFromPayload,
   EXECUTE_SHORTCUT: updateDevicesFromPayload,
 }, {
-  allDevices: [],
-  devices: [],
+  allDevices: Map(),
+  devices: Map(),
   layer: 'control',
   menues: {},
   presets: {},

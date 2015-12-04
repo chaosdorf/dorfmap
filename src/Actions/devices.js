@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { createAction } from 'redux-actions';
 import { socketUpdate } from '../primus';
 import axios from 'axios';
+import { Map } from 'immutable';
 
 export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = true) => {
   device.rate_delay -= 1;
@@ -16,14 +17,16 @@ export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = 
 
 async function _fetchDevices() {
   const devices = await axios.get('/status/devices.json');
+  let devicesMap = Map();
   _.each(devices, d => {
+    devicesMap = devicesMap.set(d.name, d);
     if (d.status === 1) {
       d.rate_delay = 0;
     } else if (d.rate_delay > 0) {
       setTimeout(() => reduceDelay(d), 1000);
     }
   });
-  return Object.keys(devices).map(key => devices[key]);
+  return devicesMap;
 }
 
 export const changeLayer = createAction('CHANGE_LAYER', layer => layer);
