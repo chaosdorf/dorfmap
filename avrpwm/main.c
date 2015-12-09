@@ -19,7 +19,7 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x000d)
+#define MYADDRESS (0x0001)
 
 volatile uint8_t binary_1 = 0;
 volatile uint8_t binary_2 = 0;
@@ -37,7 +37,7 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
-	DDRA = _BV(0);
+	DDRA = _BV(0) | _BV(1);
 	DDRB = 0xff;
 	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
@@ -105,9 +105,9 @@ ISR(INT0_vect)
 		address = (address << 1) | DATA_BIT;
 
 		if (DATA_BIT != 0)
-			PORTA |= _BV(PA0);
+			PORTA |= _BV(PA1);
 		else
-			PORTA &= ~_BV(PA0);
+			PORTA &= ~_BV(PA1);
 	}
 	else {
 		if (DATA_HI && (address == MYADDRESS)) {
@@ -131,5 +131,10 @@ ISR(INT0_vect)
 
 ISR(TIMER0_OVF_vect)
 {
+	static uint16_t cnt = 0;
+	if (++cnt == 0x9fff) {
+		PINA |= _BV(PA0);
+		cnt = 0;
+	}
 	asm("wdr");
 }
