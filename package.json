@@ -19,7 +19,7 @@
     "axios": "0.7.0",
     "babel-runtime": "5.8.34",
     "bluebird": "^3.0.5",
-    "history": "^1.13.1",
+    "history": "^1.16.0",
     "immutable": "^3.7.5",
     "lodash": "3.10.1",
     "material-design-iconfont": "0.1.7",
