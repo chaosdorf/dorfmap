@@ -73,7 +73,7 @@
 <text x="45.72" y="5.08" size="1.27" layer="25" font="vector" rot="R270">+</text>
 <text x="45.72" y="43.18" size="1.27" layer="25" font="vector" rot="R270">+</text>
 <text x="41.91" y="45.72" size="1.27" layer="25" font="vector">+</text>
-<text x="27.94" y="1.905" size="1.016" layer="26" font="vector" rot="MR0">VCC select
+<text x="15.875" y="18.415" size="1.016" layer="26" font="vector" rot="MR0">VCC select
 open  =ext
 closed=bus</text>
 <text x="41.91" y="40.64" size="1.016" layer="25" font="vector" rot="R180">B4</text>
@@ -95,24 +95,22 @@ closed=bus</text>
 <text x="2.54" y="36.195" size="1.016" layer="25" font="vector">avrshift</text>
 <text x="2.54" y="34.925" size="1.016" layer="25" font="vector">rev 2.1</text>
 <text x="2.54" y="38.735" size="1.016" layer="25">derf</text>
-<wire x1="28.575" y1="1.27" x2="18.415" y2="1.27" width="0.254" layer="26"/>
-<wire x1="6.35" y1="19.05" x2="6.35" y2="22.86" width="0.254" layer="26"/>
-<wire x1="6.35" y1="22.86" x2="1.27" y2="22.86" width="0.254" layer="26"/>
-<wire x1="1.27" y1="22.86" x2="1.27" y2="19.05" width="0.254" layer="26"/>
-<wire x1="1.27" y1="19.05" x2="6.35" y2="19.05" width="0.254" layer="26"/>
-<wire x1="18.415" y1="1.27" x2="18.415" y2="6.35" width="0.254" layer="26"/>
-<wire x1="18.415" y1="6.35" x2="28.575" y2="6.35" width="0.254" layer="26"/>
-<wire x1="28.575" y1="6.35" x2="28.575" y2="1.27" width="0.254" layer="26"/>
-<wire x1="2.54" y1="9.525" x2="17.145" y2="9.525" width="0.254" layer="26"/>
-<wire x1="17.145" y1="9.525" x2="18.415" y2="8.255" width="0.254" layer="26"/>
-<wire x1="18.415" y1="8.255" x2="18.415" y2="6.35" width="0.254" layer="26"/>
-<wire x1="2.54" y1="9.525" x2="1.27" y2="10.795" width="0.254" layer="26"/>
-<wire x1="1.27" y1="10.795" x2="1.27" y2="19.05" width="0.254" layer="26"/>
 <text x="12.7" y="33.655" size="1.27" layer="25">ISP</text>
 <text x="1.27" y="15.875" size="1.016" layer="25">SI2C</text>
 <wire x1="1.27" y1="17.145" x2="1.27" y2="10.16" width="0.254" layer="25"/>
 <text x="5.08" y="28.575" size="1.27" layer="25" rot="R180">1</text>
 <wire x1="1.27" y1="17.145" x2="4.445" y2="17.145" width="0.254" layer="25"/>
+<wire x1="1.27" y1="17.78" x2="1.27" y2="22.86" width="0.254" layer="26"/>
+<wire x1="1.27" y1="22.86" x2="16.51" y2="22.86" width="0.254" layer="26"/>
+<wire x1="16.51" y1="22.86" x2="16.51" y2="17.78" width="0.254" layer="26"/>
+<wire x1="16.51" y1="17.78" x2="1.27" y2="17.78" width="0.254" layer="26"/>
+<wire x1="23.495" y1="5.08" x2="27.305" y2="5.08" width="0.254" layer="25"/>
+<wire x1="27.305" y1="5.08" x2="27.305" y2="3.175" width="0.254" layer="25"/>
+<wire x1="27.305" y1="3.175" x2="27.305" y2="1.27" width="0.254" layer="25"/>
+<wire x1="27.305" y1="1.27" x2="23.495" y2="1.27" width="0.254" layer="25"/>
+<wire x1="23.495" y1="1.27" x2="23.495" y2="3.175" width="0.254" layer="25"/>
+<wire x1="23.495" y1="3.175" x2="23.495" y2="5.08" width="0.254" layer="25"/>
+<wire x1="23.495" y1="3.175" x2="27.305" y2="3.175" width="0.254" layer="25"/>
 </plain>
 <libraries>
 <library name="atmel">
@@ -1816,11 +1814,11 @@ grid 5 mm, outline 2.4 x 4.4 mm</description>
 </element>
 <element name="LED1" library="led" package="LED3MM" value="PWR" x="25.4" y="7.62" smashed="yes">
 <attribute name="NAME" x="27.305" y="8.001" size="1.27" layer="27" ratio="10"/>
-<attribute name="VALUE" x="26.67" y="2.286" size="1.016" layer="25" font="vector" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="26.67" y="2.921" size="1.016" layer="25" font="vector" ratio="10" rot="R180"/>
 </element>
 <element name="LED2" library="led" package="LED3MM" value="ACT" x="25.4" y="12.065" smashed="yes">
 <attribute name="NAME" x="27.305" y="12.446" size="1.27" layer="27" ratio="10"/>
-<attribute name="VALUE" x="26.67" y="4.191" size="1.016" layer="25" font="vector" ratio="10" rot="R180"/>
+<attribute name="VALUE" x="26.67" y="4.826" size="1.016" layer="25" font="vector" ratio="10" rot="R180"/>
 </element>
 <element name="JP1" library="pinhead" package="1X02" value="PWR" x="2.54" y="44.45" smashed="yes" rot="R90">
 <attribute name="NAME" x="3.8862" y="41.3512" size="1.27" layer="27" ratio="10" rot="R180"/>
