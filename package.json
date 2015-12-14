@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "0.8.0",
-    "babel-runtime": "5.8.34",
+    "babel-runtime": "6.3.13",
     "bluebird": "3.0.6",
     "history": "1.13.x",
     "immutable": "3.7.5",
