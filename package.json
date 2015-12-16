@@ -18,7 +18,7 @@
   "dependencies": {
     "axios": "0.8.0",
     "babel-runtime": "5.8.34",
-    "bluebird": "3.0.6",
+    "bluebird": "3.1.1",
     "history": "1.13.x",
     "immutable": "3.7.5",
     "lodash": "3.10.1",
