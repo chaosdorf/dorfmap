@@ -20,7 +20,7 @@
     "babel-runtime": "5.8.34",
     "bluebird": "3.0.6",
     "history": "1.13.x",
-    "immutable": "3.7.5",
+    "immutable": "3.7.6",
     "lodash": "3.10.1",
     "material-design-iconfont": "0.1.7",
     "material-ui": "0.13.4",
