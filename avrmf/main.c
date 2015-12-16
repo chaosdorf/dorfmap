@@ -12,6 +12,10 @@
  */
 
 /*
+ * TODO move SDA out to PD0 and SCL out to PD1
+ */
+
+/*
  * PD2 and PD3 are inverted (optokoppler to gnd and internal pull-ups)
  */
 #define CLOCK_LO ( ( PIND & _BV(PD2) ) != 0 )

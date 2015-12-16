@@ -10130,6 +10130,7 @@ use bus power. JP1 not populated</text>
 <wire x1="-30.48" y1="17.78" x2="-38.1" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="-38.1" y1="17.78" x2="-38.1" y2="12.7" width="0.1524" layer="91"/>
+<label x="-38.1" y="12.7" size="1.778" layer="95" rot="R90"/>
 </segment>
 <segment>
 <pinref part="SV2" gate="A" pin="5"/>
