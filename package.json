@@ -16,7 +16,7 @@
   "author": "marudor",
   "license": "MIT",
   "dependencies": {
-    "axios": "0.8.0",
+    "axios": "0.8.1",
     "babel-runtime": "5.8.34",
     "bluebird": "3.0.6",
     "history": "1.13.x",
