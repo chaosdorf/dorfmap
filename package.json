@@ -42,7 +42,7 @@
     "babel-loader": "5.4.0",
     "babel-plugin-react-transform": "^1.1.1",
     "babel-plugin-typecheck": "^2.0.0",
-    "css-loader": "0.23.0",
+    "css-loader": "0.23.1",
     "eslint": "1.10.3",
     "eslint-loader": "1.1.1",
     "eslint-plugin-react": "^3.11.3",
