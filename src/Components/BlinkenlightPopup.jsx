@@ -18,12 +18,11 @@ export default class BlinkenlightPopup extends React.Component {
     presets: React.PropTypes.object,
   };
   state = {}
-  cwr6
   componentWillMount() {
     fetchPresets(this.props.lamp);
   }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.presets && nextProps.presets[nextProps.lamp.name]) {
+    if (nextProps.presets && nextProps.presets[nextProps.lamp.name] && nextProps.presets[nextProps.lamp.name].active) {
       this.setState({
         active: nextProps.presets[nextProps.lamp.name].active.raw_string,
       });

@@ -13,11 +13,14 @@ export default class OptionDialog extends React.Component {
     menues: React.PropTypes.object,
     open: React.PropTypes.bool,
   };
+  static defaultProps = {
+    open: false,
+  };
   handleTabChange = () => {
     setTimeout(() => {
       this.refs.optionDialog._positionDialog();
     }, 25);
-  }
+  };
   render() {
     const { menues, activeType, open } = this.props;
     const selectedIndex = _(menues).keys().indexOf(activeType);

@@ -1,3 +1,5 @@
+import 'babel-regenerator-runtime';
+import './babelHelper.js';
 import axios from 'axios';
 import { baseHost } from 'config';
 

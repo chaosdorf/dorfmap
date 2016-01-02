@@ -46,7 +46,7 @@ export default class OptionDialogs extends React.Component {
   }
   handleRequestClose = () => {
     this.setState({ open: false });
-  }
+  };
   render() {
     return (
       <div>

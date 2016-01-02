@@ -1,8 +1,17 @@
 sudo: false
 language: node_js
 node_js:
-- "4.2.2"
-- "5.1"
+- "4"
+- "5"
 script: npm run travis
 env:
-- NO_WATCH_TESTS=1
+  - CXX=g++-4.8
+cache: apt
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+notifications:
+  email: false

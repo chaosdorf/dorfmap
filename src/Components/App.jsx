@@ -22,7 +22,7 @@ reduxActions.handleActions = function(old) {
     return old.call(this, reducerMap, ...rest);
   };
 }(reduxActions.handleActions);
-const reducer = require('../Reducers');
+const reducer = require('../Reducers').default;
 
 if (IS_PRODUCTION) {
   store = compose(
@@ -30,8 +30,8 @@ if (IS_PRODUCTION) {
   )(createStore)(reducer);
 } else {
   const DT = require('redux-devtools');
-  const DockMonitor = require('redux-devtools-dock-monitor');
-  const LogMonitor = require('redux-devtools-log-monitor');
+  const DockMonitor = require('redux-devtools-dock-monitor').default;
+  const LogMonitor = require('redux-devtools-log-monitor').default;
 
   const DevTools = DT.createDevTools(
     <DockMonitor toggleVisibilityKey="H" changePositionKey="Q">
@@ -73,7 +73,7 @@ reduxActions.createAction = function(old) {
   };
 }(reduxActions.createAction);
 
-const Dorfmap = require('./Dorfmap');
+const Dorfmap = require('./Dorfmap').default;
 export default class App extends React.Component {
   static childContextTypes = {
     store: React.PropTypes.any,
