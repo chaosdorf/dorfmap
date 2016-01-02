@@ -1820,35 +1820,35 @@ type 0207, grid 10 mm</description>
 <attribute name="NAME" x="52.197" y="45.7962" size="1.27" layer="27" ratio="10"/>
 <attribute name="VALUE" x="52.197" y="26.6192" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="R4" library="rcl" package="0207/10" value="" x="53.34" y="19.05" smashed="yes" rot="R90">
+<element name="R4" library="rcl" package="0207/10" value="470" x="53.34" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="52.197" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="53.975" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R5" library="rcl" package="0207/10" value="" x="55.88" y="19.05" smashed="yes" rot="R90">
+<element name="R5" library="rcl" package="0207/10" value="470" x="55.88" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="54.737" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="56.515" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R6" library="rcl" package="0207/10" value="" x="58.42" y="19.05" smashed="yes" rot="R90">
+<element name="R6" library="rcl" package="0207/10" value="470" x="58.42" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="57.277" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="59.055" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R7" library="rcl" package="0207/10" value="" x="60.96" y="19.05" smashed="yes" rot="R90">
+<element name="R7" library="rcl" package="0207/10" value="470" x="60.96" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="59.817" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="61.595" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R8" library="rcl" package="0207/10" value="" x="63.5" y="19.05" smashed="yes" rot="R90">
+<element name="R8" library="rcl" package="0207/10" value="470" x="63.5" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="62.357" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="64.135" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R9" library="rcl" package="0207/10" value="" x="66.04" y="19.05" smashed="yes" rot="R90">
+<element name="R9" library="rcl" package="0207/10" value="470" x="66.04" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="64.897" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="66.675" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R10" library="rcl" package="0207/10" value="" x="68.58" y="19.05" smashed="yes" rot="R90">
+<element name="R10" library="rcl" package="0207/10" value="470" x="68.58" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="67.437" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="69.215" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>
-<element name="R11" library="rcl" package="0207/10" value="" x="71.12" y="19.05" smashed="yes" rot="R90">
+<element name="R11" library="rcl" package="0207/10" value="470" x="71.12" y="19.05" smashed="yes" rot="R90">
 <attribute name="NAME" x="71.247" y="25.019" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="71.755" y="16.7894" size="1.27" layer="27" ratio="10" rot="R90"/>
 </element>

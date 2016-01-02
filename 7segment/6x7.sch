@@ -8419,14 +8419,14 @@ Source: AVX .. aphvc.pdf</description>
 <part name="DIS1" library="display-hp" deviceset="HD-K121" device=""/>
 <part name="DIS2" library="display-hp" deviceset="HD-K121" device=""/>
 <part name="DIS3" library="display-hp" deviceset="HD-K121" device=""/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R7" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R8" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R9" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R10" library="rcl" deviceset="R-EU_" device="0207/10"/>
-<part name="R11" library="rcl" deviceset="R-EU_" device="0207/10"/>
+<part name="R4" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R6" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R8" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R9" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R10" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
+<part name="R11" library="rcl" deviceset="R-EU_" device="0207/10" value="470"/>
 <part name="SV2" library="con-harting-ml" deviceset="ML6" device=""/>
 </parts>
 <sheets>
