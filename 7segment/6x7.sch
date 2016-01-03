@@ -8642,7 +8642,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="IC1" library="atmel" deviceset="AT90S2313" device="P"/>
 <part name="OK1" library="optocoupler" deviceset="PC817" device=""/>
 <part name="OK2" library="optocoupler" deviceset="PC817" device=""/>
-<part name="IC2" library="linear" deviceset="78*" device="TV" technology="05"/>
+<part name="IC2" library="linear" deviceset="78*" device="T" technology="05" value="7805T"/>
 <part name="R1" library="rcl" deviceset="R-EU_" device="0207/10" value="1K"/>
 <part name="R2" library="rcl" deviceset="R-EU_" device="0207/10" value="1K"/>
 <part name="C1" library="capacitor-wima" deviceset="C" device="2,5-3" value="330nF"/>
