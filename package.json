@@ -41,7 +41,7 @@
   "devDependencies": {
     "autoprefixer-loader": "3.1.0",
     "babel-eslint": "^5.0.0-beta6",
-    "babel-loader": "^6.2.0",
+    "babel-loader": "^6.2.1",
     "babel-plugin-external-helpers-2": "^6.3.13",
     "babel-plugin-remove-console": "^1.0.1",
     "babel-plugin-remove-debugger": "^1.0.1",
