@@ -63,7 +63,7 @@ export default class Lamp extends React.Component {
   state = {
     dialogOpen: false,
   };
-  lampCopy = _.cloneDeep(this.props.lamp)
+  lampCopy = _.cloneDeep(this.props.lamp);
   getTooltipText(lamp) {
     let text = lamp.status_text;
     if (!text) {
@@ -112,7 +112,7 @@ export default class Lamp extends React.Component {
     } else if (lamp.rate_delay <= 0) {
       toggleDevice(lamp);
     }
-  }
+  };
   handleRequestClose = () => {
     this.setState({
       dialogOpen: false,

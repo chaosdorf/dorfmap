@@ -14,7 +14,7 @@ export default class SegmentPopup extends React.Component {
     modes: React.PropTypes.object,
     onRequestClose: React.PropTypes.func,
     open: React.PropTypes.bool,
-  }
+  };
   state = {
 
   };
@@ -46,17 +46,17 @@ export default class SegmentPopup extends React.Component {
     this.setState({
       value: 'custom',
     });
-  }
+  };
   handleChange = (e) => {
     this.setState({
       customTxt: e.target.value,
     });
-  }
+  };
   handleRadioChange = (value) => {
     this.setState({
       value,
     });
-  }
+  };
   render() {
     const { open, modes, onRequestClose } = this.props;
     const { value, customTxt } = this.state;

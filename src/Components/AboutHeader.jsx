@@ -16,7 +16,7 @@ export default class AboutHeader extends React.Component {
       textDecoration: 'none',
       margin: 5,
     },
-  }
+  };
   render() {
     const style = AboutHeader.style;
     return (

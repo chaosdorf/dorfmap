@@ -17,7 +17,7 @@ export default class BlinkenlightPopup extends React.Component {
     open: React.PropTypes.bool,
     presets: React.PropTypes.object,
   };
-  state = {}
+  state = {};
   componentWillMount() {
     fetchPresets(this.props.lamp);
   }
@@ -31,12 +31,12 @@ export default class BlinkenlightPopup extends React.Component {
   save = () => {
     saveBlinkenlight(this.props.lamp, this.state.active);
     this.props.onRequestClose();
-  }
+  };
   handleRadioChange = (value) => {
     this.setState({
       active: value,
     });
-  }
+  };
   render() {
     const { onRequestClose, open, presets, lamp } = this.props;
     const { active } = this.state;

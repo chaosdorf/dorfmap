@@ -11,13 +11,13 @@ export default class MenuEntries extends React.Component {
     closeFn: React.PropTypes.func,
     entries: React.PropTypes.array,
     type: React.PropTypes.string.isRequired,
-  }
+  };
   static style = {
     wrapper: {
       display: 'flex',
       flexDirection: 'column',
     },
-  }
+  };
   handleClick(entry) {
     switch (this.props.type) {
       case 'layers':
