@@ -1,3 +1,4 @@
+/* @flow */
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
@@ -6,22 +7,29 @@ import RadioGroup from 'react-radio-group';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
+type Props = {
+  lamp: Object,
+  onRequestClose: Function,
+  open: bool,
+  presets: Object,
+}
+
+type State = {
+  active?: bool,
+}
+
+/*::`*/
 @ConfiguredRadium
 @connect(state => ({
   presets: state.presets,
 }))
-export default class BlinkenlightPopup extends React.Component {
-  static propTypes = {
-    lamp: React.PropTypes.object,
-    onRequestClose: React.PropTypes.func,
-    open: React.PropTypes.bool,
-    presets: React.PropTypes.object,
-  };
-  state = {};
+/*::`*/
+export default class BlinkenlightPopup extends React.Component<void, Props, State> {
+  state: State = {};
   componentWillMount() {
     fetchPresets(this.props.lamp);
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.presets && nextProps.presets[nextProps.lamp.name] && nextProps.presets[nextProps.lamp.name].active) {
       this.setState({
         active: nextProps.presets[nextProps.lamp.name].active.raw_string,

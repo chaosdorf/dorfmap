@@ -1,24 +1,34 @@
+/* @flow */
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { Dialog, FlatButton, TextField } from 'material-ui';
 import { fetchSegmentModes, changeSegment } from '../Actions/devices';
+import ConfiguredRadium from 'configuredRadium';
 import RadioGroup from 'react-radio-group';
 import React from 'react';
 
+type Props = {
+  lamp: Object,
+  modes: Object,
+  onRequestClose?: Function,
+  open?: bool,
+}
+
+type State = {
+  value?: string,
+  customTxt?: string,
+}
+
+/*::`*/
 @connect(state => ({
   modes: state.segmentModes,
 }))
-export default class SegmentPopup extends React.Component {
-  static propTypes = {
-    lamp: React.PropTypes.object,
-    modes: React.PropTypes.object,
-    onRequestClose: React.PropTypes.func,
-    open: React.PropTypes.bool,
+@ConfiguredRadium
+/*::`*/
+export default class SegmentPopup extends React.Component<void, Props, State> {
+  state: State = {
   };
-  state = {
-
-  };
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const lamp = this.props.lamp;
     let value = lamp.charwrite_text;
     let customTxt = '';
@@ -40,7 +50,9 @@ export default class SegmentPopup extends React.Component {
       mode = this.state.customTxt;
     }
     changeSegment(this.props.lamp, mode);
-    this.props.onRequestClose();
+    if (this.props.onRequestClose) {
+      this.props.onRequestClose();
+    }
   };
   setCustom = () => {
     this.setState({
@@ -68,26 +80,26 @@ export default class SegmentPopup extends React.Component {
         <div>
           <RadioGroup selectedValue={value} ref="radio" onChange={this.handleRadioChange}>
             {Radio => (
-              <div>
+            <div>
                 {_.map(modes, (name, id) => {
-                  return (
-                    <div style={{ lineHeight: '32px' }} key={id}>
-                      <label>
-                        <Radio style={{ marginRight: 5 }} value={id}/>
-                        {name}
-                      </label>
-                    </div>
-                  );
-                })}
-                <div>
-                  <Radio style={{ marginRight: 5 }} value="custom"/>
-                  <TextField
-                    value={customTxt}
-                    onChange={this.handleChange}
-                    onFocus={this.setCustom}
-                    hintText="Custom"/>
-                </div>
+                return (
+              <div style={{ lineHeight: '32px' }} key={id}>
+                <label>
+                  <Radio style={{ marginRight: 5 }} value={id}/>
+                  {name}
+                </label>
               </div>
+              );
+              })}
+              <div>
+                <Radio style={{ marginRight: 5 }} value="custom"/>
+                <TextField
+                  value={customTxt}
+                  onChange={this.handleChange}
+                  onFocus={this.setCustom}
+                  hintText="Custom"/>
+              </div>
+            </div>
             )}
           </RadioGroup>
           <div>
@@ -96,6 +108,6 @@ export default class SegmentPopup extends React.Component {
           </div>
         </div>
       </Dialog>
-    );
+      );
+    }
   }
-}

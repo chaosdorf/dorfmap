@@ -1,3 +1,4 @@
+/* @flow */
 import _ from 'lodash';
 import { toggleDevice, reduceDelay } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
@@ -41,8 +42,18 @@ function getImage(lamp: Object) {
   return `static/images/${baseImage}${status}.png`;
 }
 
+type Props = {
+  lamp: Lamp,
+}
+
+type State = {
+  dialogOpen: bool,
+}
+
+/*::`*/
 @ConfiguredRadium
-export default class Lamp extends React.Component {
+/*::`*/
+export default class LampComponent extends React.Component<void, Props, State> {
   static propTypes = {
     lamp: React.PropTypes.object.isRequired,
   };
@@ -60,11 +71,11 @@ export default class Lamp extends React.Component {
       },
     },
   };
-  state = {
+  state: State = {
     dialogOpen: false,
   };
   lampCopy = _.cloneDeep(this.props.lamp);
-  getTooltipText(lamp) {
+  getTooltipText(lamp: Lamp): ?ReactElement {
     let text = lamp.status_text;
     if (!text) {
       return null;
@@ -76,20 +87,20 @@ export default class Lamp extends React.Component {
     return <div dangerouslySetInnerHTML={{ __html: text }}/>;
     /* eslint-enable react/no-danger */
   }
-  getDuplicate(lamp, tooltipText) {
+  getDuplicate(lamp: Lamp, tooltipText: ?ReactElement) {
     if (!lamp.duplicates || !lamp.duplicates.length) {
       return null;
     }
 
     const dup = lamp.duplicates[0];
-    const dupStyle = [Lamp.style.lamp.normal, {
+    const dupStyle = [LampComponent.style.lamp.normal, {
       left: dup.x1,
       top: dup.y1,
       width: lamp.x2,
       height: lamp.y2,
     }];
     if (lamp.is_writable && lamp.rate_delay <= 0) {
-      dupStyle.push(Lamp.style.lamp.writeable);
+      dupStyle.push(LampComponent.style.lamp.writeable);
     }
     return (
       <Tooltip destroyTooltipOnHide
@@ -118,7 +129,8 @@ export default class Lamp extends React.Component {
       dialogOpen: false,
     });
   };
-  componentWillReceiveProps({ lamp }) {
+  componentWillReceiveProps(props: Props) {
+    const { lamp } = props;
     if (lamp.status === 1) {
       /* eslint-disable camelcase */
       lamp.rate_delay = 0;
@@ -127,17 +139,17 @@ export default class Lamp extends React.Component {
       setTimeout(() => reduceDelay(lamp, false), 1000);
     }
   }
-  render() {
+  render(): ReactElement {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
-    const style = [Lamp.style.lamp.normal, {
+    const style = [LampComponent.style.lamp.normal, {
       left: lamp.x1,
       top: lamp.y1,
       width: lamp.x2,
       height: lamp.y2,
     }];
     if (lamp.is_writable && lamp.rate_delay <= 0) {
-      style.push(Lamp.style.lamp.writeable);
+      style.push(LampComponent.style.lamp.writeable);
     }
     let dialog;
     if (lamp.type === 'charwrite') {

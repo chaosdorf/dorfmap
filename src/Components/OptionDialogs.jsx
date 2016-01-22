@@ -1,10 +1,13 @@
+/* @flow */
 import { RaisedButton } from 'material-ui';
 import { fetchMenues } from '../Actions/menu';
 import OptionDialog from './OptionDialog';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
+/*::`*/
 @ConfiguredRadium
+/*::`*/
 export default class OptionDialogs extends React.Component {
   static style = {
     dialogs: {
@@ -24,7 +27,7 @@ export default class OptionDialogs extends React.Component {
   componentWillMount() {
     fetchMenues();
   }
-  handleClick(action) {
+  handleClick(action: number) {
     let title;
     switch (action) {
       case this.actions.actions:

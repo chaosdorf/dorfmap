@@ -1,11 +1,14 @@
+/* @flow */
 import AboutHeader from './AboutHeader';
 import Map from './Map';
 import OptionDialogs from './OptionDialogs';
-import { Style } from 'radium';
+import { Style } from 'Radium';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
+/*::`*/
 @ConfiguredRadium
+/*::`*/
 export default class Dorfmap extends React.Component {
   static style = {
     'html': {
@@ -15,7 +18,7 @@ export default class Dorfmap extends React.Component {
       minHeight: 'initial',
     },
   };
-  render() {
+  render(): ReactElement {
     return (
       <div>
         <Style rules={Dorfmap.style}/>

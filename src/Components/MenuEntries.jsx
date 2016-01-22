@@ -1,3 +1,4 @@
+/* @flow */
 import _ from 'lodash';
 import { changeLayer, executePreset, executeShortcut } from '../Actions/devices';
 import { FlatButton } from 'material-ui';
@@ -5,7 +6,9 @@ import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
 
+/*::`*/
 @ConfiguredRadium
+/*::`*/
 export default class MenuEntries extends React.Component {
   static propTypes = {
     closeFn: React.PropTypes.func,
@@ -18,7 +21,7 @@ export default class MenuEntries extends React.Component {
       flexDirection: 'column',
     },
   };
-  handleClick(entry) {
+  handleClick(entry: any) {
     switch (this.props.type) {
       case 'layers':
       changeLayer(entry);
@@ -32,7 +35,7 @@ export default class MenuEntries extends React.Component {
     }
     this.props.closeFn();
   }
-  render() {
+  render(): ReactElement {
     const entries = _.map(this.props.entries, entry => {
       return (
         <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>

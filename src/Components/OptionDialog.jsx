@@ -1,11 +1,13 @@
+/* @flow */
 import _ from 'lodash';
 import MenuEntries from './MenuEntries';
 import React from 'react';
-import Dialog from 'material-ui/lib/dialog';
-import { Tabs, Tab } from 'material-ui';
+import { Tabs, Tab, Dialog } from 'material-ui';
 import { connect } from 'react-redux';
 
+/*::`*/
 @connect(state => ({ menues: state.menues }))
+/*::`*/
 export default class OptionDialog extends React.Component {
   static propTypes = {
     activeType: React.PropTypes.string,

@@ -1,3 +1,4 @@
+/* @flow */
 /* eslint camelcase: 0 */
 import _ from 'lodash';
 import { createAction } from 'redux-actions';
@@ -55,7 +56,7 @@ export const updateDevice = createAction('UPDATE_DEVICE', async deviceId => {
 
 export const fetchSegmentModes = createAction('FETCH_SEGMENT_MODES', async () => {
   const modes = await axios.get('/ajax/charwrite.json');
-  return _.zipObject(_.pluck(modes, 'name'), _.pluck(modes, 'description'));
+  return _.zipObject(_.map(modes, 'name'), _.map(modes, 'description'));
 });
 
 export const changeSegment = createAction('CHANGE_SEGMENT', async (segment, mode) => {

@@ -1,18 +1,23 @@
+/* @flow */
 import { fetchDevices } from '../Actions/devices';
 import { connect } from 'react-redux';
 import Lamp from './Lamp';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
+import type { Map } from 'immutable';
 
 
+type Props = {
+  lamps: Map<string, Lamp>,
+}
+
+/*::`*/
 @connect(state => ({
   lamps: state.devices,
 }))
 @ConfiguredRadium
-export default class Map extends React.Component {
-  static propTypes = {
-    lamps: React.PropTypes.object,
-  };
+/*::`*/
+export default class DMap extends React.Component<void, Props, void> {
   static style = {
     wrapper: {
       backgroundImage: 'url(/static/images/map.png)',
@@ -26,10 +31,10 @@ export default class Map extends React.Component {
   componentWillMount() {
     fetchDevices();
   }
-  render() {
+  render(): ReactElement {
     const { lamps } = this.props;
     return (
-      <div style={Map.style.wrapper}>
+      <div style={DMap.style.wrapper}>
         {
           lamps.map((lamp, key) => <Lamp key={key} lamp={lamp}/>).toArray()
         }

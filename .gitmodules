@@ -1,3 +1,3 @@
-[submodule "dorfmap-websockets"]
-	path = dorfmap-websockets
-	url = https://github.com/chaosdorf/dorfmap-websockets.git
+[submodule "interfaces/pub"]
+	path = interfaces/pub
+	url = https://marudor@github.com/marudor/flowInterfaces.git

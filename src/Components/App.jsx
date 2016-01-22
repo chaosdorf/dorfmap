@@ -1,3 +1,4 @@
+/* @flow */
 import _ from 'lodash';
 import { createStore, bindActionCreators, compose, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
@@ -78,12 +79,12 @@ export default class App extends React.Component {
   static childContextTypes = {
     store: React.PropTypes.any,
   };
-  getChildContext() {
+  getChildContext(): Object {
     return {
       store,
     };
   }
-  render() {
+  render(): ReactElement {
     const monitor = IS_PRODUCTION ? null : renderDevtools();
     return (
       <div>
