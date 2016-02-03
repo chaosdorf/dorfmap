@@ -2,7 +2,7 @@
 import AboutHeader from './AboutHeader';
 import Map from './Map';
 import OptionDialogs from './OptionDialogs';
-import { Style } from 'Radium';
+import { Style } from 'radium';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 

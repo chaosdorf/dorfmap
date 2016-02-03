@@ -1,5 +1,5 @@
 /* @flow */
-import Radium from 'Radium';
+import Radium from 'radium';
 
 export default function(component: ReactClass): ReactClass {
   const config = {};
