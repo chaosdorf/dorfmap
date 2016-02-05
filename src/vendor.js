@@ -1,5 +1,5 @@
 /* @flow */
-import 'babel-regenerator-runtime';
+import 'babel-polyfill';
 import './babelHelper.js';
 import axios from 'axios';
 import { baseHost } from 'config';
