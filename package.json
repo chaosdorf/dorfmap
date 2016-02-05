@@ -26,7 +26,7 @@
     "babel-polyfill": "^6.3.14",
     "babel-regenerator-runtime": "^6.3.13",
     "babel-runtime": "5.8.34",
-    "bluebird": "3.2.1",
+    "bluebird": "3.2.2",
     "history": "^2.0.0-rc2",
     "immutable": "3.7.6",
     "lodash": "4.2.1",
