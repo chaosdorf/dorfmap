@@ -70,7 +70,7 @@
     "html-webpack-plugin": "1.7.0",
     "imports-loader": "0.6.5",
     "pre-commit": "1.1.2",
-    "redux-devtools": "3.1.0",
+    "redux-devtools": "3.1.1",
     "redux-devtools-dock-monitor": "1.0.1",
     "redux-devtools-log-monitor": "1.0.4",
     "style-loader": "0.13.0",
