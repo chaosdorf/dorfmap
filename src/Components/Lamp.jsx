@@ -74,7 +74,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
   state: State = {
     dialogOpen: false,
   };
-  lampCopy = _.cloneDeep(this.props.lamp);
+  lampCopy: Lamp = _.cloneDeep(this.props.lamp);
   getTooltipText(lamp: Lamp): ?ReactElement {
     let text = lamp.status_text;
     if (!text) {

@@ -15,6 +15,7 @@ interfaces/pub/
 
 [options]
 module.name_mapper='babel-regenerator-runtime$' -> 'ModuleStub'
+module.name_mapper='babel-polyfill$' -> 'ModuleStub'
 module.name_mapper='.*\.css$' -> 'ModuleStub'
 module.name_mapper='config$' -> 'config.development.js'
 module.system=haste

@@ -5,10 +5,15 @@ import OptionDialog from './OptionDialog';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
+type State = {
+  open?: bool,
+  title?: string,
+}
+
 /*::`*/
 @ConfiguredRadium
 /*::`*/
-export default class OptionDialogs extends React.Component {
+export default class OptionDialogs extends React.Component<void, void, State> {
   static style = {
     dialogs: {
       display: 'flex',
@@ -18,12 +23,12 @@ export default class OptionDialogs extends React.Component {
       width: 400,
     },
   };
-  actions = {
+  actions: Object = {
     actions: 0,
     presets: 1,
     layers: 2,
   };
-  state = {};
+  state: State = {};
   componentWillMount() {
     fetchMenues();
   }
