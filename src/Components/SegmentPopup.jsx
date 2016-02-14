@@ -81,16 +81,14 @@ export default class SegmentPopup extends React.Component<void, Props, State> {
           <RadioGroup selectedValue={value} ref="radio" onChange={this.handleRadioChange}>
             {Radio => (
             <div>
-                {_.map(modes, (name, id) => {
-                return (
+                {_.map(modes, (name, id) => (
               <div style={{ lineHeight: '32px' }} key={id}>
                 <label>
                   <Radio style={{ marginRight: 5 }} value={id}/>
                   {name}
                 </label>
               </div>
-              );
-              })}
+              ))}
               <div>
                 <Radio style={{ marginRight: 5 }} value="custom"/>
                 <TextField

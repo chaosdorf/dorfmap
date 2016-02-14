@@ -63,16 +63,14 @@ export default class BlinkenlightPopup extends React.Component<void, Props, Stat
               Radio => (
                 <div>
                   {
-                    _.map(actualPresets, (preset) => {
-                      return (
-                        <div style={{ lineHeight: '32px' }} key={preset.name}>
-                          <label>
-                            <Radio style={{ marginRight: 5 }} value={preset.raw_string}/>
-                            {preset.name}
-                          </label>
-                        </div>
-                      );
-                    })
+                    _.map(actualPresets, (preset) => (
+                      <div style={{ lineHeight: '32px' }} key={preset.name}>
+                        <label>
+                          <Radio style={{ marginRight: 5 }} value={preset.raw_string}/>
+                          {preset.name}
+                        </label>
+                      </div>
+                    ))
                   }
                 </div>
               )

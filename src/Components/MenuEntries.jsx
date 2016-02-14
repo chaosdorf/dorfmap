@@ -32,15 +32,15 @@ export default class MenuEntries extends React.Component {
       case 'actions':
       executeShortcut(entry);
       break;
+      default:
+      break;
     }
     this.props.closeFn();
   }
   render(): ReactElement {
-    const entries = _.map(this.props.entries, entry => {
-      return (
-        <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>
-      );
-    });
+    const entries = _.map(this.props.entries, entry => (
+      <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>
+    ));
     return (
       <div style={MenuEntries.style.wrapper}>{entries}</div>
     );

@@ -11,7 +11,7 @@ import React from 'react';
 /*::`*/
 export default class Dorfmap extends React.Component {
   static style = {
-    'html': {
+    html: {
       fontFamily: 'Roboto, sans-serif',
     },
     '.rc-tooltip-inner': {

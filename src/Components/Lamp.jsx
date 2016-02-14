@@ -18,6 +18,8 @@ function getImage(lamp: Object) {
     case '1':
     status = '_on';
     break;
+    default:
+    break;
   }
   let baseImage;
   switch (lamp.type) {

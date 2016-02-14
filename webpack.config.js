@@ -38,7 +38,7 @@ alias.config = config;
 module.exports = {
   devtool: node_env === 'production' ? undefined : 'cheap-module-source-map',
   eslint: {
-    configFile: './src/.eslintrc',
+    configFile: './.eslintrc',
     failOnWarning: true,
     failOnError: true
   },

@@ -1,4 +1,4 @@
-import 'imports?this=>window&define=>false!./primusClient';
+import 'imports?this=>window&define=>false!./external/primusClient';
 import { updateDevice } from './Actions/devices';
 
 const config = require(CONFIGPATH);

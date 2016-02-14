@@ -38,6 +38,7 @@ export default handleActions({
       device.status = payload.status;
       return updateDevices(state, { payload: device });
     }
+    return undefined;
   },
   CHANGE_LAYER: (state, { payload }) => ({
     layer: payload,
