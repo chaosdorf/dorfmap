@@ -67,7 +67,7 @@ global.store = store;
 
 reduxActions.createAction = (function(old) {
   return function(...args) {
-    const action = old.call(this, args);
+    const action = old.apply(this, args);
     return bindActionCreators(action, store.dispatch);
   };
 }(reduxActions.createAction));

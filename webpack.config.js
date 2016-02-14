@@ -38,8 +38,8 @@ alias.config = config;
 module.exports = {
   devtool: node_env === 'production' ? undefined : 'cheap-module-source-map',
   eslint: {
-    configFile: './.eslintrc',
-    failOnWarning: true,
+    configFile: './src/.eslintrc',
+    failOnWarning: false,
     failOnError: true
   },
   context: __dirname,
