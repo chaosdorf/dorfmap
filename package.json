@@ -35,7 +35,7 @@
     "babel-regenerator-runtime": "^6.5.0",
     "babel-runtime": "5.8.34",
     "bluebird": "^3.3.1",
-    "eslint": "^2.0.0",
+    "eslint": "^2.2.0",
     "history": "^2.0.0",
     "immutable": "3.7.6",
     "lodash": "^4.3.0",
