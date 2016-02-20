@@ -13,7 +13,7 @@ CFLAGS += -I. -std=gnu99 -Os -Wall -Wextra -pedantic
 CFLAGS += -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -fwhole-program -flto -mstrict-X
 
-AVRFLAGS += -U lfuse:w:0xff:m -U hfuse:w:0xd2:m -U efuse:w:0x07:m
+AVRFLAGS += -U lfuse:w:0xff:m -U hfuse:w:0xd2:m -U efuse:w:0xff:m
 AVRFLAGS += -U flash:w:main.hex
 # AVRFLAGS += -U eeprom:w:main.eep
 
