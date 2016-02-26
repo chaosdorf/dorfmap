@@ -3,8 +3,7 @@
   "plugins": [
     "transform-es2015-for-of",
     "transform-regenerator",
-    "transform-decorators-legacy",
-    "transform-es2015-modules-commonjs"
+    "transform-decorators-legacy"
   ],
   "env": {
     "production": {
