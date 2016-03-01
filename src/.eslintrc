@@ -1,7 +1,8 @@
 {
   "extends": "marudor",
   "env": {
-    "browser": true
+    "browser": true,
+    "node": true
   },
   "globals": {
     "IS_PRODUCTION": false,

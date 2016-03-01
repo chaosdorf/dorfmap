@@ -1,18 +1,12 @@
 <!DOCTYPE html>
-<html{% if(o.htmlWebpackPlugin.files.manifest) { %} manifest="{%= o.htmlWebpackPlugin.files.manifest %}"{% } %}>
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1, width=device-width">
-    <title>{%=o.htmlWebpackPlugin.options.title || 'Dorfmap'%}</title>
+    <title>Dorfmap</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,300,700,400italic">
-    {% if (o.htmlWebpackPlugin.files.favicon) { %}
-    <link rel="shortcut icon" href="{%=o.htmlWebpackPlugin.files.favicon%}">
-    {% } %}
   </head>
   <body>
     <div id="dorfmapWrapper"></div>
-    {% for (var chunk in o.htmlWebpackPlugin.files.chunks) { %}
-    <script src="{%=o.htmlWebpackPlugin.files.chunks[chunk].entry %}"></script>
-    {% } %}
   </body>
 </html>

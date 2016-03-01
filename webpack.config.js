@@ -11,7 +11,6 @@ var plugins = [
   new webpack.NoErrorsPlugin(),
   new HtmlWebpackPlugin({
     template: './src/index.html',
-    title: 'Dorfmap',
     minify: {}
   }),
   new webpack.DefinePlugin({
@@ -58,10 +57,10 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.css$/, loader: 'style!css!autoprefixer?browsers=last 2 version' },
+      { test: /\.css$/, loader: 'style!css' },
+      { test: /\.CSS.js$/, exclude: /(node_modules|dependency)/, loader: 'inline-css!babel' },
       { test: /^((?!CSS\.js$).)*(\.jsx?)$/,
-        exclude: /(node_modules|primusClient)/,
-        include: /src/,
+        exclude: /(node_modules|external)/,
         loader: 'babel!eslint',
       },
       { test: /\.(jpg|png|gif)$/, loader: 'file!image' },

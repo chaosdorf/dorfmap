@@ -6,7 +6,6 @@ import React from 'react';
 import reduxPromise from 'redux-promise';
 
 let store;
-let renderDevtools;
 
 const reduxActions = require('redux-actions');
 reduxActions.handleActions = (function(old) {
@@ -30,25 +29,8 @@ if (IS_PRODUCTION) {
     applyMiddleware(reduxPromise)
   )(createStore)(reducer);
 } else {
-  const DT = require('redux-devtools');
-  const DockMonitor = require('redux-devtools-dock-monitor').default;
-  const LogMonitor = require('redux-devtools-log-monitor').default;
-
-  const DevTools = DT.createDevTools(
-    <DockMonitor toggleVisibilityKey="H" changePositionKey="Q">
-      <LogMonitor/>
-    </DockMonitor>
-  );
-
-
   const createDevStore = compose(
     applyMiddleware(reduxPromise),
-    DevTools.instrument(),
-    DT.persistState(
-      window.location.href.match(
-        /[?&]debug_session=([^&]+)\b/
-      )
-    )
   )(createStore);
 
   store = createDevStore(reducer);
@@ -59,8 +41,6 @@ if (IS_PRODUCTION) {
       store.replaceReducer(nextRootReducer);
     });
   }
-
-  renderDevtools = () => <DevTools />;
 }
 
 global.store = store;
@@ -83,13 +63,11 @@ export default class App extends React.Component {
     };
   }
   render(): ReactElement {
-    const monitor = IS_PRODUCTION ? null : renderDevtools();
     return (
       <div>
         <Provider store={store}>
           <Dorfmap/>
         </Provider>
-        {monitor}
       </div>
     );
   }
