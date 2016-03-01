@@ -3,8 +3,12 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
 const process = require('process');
 var webpack = require('webpack');
+var fs = require('fs');
 
 var node_env = process.env.NODE_ENV || 'development';
+if (!fs.existsSync(`./src/config.${node_env}.js`)) {
+  node_env = 'development';
+}
 const configPath = `config.${node_env}.js`;
 
 var plugins = [
