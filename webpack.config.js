@@ -33,7 +33,8 @@ if (node_env === 'production') {
 }
 
 var alias = {
-  eventemitter: 'eventemitter3'
+  eventemitter: 'eventemitter3',
+  bluebird: 'bluebird/js/browser/bluebird.min.js',
 };
 var config = path.resolve('src/config.' + node_env + '.js');
 alias.config = config;

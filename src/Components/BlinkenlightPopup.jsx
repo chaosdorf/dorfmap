@@ -12,7 +12,7 @@ type Props = {
   lamp: Object,
   onRequestClose: Function,
   open: bool,
-  presets: Object,
+  presets?: Object,
 }
 
 type State = {

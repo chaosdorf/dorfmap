@@ -10,7 +10,7 @@ import React from 'react';
 
 type Props = {
   lamp: Object,
-  modes: Object,
+  modes?: Object,
   onRequestClose?: Function,
   open?: bool,
 }
@@ -34,7 +34,7 @@ export default class SegmentPopup extends React.Component {
     const lamp = this.props.lamp;
     let value = lamp.charwrite_text;
     let customTxt = '';
-    if (!nextProps.modes.hasOwnProperty(lamp.charwrite_text)) {
+    if (nextProps.modes && !nextProps.modes.hasOwnProperty(lamp.charwrite_text)) {
       value = 'custom';
       customTxt = lamp.charwrite_text;
     }

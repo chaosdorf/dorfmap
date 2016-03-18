@@ -8,7 +8,7 @@ import type { Map } from 'immutable';
 
 
 type Props = {
-  lamps: Map<string, Lamp>,
+  lamps?: Map<string, Lamp>,
 }
 
 /*::`*/
@@ -34,6 +34,9 @@ export default class DMap extends React.Component {
   }
   render() {
     const { lamps } = this.props;
+    if (!lamps) {
+      return null;
+    }
     return (
       <div style={DMap.style.wrapper}>
         {
