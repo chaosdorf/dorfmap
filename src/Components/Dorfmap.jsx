@@ -18,7 +18,7 @@ export default class Dorfmap extends React.Component {
       minHeight: 'initial',
     },
   };
-  render(): ReactElement {
+  render() {
     return (
       <div>
         <Style rules={Dorfmap.style}/>

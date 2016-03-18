@@ -62,7 +62,7 @@ export default class App extends React.Component {
       store,
     };
   }
-  render(): ReactElement {
+  render(): React.Element {
     return (
       <div>
         <Provider store={store}>

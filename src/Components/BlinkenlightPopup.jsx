@@ -1,10 +1,11 @@
 /* @flow */
 import _ from 'lodash';
+import { autobind } from 'core-decorators';
 import { connect } from 'react-redux';
-import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import { Dialog, FlatButton } from 'material-ui';
-import RadioGroup from 'react-radio-group';
+import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import ConfiguredRadium from '../configuredRadium';
+import RadioGroup from 'react-radio-group';
 import React from 'react';
 
 type Props = {
@@ -24,7 +25,8 @@ type State = {
   presets: state.presets,
 }))
 /*::`*/
-export default class BlinkenlightPopup extends React.Component<void, Props, State> {
+export default class BlinkenlightPopup extends React.Component {
+  props: Props;
   state: State = {};
   componentWillMount() {
     fetchPresets(this.props.lamp);
@@ -36,15 +38,17 @@ export default class BlinkenlightPopup extends React.Component<void, Props, Stat
       });
     }
   }
-  save = () => {
+  @autobind
+  save() {
     saveBlinkenlight(this.props.lamp, this.state.active);
     this.props.onRequestClose();
-  };
-  handleRadioChange = (value) => {
+  }
+  @autobind
+  handleRadioChange(value: bool) {
     this.setState({
       active: value,
     });
-  };
+  }
   render() {
     const { onRequestClose, open, presets, lamp } = this.props;
     const { active } = this.state;

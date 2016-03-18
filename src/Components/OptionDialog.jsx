@@ -1,9 +1,10 @@
 /* @flow */
 import _ from 'lodash';
+import { autobind } from 'core-decorators';
+import { connect } from 'react-redux';
+import { Tabs, Tab, Dialog } from 'material-ui';
 import MenuEntries from './MenuEntries';
 import React from 'react';
-import { Tabs, Tab, Dialog } from 'material-ui';
-import { connect } from 'react-redux';
 
 /*::`*/
 @connect(state => ({ menues: state.menues }))
@@ -18,11 +19,12 @@ export default class OptionDialog extends React.Component {
   static defaultProps = {
     open: false,
   };
-  handleTabChange = () => {
+  @autobind
+  handleTabChange() {
     setTimeout(() => {
       this.refs.optionDialog._positionDialog();
     }, 25);
-  };
+  }
   render() {
     const { menues, activeType, open } = this.props;
     const selectedIndex = _(menues).keys().indexOf(activeType);

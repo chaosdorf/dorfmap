@@ -17,7 +17,8 @@ type Props = {
 }))
 @ConfiguredRadium
 /*::`*/
-export default class DMap extends React.Component<void, Props, void> {
+export default class DMap extends React.Component {
+  props: Props;
   static style = {
     wrapper: {
       backgroundImage: 'url(/static/images/map.png)',
@@ -31,7 +32,7 @@ export default class DMap extends React.Component<void, Props, void> {
   componentWillMount() {
     fetchDevices();
   }
-  render(): ReactElement {
+  render() {
     const { lamps } = this.props;
     return (
       <div style={DMap.style.wrapper}>

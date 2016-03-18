@@ -20,7 +20,7 @@ export default class AboutHeader extends React.Component {
       margin: 5,
     },
   };
-  render(): ReactElement {
+  render(): React.Element {
     const style = AboutHeader.style;
     return (
       <div style={style.wrapper}>

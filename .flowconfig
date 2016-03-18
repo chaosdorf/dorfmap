@@ -11,10 +11,15 @@ src/
 
 [libs]
 interfaces/
-interfaces/pub/
+node_modules/iflow-radium/index.js.flow
+node_modules/iflow-lodash/index.js.flow
+node_modules/iflow-material-ui/index.js.flow
+node_modules/iflow-core-decorators/index.js.flow
+node_modules/iflow-react-redux/index.js.flow
+node_modules/iflow-react-router/index.js.flow
+
 
 [options]
-module.name_mapper='babel-regenerator-runtime$' -> 'ModuleStub'
 module.name_mapper='babel-polyfill$' -> 'ModuleStub'
 module.name_mapper='.*\.css$' -> 'ModuleStub'
 module.name_mapper='config$' -> 'config.development.js'

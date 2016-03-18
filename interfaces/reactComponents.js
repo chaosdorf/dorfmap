@@ -1,5 +1,7 @@
+import React from 'react';
+
 declare module 'react-radio-group' {
-  declare var exports: ReactClass;
+  declare var exports: React.Component;
 }
 
 declare module 'redux-promise' {

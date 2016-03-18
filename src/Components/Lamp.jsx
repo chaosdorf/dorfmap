@@ -1,5 +1,6 @@
 /* @flow */
 import _ from 'lodash';
+import { autobind } from 'core-decorators';
 import { toggleDevice, reduceDelay } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
@@ -77,7 +78,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
     dialogOpen: false,
   };
   lampCopy: Lamp = _.cloneDeep(this.props.lamp);
-  getTooltipText(lamp: Lamp): ?ReactElement {
+  getTooltipText(lamp: Lamp): ?React.Element {
     let text = lamp.status_text;
     if (!text) {
       return null;
@@ -89,7 +90,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
     return <div dangerouslySetInnerHTML={{ __html: text }}/>;
     /* eslint-enable react/no-danger */
   }
-  getDuplicate(lamp: Lamp, tooltipText: ?ReactElement) {
+  getDuplicate(lamp: Lamp, tooltipText: ?React.Element) {
     if (!lamp.duplicates || !lamp.duplicates.length) {
       return null;
     }
@@ -116,7 +117,8 @@ export default class LampComponent extends React.Component<void, Props, State> {
       </Tooltip>
     );
   }
-  toggle = () => {
+  @autobind
+  toggle() {
     const { lamp } = this.props;
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
       this.setState({
@@ -125,12 +127,13 @@ export default class LampComponent extends React.Component<void, Props, State> {
     } else if (lamp.rate_delay <= 0) {
       toggleDevice(lamp);
     }
-  };
-  handleRequestClose = () => {
+  }
+  @autobind
+  handleRequestClose() {
     this.setState({
       dialogOpen: false,
     });
-  };
+  }
   componentWillReceiveProps(props: Props) {
     const { lamp } = props;
     if (lamp.status === 1) {
@@ -141,7 +144,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
       setTimeout(() => reduceDelay(lamp, false), 1000);
     }
   }
-  render(): ReactElement {
+  render(): React.Element {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
     const style = [LampComponent.style.lamp.normal, {

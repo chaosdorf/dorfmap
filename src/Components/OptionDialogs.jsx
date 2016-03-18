@@ -1,8 +1,9 @@
 /* @flow */
-import { RaisedButton } from 'material-ui';
+import { autobind } from 'core-decorators';
 import { fetchMenues } from '../Actions/menu';
-import OptionDialog from './OptionDialog';
+import { RaisedButton } from 'material-ui';
 import ConfiguredRadium from 'configuredRadium';
+import OptionDialog from './OptionDialog';
 import React from 'react';
 
 type State = {
@@ -13,7 +14,7 @@ type State = {
 /*::`*/
 @ConfiguredRadium
 /*::`*/
-export default class OptionDialogs extends React.Component<void, void, State> {
+export default class OptionDialogs extends React.Component {
   static style = {
     dialogs: {
       display: 'flex',
@@ -52,9 +53,10 @@ export default class OptionDialogs extends React.Component<void, void, State> {
       open: true,
     });
   }
-  handleRequestClose = () => {
+  @autobind
+  handleRequestClose() {
     this.setState({ open: false });
-  };
+  }
   render() {
     return (
       <div>

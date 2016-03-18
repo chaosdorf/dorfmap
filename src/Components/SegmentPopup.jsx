@@ -1,5 +1,6 @@
 /* @flow */
 import _ from 'lodash';
+import { autobind } from 'core-decorators';
 import { connect } from 'react-redux';
 import { Dialog, FlatButton, TextField } from 'material-ui';
 import { fetchSegmentModes, changeSegment } from '../Actions/devices';
@@ -25,7 +26,8 @@ type State = {
 }))
 @ConfiguredRadium
 /*::`*/
-export default class SegmentPopup extends React.Component<void, Props, State> {
+export default class SegmentPopup extends React.Component {
+  props: Props;
   state: State = {
   };
   componentWillReceiveProps(nextProps: Props) {
@@ -44,7 +46,8 @@ export default class SegmentPopup extends React.Component<void, Props, State> {
   componentWillMount() {
     fetchSegmentModes();
   }
-  save = async () => {
+  @autobind
+  async save(): Promise {
     let mode = this.state.value;
     if (mode === 'custom') {
       mode = this.state.customTxt;
@@ -53,22 +56,25 @@ export default class SegmentPopup extends React.Component<void, Props, State> {
     if (this.props.onRequestClose) {
       this.props.onRequestClose();
     }
-  };
-  setCustom = () => {
+  }
+  @autobind
+  setCustom() {
     this.setState({
       value: 'custom',
     });
-  };
-  handleChange = (e) => {
+  }
+  @autobind
+  handleChange(e: SyntheticEvent) {
     this.setState({
       customTxt: e.target.value,
     });
-  };
-  handleRadioChange = (value) => {
+  }
+  @autobind
+  handleRadioChange(value: any) {
     this.setState({
       value,
     });
-  };
+  }
   render() {
     const { open, modes, onRequestClose } = this.props;
     const { value, customTxt } = this.state;
