@@ -49,6 +49,8 @@ hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light ratelimit=10 watts=30       Deckenlicht
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light ratelimit=90 layer=caution watts=348  Putzlicht
+hackcenter_ws2812b    580   60    0    0 feedback1/8 \
+  type=light watts=5 default=1 Chaosdorf-Ossendorf
 hackcenter_regal1     480   60    0    0 feedback5/1 \
   type=light watts=1     LED-Streifen Regal 1 (links)
 hackcenter_regal2     515   60    0    0 feedback5/3 \
@@ -89,7 +91,7 @@ hackcenter_7seg1     1010  200    0    0 feedback1/7segment2.mode \
   type=charwrite area=Hackcenter default=power          4x7Segment links
 hackcenter_7seg2     1010  232    0    0 feedback1/7segment3.mode \
   type=charwrite area=Hackcenter default=*avg           4x7Segment rechts
-hackcenter_regal      600   60    0    0 feedback4 \
+hackcenter_regal      610   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3 address=8 RGB-Streifen
 
 
