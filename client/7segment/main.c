@@ -57,7 +57,7 @@ int main (void)
 		if (++blnkstep == 16384) {
 			for (i = 0; i < 6; i++)
 				switchbuf[i] = dispbuf[i];
-			for (i = 4; i < 48; i++)
+			for (i = 6; i < 48; i++)
 				dispbuf[i - 6] = dispbuf[i];
 			for (i = 42; i < 48; i++)
 				dispbuf[i] = switchbuf[i - 42];
