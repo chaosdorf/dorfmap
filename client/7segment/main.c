@@ -65,8 +65,8 @@ int main (void)
 		}
 
 		PORTB = 0xff;
-		PORTA = 0;
-		PORTD = _BV(PD0) | _BV(PD2) | _BV(PD3);
+		PORTA = _BV(PA0);
+		PORTD = _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[0];
 
 		for (i = 0; i < 16; i++)
@@ -74,7 +74,7 @@ int main (void)
 
 		PORTB = 0xff;
 		PORTA = 0;
-		PORTD = _BV(PD1) | _BV(PD2) | _BV(PD3);
+		PORTD = _BV(PD6) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[1];
 
 		for (i = 0; i < 16; i++)
@@ -82,7 +82,7 @@ int main (void)
 
 		PORTB = 0xff;
 		PORTA = 0;
-		PORTD = _BV(PD4) | _BV(PD2) | _BV(PD3);
+		PORTD = _BV(PD1) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[2];
 
 		for (i = 0; i < 16; i++)
@@ -90,7 +90,7 @@ int main (void)
 
 		PORTB = 0xff;
 		PORTA = 0;
-		PORTD = _BV(PD5) | _BV(PD2) | _BV(PD3);
+		PORTD = _BV(PD0) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[3];
 
 		for (i = 0; i < 16; i++)
@@ -98,15 +98,15 @@ int main (void)
 
 		PORTB = 0xff;
 		PORTA = 0;
-		PORTD = _BV(PD6) | _BV(PD2) | _BV(PD3);
+		PORTD = _BV(PD5) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[4];
 
 		for (i = 0; i < 16; i++)
 			asm("wdr");
 
 		PORTB = 0xff;
-		PORTA = _BV(PA0);
-		PORTD = _BV(PD2) | _BV(PD3);
+		PORTA = 0;
+		PORTD = _BV(PD4) | _BV(PD2) | _BV(PD3);
 		PORTB = ~dispbuf[5];
 
 		for (i = 0; i < 16; i++)
