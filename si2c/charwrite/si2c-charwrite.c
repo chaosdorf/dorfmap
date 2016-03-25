@@ -12,7 +12,7 @@
  */
 static const uint8_t firstseg[] = {
 	0x00, // space
-	0x88, // !
+	0x11, // !
 	0x09, // "
 	0x04, // #
 	0x04, // $
@@ -69,7 +69,7 @@ static const uint8_t firstseg[] = {
 	0xe2, // w
 	0xac, // X
 	0x2d, // y
-	0xb7, // Z
+	0xc7, // z
 };
 
 char sdastr[64];
@@ -96,59 +96,17 @@ static void writebyte(unsigned char byte)
 	}
 }
 
-static unsigned char firsttofirst(unsigned char byte)
+static unsigned char fixup(unsigned char byte)
 {
 	return (
-			((byte & 0x01) << 3) |
-			((byte & 0x02) << 1) |
+			((byte & 0x01) << 6) |
+			((byte & 0x02) << 6) |
 			((byte & 0x04) >> 1) |
-			((byte & 0x08) >> 3) |
-			((byte & 0x10) << 3) |
-			((byte & 0x20) << 1) |
-			((byte & 0x40) >> 1) |
-			((byte & 0x80) >> 3)
-	);
-}
-
-static unsigned char firsttosecond(unsigned char byte)
-{
-	return (
-			((byte & 0x01) << 2) |
-			((byte & 0x02) >> 0) |
-			((byte & 0x04) << 4) |
-			((byte & 0x08) >> 3) |
-			((byte & 0x10) >> 1) |
-			((byte & 0x20) << 2) |
-			((byte & 0x40) >> 1) |
-			((byte & 0x80) >> 3)
-	);
-}
-
-static unsigned char firsttothird(unsigned char byte)
-{
-	return (
-			((byte & 0x01) << 3) |
-			((byte & 0x02) << 1) |
-			((byte & 0x04) >> 1) |
-			((byte & 0x08) >> 3) |
-			((byte & 0x10) << 3) |
-			((byte & 0x20) << 1) |
-			((byte & 0x40) >> 1) |
-			((byte & 0x80) >> 3)
-	);
-}
-
-static unsigned char firsttofourth(unsigned char byte)
-{
-	return (
-			((byte & 0x01) << 2) |
-			((byte & 0x02) << 0) |
-			((byte & 0x04) << 4) |
-			((byte & 0x08) >> 3) |
-			((byte & 0x10) >> 1) |
-			((byte & 0x20) << 2) |
-			((byte & 0x40) >> 1) |
-			((byte & 0x80) >> 3)
+			((byte & 0x08) >> 1) |
+			((byte & 0x10) >> 4) |
+			((byte & 0x20) << 0) |
+			((byte & 0x40) >> 2) |
+			((byte & 0x80) >> 4)
 	);
 }
 
@@ -156,10 +114,10 @@ int main(int argc, char **argv)
 {
 	int input;
 	unsigned char charoffset = 0;
-	unsigned char buf[32];
-	unsigned char hasdot[32];
+	unsigned char buf[48];
+	unsigned char hasdot[48];
 
-	int sdapin = 0, sclpin = 0, addrhi = 0, addrlo = 0, i;
+	unsigned int sdapin = 0, sclpin = 0, addrhi = 0, addrlo = 0, i;
 
 	if (argc < 2)
 		errx(1, "usage: si2c-charwrite <sdapin> <sclpin>");
@@ -172,25 +130,21 @@ int main(int argc, char **argv)
 	snprintf(sdastr, 64, "/sys/class/gpio/gpio%d/value", sdapin);
 	snprintf(sclstr, 64, "/sys/class/gpio/gpio%d/value", sclpin);
 
-	for (i = 0; i < 32; i++)
+	for (i = 0; i < sizeof(hasdot); i++)
 		hasdot[i] = 0;
 
-	sem_init(12);
+	em_init(12);
 
 	while ((input = getc(stdin)) != EOF) {
 		if (input == '\n') {
-			for (i = charoffset; i < 32; i++) {
+			for (i = charoffset; i < sizeof(buf); i++) {
 				buf[i] = buf[i - charoffset];
 				hasdot[i] = hasdot[i - charoffset];
 			}
 
-			sem_enter();
-			for (i = 0; i < 8; i++) {
-				writebyte(firsttofourth(firstseg[buf[3 + (4 * i)]] | hasdot[3 + (4 * i)] ));
-				writebyte(firsttothird(firstseg[buf[2 + (4 * i)]] | hasdot[2 + (4 * i)] ));
-				writebyte(firsttosecond(firstseg[buf[1 + (4 * i)]] | hasdot[1 + (4 * i)] ));
-				writebyte(firsttofirst(firstseg[buf[0 + (4 * i)]] | hasdot[0 + (4 * i)] ));
-			}
+			for (i = 0; i < sizeof(buf); i++)
+				writebyte(fixup(firstseg[buf[i]] | hasdot[i]));
+
 			writebyte(addrhi);
 			writebyte(addrlo);
 			writepin(sdastr, 1);
@@ -200,7 +154,7 @@ int main(int argc, char **argv)
 
 			sem_leave();
 
-			for (i = 0; i < 32; i++)
+			for (i = 0; i < sizeof(hasdot); i++)
 				hasdot[i] = 0;
 
 		}
@@ -219,7 +173,7 @@ int main(int argc, char **argv)
 				input -= 0x20;
 
 				buf[charoffset] = input;
-				charoffset = (charoffset + 1) % 32;
+				charoffset = (charoffset + 1) % sizeof(buf);
 			}
 
 		}
