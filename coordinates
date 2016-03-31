@@ -43,8 +43,12 @@ hackcenter_3spot      580  125    0    0 feedback1/12 \
   type=light watts=105      Hackcenter Spiegelsäule
 hackcenter_w          686  280    0    0 feedback1/4 \
   type=light ratelimit=5 watts=20       Tischreihe (Spots)
-hackcenter_blau       531  376  890  390 feedback1/5 \
-  type=light ratelimit=7 watts=24       Tischreihe
+hackcenter_blau       620  350    0    0 feedback9/bin6 \
+  type=light ratelimit=1 watts=24       LED-Streifen blau
+hackcenter_weiss      580  350    0    0 feedback9/bin4 \
+  type=light ratelimit=1 watts=24       LED-Streifen kaltweiß
+hackcenter_psudecke   540  350    0    0 feedback1/5 \
+  type=switch default=1 ratelimit=7 watts=1       LED-Streifen Netzteil
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light ratelimit=10 watts=30       Deckenlicht
 hackcenter_roehre     600  180    0    0 feedback1/7 \
@@ -67,12 +71,10 @@ hackcenter_regal7     740   60    0    0 feedback5/4 \
   type=light watts=1     LED-Streifen Regal 7
 hackcenter_regal8     775   60    0    0 feedback5/2 \
   type=light watts=1     LED-Streifen Regal 8 (rechts)
-ubercharger           883  290    0    0 feedback1/10 \
-  type=switch area=Hackcenter inverted=1 user_readonly=1 default=1 USB-Ladegerät
+ubercharger           883  290    0    0 feedback9/bin5 \
+  type=switch inverted=1 user_readonly=1 default=1 USB-Ladegerät
 
 [layer=control ratelimit=2 area=Nomspace]
-borg16                1280  205   0    0 feedback6/bin7 \
-  type=light watts=6 default=1 Borg16
 durchgang             1400  180   0    0 feedback6/bin3 \
   type=light watts=6       Durchgang Cave
 
