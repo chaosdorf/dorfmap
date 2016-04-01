@@ -25,11 +25,7 @@ function getImage(lamp: Object) {
   let baseImage;
   switch (lamp.type) {
     case 'light':
-    if (lamp.name === 'hackcenter_blau') {
-      baseImage = 'hackcenter_blau';
-    } else {
-      baseImage = 'light';
-    }
+    baseImage = 'light';
     break;
     case 'light_au':
     if (lamp.auto) {
