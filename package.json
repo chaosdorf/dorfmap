@@ -73,7 +73,7 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "css-loader": "0.23.1",
-    "eslint": "^2.0.0",
+    "eslint": "^2.3.0",
     "eslint-config-marudor": "^1.0.7",
     "eslint-loader": "1.3.0",
     "eslint-plugin-flow-vars": "^0.2.0",
