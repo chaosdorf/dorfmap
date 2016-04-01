@@ -133,7 +133,7 @@ int main(int argc, char **argv)
 	for (i = 0; i < sizeof(hasdot); i++)
 		hasdot[i] = 0;
 
-	em_init(12);
+	sem_init(12);
 
 	while ((input = getc(stdin)) != EOF) {
 		if (input == '\n') {
