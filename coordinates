@@ -1,5 +1,5 @@
 [layer=control ratelimit=2 area=Schleuse]
-logo                  224  460    0    0 feedback2/pwm2 \
+logo                  224  460    0    0 feedback7/pwm0 \
   type=light_au watts=1       Chaosdorf-Logo
 lounge_t2c            150  520    0    0 feedback3/7   \
   type=light watts=35           Fahrrad-Aufhänger
@@ -9,7 +9,7 @@ schaufenster            5  595    0    0 feedback2/bin1 \
   type=light_au watts=5       Schaufenster außen
 
 [layer=control ratelimit=2 area=Treppe]
-treppe_w              350  525    0    0 feedback2/bin6 \
+treppe_w              350  525    0    0 feedback7/bin4 \
   type=light watts=10           Deckenlicht
 treppe_bild           350  590    0    0 feedback7/bin5 \
   type=light watts=5            Bild
