@@ -4,15 +4,12 @@
 #include <stdlib.h>
 
 /*
- * PD4: SCL out
- * PD5: SDA out
- * PD6: binary out
+ * PA0, PA1: status LED
+ * PD0: SDA out
+ * PD1: SCL out
+ * PD4, PD6: binary out
  * PB0, PB1, PB5, PB6, PB7: binary out
- * PB2, PB3, PB4: analog out (pwm)
- */
-
-/*
- * TODO move SDA out to PD0 and SCL out to PD1
+ * PB2, PB3, PB4, PD5: analog out (pwm)
  */
 
 /*
@@ -24,10 +21,11 @@
 #define DATA_HI ( ( PIND & _BV(PD3) ) == 0 )
 #define DATA_BIT ( ( ~PIND & _BV(PD3) ) >> PD3 )
 
-#define MYADDRESS (0x000b)
+#define MYADDRESS (0x000f)
 
-volatile uint8_t binary_out = 0;
-volatile uint8_t pwm[3];
+volatile uint8_t binary_1 = 0;
+volatile uint8_t binary_2 = 0;
+volatile uint8_t pwm[4];
 volatile uint16_t address;
 
 int main (void)
@@ -41,6 +39,7 @@ int main (void)
 
 	ACSR |= _BV(ACD);
 
+	DDRA = _BV(0) | _BV(1);
 	DDRB = 0xff;
 	DDRD = _BV(DDD0) | _BV(DDD1) | _BV(DDD4) | _BV(DDD5) | _BV(DDD6);
 
@@ -50,7 +49,7 @@ int main (void)
 	MCUCR |= _BV(ISC10) | _BV(ISC00);
 	GIMSK |= _BV(INT1)  | _BV(INT0);
 
-	/* disabled fast PWM on OC0A, interrupt on overflow*/
+	/* disabled fast PWM on OC0A and OC0B, interrupt on overflow*/
 	TCCR0A = _BV(WGM01) | _BV(WGM00);
 	TCCR0B = _BV(CS00);
 	TIMSK = _BV(TOIE0);
@@ -79,6 +78,11 @@ static void apply_pwm(void)
 	else
 		TCCR0A &= ~_BV(COM0A1);
 
+	if (OCR0B)
+		TCCR0A |= _BV(COM0B1);
+	else
+		TCCR0A &= ~_BV(COM0B1);
+
 	if (OCR1A)
 		TCCR1A |= _BV(COM1A1);
 	else
@@ -93,32 +97,45 @@ static void apply_pwm(void)
 ISR(INT0_vect)
 {
 	if (CLOCK_HI) {
-		PORTD |= _BV(PD4);
+		PORTD |= _BV(PD1);
 
 		// rising clock: read data
-		binary_out = (binary_out << 1) | (pwm[2] >> 7);
+		binary_1 = (binary_1 << 1) | (binary_2 >> 7);
+		binary_2 = (binary_2 << 1) | (pwm[3] >> 7);
+		pwm[3] = (pwm[3] << 1) | (pwm[2] >> 7);
 		pwm[2] = (pwm[2] << 1) | (pwm[1] >> 7);
 		pwm[1] = (pwm[1] << 1) | (pwm[0] >> 7);
 		pwm[0] = (pwm[0] << 1) | (address >> 15);
 		address = (address << 1) | DATA_BIT;
+
+		if (DATA_BIT != 0)
+			PORTA |= _BV(PA1);
+		else
+			PORTA &= ~_BV(PA1);
 	}
 	else {
-		PORTD &= ~_BV(PD4);
+		PORTD &= ~_BV(PD1);
 
 		if (DATA_HI && (address == MYADDRESS)) {
 			// falling clock, data is high: end of transmission
 
-			PORTB = binary_out
+			PORTB = binary_1
 				& ( _BV(0) | _BV(1) | _BV(5) | _BV(6) | _BV(7) );
 
-			if (binary_out & _BV(3))
+			if (binary_2 & _BV(4) )
+				PORTD |= _BV(PD4);
+			else
+				PORTD &= ~_BV(PD4);
+
+			if (binary_2 & _BV(6) )
 				PORTD |= _BV(PD6);
 			else
 				PORTD &= ~_BV(PD6);
 
 			OCR0A = pwm[0];
-			OCR1A = pwm[1];
-			OCR1B = pwm[2];
+			OCR0B = pwm[1];
+			OCR1A = pwm[2];
+			OCR1B = pwm[3];
 			apply_pwm();
 		}
 	}
@@ -127,12 +144,17 @@ ISR(INT0_vect)
 ISR(INT1_vect)
 {
 	if (DATA_HI)
-		PORTD |= _BV(PD5);
+		PORTD |= _BV(PD0);
 	else
-		PORTD &= ~_BV(PD5);
+		PORTD &= ~_BV(PD0);
 }
 
 ISR(TIMER0_OVF_vect)
 {
+	static uint16_t cnt = 0;
+	if (++cnt == 0x9fff) {
+		PINA |= _BV(PA0);
+		cnt = 0;
+	}
 	asm("wdr");
 }
