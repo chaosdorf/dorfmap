@@ -142,6 +142,7 @@ int main(int argc, char **argv)
 				hasdot[i] = hasdot[i - charoffset];
 			}
 
+			sem_enter();
 			for (i = 0; i < sizeof(buf); i++)
 				writebyte(fixup(firstseg[buf[i]] | hasdot[i]));
 
