@@ -21,16 +21,6 @@ for i in $(seq 1 13); do
 	chmod 666 /tmp/feedback1/$i
 done
 
-mkdir -p /tmp/feedback2
-chmod 777 /tmp/feedback2
-for i in bin1 bin3 bin5 bin6 pwm0 pwm1 pwm2; do
-	echo 0 > /tmp/feedback2/$i
-	chmod 666 /tmp/feedback2/$i
-done
-
-# circuit breaker feedback1
-echo 1 > /tmp/feedback2/bin3
-
 mkdir -p /tmp/feedback3
 chmod 777 /tmp/feedback3
 for i in $(seq 1 12); do
@@ -78,6 +68,13 @@ chmod 777 /tmp/feedback9
 for i in bin0 bin1 bin2 bin3 bin4 bin5 bin6 bin7 bin8 pwm0 pwm1 pwm2 pwm3; do
 	echo 0 > /tmp/feedback9/$i
 	chmod 666 /tmp/feedback9/$i
+done
+
+mkdir -p /tmp/feedback10
+chmod 777 /tmp/feedback10
+for i in bin0 bin1 bin2 bin3 bin4 bin5 bin6 pwm0 pwm1 pwm2 pwm3; do
+	echo 0 > /tmp/feedback10/$i
+	chmod 666 /tmp/feedback10/$i
 done
 
 mkdir -p /tmp/helios1
