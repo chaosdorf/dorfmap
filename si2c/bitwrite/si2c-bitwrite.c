@@ -4,8 +4,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../semop/semctl.c"
-
 #define BUFSIZE 64
 
 void writepin(char *pinstr, char val)
@@ -38,8 +36,6 @@ int main(int argc, char **argv)
 	snprintf(sdastr, 64, "/sys/class/gpio/gpio%d/value", sdapin);
 	snprintf(sclstr, 64, "/sys/class/gpio/gpio%d/value", sclpin);
 
-	sem_init(12);
-
 	while (fgets(line, BUFSIZE, stdin) != NULL) {
 		if (sscanf(line, "%hi\n", &number) == 1) {
 			if (buf_pos <= BUFSIZE) {
@@ -47,7 +43,7 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	sem_enter();
+
 	for (i = 0; i < buf_pos; i++) {
 		writepin(sdastr, 0);
 		writepin(sclstr, 0);
@@ -57,6 +53,6 @@ int main(int argc, char **argv)
 	writepin(sdastr, 1);
 	writepin(sclstr, 0);
 	writepin(sdastr, 0);
-	sem_leave();
+
 	return 0;
 }

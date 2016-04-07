@@ -4,8 +4,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "../semop/semctl.c"
-
 #define BUFSIZE 64
 
 char sdastr[64];
@@ -25,7 +23,7 @@ void push_data(short int *buf, unsigned char buf_pos)
 {
 	short int i, byte;
 	short int number;
-	sem_enter();
+
 	for (byte = 0; byte < buf_pos; byte++) {
 		number = buf[byte];
 		if ((number >= 0) && (number <= 255)) {
@@ -40,8 +38,6 @@ void push_data(short int *buf, unsigned char buf_pos)
 	writepin(sdastr, 1);
 	writepin(sclstr, 0);
 	writepin(sdastr, 0);
-	sem_leave();
-
 }
 
 int main(int argc, char **argv)
@@ -61,8 +57,6 @@ int main(int argc, char **argv)
 
 	snprintf(sdastr, 64, "/sys/class/gpio/gpio%d/value", sdapin);
 	snprintf(sclstr, 64, "/sys/class/gpio/gpio%d/value", sclpin);
-
-	sem_init(12);
 
 	while (fgets(line, BUFSIZE, stdin) != NULL) {
 		if (sscanf(line, "%hi\n", &number) == 1) {
