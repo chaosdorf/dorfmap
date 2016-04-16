@@ -87,7 +87,7 @@ werkstatt_strobo      1752  84    0    0 feedback8/bin4 \
 [layer=control]
 lounge_rgb              5   70    0    0 donationprint2 \
   type=blinkenlight area=Lounge watts=7 address=1 RGB-Streifen
-hackcenter_regal      610   60    0    0 feedback4 \
+hackcenter_regal      600   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3 address=8 RGB-Streifen
 
 
