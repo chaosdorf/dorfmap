@@ -5,6 +5,11 @@
 #include <unistd.h>
 #include <inttypes.h>
 
+#define OUTPUT_GPIO 1
+#define OUTPUT_BITSTRING 2
+
+#define OUTMODE OUTPUT_GPIO
+
 /*
  * starting at 32
  */
@@ -87,10 +92,14 @@ static void writebyte(unsigned char byte)
 {
 	signed char i;
 	for (i = 7; i >= 0; i--) {
+#if OUTMODE == OUTPUT_BITSTRING
+		putchar((byte & (1 << i)) ? '1' : '0');
+#elif OUTMODE == OUTPUT_GPIO
 		writepin(sdastr, 0);
 		writepin(sclstr, 0);
 		writepin(sdastr, (byte & (1 << i)) ? 1 : 0);
 		writepin(sclstr, 1);
+#endif
 	}
 }
 
@@ -143,9 +152,11 @@ int main(int argc, char **argv)
 
 			writebyte(addrhi);
 			writebyte(addrlo);
+#if OUTMODE == OUTPUT_GPIO
 			writepin(sdastr, 1);
 			writepin(sclstr, 0);
 			writepin(sdastr, 0);
+#endif
 			charoffset = 0;
 
 			for (i = 0; i < sizeof(hasdot); i++)
