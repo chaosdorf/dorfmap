@@ -42,7 +42,9 @@ export default class MenuEntries extends React.Component {
       <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>
     ));
     return (
-      <div style={MenuEntries.style.wrapper}>{entries}</div>
+      <div style={MenuEntries.style.wrapper}>
+        {entries}
+      </div>
     );
   }
 }

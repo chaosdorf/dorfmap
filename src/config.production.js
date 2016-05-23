@@ -1,2 +1,2 @@
 export const baseHost = '';
-export const primusLocation = 'http//dorfmapserver:3001';
+export const primusLocation = 'http://dorfmapserver.chaosdorf.space:3001';

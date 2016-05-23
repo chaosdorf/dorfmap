@@ -6,9 +6,7 @@ import { Style } from 'radium';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-/*::`*/
 @ConfiguredRadium
-/*::`*/
 export default class Dorfmap extends React.Component {
   static style = {
     html: {

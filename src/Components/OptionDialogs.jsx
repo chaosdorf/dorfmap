@@ -21,7 +21,7 @@ export default class OptionDialogs extends React.Component {
       justifyContent: 'space-between',
       marginTop: 5,
       marginLeft: 5,
-      width: 400,
+      width: '70%',
     },
   };
   actions: Object = {
@@ -57,6 +57,15 @@ export default class OptionDialogs extends React.Component {
   handleRequestClose() {
     this.setState({ open: false });
   }
+  toMete() {
+    window.open('https://mete.chaosdorf.space');
+  }
+  toLabello() {
+    window.open('http://labello.chaosdorf.space');
+  }
+  toMPD() {
+    window.open('https://mpd.chaosdorf.space');
+  }
   render() {
     return (
       <div>
@@ -70,6 +79,9 @@ export default class OptionDialogs extends React.Component {
           <RaisedButton
             onTouchTap={this.handleClick.bind(this, this.actions.layers)}
             label="Layers"/>
+          <RaisedButton label="Mete" onClick={this.toMete}/>
+          <RaisedButton label="Labello" onClick={this.toLabello}/>
+          <RaisedButton label="MPD" onClick={this.toMPD}/>
         </div>
 
         <OptionDialog

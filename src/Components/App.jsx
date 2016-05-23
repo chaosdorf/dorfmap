@@ -4,6 +4,8 @@ import { createStore, bindActionCreators, compose, applyMiddleware } from 'redux
 import { Provider } from 'react-redux';
 import React from 'react';
 import reduxPromise from 'redux-promise';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 let store;
 
@@ -64,11 +66,13 @@ export default class App extends React.Component {
   }
   render(): React.Element {
     return (
-      <div>
-        <Provider store={store}>
-          <Dorfmap/>
-        </Provider>
-      </div>
+      <MuiThemeProvider muiTheme={getMuiTheme()}>
+        <div>
+          <Provider store={store}>
+            <Dorfmap/>
+          </Provider>
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
