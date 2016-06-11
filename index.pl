@@ -14,7 +14,7 @@ use List::Util qw(first sum);
 use Mojolicious::Lite;
 use Storable qw(retrieve lock_nstore lock_retrieve);
 
-no if $] >= 5.018, warnings => "experimental::smartmatch";
+no if $] >= 5.018, warnings => 'experimental::smartmatch';
 
 my $locations   = {};
 my $coordinates = {};
@@ -156,6 +156,20 @@ sub set_device {
 	# do not allow users to do anything with a device marked as user_readonly
 	if ( $coordinates->{$id}->{user_readonly} and not $opt{force} ) {
 		return 1;
+	}
+
+	if ( $coordinates->{$id}->{conflicts} and $value == 1 ) {
+		for my $dev ( split( /,/, $coordinates->{$id}->{conflicts} ) ) {
+			if ( get_device($dev) == 1 ) {
+				set_device( $dev, 0 );
+			}
+		}
+	}
+
+	if ( $coordinates->{$id}->{psu} and $value == 1 ) {
+		if ( get_device( $coordinates->{$id}->{psu} ) == 0 ) {
+			set_device( $coordinates->{$id}->{psu}, 1, force => 1 );
+		}
 	}
 
 	if ( $coordinates->{$id}->{inverted} ) {
