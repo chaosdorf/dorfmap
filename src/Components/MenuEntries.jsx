@@ -37,7 +37,7 @@ export default class MenuEntries extends React.Component {
     }
     this.props.closeFn();
   }
-  render(): React.Element {
+  render() {
     const entries = _.map(this.props.entries, entry => (
       <FlatButton key={entry} label={entry} onClick={this.handleClick.bind(this, entry)}/>
     ));

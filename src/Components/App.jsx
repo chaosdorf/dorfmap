@@ -12,6 +12,7 @@ let store;
 const reduxActions = require('redux-actions');
 reduxActions.handleActions = (function(old) {
   return function(reducerMap: Object, ...rest) {
+    // $FlowFixMe
     _.each(reducerMap, (r, index) => {
       reducerMap[index] = function(state, action) {
         const newState = r(state, action);
@@ -33,6 +34,7 @@ if (IS_PRODUCTION) {
 } else {
   const createDevStore = compose(
     applyMiddleware(reduxPromise),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore);
 
   store = createDevStore(reducer);
@@ -64,7 +66,7 @@ export default class App extends React.Component {
       store,
     };
   }
-  render(): React.Element {
+  render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div>

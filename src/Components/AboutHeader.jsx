@@ -2,9 +2,7 @@
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
-/*::`*/
 @ConfiguredRadium
-/*::`*/
 export default class AboutHeader extends React.Component {
   static style = {
     wrapper: {
@@ -20,7 +18,7 @@ export default class AboutHeader extends React.Component {
       margin: 5,
     },
   };
-  render(): React.Element {
+  render() {
     const style = AboutHeader.style;
     return (
       <div style={style.wrapper}>

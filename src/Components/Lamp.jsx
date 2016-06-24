@@ -49,9 +49,7 @@ type State = {
   dialogOpen: bool,
 }
 
-/*::`*/
 @ConfiguredRadium
-/*::`*/
 export default class LampComponent extends React.Component<void, Props, State> {
   static propTypes = {
     lamp: React.PropTypes.object.isRequired,
@@ -74,7 +72,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
     dialogOpen: false,
   };
   lampCopy: Lamp = _.cloneDeep(this.props.lamp);
-  getTooltipText(lamp: Lamp): ?React.Element {
+  getTooltipText(lamp: Lamp): ?React.Element<*> {
     let text = lamp.status_text;
     if (!text) {
       return null;
@@ -86,7 +84,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
     return <div dangerouslySetInnerHTML={{ __html: text }}/>;
     /* eslint-enable react/no-danger */
   }
-  getDuplicate(lamp: Lamp, tooltipText: ?React.Element) {
+  getDuplicate(lamp: Lamp, tooltipText: ?React.Element<*>) {
     if (!lamp.duplicates || !lamp.duplicates.length) {
       return null;
     }
@@ -136,11 +134,22 @@ export default class LampComponent extends React.Component<void, Props, State> {
       /* eslint-disable camelcase */
       lamp.rate_delay = 0;
     } else if (lamp.rate_delay > 0) {
-      /* eslint-enable camelcase */
-      setTimeout(() => reduceDelay(lamp, false), 1000);
+      this.reduceDelay(lamp);
     }
   }
-  render(): React.Element {
+  reduceDelay(lamp: Lamp) {
+    setTimeout(() => {
+      lamp.rate_delay -= 1;
+      this.forceUpdate();
+      if (lamp.rate_delay <= 0) {
+        /* eslint-enable camelcase */
+        reduceDelay(lamp, false);
+      } else {
+        this.reduceDelay(lamp);
+      }
+    }, 1000);
+  }
+  render() {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
     const style = [LampComponent.style.lamp.normal, {
@@ -170,7 +179,7 @@ export default class LampComponent extends React.Component<void, Props, State> {
     return (
       <div>
         {
-          tooltipText ? (<Tooltip destroyTooltipOnHide overlay={tooltipText}>
+          tooltipText ? (<Tooltip overlay={tooltipText}>
             {img}
           </Tooltip>) : img
         }

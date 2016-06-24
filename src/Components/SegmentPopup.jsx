@@ -66,6 +66,7 @@ export default class SegmentPopup extends React.Component {
   @autobind
   handleChange(e: SyntheticEvent) {
     this.setState({
+      // $FlowFixMe
       customTxt: e.target.value,
     });
   }
@@ -86,24 +87,26 @@ export default class SegmentPopup extends React.Component {
         <div>
           <RadioGroup selectedValue={value} ref="radio" onChange={this.handleRadioChange}>
             {Radio => (
-            <div>
-                {_.map(modes, (name, id) => (
-              <div style={{ lineHeight: '32px' }} key={id}>
-                <label>
-                  <Radio style={{ marginRight: 5 }} value={id}/>
-                  {name}
-                </label>
-              </div>
-              ))}
               <div>
-                <Radio style={{ marginRight: 5 }} value="custom"/>
-                <TextField
-                  value={customTxt}
-                  onChange={this.handleChange}
-                  onFocus={this.setCustom}
-                  hintText="Custom"/>
+                {
+                  // $FlowFixMe
+                  _.map(modes, (name, id) => (
+                  <div style={{ lineHeight: '32px' }} key={id}>
+                    <label>
+                      <Radio style={{ marginRight: 5 }} value={id}/>
+                      {name}
+                    </label>
+                  </div>
+                ))}
+                <div>
+                  <Radio style={{ marginRight: 5 }} value="custom"/>
+                  <TextField
+                    value={customTxt}
+                    onChange={this.handleChange}
+                    onFocus={this.setCustom}
+                    hintText="Custom"/>
+                </div>
               </div>
-            </div>
             )}
           </RadioGroup>
           <div>
@@ -112,6 +115,6 @@ export default class SegmentPopup extends React.Component {
           </div>
         </div>
       </Dialog>
-      );
-    }
+    );
   }
+}
