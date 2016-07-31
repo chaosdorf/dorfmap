@@ -18,7 +18,7 @@ treppe_garderobe      400  440    0    0 feedback7/bin6 \
 lounge_t2b            260  264    0    0 feedback3/6   \
   type=light watts=4            Unten
 lounge_beamer         260  330    0    0 beamer1/power   \
-  type=switch ratelimit=30 watts=50 Beamer
+  type=beamer ratelimit=30 watts=50 Beamer
 
 [layer=control ratelimit=2 area=Lounge]
 lounge_pumpe            5  112    0    0 donationprint1/11 \
