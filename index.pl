@@ -1228,11 +1228,11 @@ get '/ajax/menu' => sub {
 		json => [
 			{
 				name    => 'actions',
-				entries => [ sort keys $shortcuts ]
+				entries => [ sort keys %{$shortcuts} ]
 			},
 			{
 				name    => 'presets',
-				entries => [ sort keys $presets ]
+				entries => [ sort keys %{$presets} ]
 			},
 			{
 				name    => 'layers',
