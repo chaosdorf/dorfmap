@@ -9,6 +9,7 @@
     "CONFIGPATH": false
   },
   "rules": {
-    "generator-star-spacing": 0
+    "generator-star-spacing": 0,
+    "import/prefer-default-export": 0
   }
 }

@@ -1,6 +1,5 @@
 /* @flow */
 import 'babel-polyfill';
-import './external/babelHelper.js';
 import axios from 'axios';
 import { baseHost } from 'config';
 

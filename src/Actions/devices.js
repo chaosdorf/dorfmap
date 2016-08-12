@@ -8,10 +8,8 @@ import { Map } from 'immutable';
 
 export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = true) => {
   device.rate_delay -= 1;
-  if (device.rate_delay > 0) {
-    if (timeoutAgain) {
-      setTimeout(() => reduceDelay(device), 1000);
-    }
+  if (device.rate_delay > 0 && timeoutAgain) {
+    setTimeout(() => reduceDelay(device), 1000);
   }
   return device;
 });

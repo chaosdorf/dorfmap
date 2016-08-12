@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Dialog, FlatButton } from 'material-ui';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import ConfiguredRadium from '../configuredRadium';
-import RadioGroup from 'react-radio-group';
+import { RadioGroup, Radio } from 'react-radio-group';
 import React from 'react';
 
 type Props = {
@@ -64,20 +64,14 @@ export default class BlinkenlightPopup extends React.Component {
         <div>
           <RadioGroup selectedValue={active} ref="radio" onChange={this.handleRadioChange}>
             {
-              Radio => (
-                <div>
-                  {
-                    _.map(actualPresets, (preset) => (
-                      <div style={{ lineHeight: '32px' }} key={preset.name}>
-                        <label>
-                          <Radio style={{ marginRight: 5 }} value={preset.raw_string}/>
-                          {preset.name}
-                        </label>
-                      </div>
-                    ))
-                  }
+              _.map(actualPresets, (preset) => (
+                <div style={{ lineHeight: '32px' }} key={preset.name}>
+                  <label>
+                    <Radio style={{ marginRight: 5 }} value={preset.raw_string}/>
+                    {preset.name}
+                  </label>
                 </div>
-              )
+              ))
             }
           </RadioGroup>
           <div>

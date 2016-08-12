@@ -10,6 +10,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 let store;
 
 const reduxActions = require('redux-actions');
+
 reduxActions.handleActions = (function(old) {
   return function(reducerMap: Object, ...rest) {
     // $FlowFixMe
@@ -42,6 +43,7 @@ if (IS_PRODUCTION) {
   if (module.hot) {
     module.hot.accept('../Reducers', () => {
       const nextRootReducer = require('../Reducers/index');
+
       store.replaceReducer(nextRootReducer);
     });
   }
@@ -57,6 +59,7 @@ reduxActions.createAction = (function(old) {
 }(reduxActions.createAction));
 
 const Dorfmap = require('./Dorfmap').default;
+
 export default class App extends React.Component {
   static childContextTypes = {
     store: React.PropTypes.any,

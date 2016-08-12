@@ -50,7 +50,8 @@ type State = {
 }
 
 @ConfiguredRadium
-export default class LampComponent extends React.Component<void, Props, State> {
+export default class LampComponent extends React.Component {
+  props: Props;
   static propTypes = {
     lamp: React.PropTypes.object.isRequired,
   };
@@ -128,16 +129,20 @@ export default class LampComponent extends React.Component<void, Props, State> {
       dialogOpen: false,
     });
   }
+  doesReduce: bool = false;
   componentWillReceiveProps(props: Props) {
     const { lamp } = props;
     if (lamp.status === 1) {
       /* eslint-disable camelcase */
       lamp.rate_delay = 0;
-    } else if (lamp.rate_delay > 0) {
+      this.doesReduce = false;
+    } else if (lamp.rate_delay > 0 && !this.doesReduce) {
       this.reduceDelay(lamp);
+      // reduceDelay(lamp);
     }
   }
   reduceDelay(lamp: Lamp) {
+    this.doesReduce = true;
     setTimeout(() => {
       lamp.rate_delay -= 1;
       this.forceUpdate();

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Dialog, FlatButton, TextField } from 'material-ui';
 import { fetchSegmentModes, changeSegment } from '../Actions/devices';
 import ConfiguredRadium from 'configuredRadium';
-import RadioGroup from 'react-radio-group';
+import { RadioGroup, Radio } from 'react-radio-group';
 import React from 'react';
 
 type Props = {
@@ -20,12 +20,10 @@ type State = {
   customTxt?: string,
 }
 
-/*::`*/
 @connect(state => ({
   modes: state.segmentModes,
 }))
 @ConfiguredRadium
-/*::`*/
 export default class SegmentPopup extends React.Component {
   props: Props;
   state: State = {
@@ -86,11 +84,9 @@ export default class SegmentPopup extends React.Component {
         contentStyle={{ display: 'table', width: 'auto' }}>
         <div>
           <RadioGroup selectedValue={value} ref="radio" onChange={this.handleRadioChange}>
-            {Radio => (
               <div>
                 {
-                  // $FlowFixMe
-                  _.map(modes, (name, id) => (
+                  _.map(modes, (name, id: number) => (
                   <div style={{ lineHeight: '32px' }} key={id}>
                     <label>
                       <Radio style={{ marginRight: 5 }} value={id}/>
@@ -107,7 +103,6 @@ export default class SegmentPopup extends React.Component {
                     hintText="Custom"/>
                 </div>
               </div>
-            )}
           </RadioGroup>
           <div>
             <FlatButton label="Abbrechen" onClick={onRequestClose}/>
