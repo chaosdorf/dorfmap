@@ -1,4 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var Dashboard = require('webpack-dashboard');
+var DashboardPlugin = require('webpack-dashboard/plugin');
+var dashboard = new Dashboard();
 
 var path = require('path');
 const process = require('process');
@@ -24,6 +27,7 @@ var plugins = [
     IS_PRODUCTION: JSON.stringify(node_env === 'production'),
     CONFIGPATH: JSON.stringify(configPath),
   }),
+  new DashboardPlugin(dashboard.setData),
 ];
 
 if (node_env === 'production') {

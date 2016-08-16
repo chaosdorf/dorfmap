@@ -13,7 +13,7 @@
   "contributors": [],
   "bugs": "https://github.com/chaosdorf/dorfmap/issues",
   "scripts": {
-    "dev": "webpack-dev-server --progress --no-info --inline --hot -d --content-base public/ --history-api-fallback",
+    "dev": "webpack-dev-server --inline --hot --content-base public/ --history-api-fallback --quiet",
     "build": "webpack --bail",
     "test": "npm run build",
     "deploy": "npm run lint && NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
@@ -64,11 +64,11 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "css-loader": "0.23.1",
-    "eslint": "3.2.2",
+    "eslint": "3.3.1",
     "eslint-config-marudor": "2.0.10",
     "eslint-loader": "1.5.0",
     "eslint-plugin-flow-vars": "0.5.0",
-    "eslint-plugin-react": "6.0.0",
+    "eslint-plugin-react": "6.1.1",
     "file-loader": "0.9.0",
     "html-webpack-plugin": "2.17.0",
     "iflow-core-decorators": "^1.0.15",
@@ -81,6 +81,7 @@
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.13.1",
+    "webpack-dashboard": "0.0.1",
     "webpack-dev-server": "^1.14.0"
   }
 }
