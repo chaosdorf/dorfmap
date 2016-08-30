@@ -2,6 +2,13 @@
 import { handleActions } from 'redux-actions';
 import { Map } from 'immutable';
 
+function updateModes(state, { payload }) {
+   state.beamerModes[payload.name] = payload.modes;
+   return {
+     beamerModes: Object.assign(state.beamerModes),
+   };
+ }
+
 function updateDevices(state, { payload }) {
   state.allDevices = state.allDevices.set(payload.name, payload);
   return {
@@ -25,6 +32,7 @@ function updateDevicesFromPayload(state, { payload }) {
 }
 
 export default handleActions({
+  FETCH_BEAMER: updateModes,
   FETCH_MENUES: (state, { payload }) => ({
     menues: payload,
   }),
@@ -61,4 +69,5 @@ export default handleActions({
   menues: {},
   presets: {},
   segmentModes: {},
+  beamerModes: {},
 });

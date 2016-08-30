@@ -1113,6 +1113,34 @@ post '/action' => sub {
 	return;
 };
 
+get '/ajax/beamer.json' => sub {
+ 	my ($self) = @_;
+ 	my $device = $self->param('device');
+
+ 	$self->render( json => [
+ 		{
+ 			name => 'PON',
+ 			description => 'Power On',
+ 		},
+ 		{
+ 			name => 'POF',
+ 			description => 'Power Off',
+ 		},
+ 		{
+ 			name => 'IIS:HD1',
+ 			description => 'HDMI',
+ 		},
+ 		{
+ 			name => 'IIS:HD2',
+ 			description => 'Chromecast',
+ 		},
+ 		{
+ 			name => 'IIS:RG1',
+ 			description => 'VGA',
+ 		},
+ 	]);
+ };
+
 # Used by angular frontend. Returns all animations and the
 # currently active one for a given device.
 get '/ajax/blinkencontrol' => sub {

@@ -5,6 +5,7 @@ import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 import Tooltip from 'rc-tooltip';
+// import BeamerPopup from './BeamerPopup';
 
 function getImage(lamp: Object) {
   let status = '';
@@ -113,6 +114,7 @@ export default class LampComponent extends React.Component {
   toggle() {
     const { lamp } = this.props;
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
+    // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
       this.setState({
         dialogOpen: true,
       });
@@ -166,6 +168,9 @@ export default class LampComponent extends React.Component {
     let dialog;
     if (lamp.type === 'blinkenlight') {
       dialog = (<BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
+      // Toggle me to enable beamer Popup!
+    // } else if (lamp.type === 'beamer') {
+      // dialog = (<BeamerPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
     const tooltipText = this.getTooltipText(lamp);
     const img = (

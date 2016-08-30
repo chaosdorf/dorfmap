@@ -6,6 +6,20 @@ import { socketUpdate } from '../primus';
 import axios from 'axios';
 import { Map } from 'immutable';
 
+export const fetchBeamer = createAction('FETCH_BEAMER', async (lamp) => ({
+  name: lamp.name,
+  modes: await axios.get(`/ajax/beamer.json?device=${lamp.name}`),
+}));
+
+export const saveBeamer = createAction('SAVE_BEAMER', async (lamp, mode) => {
+  await axios.post('/ajax/beamer', {
+    device: lamp.name,
+    action: mode,
+  });
+  lamp.mode = mode;
+  return lamp;
+});
+
 export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = true) => {
   device.rate_delay -= 1;
   if (device.rate_delay > 0 && timeoutAgain) {
