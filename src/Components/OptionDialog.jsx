@@ -1,14 +1,12 @@
 /* @flow */
 import _ from 'lodash';
-import { autobind } from 'core-decorators';
 import { connect } from 'react-redux';
-import { Tabs, Tab, Dialog } from 'material-ui';
+import { Overlay, Panel } from 'rebass';
+import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
 import MenuEntries from './MenuEntries';
 import React from 'react';
 
-/*::`*/
 @connect(state => ({ menues: state.menues }))
-/*::`*/
 export default class OptionDialog extends React.Component {
   static propTypes = {
     activeType: React.PropTypes.string,
@@ -19,30 +17,31 @@ export default class OptionDialog extends React.Component {
   static defaultProps = {
     open: false,
   };
-  @autobind
-  handleTabChange() {
-    setTimeout(() => {
-      this.refs.optionDialog._positionDialog();
-    }, 25);
-  }
   render() {
     const { menues, activeType, open } = this.props;
-    const selectedIndex = _(menues).keys().indexOf(activeType);
+    const selectedIndex = Object.keys(menues).indexOf(activeType);
 
     return (
-      <Dialog
-        ref="optionDialog"
-        onRequestClose={this.props.handleRequestClose}
-        bodyStyle={{ padding: 0 }}
+      <Overlay
+        onDismiss={this.props.handleRequestClose}
         open={open}>
-        <Tabs onChange={this.handleTabChange} key={selectedIndex} initialSelectedIndex={selectedIndex} ref="tabs">
-          {_.map(this.props.menues, (entries, type) => (
-              <Tab label={_.capitalize(type)} key={type}>
+        <Panel>
+          <Tabs selectedIndex={selectedIndex}>
+            <TabList>
+              {_.map(this.props.menues, (entries, type) => (
+                <Tab key={type}>
+                  {_.capitalize(type)}
+                </Tab>
+              ))}
+            </TabList>
+            {_.map(this.props.menues, (entries, type) => (
+              <TabPanel key={type}>
                 <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose}/>
-              </Tab>
+              </TabPanel>
             ))}
-        </Tabs>
-      </Dialog>
+          </Tabs>
+        </Panel>
+      </Overlay>
     );
   }
 }

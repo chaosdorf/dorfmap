@@ -5,5 +5,9 @@ import { createAction } from 'redux-actions';
 
 export const fetchMenues = createAction('FETCH_MENUES', async () => {
   const rawMenues = await axios.get('/ajax/menu.json');
-  return _.zipObject(_.map(rawMenues, 'name'), _.map(rawMenues, 'entries'));
+  const menu = {};
+  _.forEach(rawMenues, m => {
+    menu[m.name] = m.entries;
+  });
+  return menu;
 });

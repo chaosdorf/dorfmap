@@ -1,11 +1,15 @@
 {
-  "presets": ["react", "es2015", "stage-0"],
+  "presets": ["react", ["es2015", { "modules": false }], "stage-2"],
   "plugins": [
-    "transform-es2015-for-of",
-    "transform-regenerator",
-    "transform-decorators-legacy"
+    "transform-decorators-legacy",
+    "lodash"
   ],
   "env": {
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel"
+      ]
+    },
     "production": {
       "plugins": [
         "transform-remove-console",

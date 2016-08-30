@@ -8,4 +8,5 @@ export type Lamp = {
   name: string,
   type: string,
   status: 0|1,
+  duplicates?: Lamp[],
 }

@@ -1,11 +1,9 @@
 /* @flow */
-import _ from 'lodash';
 import { autobind } from 'core-decorators';
 import { toggleDevice, reduceDelay } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
-import SegmentPopup from './SegmentPopup';
 import Tooltip from 'rc-tooltip';
 
 function getImage(lamp: Object) {
@@ -72,7 +70,6 @@ export default class LampComponent extends React.Component {
   state: State = {
     dialogOpen: false,
   };
-  lampCopy: Lamp = _.cloneDeep(this.props.lamp);
   getTooltipText(lamp: Lamp): ?React.Element<*> {
     let text = lamp.status_text;
     if (!text) {
@@ -105,7 +102,7 @@ export default class LampComponent extends React.Component {
         overlay={tooltipText}>
         <img
           ref="duplicate"
-          onTouchTap={this.toggle}
+          onClick={this.toggle}
           name={lamp.name}
           style={dupStyle}
           src={getImage(lamp)}/>
@@ -167,16 +164,14 @@ export default class LampComponent extends React.Component {
       style.push(LampComponent.style.lamp.writeable);
     }
     let dialog;
-    if (lamp.type === 'charwrite') {
-      dialog = (<SegmentPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
-    } else if (lamp.type === 'blinkenlight') {
+    if (lamp.type === 'blinkenlight') {
       dialog = (<BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
     const tooltipText = this.getTooltipText(lamp);
     const img = (
       <img
         ref="normal"
-        onTouchTap={this.toggle}
+        onClick={this.toggle}
         name={lamp.name}
         style={style}
         src={getImage(lamp)}/>

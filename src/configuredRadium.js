@@ -6,6 +6,5 @@ export default function(component: any): any {
   if (window.navigator.userAgent.indexOf('SeaMonkey') !== -1) {
     config.userAgent = 'foobar';
   }
-  // $FlowFixMe
   return Radium(config)(component);
 }

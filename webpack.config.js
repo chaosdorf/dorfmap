@@ -1,85 +1,88 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var Dashboard = require('webpack-dashboard');
-var DashboardPlugin = require('webpack-dashboard/plugin');
-var dashboard = new Dashboard();
+const nodeEnv = process.env.NODE_ENV || 'development';
+const __DEV__ = nodeEnv !== 'production';
 
-var path = require('path');
-const process = require('process');
-var webpack = require('webpack');
-var fs = require('fs');
-
-var node_env = process.env.NODE_ENV || 'development';
-if (!fs.existsSync(`./src/config.${node_env}.js`)) {
-  node_env = 'development';
-}
-const configPath = `config.${node_env}.js`;
-
-var plugins = [
-  new webpack.NoErrorsPlugin(),
-  new HtmlWebpackPlugin({
-    template: './src/index.html',
-    minify: {}
-  }),
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(node_env)
-    },
-    IS_PRODUCTION: JSON.stringify(node_env === 'production'),
-    CONFIGPATH: JSON.stringify(configPath),
-  }),
-  new DashboardPlugin(dashboard.setData),
-];
-
-if (node_env === 'production') {
-  plugins.push(
-    new webpack.optimize.UglifyJsPlugin()
-  );
-}
-
-var alias = {
-  eventemitter: 'eventemitter3',
-  bluebird: 'bluebird/js/browser/bluebird.min.js',
-};
-var config = path.resolve('src/config.' + node_env + '.js');
-alias.config = config;
-
-module.exports = {
-  devtool: node_env === 'production' ? undefined : 'cheap-module-source-map',
-  eslint: {
-    configFile: './src/.eslintrc',
-    failOnWarning: false,
-    failOnError: true
+const config = require('@terse/webpack').api()
+.entry('./src/main.js')
+.plugin('webpack.NoErrorsPlugin')
+.plugin('webpack.DefinePlugin', {
+  'process.env': {
+    NODE_ENV: JSON.stringify(nodeEnv)
   },
-  context: __dirname,
-  resolve: {
-    extensions: ['', '.js', '.jsx', '.json'],
-    alias,
-    root: path.resolve('src')
+  __DEV__: JSON.stringify(__DEV__),
+  BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
+  PRIMUS: JSON.stringify(process.env.PRIMUS || 'http://localhost:3001'),
+  SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN || ''),
+  SENTRY_ENV: JSON.stringify(process.env.SENTRY_ENV || ''),
+})
+.plugin('html-webpack-plugin', {
+  filename: 'index.html',
+  template: 'src/index.html',
+  minify: {},
+})
+.modules('src')
+.alias('bluebird', 'bluebird/js/browser/bluebird.min.js')
+.output({
+  path: 'public',
+  filename: 'dorfmap-[hash].js',
+  publicPath: '/',
+})
+.target('web')
+.when('development', api => api
+.preLoader('eslint', '.jsx?', {
+  exclude: /node_modules/,
+})
+.sourcemap('#source-map')
+)
+.when('production', api => api
+.plugin('webpack.LoaderOptionsPlugin', {
+  minimize: true,
+  debug: false,
+})
+.plugin('webpack.optimize.UglifyJsPlugin', {
+  compress: {
+    warnings: false,
   },
-  entry: [
-    './src/main.js'
-  ],
   output: {
-    path: path.resolve('public'),
-    filename: 'app-[hash].js',
-    publicPath: ''
+    comments: false,
   },
-  module: {
-    loaders: [
-      { test: /\.css$/, loader: 'style!css' },
-      { test: /\.CSS.js$/, exclude: /(node_modules|dependency)/, loader: 'inline-css!babel' },
-      { test: /^((?!CSS\.js$).)*(\.jsx?)$/,
-        exclude: /(node_modules|external)/,
-        loader: 'babel!eslint',
-      },
-      { test: /\.(jpg|png|gif)$/, loader: 'file!image' },
-      { test: /\.woff2?(\?v=.*)?$/, loader: 'url?limit=10000&minetype=application/font-woff' },
-      { test: /\.(eot|ttf|svg|otf)(\?v=.*)?$/, loader: 'url' },
-      { test: /\.json$/, loader: 'json' }
-    ],
-    noParse: [
-      /primusClient\.js/,
-    ],
-  },
-  plugins,
+  screwIe8: true,
+  sourceMap: false,
+})
+)
+.getConfig();
+
+if (process.env.DASHBOARD) {
+  const Dashboard = require('webpack-dashboard');
+  const DashboardPlugin = require('webpack-dashboard/plugin');
+
+  const dashboard = new Dashboard();
+  config.plugins.push(new DashboardPlugin(dashboard.setData));
+}
+
+config.eslint = {
+  configFile: './src/.eslintrc.js',
+  failOnWarning: false,
+  failOnError: true,
 };
+config.resolve.extensions = ['', '.js', '.jsx', '.json'];
+config.module.loaders = [
+  { test: /\.jsx?$/,
+    exclude: /(node_modules|primusClient)/,
+    loader: 'babel',
+    query: { cacheDirectory: true },
+  },
+  { test: /\.(CSS|css)\.js$/,
+    exclude: /(node_modules)/,
+    loader: 'inline-css',
+  },
+  { test: /\.pdf$/, loader: 'file' },
+  { test: /\.(eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file' },
+  { test: /\.(jpg|png|gif|jpeg|ico)$/, loader: 'url' },
+  { test: /\.json$/, loader: 'json' },
+  { test: /\.css$/, loader: 'style!css' },
+  { test: /\.less/, loader: 'style!css!less' },
+];
+config.module.noParse = [
+  /primusClient\.js/,
+];
+module.exports = config;

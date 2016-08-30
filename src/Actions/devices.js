@@ -17,7 +17,7 @@ export const reduceDelay = createAction('REDUCE_DELAY', (device, timeoutAgain = 
 async function _fetchDevices() {
   const devices = await axios.get('/status/devices.json');
   let devicesMap = Map();
-  _.each(devices, d => {
+  _.forEach(devices, d => {
     devicesMap = devicesMap.set(d.name, d);
     if (d.status === 1) {
       d.rate_delay = 0;
@@ -54,7 +54,11 @@ export const toggleDevice = createAction('TOGGLE_DEVICE', async (device) => {
 
 export const fetchSegmentModes = createAction('FETCH_SEGMENT_MODES', async () => {
   const modes = await axios.get('/ajax/charwrite.json');
-  return _.zipObject(_.map(modes, 'name'), _.map(modes, 'description'));
+  const mode = {};
+  _.forEach(modes, m => {
+    mode[m.name] = m.description;
+  });
+  return mode;
 });
 
 export const changeSegment = createAction('CHANGE_SEGMENT', async (segment, mode) => {

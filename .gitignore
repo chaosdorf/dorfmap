@@ -33,3 +33,4 @@ public/js/vendor.js
 public/app.js
 public/app-*.js
 .DS_Store
+www

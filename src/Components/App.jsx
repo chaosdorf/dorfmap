@@ -4,8 +4,6 @@ import { createStore, bindActionCreators, compose, applyMiddleware } from 'redux
 import { Provider } from 'react-redux';
 import React from 'react';
 import reduxPromise from 'redux-promise';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 let store;
 
@@ -14,7 +12,7 @@ const reduxActions = require('redux-actions');
 reduxActions.handleActions = (function(old) {
   return function(reducerMap: Object, ...rest) {
     // $FlowFixMe
-    _.each(reducerMap, (r, index) => {
+    _.forEach(reducerMap, (r, index) => {
       reducerMap[index] = function(state, action) {
         const newState = r(state, action);
         return {
@@ -28,21 +26,22 @@ reduxActions.handleActions = (function(old) {
 }(reduxActions.handleActions));
 const reducer = require('../Reducers').default;
 
-if (IS_PRODUCTION) {
+if (__DEV__) {
   store = compose(
-    applyMiddleware(reduxPromise)
+    applyMiddleware(reduxPromise),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore)(reducer);
 } else {
   const createDevStore = compose(
-    applyMiddleware(reduxPromise),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
+    applyMiddleware(reduxPromise)
   )(createStore);
 
   store = createDevStore(reducer);
 
   if (module.hot) {
+    // $FlowFixMe
     module.hot.accept('../Reducers', () => {
-      const nextRootReducer = require('../Reducers/index');
+      const nextRootReducer = require('../Reducers').default;
 
       store.replaceReducer(nextRootReducer);
     });
@@ -71,13 +70,9 @@ export default class App extends React.Component {
   }
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme()}>
-        <div>
-          <Provider store={store}>
-            <Dorfmap/>
-          </Provider>
-        </div>
-      </MuiThemeProvider>
+      <Provider store={store}>
+        <Dorfmap/>
+      </Provider>
     );
   }
 }

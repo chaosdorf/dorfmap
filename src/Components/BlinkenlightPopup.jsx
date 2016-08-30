@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { autobind } from 'core-decorators';
 import { connect } from 'react-redux';
-import { Dialog, FlatButton } from 'material-ui';
+import { Button, Overlay, Panel, Divider } from 'rebass';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import ConfiguredRadium from '../configuredRadium';
 import { RadioGroup, Radio } from 'react-radio-group';
@@ -19,12 +19,18 @@ type State = {
   active?: bool,
 }
 
-/*::`*/
+
+const style = {
+  buttonWrapper: {
+    display: 'flex',
+    justifyContent: 'space-around',
+  },
+};
+
 @ConfiguredRadium
 @connect(state => ({
   presets: state.presets,
 }))
-/*::`*/
 export default class BlinkenlightPopup extends React.Component {
   props: Props;
   state: State = {};
@@ -57,11 +63,10 @@ export default class BlinkenlightPopup extends React.Component {
     }
     const actualPresets = presets[lamp.name].presets;
     return (
-      <Dialog
-        onRequestClose={onRequestClose}
-        open={open}
-        contentStyle={{ display: 'table', width: 'auto' }}>
-        <div>
+      <Overlay
+        onDismiss={onRequestClose}
+        open={open}>
+        <Panel>
           <RadioGroup selectedValue={active} ref="radio" onChange={this.handleRadioChange}>
             {
               _.map(actualPresets, (preset) => (
@@ -74,12 +79,13 @@ export default class BlinkenlightPopup extends React.Component {
               ))
             }
           </RadioGroup>
-          <div>
-            <FlatButton label="Abbrechen" onClick={onRequestClose}/>
-            <FlatButton label="Speichern" onClick={this.save}/>
+          <Divider/>
+          <div style={style.buttonWrapper}>
+            <Button onClick={onRequestClose}>Cancel</Button>
+            <Button onClick={this.save}>Save</Button>
           </div>
-        </div>
-      </Dialog>
+        </Panel>
+      </Overlay>
     );
   }
 }

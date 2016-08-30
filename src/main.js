@@ -1,14 +1,25 @@
 /* @flow */
+import 'react-hot-loader/patch';
 import './vendor.js';
 import ReactDOM from 'react-dom';
-import routes from './routes.js';
-import taps from 'react-tap-event-plugin';
+import App from './Components/App';
+import React from 'react';
 import './primus';
-
-
-taps();
-
+import { AppContainer } from 'react-hot-loader';
 
 setTimeout(() => {
-  ReactDOM.render(routes, document.querySelector('#dorfmapWrapper'));
+  ReactDOM.render((
+    <AppContainer><App/></AppContainer>
+  ), document.querySelector('#dorfmapWrapper'));
 }, 500);
+
+if (module.hot) {
+  // $FlowFixMe
+  module.hot.accept('./Components/App', () => {
+    const App = require('./Components/App').default;
+
+    ReactDOM.render((
+      <AppContainer><App/></AppContainer>
+    ), document.querySelector('#dorfmapWrapper'));
+  });
+}
