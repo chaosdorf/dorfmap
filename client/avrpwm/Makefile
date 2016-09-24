@@ -26,7 +26,7 @@ AVRFLAGS += -U flash:w:main.hex
 
 main.elf: main.c
 	${AVRCC} ${CFLAGS} -o $@ ${@:.elf=.c} -Wl,-Map=main.map,--cref
-	avr-size -d $@
+	avr-size --format=avr --mcu=${MCU} $@
 
 program: main.hex main.eep
 	${AVRFLASH} -p ${MCU} -c ${AVRDUDE_PROGRAMMER} ${AVRFLAGS}
