@@ -11,8 +11,6 @@ src/
 
 [libs]
 interfaces/
-node_modules/iflow-lodash/index.js.flow
-node_modules/iflow-core-decorators/index.js.flow
 
 
 [options]

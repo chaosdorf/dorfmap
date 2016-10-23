@@ -11,7 +11,6 @@ const reduxActions = require('redux-actions');
 
 reduxActions.handleActions = (function(old) {
   return function(reducerMap: Object, ...rest) {
-    // $FlowFixMe
     _.forEach(reducerMap, (r, index) => {
       reducerMap[index] = function(state, action) {
         const newState = r(state, action);

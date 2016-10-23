@@ -32,5 +32,8 @@ public/**/Templates/*
 public/js/vendor.js
 public/app.js
 public/app-*.js
+public/dorfmap-*.js
+public/dorfmap.js
 .DS_Store
 www
+/cache/
