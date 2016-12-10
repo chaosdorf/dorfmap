@@ -43,8 +43,10 @@ srv:listen(80, function(conn)
 		end
 
 		temp = read_reg(0x4f, 0)
+		brightness = adc.read(0)
 		buf = buf .. "temph=" .. string.byte(ret, 1) .. "\n"
 		buf = buf .. "templ=" .. string.byte(ret, 2) .. "\n"
+		buf = buf .. "brightness=" .. brightness .. "\n"
 
 		if (_GET.lled == "on") then
 			gpio.write(lowerled, 0);
