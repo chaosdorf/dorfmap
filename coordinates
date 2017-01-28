@@ -49,21 +49,19 @@ hackcenter_blau       620  350    0    0 feedback9/bin6 \
   type=light ratelimit=1 watts=24 conflicts=hackcenter_weiss psu=hackcenter_psudecke  LED-Streifen blau
 hackcenter_weiss      580  350    0    0 feedback9/bin4 \
   type=light ratelimit=1 watts=24 conflicts=hackcenter_blau psu=hackcenter_psudecke  LED-Streifen kaltweiß
-hackcenter_psudecke   540  350    0    0 feedback1/5 \
-  type=switch ratelimit=7 watts=1 user_readonly=1  LED-Streifen Netzteil
 hackcenter_spots      700  180    0    0 feedback1/6 \
   type=light ratelimit=10 watts=30       Deckenlicht
 hackcenter_roehre     600  180    0    0 feedback1/7 \
   type=light ratelimit=90 layer=caution watts=348  Putzlicht
 hackcenter_ws2812b    580   20    0    0 feedback1/8 \
   type=light watts=5 default=1 Chaosdorf-Ossendorf
-hackcenter_regal1     480   60    0    0 feedback5/1 \
+hackcenter_regal1     495   60    0    0 feedback5/1 \
   type=light watts=1     LED-Streifen Regal 1 (links)
-hackcenter_regal2     515   60    0    0 feedback5/3 \
+hackcenter_regal2     530   60    0    0 feedback5/3 \
   type=light watts=1     LED-Streifen Regal 2
-hackcenter_regal3     550   60    0    0 feedback5/5 \
+hackcenter_regal3     565   60    0    0 feedback5/5 \
   type=light watts=1     LED-Streifen Regal 3
-hackcenter_regal4     640   60    0    0 feedback5/7 \
+hackcenter_regal4     635   60    0    0 feedback5/7 \
   type=light watts=1     LED-Streifen Regal 4
 hackcenter_regal5     670   60    0    0 feedback5/8 \
   type=light watts=1     LED-Streifen Regal 5
@@ -73,10 +71,18 @@ hackcenter_regal7     740   60    0    0 feedback5/4 \
   type=light watts=1     LED-Streifen Regal 7
 hackcenter_regal8     775   60    0    0 feedback5/2 \
   type=light watts=1     LED-Streifen Regal 8 (rechts)
+
+[layer=power ratelimit=60 area=Hackcenter]
 tischerechts          800  280    0    0 feedback9/bin3 \
   type=switch inverted=1 user_readonly=1 default=1 Strom Tischreihe rechts
 ubercharger           883  290    0    0 feedback9/bin5 \
   type=switch inverted=1 user_readonly=1 default=1 USB-Ladegerät
+hackcenter_psudecke   540  350    0    0 feedback1/5 \
+  type=switch watts=1 user_readonly=1  LED-Streifen Netzteil
+hackcenter_psu1       530   60    0    0 feedback11/bin7 \
+  type=switch inverted=1 user_readonly=1 default=1 Monitorreihe links
+hackcenter_psu2       740   60    0    0 feedback11/bin8 \
+  type=switch inverted=1 user_readonly=1 default=1 Monitorreihe rechts
 
 [layer=control ratelimit=2 area=Nomspace]
 durchgang             1400  180   0    0 feedback6/bin3 \
@@ -91,7 +97,7 @@ werkstatt_strobo      1752  84    0    0 feedback8/bin4 \
 [layer=control]
 lounge_rgb              5   70    0    0 donationprint2 \
   type=blinkenlight area=Lounge watts=7 address=1 RGB-Streifen
-hackcenter_regal      610   60    0    0 feedback4 \
+hackcenter_regal      600   60    0    0 feedback4 \
   type=blinkenlight area=Hackcenter watts=3 address=8 RGB-Streifen
 
 
