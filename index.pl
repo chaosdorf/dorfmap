@@ -791,6 +791,9 @@ sub status_text {
 	if ( $type eq 'server' ) {
 		return $id;
 	}
+	if ( $type eq 'wifi' ) {
+		return $id;
+	}
 	return $coordinates->{$location}->{text};
 }
 
