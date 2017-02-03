@@ -1038,7 +1038,9 @@ post '/action' => sub {
 				spew( "/tmp/automatic_${id}", q{} );
 			}
 			else {
-				unshutdown;
+				if ( not $coordinates->{$id}->{in_shutdown} ) {
+					unshutdown;
+				}
 				set_device( $id, 1 );
 			}
 			$self->render( json => json_status($id) );
