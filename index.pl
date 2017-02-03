@@ -788,6 +788,12 @@ sub status_text {
 		return $coordinates->{$location}->{text} . '<br/>'
 		  . auto_text($location);
 	}
+	if ( $type eq 'server' ) {
+		return $id;
+	}
+	if ( $type eq 'wifi' ) {
+		return $id;
+	}
 	return $coordinates->{$location}->{text};
 }
 
