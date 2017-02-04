@@ -79,10 +79,10 @@ ubercharger           883  290    0    0 feedback9/bin5 \
   type=switch inverted=1 default=1 USB-Ladegerät
 hackcenter_psudecke   540  350    0    0 feedback1/5 \
   type=switch watts=1 user_readonly=1  LED-Streifen Netzteil
-hackcenter_psu1       530   60    0    0 feedback11/bin7 \
-  type=switch inverted=1 default=1 Monitorreihe links
-hackcenter_psu2       740   60    0    0 feedback11/bin8 \
-  type=switch inverted=1 default=1 Monitorreihe rechts
+#hackcenter_psu1       530   60    0    0 feedback11/bin7 \
+#  type=switch inverted=1 default=1 Monitorreihe links
+#hackcenter_psu2       740   60    0    0 feedback11/bin8 \
+#  type=switch inverted=1 default=1 Monitorreihe rechts
 
 [layer=control ratelimit=2 area=Nomspace]
 durchgang             1400  180   0    0 feedback6/bin3 \
