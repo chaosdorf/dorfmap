@@ -24,8 +24,9 @@ my $remotemap   = {};
 my $shortcuts   = {};
 my @remote_buffer;
 
-my $shutdownfile = '/tmp/is_shutdown';
-my $tsdir        = '/tmp/dorfmap-ts';
+my $shutdownfile  = '/tmp/is_shutdown';
+my $powerdownfile = '/tmp/is_poweroff';
+my $tsdir         = '/tmp/dorfmap-ts';
 
 my $auto_prefix   = '/etc/automatic_light_control';
 my $store_prefix  = '/srv/www/stored';
@@ -558,7 +559,7 @@ sub status_info {
 	if ( slurp('/srv/www/doorstatus') eq 'open' ) {
 		$json->{hackspace} = 'public';
 	}
-	elsif ( -e '/tmp/is_shutdown' ) {
+	elsif ( -e $shutdownfile ) {
 		$json->{hackspace} = 'shutdown';
 	}
 	elsif ( slurp('/srv/www/doorstatus') eq 'closed' ) {
@@ -601,7 +602,7 @@ sub status_info {
 sub infotext {
 	my $buf;
 
-	my $is_shutdown = ( -e '/tmp/is_shutdown' );
+	my $is_shutdown = ( -e $shutdownfile );
 
 	$buf .= sprintf(
 		'<span class="shutdown%s">Shutdown: %s</span><br/>',
