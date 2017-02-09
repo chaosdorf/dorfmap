@@ -1103,7 +1103,9 @@ post '/action' => sub {
 				}
 			}
 			else {
-				unshutdown;
+				if ( not $coordinates->{$id}->{in_shutdown} ) {
+					unshutdown;
+				}
 				my $state = get_device($id);
 				set_device( $id, $state ^ 1 );
 			}
