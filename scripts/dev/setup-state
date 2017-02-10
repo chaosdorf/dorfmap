@@ -77,6 +77,14 @@ for i in bin0 bin1 bin2 bin3 bin4 bin5 bin6 pwm0 pwm1 pwm2 pwm3; do
 	chmod 666 /tmp/feedback10/$i
 done
 
+mkdir /tmp/feedback11
+chmod 777 /tmp/feedback11
+for i in bin0 bin1 bin2 bin3 bin4 bin5 bin6 bin7 bin8 pwm0 pwm1 pwm2 pwm3; do
+	echo 0 > /tmp/feedback11/$i
+	chmod 666 /tmp/feedback11/$i
+done
+
+
 mkdir -p /tmp/helios1
 chmod 777 /tmp/helios1
 for i in 0 1 2 3; do
