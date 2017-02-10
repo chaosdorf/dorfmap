@@ -599,77 +599,6 @@ sub status_info {
 	return $json;
 }
 
-sub infotext {
-	my $buf;
-
-	my $is_shutdown = ( -e $shutdownfile );
-
-	$buf .= sprintf(
-		'<span class="shutdown%s">Shutdown: %s</span><br/>',
-		$is_shutdown ? 'yes' : 'no',
-		$is_shutdown ? 'Yes' : 'No',
-	);
-
-	if ( $is_shutdown and get_device('outdoor') == 1 ) {
-		$buf
-		  .= 'Außenbeleuchtung geht in wenigen Minuten automatisch aus<br/>';
-	}
-
-	if ( -e "${bgdata_prefix}/hosts_dynamic" ) {
-		$buf .= sprintf(
-			'<span class="onlinegueststext">Online IPs</span>'
-			  . '<span class="onlineguests">%d</span> guests / '
-			  . ' <span class="onlineguests">%d</span> total<br/>',
-			slurp("${bgdata_prefix}/hosts_dynamic"),
-			slurp("${bgdata_prefix}/hosts_total")
-		);
-	}
-
-	my $power_p1 = slurp('/srv/www/flukso/30_p1') // -1;
-	my $power_p2 = slurp('/srv/www/flukso/30_p2') // -1;
-	my $power_p3 = slurp('/srv/www/flukso/30_p3') // -1;
-
-	$buf .= '<span class="wattagetext">Verbrauch</span>';
-	$buf .= sprintf_wattage( $power_p1 + $power_p2 + $power_p3 );
-	$buf .= '<br/><ul>';
-	$buf .= '<li><span class="wattagetext">Phasen</span>';
-
-	$buf .= join( ' + ',
-		map { sprintf_wattage($_) } ( $power_p1, $power_p2, $power_p3 ) );
-	$buf .= '</li>';
-
-	if ( -e "${store_prefix}/power_serverraum" ) {
-		$buf .= '<li><span class="wattagetext">Serverraum (USV)</span>';
-		$buf .= sprintf_wattage( slurp("${store_prefix}/power_serverraum") );
-		$buf .= '</li>';
-	}
-
-	$buf .= sprintf(
-		'<li><span class="wattagetext">Beleuchtung</span>'
-		  . '<span class="wattage">ca. %dW</span></li>',
-		estimated_power_consumption
-	);
-	$buf .= '</ul>';
-
-	for my $h ( keys %{$coordinates} ) {
-		if ( exists $coordinates->{$h}->{dorfmap}
-			and device_status($h) == 0 )
-		{
-			my $prefix = $coordinates->{$h}->{dorfmap};
-			$buf .= sprintf(
-'<img style="float: left;" src="/static/images/warning.png" alt="!" /> %s is offline — '
-				  . 'some devices may not work <ul><li>%s</li></ul><br/>',
-				$h,
-				join( '</li><li>',
-					grep { $coordinates->{$_}->{path} =~ m{ ^ $h }x }
-					  keys %{$coordinates} )
-			);
-		}
-	}
-
-	return $buf;
-}
-
 sub json_blinkencontrol {
 	my ($device) = @_;
 	my $current_string = get_device( $device, text => 1 );
@@ -743,7 +672,6 @@ sub json_status {
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
-		infoarea    => infotext(),
 		info        => status_info(),
 	};
 
@@ -781,9 +709,6 @@ sub status_text {
 	}
 	if ( $type eq 'rtext' ) {
 		return slurp("${store_prefix}/${location}");
-	}
-	if ( $type eq 'infoarea' ) {
-		return infotext();
 	}
 	if ( $type eq 'light_au' ) {
 		return $coordinates->{$location}->{text} . '<br/>'
