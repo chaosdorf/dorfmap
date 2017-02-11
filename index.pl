@@ -568,6 +568,13 @@ sub status_info {
 		$json->{hackspace} = 'unknown';
 	}
 
+	$json->{powered_areas} = 0;
+	for my $id ( keys %{$coordinates} ) {
+		if ( $coordinates->{$id}{in_shutdown} and device_status($id) ) {
+			$json->{powered_areas}++;
+		}
+	}
+
 	# We use 0+something() to make sure all numbers are present in the JSON
 	# file as numbers and not strings.
 
