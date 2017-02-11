@@ -29,7 +29,6 @@ my $powerdownfile = '/tmp/is_poweroff';
 my $tsdir         = '/tmp/dorfmap-ts';
 
 my $auto_prefix   = '/etc/automatic_light_control';
-my $store_prefix  = '/srv/www/stored';
 my $bgdata_prefix = '/srv/www/bgdata';
 
 my @dd_layers = map { { name => $_ } } qw(control caution power);
@@ -591,11 +590,6 @@ sub status_info {
 
 	$json->{power}->{lights} = 0 + estimated_power_consumption();
 
-	if ( -e "${store_prefix}/power_serverraum" ) {
-		$json->{power}->{usv}
-		  = 0 + slurp("${store_prefix}/power_serverraum") + 0;
-	}
-
 	return $json;
 }
 
@@ -706,9 +700,6 @@ sub status_text {
 
 	if ( not $type ) {
 		return $coordinates->{$location}->{text};
-	}
-	if ( $type eq 'rtext' ) {
-		return slurp("${store_prefix}/${location}");
 	}
 	if ( $type eq 'light_au' ) {
 		return $coordinates->{$location}->{text} . '<br/>'
@@ -1381,31 +1372,6 @@ any '/presets' => sub {
 	);
 
 	return;
-};
-
-# Used by external applications to set parameters which can not be polled
-# by the dorfmap (such as the UPS temperature and power consumption)
-post '/set' => sub {
-	my ($self) = @_;
-
-	if ( not -d $store_prefix ) {
-		mkdir($store_prefix);
-	}
-
-	if ( $self->req->method eq 'POST' ) {
-		for my $key ( keys %{$coordinates} ) {
-			if ( ( $coordinates->{$key}->{type} // q{} ) eq 'rtext'
-				and $self->param($key) )
-			{
-				spew( "${store_prefix}/${key}", $self->param($key) );
-			}
-		}
-	}
-
-	$self->render(
-		data   => q{},
-		status => 204
-	);
 };
 
 # Used by external applications
