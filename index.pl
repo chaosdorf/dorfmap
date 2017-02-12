@@ -246,6 +246,67 @@ sub get_device {
 	return $state;
 }
 
+sub do_shutdown {
+	my ($mode) = @_;
+	my @errors;
+	my @delayed;
+
+	$mode //= 'full';
+
+	spew( $shutdownfile, q{} );
+	door_set_private();
+
+	for my $device ( keys %{$coordinates} ) {
+		my $type = $coordinates->{$device}->{type};
+
+		# delayed poweroff so the shutdown announcement has sufficient time
+		if ( $type ~~ [qw[amp]] ) {
+			push( @delayed, $device );
+			next;
+		}
+
+		if ( $type eq 'blinkenlight' ) {
+			my $path   = $remotemap->{$device};
+			my $addrhi = int( $coordinates->{$device}->{address} / 255 );
+			my $addrlo = $coordinates->{$device}->{address} % 255;
+
+			spew( "${path}/commands",
+				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\npush\n" );
+		}
+		elsif ( $type eq 'charwrite' ) {
+			set_device( $device, 'blank', force => 1 );
+		}
+		elsif ( $mode eq 'full' or not $coordinates->{$device}{in_shutdown} ) {
+			set_device(
+				$device, 0,
+				force    => 1,
+				buffered => 1,
+			);
+		}
+	}
+
+	for my $device (@delayed) {
+		set_device( $device, 0, force => 1 );
+	}
+
+	set_buffered_remotes();
+	system('blinkencontrol-donationprint');
+	system('blinkencontrol-feedback');
+
+	if ( $? != 0 ) {
+		push( @errors,
+			    "CRITICAL: private\@door returned $?: $! --"
+			  . ' please make sure the door is set to non-public' );
+	}
+	elsif (@errors) {
+		unshift( @errors,
+			    'shutdown successful. however, the following '
+			  . 'warnings were generated:' );
+	}
+
+	return @errors;
+}
+
 sub unshutdown {
 
 	if ( -e $shutdownfile ) {
@@ -792,61 +853,14 @@ $shortcuts->{makeprivate} = sub {
 
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
-	my @errors;
-	my @delayed;
 
-	spew( $shutdownfile, q{} );
-	door_set_private();
+	return do_shutdown('full');
+};
 
-	for my $device ( keys %{$coordinates} ) {
-		my $type = $coordinates->{$device}->{type};
+$shortcuts->{'soft shutdown'} = sub {
+	my ($self) = @_;
 
-		# delayed poweroff so the shutdown announcement has sufficient time
-		if ( $type ~~ [qw[amp]] ) {
-			push( @delayed, $device );
-			next;
-		}
-
-		if ( $type eq 'blinkenlight' ) {
-			my $path   = $remotemap->{$device};
-			my $addrhi = int( $coordinates->{$device}->{address} / 255 );
-			my $addrlo = $coordinates->{$device}->{address} % 255;
-
-			spew( "${path}/commands",
-				"0\n32\n0\n0\n0\n${addrhi}\n${addrlo}\npush\n" );
-		}
-		elsif ( $type eq 'charwrite' ) {
-			set_device( $device, 'blank', force => 1 );
-		}
-		else {
-			set_device(
-				$device, 0,
-				force    => 1,
-				buffered => 1,
-			);
-		}
-	}
-
-	for my $device (@delayed) {
-		set_device( $device, 0, force => 1 );
-	}
-
-	set_buffered_remotes();
-	system('blinkencontrol-donationprint');
-	system('blinkencontrol-feedback');
-
-	if ( $? != 0 ) {
-		push( @errors,
-			    "CRITICAL: private\@door returned $?: $! --"
-			  . ' please make sure the door is set to non-public' );
-	}
-	elsif (@errors) {
-		unshift( @errors,
-			    'shutdown successful. however, the following '
-			  . 'warnings were generated:' );
-	}
-
-	return @errors;
+	return do_shutdown('soft');
 };
 
 $shortcuts->{unshutdown} = sub {
