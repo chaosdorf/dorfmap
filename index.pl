@@ -851,6 +851,20 @@ $shortcuts->{makeprivate} = sub {
 	return;
 };
 
+$shortcuts->{'power off'} = sub {
+	my ($self) = @_;
+
+	if ( -e $shutdownfile ) {
+		for my $device ( keys %{$coordinates} ) {
+			if ( $coordinates->{$device}{in_shutdown} ) {
+				set_device( $device, 0, force => 1 );
+			}
+		}
+	}
+
+	return;
+};
+
 $shortcuts->{shutdown} = sub {
 	my ($self) = @_;
 
