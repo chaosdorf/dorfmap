@@ -1,5 +1,5 @@
 wifi.setmode(wifi.STATION)
-wifi.sta.config(..., ...)
+wifi.sta.config("...", "...")
 
 lowerled = 0
 upperled = 4
@@ -29,10 +29,10 @@ end
 srv=net.createServer(net.TCP)
 srv:listen(80, function(conn)
 	conn:on("receive", function(client,request)
-		local buf = "HTTP/1.1 200 OK\n\n";
-		local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP");
+		local buf = "HTTP/1.1 200 OK\nServer: NodeMCU on ESP8266-12E\n\n"
+		local _, _, method, path, vars = string.find(request, "([A-Z]+) (.+)?(.+) HTTP")
 		if(method == nil)then
-			_, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP");
+			_, _, method, path = string.find(request, "([A-Z]+) (.+) HTTP")
 		end
 
 		local _GET = {}
@@ -49,19 +49,21 @@ srv:listen(80, function(conn)
 		buf = buf .. "brightness=" .. brightness .. "\n"
 
 		if (_GET.lled == "on") then
-			gpio.write(lowerled, 0);
+			gpio.write(lowerled, 0)
 		elseif (_GET.lled == "off") then
-			gpio.write(lowerled, 1);
+			gpio.write(lowerled, 1)
 		end
 
 		if (_GET.uled == "on") then
-			gpio.write(upperled, 0);
+			gpio.write(upperled, 0)
 		elseif (_GET.uled == "off") then
-			gpio.write(upperled, 1);
+			gpio.write(upperled, 1)
 		end
 
-		client:send(buf);
-		client:close();
-		collectgarbage();
-    end)
+		client:send(buf)
+	end)
+	conn:on("sent", function(conn)
+		conn:close()
+		collectgarbage()
+	end)
 end)
