@@ -14,6 +14,9 @@ void writepin(char *pinstr, char val)
 	FILE *fh;
 
 	fh = fopen(pinstr, "w");
+	if (fh == NULL) {
+		err(1, "Unable to open %s", pinstr);
+	}
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
 	usleep(250);
