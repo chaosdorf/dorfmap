@@ -88,7 +88,6 @@ void writepin(char *pinstr, char val)
 	}
 	fprintf(fh, "%d\n", val);
 	fclose(fh);
-	usleep(50);
 }
 
 static void writebyte(unsigned char byte)
@@ -100,6 +99,7 @@ static void writebyte(unsigned char byte)
 #elif OUTMODE == OUTPUT_GPIO
 		writepin(sdastr, (byte & (1 << i)) ? 0 : 1);
 		writepin(sclstr, 0);
+		usleep(100);
 		writepin(sclstr, 1);
 #endif
 	}
