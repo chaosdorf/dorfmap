@@ -118,9 +118,6 @@ amp3                 883  370    0    0 helios1/3 \
   area=Hackcenter Hackcenter
 
 [layer=control]
-hp2100                830   60    0    0 feedback1/9 \
-  type=printer autooff=45m area=Hackcenter HP2100 (geht nach 45min automatisch aus)
-
 dashpi                883  330    0    0 none \
   type=server area=Hackcenter
 donationprint          70  390    0    0 none \
