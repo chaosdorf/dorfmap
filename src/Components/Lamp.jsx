@@ -1,6 +1,6 @@
-/* @flow */
+// @flow
 import { autobind } from 'core-decorators';
-import { toggleDevice, reduceDelay } from '../Actions/devices';
+import { reduceDelay, toggleDevice } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
@@ -12,41 +12,41 @@ function getImage(lamp: Object) {
   switch (lamp.status) {
     case 0:
     case '0':
-    status = '_off';
-    break;
+      status = '_off';
+      break;
     case 1:
     case '1':
-    status = '_on';
-    break;
+      status = '_on';
+      break;
     default:
-    break;
+      break;
   }
   let baseImage;
   switch (lamp.type) {
     case 'light':
-    baseImage = 'light';
-    break;
+      baseImage = 'light';
+      break;
     case 'light_au':
-    if (lamp.auto) {
-      baseImage = 'light_auto';
-    } else {
-      baseImage = 'light_noauto';
-    }
-    break;
+      if (lamp.auto) {
+        baseImage = 'light_auto';
+      } else {
+        baseImage = 'light_noauto';
+      }
+      break;
     default:
-    baseImage = lamp.type;
-    break;
+      baseImage = lamp.type;
+      break;
   }
   return `static/images/${baseImage}${status}.png`;
 }
 
 type Props = {
-  lamp: Lamp,
-}
+  lamp: Lamp
+};
 
 type State = {
-  dialogOpen: bool,
-}
+  dialogOpen: boolean
+};
 
 @ConfiguredRadium
 export default class LampComponent extends React.Component {
@@ -80,7 +80,7 @@ export default class LampComponent extends React.Component {
       text = `${text} (${lamp.rate_delay}s)`;
     }
     /* eslint-disable react/no-danger */
-    return <div dangerouslySetInnerHTML={{ __html: text }}/>;
+    return <div dangerouslySetInnerHTML={{ __html: text }} />;
     /* eslint-enable react/no-danger */
   }
   getDuplicate(lamp: Lamp, tooltipText: ?React.Element<*>) {
@@ -89,18 +89,20 @@ export default class LampComponent extends React.Component {
     }
 
     const dup = lamp.duplicates[0];
-    const dupStyle = [LampComponent.style.lamp.normal, {
-      left: dup.x1,
-      top: dup.y1,
-      width: lamp.x2,
-      height: lamp.y2,
-    }];
+    const dupStyle = [
+      LampComponent.style.lamp.normal,
+      {
+        left: dup.x1,
+        top: dup.y1,
+        width: lamp.x2,
+        height: lamp.y2,
+      },
+    ];
     if (lamp.is_writable && lamp.rate_delay <= 0) {
       dupStyle.push(LampComponent.style.lamp.writeable);
     }
     return (
-      <Tooltip destroyTooltipOnHide
-        overlay={tooltipText}>
+      <Tooltip destroyTooltipOnHide overlay={tooltipText}>
         <img
           ref="duplicate"
           onClick={this.toggle}
@@ -110,11 +112,10 @@ export default class LampComponent extends React.Component {
       </Tooltip>
     );
   }
-  @autobind
-  toggle() {
+  @autobind toggle() {
     const { lamp } = this.props;
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
-    // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
+      // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
       this.setState({
         dialogOpen: true,
       });
@@ -122,13 +123,12 @@ export default class LampComponent extends React.Component {
       toggleDevice(lamp);
     }
   }
-  @autobind
-  handleRequestClose() {
+  @autobind handleRequestClose() {
     this.setState({
       dialogOpen: false,
     });
   }
-  doesReduce: bool = false;
+  doesReduce: boolean = false;
   componentWillReceiveProps(props: Props) {
     const { lamp } = props;
     if (lamp.status === 1) {
@@ -156,20 +156,28 @@ export default class LampComponent extends React.Component {
   render() {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
-    const style = [LampComponent.style.lamp.normal, {
-      left: lamp.x1,
-      top: lamp.y1,
-      width: lamp.x2,
-      height: lamp.y2,
-    }];
+    const style = [
+      LampComponent.style.lamp.normal,
+      {
+        left: lamp.x1,
+        top: lamp.y1,
+        width: lamp.x2,
+        height: lamp.y2,
+      },
+    ];
     if (lamp.is_writable && lamp.rate_delay <= 0) {
       style.push(LampComponent.style.lamp.writeable);
     }
     let dialog;
     if (lamp.type === 'blinkenlight') {
-      dialog = (<BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
+      dialog = (
+        <BlinkenlightPopup
+          onRequestClose={this.handleRequestClose}
+          open={dialogOpen}
+          lamp={lamp}/>
+      );
       // Toggle me to enable beamer Popup!
-    // } else if (lamp.type === 'beamer') {
+      // } else if (lamp.type === 'beamer') {
       // dialog = (<BeamerPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
     const tooltipText = this.getTooltipText(lamp);
@@ -183,11 +191,11 @@ export default class LampComponent extends React.Component {
     );
     return (
       <div>
-        {
-          tooltipText ? (<Tooltip overlay={tooltipText}>
-            {img}
-          </Tooltip>) : img
-        }
+        {tooltipText
+          ? <Tooltip overlay={tooltipText}>
+              {img}
+            </Tooltip>
+          : img}
         {this.getDuplicate(lamp, tooltipText)}
         {dialog}
       </div>

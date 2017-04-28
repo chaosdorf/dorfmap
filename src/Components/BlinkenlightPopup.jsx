@@ -1,24 +1,23 @@
-/* @flow */
-import _ from 'lodash';
+// @flow
 import { autobind } from 'core-decorators';
+import { Button, Divider, Overlay, Panel } from 'rebass';
 import { connect } from 'react-redux';
-import { Button, Overlay, Panel, Divider } from 'rebass';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
+import { Radio, RadioGroup } from 'react-radio-group';
+import _ from 'lodash';
 import ConfiguredRadium from '../configuredRadium';
-import { RadioGroup, Radio } from 'react-radio-group';
 import React from 'react';
 
 type Props = {
   lamp: Object,
   onRequestClose: Function,
-  open: bool,
-  presets?: Object,
-}
+  open: boolean,
+  presets?: Object
+};
 
 type State = {
-  active?: bool,
-}
-
+  active?: boolean
+};
 
 const style = {
   buttonWrapper: {
@@ -38,19 +37,21 @@ export default class BlinkenlightPopup extends React.Component {
     fetchPresets(this.props.lamp);
   }
   componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.presets && nextProps.presets[nextProps.lamp.name] && nextProps.presets[nextProps.lamp.name].active) {
+    if (
+      nextProps.presets &&
+      nextProps.presets[nextProps.lamp.name] &&
+      nextProps.presets[nextProps.lamp.name].active
+    ) {
       this.setState({
         active: nextProps.presets[nextProps.lamp.name].active.raw_string,
       });
     }
   }
-  @autobind
-  save() {
+  @autobind save() {
     saveBlinkenlight(this.props.lamp, this.state.active);
     this.props.onRequestClose();
   }
-  @autobind
-  handleRadioChange(value: bool) {
+  @autobind handleRadioChange(value: boolean) {
     this.setState({
       active: value,
     });
@@ -63,26 +64,25 @@ export default class BlinkenlightPopup extends React.Component {
     }
     const actualPresets = presets[lamp.name].presets;
     return (
-      <Overlay
-        onDismiss={onRequestClose}
-        open={open}>
+      <Overlay onDismiss={onRequestClose} open={open}>
         <Panel>
-          <RadioGroup selectedValue={active} ref="radio" onChange={this.handleRadioChange}>
-            {
-              _.map(actualPresets, (preset) => (
-                <div style={{ lineHeight: '32px' }} key={preset.name}>
-                  <label>
-                    <Radio style={{ marginRight: 5 }} value={preset.raw_string}/>
-                    {preset.name}
-                  </label>
-                </div>
-              ))
-            }
+          <RadioGroup
+            selectedValue={active}
+            ref="radio"
+            onChange={this.handleRadioChange}>
+            {_.map(actualPresets, preset => (
+              <div style={{ lineHeight: '32px' }} key={preset.name}>
+                <label>
+                  <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
+                  {preset.name}
+                </label>
+              </div>
+            ))}
           </RadioGroup>
-          <Divider/>
+          <Divider />
           <div style={style.buttonWrapper}>
-            <Button onClick={onRequestClose}>Cancel</Button>
-            <Button onClick={this.save}>Save</Button>
+            <Button onClick={onRequestClose}>{'Cancel'}</Button>
+            <Button onClick={this.save}>{'Save'}</Button>
           </div>
         </Panel>
       </Overlay>

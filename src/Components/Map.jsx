@@ -1,15 +1,14 @@
-/* @flow */
-import { fetchDevices } from '../Actions/devices';
+// @flow
 import { connect } from 'react-redux';
-import LampComponent from './Lamp';
+import { fetchDevices } from '../Actions/devices';
 import ConfiguredRadium from 'configuredRadium';
+import LampComponent from './Lamp';
 import React from 'react';
 import type { Map } from 'immutable';
 
-
 type Props = {
-  lamps?: Map<string, Lamp>,
-}
+  lamps?: Map<string, Lamp>
+};
 
 @connect(state => ({
   lamps: state.devices,
@@ -37,9 +36,9 @@ export default class DMap extends React.Component {
     }
     return (
       <div style={DMap.style.wrapper}>
-        {
-          lamps.map((lamp, key) => <LampComponent key={key} lamp={lamp}/>).toArray()
-        }
+        {lamps
+          .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
+          .toArray()}
       </div>
     );
   }

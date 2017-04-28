@@ -1,15 +1,15 @@
-/* @flow */
+// @flow
 import { autobind } from 'core-decorators';
-import { fetchMenues } from '../Actions/menu';
 import { Button } from 'rebass';
+import { fetchMenues } from '../Actions/menu';
 import ConfiguredRadium from 'configuredRadium';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 
 type State = {
-  open?: bool,
-  title?: string,
-}
+  open?: boolean,
+  title?: string
+};
 
 @ConfiguredRadium
 export default class OptionDialogs extends React.Component {
@@ -35,36 +35,32 @@ export default class OptionDialogs extends React.Component {
     let title;
     switch (action) {
       case this.actions.actions:
-      title = 'actions';
-      break;
+        title = 'actions';
+        break;
       case this.actions.presets:
-      title = 'presets';
-      break;
+        title = 'presets';
+        break;
       case this.actions.layers:
-      title = 'layers';
-      break;
+        title = 'layers';
+        break;
       default:
-      break;
+        break;
     }
     this.setState({
       title,
       open: true,
     });
   }
-  @autobind
-  handleActionsClick() {
+  @autobind handleActionsClick() {
     this.handleClick(this.actions.actions);
   }
-  @autobind
-  handlePresetsClick() {
+  @autobind handlePresetsClick() {
     this.handleClick(this.actions.presets);
   }
-  @autobind
-  handleLayersClick() {
+  @autobind handleLayersClick() {
     this.handleClick(this.actions.layers);
   }
-  @autobind
-  handleRequestClose() {
+  @autobind handleRequestClose() {
     this.setState({ open: false });
   }
   toMete() {
@@ -81,14 +77,22 @@ export default class OptionDialogs extends React.Component {
       <div>
         <div style={OptionDialogs.style.dialogs} className="optionDialogs">
           <div>
-            <Button rounded="left" onClick={this.handleActionsClick}>Actions</Button>
-            <Button rounded={false} onClick={this.handlePresetsClick}>Presets</Button>
-            <Button rounded="right" onClick={this.handleLayersClick}>Layers</Button>
+            <Button rounded="left" onClick={this.handleActionsClick}>
+              {'Actions'}
+            </Button>
+            <Button rounded={false} onClick={this.handlePresetsClick}>
+              {'Presets'}
+            </Button>
+            <Button rounded="right" onClick={this.handleLayersClick}>
+              {'Layers'}
+            </Button>
           </div>
           <div>
-            <Button rounded="left" onClick={this.toMete}>Mete</Button>
-            <Button rounded={false} onClick={this.toLabello}>Labello</Button>
-            <Button rounded="right" onClick={this.toMPD}>MPD</Button>
+            <Button rounded="left" onClick={this.toMete}>{'Mete'}</Button>
+            <Button rounded={false} onClick={this.toLabello}>
+              {'Labello'}
+            </Button>
+            <Button rounded="right" onClick={this.toMPD}>{'MPD'}</Button>
           </div>
         </div>
 

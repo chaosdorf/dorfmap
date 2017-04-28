@@ -1,8 +1,8 @@
-/* @flow */
-import _ from 'lodash';
+// @flow
 import { connect } from 'react-redux';
 import { Overlay, Panel } from 'rebass';
-import { Tabs, Tab, TabList, TabPanel } from 'react-tabs';
+import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import _ from 'lodash';
 import MenuEntries from './MenuEntries';
 import React from 'react';
 
@@ -22,9 +22,7 @@ export default class OptionDialog extends React.Component {
     const selectedIndex = Object.keys(menues).indexOf(activeType);
 
     return (
-      <Overlay
-        onDismiss={this.props.handleRequestClose}
-        open={open}>
+      <Overlay onDismiss={this.props.handleRequestClose} open={open}>
         <Panel>
           <Tabs selectedIndex={selectedIndex}>
             <TabList>
@@ -36,7 +34,10 @@ export default class OptionDialog extends React.Component {
             </TabList>
             {_.map(this.props.menues, (entries, type) => (
               <TabPanel key={type}>
-                <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose}/>
+                <MenuEntries
+                  entries={entries}
+                  type={type}
+                  closeFn={this.props.handleRequestClose}/>
               </TabPanel>
             ))}
           </Tabs>

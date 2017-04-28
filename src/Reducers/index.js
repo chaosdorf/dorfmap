@@ -1,13 +1,13 @@
-/* @flow */
+// @flow
 import { handleActions } from 'redux-actions';
 import { Map } from 'immutable';
 
 function updateModes(state, { payload }) {
-   state.beamerModes[payload.name] = payload.modes;
-   return {
-     beamerModes: Object.assign(state.beamerModes),
-   };
- }
+  state.beamerModes[payload.name] = payload.modes;
+  return {
+    beamerModes: Object.assign(state.beamerModes),
+  };
+}
 
 function updateDevices(state, { payload }) {
   state.allDevices = state.allDevices.set(payload.name, payload);
@@ -31,43 +31,46 @@ function updateDevicesFromPayload(state, { payload }) {
   };
 }
 
-export default handleActions({
-  FETCH_BEAMER: updateModes,
-  FETCH_MENUES: (state, { payload }) => ({
-    menues: payload,
-  }),
-  FETCH_DEVICES: updateDevicesFromPayload,
-  UPDATE_DEVICE: (state, { payload }) => {
-    const device = state.allDevices.find(d => d.name === payload.name);
-    if (device) {
-      /* eslint-disable camelcase */
-      device.rate_delay = payload.rate_delay;
-      /* eslint-enable camelcase */
-      device.status = payload.status;
-      return updateDevices(state, { payload: device });
-    }
-    return undefined;
+export default handleActions(
+  {
+    FETCH_BEAMER: updateModes,
+    FETCH_MENUES: (state, { payload }) => ({
+      menues: payload,
+    }),
+    FETCH_DEVICES: updateDevicesFromPayload,
+    UPDATE_DEVICE: (state, { payload }) => {
+      const device = state.allDevices.find(d => d.name === payload.name);
+      if (device) {
+        /* eslint-disable camelcase */
+        device.rate_delay = payload.rate_delay;
+        /* eslint-enable camelcase */
+        device.status = payload.status;
+        return updateDevices(state, { payload: device });
+      }
+      return undefined;
+    },
+    CHANGE_LAYER: (state, { payload }) => ({
+      layer: payload,
+      devices: state.allDevices.filter(l => l.layer === payload),
+    }),
+    TOGGLE_DEVICE: updateDevices,
+    REDUCE_DELAY: updateDevices,
+    FETCH_SEGMENT_MODES: (state, { payload }) => ({
+      segmentModes: payload,
+    }),
+    CHANGE_SEGMENT: updateDevices,
+    FETCH_PRESETS: updatePresets,
+    SAVE_BLINKENLIGHT: updatePresets,
+    EXECUTE_PRESET: updateDevicesFromPayload,
+    EXECUTE_SHORTCUT: updateDevicesFromPayload,
   },
-  CHANGE_LAYER: (state, { payload }) => ({
-    layer: payload,
-    devices: state.allDevices.filter(l => l.layer === payload),
-  }),
-  TOGGLE_DEVICE: updateDevices,
-  REDUCE_DELAY: updateDevices,
-  FETCH_SEGMENT_MODES: (state, { payload }) => ({
-    segmentModes: payload,
-  }),
-  CHANGE_SEGMENT: updateDevices,
-  FETCH_PRESETS: updatePresets,
-  SAVE_BLINKENLIGHT: updatePresets,
-  EXECUTE_PRESET: updateDevicesFromPayload,
-  EXECUTE_SHORTCUT: updateDevicesFromPayload,
-}, {
-  allDevices: Map(),
-  devices: Map(),
-  layer: 'control',
-  menues: {},
-  presets: {},
-  segmentModes: {},
-  beamerModes: {},
-});
+  {
+    allDevices: Map(),
+    devices: Map(),
+    layer: 'control',
+    menues: {},
+    presets: {},
+    segmentModes: {},
+    beamerModes: {},
+  }
+);

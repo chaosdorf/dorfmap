@@ -1,7 +1,12 @@
-/* @flow */
-import _ from 'lodash';
-import { createStore, bindActionCreators, compose, applyMiddleware } from 'redux';
+// @flow
+import {
+  applyMiddleware,
+  bindActionCreators,
+  compose,
+  createStore,
+} from 'redux';
 import { Provider } from 'react-redux';
+import _ from 'lodash';
 import React from 'react';
 import reduxPromise from 'redux-promise';
 
@@ -31,9 +36,7 @@ if (__DEV__) {
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )(createStore)(reducer);
 } else {
-  const createDevStore = compose(
-    applyMiddleware(reduxPromise)
-  )(createStore);
+  const createDevStore = compose(applyMiddleware(reduxPromise))(createStore);
 
   store = createDevStore(reducer);
 
@@ -70,7 +73,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <Dorfmap/>
+        <Dorfmap />
       </Provider>
     );
   }

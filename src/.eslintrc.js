@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  'globals': {
+  globals: {
     __DEV__: false,
     BASE_HOST: false,
     PRIMUS: false,
@@ -13,5 +13,6 @@ module.exports = {
   rules: {
     'generator-star-spacing': 0,
     'import/prefer-default-export': 0,
+    'react/jsx-no-bind': 0,
   },
-}
+};

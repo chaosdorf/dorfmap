@@ -1,10 +1,13 @@
-/* @flow */
-import _ from 'lodash';
-import { changeLayer, executePreset, executeShortcut } from '../Actions/devices';
+// @flow
 import { ButtonOutline } from 'rebass';
+import {
+  changeLayer,
+  executePreset,
+  executeShortcut,
+} from '../Actions/devices';
+import _ from 'lodash';
 import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
-
 
 @ConfiguredRadium
 export default class MenuEntries extends React.Component {
@@ -26,22 +29,27 @@ export default class MenuEntries extends React.Component {
   handleClick(entry: any) {
     switch (this.props.type) {
       case 'layers':
-      changeLayer(entry);
-      break;
+        changeLayer(entry);
+        break;
       case 'presets':
-      executePreset(entry);
-      break;
+        executePreset(entry);
+        break;
       case 'actions':
-      executeShortcut(entry);
-      break;
+        executeShortcut(entry);
+        break;
       default:
-      break;
+        break;
     }
     this.props.closeFn();
   }
   render() {
     const entries = _.map(this.props.entries, entry => (
-      <ButtonOutline style={MenuEntries.style.button} key={entry} onClick={this.handleClick.bind(this, entry)}>{entry}</ButtonOutline>
+      <ButtonOutline
+        style={MenuEntries.style.button}
+        key={entry}
+        onClick={this.handleClick.bind(this, entry)}>
+        {entry}
+      </ButtonOutline>
     ));
     return (
       <div style={MenuEntries.style.wrapper}>

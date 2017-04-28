@@ -1,4 +1,4 @@
-/* @flow */
+// @flow
 import Radium from 'radium';
 
 export default function(component: any): any {
