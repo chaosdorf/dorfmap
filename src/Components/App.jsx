@@ -7,6 +7,7 @@ import {
 } from 'redux';
 import { Provider } from 'react-redux';
 import _ from 'lodash';
+import PropTypes from 'prop-types';
 import React from 'react';
 import reduxPromise from 'redux-promise';
 
@@ -63,7 +64,7 @@ const Dorfmap = require('./Dorfmap').default;
 
 export default class App extends React.Component {
   static childContextTypes = {
-    store: React.PropTypes.any,
+    store: PropTypes.any,
   };
   getChildContext(): Object {
     return {

@@ -1,11 +1,11 @@
 // @flow
-import { autobind } from 'core-decorators';
-import { Button, Divider, Overlay, Panel } from 'rebass';
 import { connect } from 'react-redux';
 import { fetchBeamer, saveBeamer } from '../Actions/devices';
 import { Radio, RadioGroup } from 'react-radio-group';
 import _ from 'lodash';
 import ConfiguredRadium from '../configuredRadium';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
 
 type Props = {
@@ -17,13 +17,6 @@ type Props = {
 
 type State = {
   active?: boolean
-};
-
-const style = {
-  buttonWrapper: {
-    display: 'flex',
-    justifyContent: 'space-around',
-  },
 };
 
 @ConfiguredRadium
@@ -47,15 +40,15 @@ export default class BeamerPopup extends React.Component {
       });
     }
   }
-  @autobind save() {
+  save = () => {
     saveBeamer(this.props.lamp, this.state.active);
     this.props.onRequestClose();
-  }
-  @autobind handleRadioChange(value: boolean) {
+  };
+  handleRadioChange = (value: boolean) => {
     this.setState({
       active: value,
     });
-  }
+  };
   render() {
     const { onRequestClose, open, modes, lamp } = this.props;
     const { active } = this.state;
@@ -63,29 +56,26 @@ export default class BeamerPopup extends React.Component {
       return null;
     }
     const actualModes = modes[lamp.name];
+    const actions = [
+      <FlatButton key="a" onClick={onRequestClose}>{'Cancel'}</FlatButton>,
+      <FlatButton key="b" onClick={this.save}>{'Save'}</FlatButton>,
+    ];
     return (
-      <Overlay onDismiss={onRequestClose} open={open}>
-        <Panel>
-          <RadioGroup
-            selectedValue={active}
-            ref="radio"
-            onChange={this.handleRadioChange}>
-            {_.map(actualModes, mode => (
-              <div style={{ lineHeight: '32px' }} key={mode.description}>
-                <label>
-                  <Radio style={{ marginRight: 5 }} value={mode.name} />
-                  {mode.description}
-                </label>
-              </div>
-            ))}
-          </RadioGroup>
-          <Divider />
-          <div style={style.buttonWrapper}>
-            <Button onClick={onRequestClose}>{'Cancel'}</Button>
-            <Button onClick={this.save}>{'Save'}</Button>
-          </div>
-        </Panel>
-      </Overlay>
+      <Dialog actions={actions} onDismiss={onRequestClose} open={open}>
+        <RadioGroup
+          selectedValue={active}
+          ref="radio"
+          onChange={this.handleRadioChange}>
+          {_.map(actualModes, mode => (
+            <div style={{ lineHeight: '32px' }} key={mode.description}>
+              <label>
+                <Radio style={{ marginRight: 5 }} value={mode.name} />
+                {mode.description}
+              </label>
+            </div>
+          ))}
+        </RadioGroup>
+      </Dialog>
     );
   }
 }

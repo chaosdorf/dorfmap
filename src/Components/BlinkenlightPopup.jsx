@@ -1,11 +1,11 @@
 // @flow
-import { autobind } from 'core-decorators';
-import { Button, Divider, Overlay, Panel } from 'rebass';
 import { connect } from 'react-redux';
 import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
 import { Radio, RadioGroup } from 'react-radio-group';
 import _ from 'lodash';
 import ConfiguredRadium from '../configuredRadium';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
 
 type Props = {
@@ -17,13 +17,6 @@ type Props = {
 
 type State = {
   active?: boolean
-};
-
-const style = {
-  buttonWrapper: {
-    display: 'flex',
-    justifyContent: 'space-around',
-  },
 };
 
 @ConfiguredRadium
@@ -47,15 +40,15 @@ export default class BlinkenlightPopup extends React.Component {
       });
     }
   }
-  @autobind save() {
+  save = () => {
     saveBlinkenlight(this.props.lamp, this.state.active);
     this.props.onRequestClose();
-  }
-  @autobind handleRadioChange(value: boolean) {
+  };
+  handleRadioChange = (value: boolean) => {
     this.setState({
       active: value,
     });
-  }
+  };
   render() {
     const { onRequestClose, open, presets, lamp } = this.props;
     const { active } = this.state;
@@ -63,9 +56,13 @@ export default class BlinkenlightPopup extends React.Component {
       return null;
     }
     const actualPresets = presets[lamp.name].presets;
+    const actions = [
+      <FlatButton key="c" onClick={onRequestClose}>{'Cancel'}</FlatButton>,
+      <FlatButton key="s" onClick={this.save}>{'Save'}</FlatButton>,
+    ];
     return (
-      <Overlay onDismiss={onRequestClose} open={open}>
-        <Panel>
+      <Dialog actions={actions} onRequestClose={onRequestClose} open={open}>
+        <div>
           <RadioGroup
             selectedValue={active}
             ref="radio"
@@ -79,13 +76,8 @@ export default class BlinkenlightPopup extends React.Component {
               </div>
             ))}
           </RadioGroup>
-          <Divider />
-          <div style={style.buttonWrapper}>
-            <Button onClick={onRequestClose}>{'Cancel'}</Button>
-            <Button onClick={this.save}>{'Save'}</Button>
-          </div>
-        </Panel>
-      </Overlay>
+        </div>
+      </Dialog>
     );
   }
 }

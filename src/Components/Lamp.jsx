@@ -1,8 +1,8 @@
 // @flow
-import { autobind } from 'core-decorators';
 import { reduceDelay, toggleDevice } from '../Actions/devices';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import ConfiguredRadium from 'configuredRadium';
+import PropTypes from 'prop-types';
 import React from 'react';
 import Tooltip from 'rc-tooltip';
 // import BeamerPopup from './BeamerPopup';
@@ -52,7 +52,7 @@ type State = {
 export default class LampComponent extends React.Component {
   props: Props;
   static propTypes = {
-    lamp: React.PropTypes.object.isRequired,
+    lamp: PropTypes.object.isRequired,
   };
   static style = {
     lamp: {
@@ -112,7 +112,7 @@ export default class LampComponent extends React.Component {
       </Tooltip>
     );
   }
-  @autobind toggle() {
+  toggle = () => {
     const { lamp } = this.props;
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
       // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
@@ -122,12 +122,12 @@ export default class LampComponent extends React.Component {
     } else if (lamp.rate_delay <= 0) {
       toggleDevice(lamp);
     }
-  }
-  @autobind handleRequestClose() {
+  };
+  handleRequestClose = () => {
     this.setState({
       dialogOpen: false,
     });
-  }
+  };
   doesReduce: boolean = false;
   componentWillReceiveProps(props: Props) {
     const { lamp } = props;

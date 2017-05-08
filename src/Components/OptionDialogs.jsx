@@ -1,8 +1,7 @@
 // @flow
-import { autobind } from 'core-decorators';
-import { Button } from 'rebass';
 import { fetchMenues } from '../Actions/menu';
 import ConfiguredRadium from 'configuredRadium';
+import FlatButton from 'material-ui/FlatButton';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 
@@ -13,15 +12,6 @@ type State = {
 
 @ConfiguredRadium
 export default class OptionDialogs extends React.Component {
-  static style = {
-    dialogs: {
-      display: 'flex',
-      justifyContent: 'space-around',
-      marginTop: 5,
-      marginLeft: 10,
-      width: '70%',
-    },
-  };
   actions: Object = {
     actions: 0,
     presets: 1,
@@ -51,18 +41,18 @@ export default class OptionDialogs extends React.Component {
       open: true,
     });
   }
-  @autobind handleActionsClick() {
+  handleActionsClick = () => {
     this.handleClick(this.actions.actions);
-  }
-  @autobind handlePresetsClick() {
+  };
+  handlePresetsClick = () => {
     this.handleClick(this.actions.presets);
-  }
-  @autobind handleLayersClick() {
+  };
+  handleLayersClick = () => {
     this.handleClick(this.actions.layers);
-  }
-  @autobind handleRequestClose() {
+  };
+  handleRequestClose = () => {
     this.setState({ open: false });
-  }
+  };
   toMete() {
     window.open('https://mete.chaosdorf.space');
   }
@@ -75,24 +65,24 @@ export default class OptionDialogs extends React.Component {
   render() {
     return (
       <div>
-        <div style={OptionDialogs.style.dialogs} className="optionDialogs">
+        <div style={style.dialogs} className="optionDialogs">
           <div>
-            <Button rounded="left" onClick={this.handleActionsClick}>
+            <FlatButton onClick={this.handleActionsClick}>
               {'Actions'}
-            </Button>
-            <Button rounded={false} onClick={this.handlePresetsClick}>
+            </FlatButton>
+            <FlatButton onClick={this.handlePresetsClick}>
               {'Presets'}
-            </Button>
-            <Button rounded="right" onClick={this.handleLayersClick}>
+            </FlatButton>
+            <FlatButton onClick={this.handleLayersClick}>
               {'Layers'}
-            </Button>
+            </FlatButton>
           </div>
           <div>
-            <Button rounded="left" onClick={this.toMete}>{'Mete'}</Button>
-            <Button rounded={false} onClick={this.toLabello}>
+            <FlatButton onClick={this.toMete}>{'Mete'}</FlatButton>
+            <FlatButton onClick={this.toLabello}>
               {'Labello'}
-            </Button>
-            <Button rounded="right" onClick={this.toMPD}>{'MPD'}</Button>
+            </FlatButton>
+            <FlatButton onClick={this.toMPD}>{'MPD'}</FlatButton>
           </div>
         </div>
 
@@ -104,3 +94,13 @@ export default class OptionDialogs extends React.Component {
     );
   }
 }
+
+const style = {
+  dialogs: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    marginTop: 5,
+    marginLeft: 10,
+    width: '70%',
+  },
+};

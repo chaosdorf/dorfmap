@@ -1,5 +1,4 @@
 // @flow
-import { ButtonOutline } from 'rebass';
 import {
   changeLayer,
   executePreset,
@@ -7,25 +6,18 @@ import {
 } from '../Actions/devices';
 import _ from 'lodash';
 import ConfiguredRadium from 'configuredRadium';
+import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
+
+type Props = {
+  closeFn: Function,
+  entries: ?(any[]),
+  type: string
+};
 
 @ConfiguredRadium
 export default class MenuEntries extends React.Component {
-  static propTypes = {
-    closeFn: React.PropTypes.func,
-    entries: React.PropTypes.array,
-    type: React.PropTypes.string.isRequired,
-  };
-  static style = {
-    wrapper: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    button: {
-      marginTop: 2,
-      marginBottom: 2,
-    },
-  };
+  props: Props;
   handleClick(entry: any) {
     switch (this.props.type) {
       case 'layers':
@@ -44,17 +36,28 @@ export default class MenuEntries extends React.Component {
   }
   render() {
     const entries = _.map(this.props.entries, entry => (
-      <ButtonOutline
-        style={MenuEntries.style.button}
+      <FlatButton
+        style={style.button}
         key={entry}
         onClick={this.handleClick.bind(this, entry)}>
         {entry}
-      </ButtonOutline>
+      </FlatButton>
     ));
     return (
-      <div style={MenuEntries.style.wrapper}>
+      <div style={style.wrapper}>
         {entries}
       </div>
     );
   }
 }
+
+const style = {
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  button: {
+    marginTop: 2,
+    marginBottom: 2,
+  },
+};

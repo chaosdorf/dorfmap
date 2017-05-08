@@ -1,19 +1,36 @@
 {
-  "presets": ["react", "es2015", "stage-2"],
+  "presets": [["env", {
+      "targets": {
+        "chrome": 45,
+        "firefox": 42,
+        "safari": 9,
+        "opera": 32,
+        "edge": 12,
+        "iOS": 9
+      },
+      "loose": true,
+      "useBuiltIns": true
+      }],
+      "react"
+    ],
   "plugins": [
     "transform-decorators-legacy",
-    "lodash"
+    "lodash",
+    "transform-class-properties",
+    "transform-object-rest-spread"
   ],
   "env": {
     "development": {
-      "plugins": [
-        "react-hot-loader/babel"
-      ]
-    },
+        "plugins": [
+          "transform-react-jsx-source",
+          "flow-react-proptypes",
+          "transform-dev-warning"
+        ]
+      },
     "production": {
+      "compact": true,
       "plugins": [
-        "transform-remove-console",
-        "transform-remove-debugger"
+        "transform-react-constant-elements"
       ]
     }
   }

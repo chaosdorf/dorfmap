@@ -1,48 +1,53 @@
 // @flow
 import { connect } from 'react-redux';
-import { Overlay, Panel } from 'rebass';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+import { Tab, Tabs } from 'material-ui/Tabs';
 import _ from 'lodash';
+import Dialog from 'material-ui/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
 
+type Props = {
+  activeType: ?string,
+  handleRequestClose: Function,
+  menues: Object,
+  open?: boolean
+};
 @connect(state => ({ menues: state.menues }))
 export default class OptionDialog extends React.Component {
-  static propTypes = {
-    activeType: React.PropTypes.string,
-    handleRequestClose: React.PropTypes.func,
-    menues: React.PropTypes.object,
-    open: React.PropTypes.bool,
-  };
+  // $FlowFixMe
+  props: Props;
   static defaultProps = {
     open: false,
   };
+  handleTabChange = () => this.forceUpdate();
   render() {
     const { menues, activeType, open } = this.props;
     const selectedIndex = Object.keys(menues).indexOf(activeType);
 
     return (
-      <Overlay onDismiss={this.props.handleRequestClose} open={open}>
-        <Panel>
-          <Tabs selectedIndex={selectedIndex}>
-            <TabList>
-              {_.map(this.props.menues, (entries, type) => (
-                <Tab key={type}>
-                  {_.capitalize(type)}
-                </Tab>
-              ))}
-            </TabList>
-            {_.map(this.props.menues, (entries, type) => (
-              <TabPanel key={type}>
-                <MenuEntries
-                  entries={entries}
-                  type={type}
-                  closeFn={this.props.handleRequestClose}/>
-              </TabPanel>
-            ))}
-          </Tabs>
-        </Panel>
-      </Overlay>
+      <Dialog
+        bodyStyle={style.wrapper}
+        onRequestClose={this.props.handleRequestClose}
+        open={open}>
+        <Tabs
+          onChange={this.handleTabChange}
+          initialSelectedIndex={selectedIndex}>
+          {_.map(this.props.menues, (entries, type) => (
+            <Tab key={type} label={_.capitalize(type)}>
+              <MenuEntries
+                entries={entries}
+                type={type}
+                closeFn={this.props.handleRequestClose}/>
+            </Tab>
+          ))}
+        </Tabs>
+      </Dialog>
     );
   }
 }
+
+const style = {
+  wrapper: {
+    padding: 0,
+  },
+};
