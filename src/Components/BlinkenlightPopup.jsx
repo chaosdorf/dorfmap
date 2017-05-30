@@ -12,11 +12,11 @@ type Props = {
   lamp: Object,
   onRequestClose: Function,
   open: boolean,
-  presets?: Object
+  presets?: Object,
 };
 
 type State = {
-  active?: boolean
+  active?: boolean,
 };
 
 @ConfiguredRadium
@@ -56,10 +56,12 @@ export default class BlinkenlightPopup extends React.Component {
       return null;
     }
     const actualPresets = presets[lamp.name].presets;
-    const actions = [
-      <FlatButton key="c" onClick={onRequestClose}>{'Cancel'}</FlatButton>,
-      <FlatButton key="s" onClick={this.save}>{'Save'}</FlatButton>,
-    ];
+    const actions = (
+      <div>
+        <FlatButton key="c" onClick={onRequestClose}>{'Cancel'}</FlatButton>
+        <FlatButton key="s" onClick={this.save}>{'Save'}</FlatButton>
+      </div>
+    );
     return (
       <Dialog actions={actions} onRequestClose={onRequestClose} open={open}>
         <div>

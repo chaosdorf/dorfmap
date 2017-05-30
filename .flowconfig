@@ -15,7 +15,6 @@ interfaces/
 
 [options]
 module.name_mapper='babel-polyfill$' -> 'ModuleStub'
-module.name_mapper='react-tabs$' -> 'ModuleStub'
 module.name_mapper='radium$' -> 'ModuleStub'
 module.name_mapper='react-hot-loader$' -> 'ModuleStub'
 module.name_mapper='react-hot-loader/patch$' -> 'ModuleStub'

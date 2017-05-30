@@ -12,11 +12,11 @@ type Props = {
   lamp: Object,
   onRequestClose: Function,
   open: boolean,
-  modes?: Object
+  modes?: Object,
 };
 
 type State = {
-  active?: boolean
+  active?: boolean,
 };
 
 @ConfiguredRadium
@@ -56,10 +56,12 @@ export default class BeamerPopup extends React.Component {
       return null;
     }
     const actualModes = modes[lamp.name];
-    const actions = [
-      <FlatButton key="a" onClick={onRequestClose}>{'Cancel'}</FlatButton>,
-      <FlatButton key="b" onClick={this.save}>{'Save'}</FlatButton>,
-    ];
+    const actions = (
+      <div>
+        <FlatButton key="a" onClick={onRequestClose}>{'Cancel'}</FlatButton>
+        <FlatButton key="b" onClick={this.save}>{'Save'}</FlatButton>
+      </div>
+    );
     return (
       <Dialog actions={actions} onDismiss={onRequestClose} open={open}>
         <RadioGroup

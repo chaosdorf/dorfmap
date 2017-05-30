@@ -10,7 +10,7 @@ type Props = {
   activeType: ?string,
   handleRequestClose: Function,
   menues: Object,
-  open?: boolean
+  open?: boolean,
 };
 @connect(state => ({ menues: state.menues }))
 export default class OptionDialog extends React.Component {
