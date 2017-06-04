@@ -1,5 +1,4 @@
 // @flow
-import { fetchDevices } from '../Actions/devices';
 import { inject, observer } from 'mobx-react';
 import LampComponent from './Lamp';
 import React from 'react';
@@ -23,9 +22,6 @@ export default class DMap extends React.Component {
       position: 'relative',
     },
   };
-  componentWillMount() {
-    fetchDevices();
-  }
   render() {
     const { deviceStore } = this.props;
     if (!deviceStore) {
