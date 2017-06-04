@@ -1,61 +1,50 @@
 // @flow
-import { connect } from 'react-redux';
-import { fetchPresets, saveBlinkenlight } from '../Actions/devices';
+import { inject, observer } from 'mobx-react';
 import { Radio, RadioGroup } from 'react-radio-group';
 import _ from 'lodash';
-import ConfiguredRadium from '../configuredRadium';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
+import type DeviceStore from 'Store/DeviceStore';
 
 type Props = {
   lamp: Object,
   onRequestClose: Function,
   open: boolean,
-  presets?: Object,
+  deviceStore?: DeviceStore,
 };
 
-type State = {
-  active?: boolean,
-};
-
-@ConfiguredRadium
-@connect(state => ({
-  presets: state.presets,
-}))
+@inject('deviceStore')
+@observer
 export default class BlinkenlightPopup extends React.Component {
   props: Props;
-  state: State = {};
   componentWillMount() {
-    fetchPresets(this.props.lamp);
-  }
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      nextProps.presets &&
-      nextProps.presets[nextProps.lamp.name] &&
-      nextProps.presets[nextProps.lamp.name].active
-    ) {
-      this.setState({
-        active: nextProps.presets[nextProps.lamp.name].active.raw_string,
-      });
+    const { deviceStore } = this.props;
+    if (deviceStore) {
+      deviceStore.fetchPresets(this.props.lamp);
     }
   }
   save = () => {
-    saveBlinkenlight(this.props.lamp, this.state.active);
+    const { deviceStore, lamp } = this.props;
+    if (deviceStore) {
+      deviceStore.savePreset(lamp.name);
+    }
     this.props.onRequestClose();
   };
-  handleRadioChange = (value: boolean) => {
-    this.setState({
-      active: value,
-    });
+  handleRadioChange = (value: string) => {
+    const { lamp, deviceStore } = this.props;
+    if (deviceStore) {
+      deviceStore.setActivePreset(lamp.name, value);
+      this.forceUpdate();
+    }
   };
   render() {
-    const { onRequestClose, open, presets, lamp } = this.props;
-    const { active } = this.state;
-    if (!presets || !presets[lamp.name]) {
+    const { onRequestClose, open, lamp, deviceStore } = this.props;
+    if (!deviceStore || !deviceStore.presets.has(lamp.name)) {
       return null;
     }
-    const actualPresets = presets[lamp.name].presets;
+    const presets = deviceStore.presets.get(lamp.name);
+    const actualPresets = presets.presets;
     const actions = (
       <div>
         <FlatButton key="c" onClick={onRequestClose}>{'Cancel'}</FlatButton>
@@ -66,17 +55,17 @@ export default class BlinkenlightPopup extends React.Component {
       <Dialog actions={actions} onRequestClose={onRequestClose} open={open}>
         <div>
           <RadioGroup
-            selectedValue={active}
+            selectedValue={presets.active ? presets.active.raw_string : null}
             ref="radio"
             onChange={this.handleRadioChange}>
-            {_.map(actualPresets, preset => (
-              <div style={{ lineHeight: '32px' }} key={preset.name}>
+            {_.map(actualPresets, preset =>
+              (<div style={{ lineHeight: '32px' }} key={preset.name}>
                 <label>
                   <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
                   {preset.name}
                 </label>
-              </div>
-            ))}
+              </div>)
+            )}
           </RadioGroup>
         </div>
       </Dialog>

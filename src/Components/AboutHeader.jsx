@@ -1,5 +1,4 @@
 // @flow
-import ConfiguredRadium from 'configuredRadium';
 import React from 'react';
 
 const AboutHeader = () => (
@@ -34,7 +33,7 @@ const AboutHeader = () => (
   </div>
 );
 
-export default ConfiguredRadium(AboutHeader);
+export default AboutHeader;
 
 const style = {
   wrapper: {

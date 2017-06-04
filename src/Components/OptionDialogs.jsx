@@ -1,16 +1,15 @@
 // @flow
-import { fetchMenues } from '../Actions/menu';
-import ConfiguredRadium from 'configuredRadium';
+import { inject } from 'mobx-react';
 import FlatButton from 'material-ui/FlatButton';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 
 type State = {
   open?: boolean,
-  title?: string
+  title?: string,
 };
 
-@ConfiguredRadium
+@inject('menuStore')
 export default class OptionDialogs extends React.Component {
   actions: Object = {
     actions: 0,
@@ -19,7 +18,7 @@ export default class OptionDialogs extends React.Component {
   };
   state: State = {};
   componentWillMount() {
-    fetchMenues();
+    this.props.menuStore.fetchMenues();
   }
   handleClick(action: number) {
     let title;

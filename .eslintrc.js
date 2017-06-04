@@ -10,9 +10,5 @@ module.exports = {
     PRIMUS: false,
     SENTRY: false,
   },
-  rules: {
-    'generator-star-spacing': 0,
-    'import/prefer-default-export': 0,
-    'react/jsx-no-bind': 0,
-  },
+  rules: {},
 };

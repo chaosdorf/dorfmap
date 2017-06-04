@@ -1,81 +1,19 @@
 // @flow
-import {
-  applyMiddleware,
-  bindActionCreators,
-  compose,
-  createStore,
-} from 'redux';
-import { Provider } from 'react-redux';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { Provider } from 'mobx-react';
+import { setupPrimus } from '../primus';
+import DeviceStore from 'Store/DeviceStore';
+import Dorfmap from './Dorfmap';
+import MenuStore from 'Store/MenuStore';
 import React from 'react';
-import reduxPromise from 'redux-promise';
 
-let store;
+const menuStore = new MenuStore();
+const deviceStore = new DeviceStore();
 
-const reduxActions = require('redux-actions');
+setupPrimus(deviceStore);
 
-reduxActions.handleActions = (function(old) {
-  return function(reducerMap: Object, ...rest) {
-    _.forEach(reducerMap, (r, index) => {
-      reducerMap[index] = function(state, action) {
-        const newState = r(state, action);
-        return {
-          ...state,
-          ...newState,
-        };
-      };
-    });
-    return old.call(this, reducerMap, ...rest);
-  };
-}(reduxActions.handleActions));
-const reducer = require('../Reducers').default;
+const App = () =>
+  (<Provider deviceStore={deviceStore} menuStore={menuStore}>
+    <Dorfmap />
+  </Provider>);
 
-if (__DEV__) {
-  store = compose(
-    applyMiddleware(reduxPromise),
-    window.devToolsExtension ? window.devToolsExtension() : f => f
-  )(createStore)(reducer);
-} else {
-  const createDevStore = compose(applyMiddleware(reduxPromise))(createStore);
-
-  store = createDevStore(reducer);
-
-  if (module.hot) {
-    // $FlowFixMe
-    module.hot.accept('../Reducers', () => {
-      const nextRootReducer = require('../Reducers').default;
-
-      store.replaceReducer(nextRootReducer);
-    });
-  }
-}
-
-global.store = store;
-
-reduxActions.createAction = (function(old) {
-  return function(...args) {
-    const action = old.apply(this, args);
-    return bindActionCreators(action, store.dispatch);
-  };
-}(reduxActions.createAction));
-
-const Dorfmap = require('./Dorfmap').default;
-
-export default class App extends React.Component {
-  static childContextTypes = {
-    store: PropTypes.any,
-  };
-  getChildContext(): Object {
-    return {
-      store,
-    };
-  }
-  render() {
-    return (
-      <Provider store={store}>
-        <Dorfmap />
-      </Provider>
-    );
-  }
-}
+export default App;

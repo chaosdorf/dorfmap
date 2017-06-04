@@ -1,17 +1,18 @@
+// @flow
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const node_env = (process.env.NODE_ENV || 'development').trim();
+const nodeEnv = (process.env.NODE_ENV || 'development').trim();
 const DashboardPlugin = require('webpack-dashboard/plugin');
 
-const __DEV__ = node_env !== 'production';
+const __DEV__ = nodeEnv !== 'production';
 
 const devtool = __DEV__ ? '#source-map' : '';
 
 const plugins = [
   new webpack.DefinePlugin({
     'process.env': {
-      NODE_ENV: JSON.stringify(node_env),
+      NODE_ENV: JSON.stringify(nodeEnv),
     },
     __DEV__: JSON.stringify(__DEV__),
     BASE_HOST: JSON.stringify(
@@ -76,18 +77,18 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /(node_modules|primusClient)/,
         loader: 'babel-loader',
-        query: {cacheDirectory: true},
+        query: { cacheDirectory: true },
       },
       {
         test: /\.(CSS|css)\.js$/,
         exclude: /(node_modules)/,
         loader: 'inline-css-loader',
       },
-      {test: /\.pdf$/, loader: 'file-loader'},
-      {test: /\.(eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file-loader'},
-      {test: /\.(jpg|png|gif|jpeg|ico)$/, loader: 'url-loader'},
-      {test: /\.json$/, loader: 'json-loader'},
-      {test: /\.css$/, loader: 'style-loader!css-loader'},
+      { test: /\.pdf$/, loader: 'file-loader' },
+      { test: /\.(eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file-loader' },
+      { test: /\.(jpg|png|gif|jpeg|ico)$/, loader: 'url-loader' },
+      { test: /\.json$/, loader: 'json-loader' },
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
     ],
     noParse: [
       /primusClient\.js/,

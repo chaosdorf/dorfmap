@@ -1,19 +1,16 @@
 // @flow
-import { connect } from 'react-redux';
 import { fetchDevices } from '../Actions/devices';
-import ConfiguredRadium from 'configuredRadium';
+import { inject, observer } from 'mobx-react';
 import LampComponent from './Lamp';
 import React from 'react';
-import type { Map } from 'immutable';
+import type DeviceStore from 'Store/DeviceStore';
 
 type Props = {
-  lamps?: Map<string, Lamp>
+  deviceStore?: DeviceStore,
 };
 
-@connect(state => ({
-  lamps: state.devices,
-}))
-@ConfiguredRadium
+@inject('deviceStore')
+@observer
 export default class DMap extends React.Component {
   props: Props;
   static style = {
@@ -30,13 +27,13 @@ export default class DMap extends React.Component {
     fetchDevices();
   }
   render() {
-    const { lamps } = this.props;
-    if (!lamps) {
+    const { deviceStore } = this.props;
+    if (!deviceStore) {
       return null;
     }
     return (
       <div style={DMap.style.wrapper}>
-        {lamps
+        {deviceStore.devices
           .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
           .toArray()}
       </div>

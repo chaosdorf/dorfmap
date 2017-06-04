@@ -1,6 +1,7 @@
 // @flow
 import './vendor.js';
 import App from './Components/App';
+import './cxsRender';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './primus';

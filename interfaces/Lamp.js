@@ -7,6 +7,7 @@ export type Lamp = {
   y2: number,
   name: string,
   type: string,
-  status: 0|1,
+  status: 0 | 1,
   duplicates?: Lamp[],
-}
+  layer: string,
+};

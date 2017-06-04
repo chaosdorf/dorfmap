@@ -1,11 +1,10 @@
 // @flow
-import { reduceDelay, toggleDevice } from '../Actions/devices';
+import { inject } from 'mobx-react';
 import BlinkenlightPopup from './BlinkenlightPopup';
-import ConfiguredRadium from 'configuredRadium';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Tooltip from 'rc-tooltip';
-// import BeamerPopup from './BeamerPopup';
+import type DeviceStore from 'Store/DeviceStore';
 
 function getImage(lamp: Object) {
   let status = '';
@@ -41,14 +40,15 @@ function getImage(lamp: Object) {
 }
 
 type Props = {
-  lamp: Lamp
+  lamp: Lamp,
+  deviceStore?: DeviceStore,
 };
 
 type State = {
-  dialogOpen: boolean
+  dialogOpen: boolean,
 };
 
-@ConfiguredRadium
+@inject('deviceStore')
 export default class LampComponent extends React.Component {
   props: Props;
   static propTypes = {
@@ -113,14 +113,14 @@ export default class LampComponent extends React.Component {
     );
   }
   toggle = () => {
-    const { lamp } = this.props;
+    const { lamp, deviceStore } = this.props;
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
       // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
       this.setState({
         dialogOpen: true,
       });
-    } else if (lamp.rate_delay <= 0) {
-      toggleDevice(lamp);
+    } else if (lamp.rate_delay <= 0 && deviceStore) {
+      deviceStore.toggleDevice(lamp);
     }
   };
   handleRequestClose = () => {
@@ -137,7 +137,6 @@ export default class LampComponent extends React.Component {
       this.doesReduce = false;
     } else if (lamp.rate_delay > 0 && !this.doesReduce) {
       this.reduceDelay(lamp);
-      // reduceDelay(lamp);
     }
   }
   reduceDelay(lamp: Lamp) {
@@ -145,10 +144,7 @@ export default class LampComponent extends React.Component {
     setTimeout(() => {
       lamp.rate_delay -= 1;
       this.forceUpdate();
-      if (lamp.rate_delay <= 0) {
-        /* eslint-enable camelcase */
-        reduceDelay(lamp, false);
-      } else {
+      if (lamp.rate_delay > 0) {
         this.reduceDelay(lamp);
       }
     }, 1000);
