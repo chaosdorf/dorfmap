@@ -10,5 +10,6 @@ module.exports = {
     PRIMUS: false,
     SENTRY: false,
   },
+  plugins: ['sort-imports-es6-autofix'],
   rules: {},
 };
