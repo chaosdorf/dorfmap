@@ -7,7 +7,5 @@ axios.interceptors.request.use(config => {
   return config;
 });
 
-axios.interceptors.response.use(response => response.data);
-
 global.Promise = require('bluebird');
 require('rc-tooltip/assets/bootstrap.css');

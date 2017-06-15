@@ -21,8 +21,6 @@ const plugins = [
         : process.env.BASE_HOST
     ),
     PRIMUS: JSON.stringify(process.env.PRIMUS || 'http://localhost:3001'),
-    SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN || ''),
-    SENTRY_ENV: JSON.stringify(process.env.SENTRY_ENV || ''),
   }),
   new HtmlWebpackPlugin({
     filename: 'index.html',

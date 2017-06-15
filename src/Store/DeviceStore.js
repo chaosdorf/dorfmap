@@ -25,7 +25,7 @@ export default class DeviceStore {
   @observable presets: Map<string, Presets> = Map();
   @action
   async fetchDevices() {
-    const devices = await axios.get('/status/devices.json');
+    const devices = (await axios.get('/status/devices.json')).data;
     this.allDevices = Map();
     _.forEach(devices, d => {
       this.allDevices = this.allDevices.set(d.name, d);
@@ -39,10 +39,10 @@ export default class DeviceStore {
   }
   @action
   async toggleDevice(device: Lamp) {
-    const updatedDevice = await axios.post('/action', {
+    const updatedDevice = (await axios.post('/action', {
       action: 'toggle',
       device: device.name,
-    });
+    })).data;
     socketUpdate(device.name);
     if (updatedDevice.status === 1) {
       // eslint-disable-next-line
@@ -56,7 +56,7 @@ export default class DeviceStore {
   }
   @action
   async updateDevice(deviceName: string) {
-    const { status } = await axios.get(`/get/${deviceName}.json`);
+    const { status } = (await axios.get(`/get/${deviceName}.json`)).data;
     this.allDevices = this.allDevices.set(deviceName, status);
   }
   @action
