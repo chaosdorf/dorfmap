@@ -36,14 +36,15 @@ export default class OptionDialog extends React.Component {
           onChange={this.handleTabChange}
           initialSelectedIndex={selectedIndex}>
           {menuStore.menu
-            .map((entries, type) => (
+            .map((entries, type) =>
               <Tab key={type} label={_.capitalize(type)}>
                 <MenuEntries
                   entries={entries}
                   type={type}
-                  closeFn={this.props.handleRequestClose}/>
+                  closeFn={this.props.handleRequestClose}
+                />
               </Tab>
-            ))
+            )
             .toList()}
         </Tabs>
       </Dialog>

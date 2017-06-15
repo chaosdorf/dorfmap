@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 
-const AboutHeader = () => (
+const AboutHeader = () =>
   <div style={style.wrapper}>
     <span>
       <a style={style.link} href="https://github.com/chaosdorf/dorfmap">
@@ -30,8 +30,7 @@ const AboutHeader = () => (
     <span>
       <a style={style.link} href="/space_api.json">{'spaceAPI'}</a>
     </span>
-  </div>
-);
+  </div>;
 
 export default AboutHeader;
 

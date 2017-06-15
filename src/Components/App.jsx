@@ -12,8 +12,8 @@ const deviceStore = new DeviceStore();
 setupPrimus(deviceStore);
 
 const App = () =>
-  (<Provider deviceStore={deviceStore} menuStore={menuStore}>
+  <Provider deviceStore={deviceStore} menuStore={menuStore}>
     <Dorfmap />
-  </Provider>);
+  </Provider>;
 
 export default App;

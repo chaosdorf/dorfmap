@@ -13,7 +13,8 @@ type Presets = {
 };
 
 export default class DeviceStore {
-  @computed get devices(): Map<string, Lamp> {
+  @computed
+  get devices(): Map<string, Lamp> {
     return this.allDevices.filter(l => l.layer === this.layer);
   }
   @observable allDevices: Map<string, Lamp> = Map();
@@ -22,7 +23,8 @@ export default class DeviceStore {
     this.fetchDevices();
   }
   @observable presets: Map<string, Presets> = Map();
-  @action async fetchDevices() {
+  @action
+  async fetchDevices() {
     const devices = await axios.get('/status/devices.json');
     this.allDevices = Map();
     _.forEach(devices, d => {
@@ -35,7 +37,8 @@ export default class DeviceStore {
       }
     });
   }
-  @action async toggleDevice(device: Lamp) {
+  @action
+  async toggleDevice(device: Lamp) {
     const updatedDevice = await axios.post('/action', {
       action: 'toggle',
       device: device.name,
@@ -51,11 +54,13 @@ export default class DeviceStore {
       Object.assign({}, device, updatedDevice)
     );
   }
-  @action async updateDevice(deviceName: string) {
+  @action
+  async updateDevice(deviceName: string) {
     const { status } = await axios.get(`/get/${deviceName}.json`);
     this.allDevices = this.allDevices.set(deviceName, status);
   }
-  @action async fetchPresets(device: Lamp) {
+  @action
+  async fetchPresets(device: Lamp) {
     if (!this.presets.has(device.name)) {
       const presets: Presets = await axios.get(
         `/ajax/blinkencontrol?device=${device.name}`
@@ -63,7 +68,8 @@ export default class DeviceStore {
       this.presets = this.presets.set(device.name, presets);
     }
   }
-  @action setActivePreset(deviceName: string, active: string) {
+  @action
+  setActivePreset(deviceName: string, active: string) {
     const presets = this.presets.get(deviceName);
     if (!presets) {
       return;
@@ -83,7 +89,8 @@ export default class DeviceStore {
       raw_string: presets.active.raw_string,
     });
   }
-  @action changeLayer(layer: string) {
+  @action
+  changeLayer(layer: string) {
     this.layer = layer;
   }
   async executePreset(preset: string) {

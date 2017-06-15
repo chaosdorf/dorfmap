@@ -88,7 +88,8 @@ export default class OptionDialogs extends React.Component {
         <OptionDialog
           activeType={this.state.title}
           handleRequestClose={this.handleRequestClose}
-          open={this.state.open}/>
+          open={this.state.open}
+        />
       </div>
     );
   }

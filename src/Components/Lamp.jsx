@@ -108,7 +108,8 @@ export default class LampComponent extends React.Component {
           onClick={this.toggle}
           name={lamp.name}
           style={dupStyle}
-          src={getImage(lamp)}/>
+          src={getImage(lamp)}
+        />
       </Tooltip>
     );
   }
@@ -170,7 +171,8 @@ export default class LampComponent extends React.Component {
         <BlinkenlightPopup
           onRequestClose={this.handleRequestClose}
           open={dialogOpen}
-          lamp={lamp}/>
+          lamp={lamp}
+        />
       );
       // Toggle me to enable beamer Popup!
       // } else if (lamp.type === 'beamer') {
@@ -183,7 +185,8 @@ export default class LampComponent extends React.Component {
         onClick={this.toggle}
         name={lamp.name}
         style={style}
-        src={getImage(lamp)}/>
+        src={getImage(lamp)}
+      />
     );
     return (
       <div>

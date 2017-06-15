@@ -16,7 +16,7 @@ type Props = {
 
 @inject('deviceStore')
 @observer
-export default class BlinkenlightPopup extends React.Component {
+export default class BlinkenlightPopup extends React.PureComponent {
   props: Props;
   componentWillMount() {
     const { deviceStore } = this.props;
@@ -59,12 +59,12 @@ export default class BlinkenlightPopup extends React.Component {
             ref="radio"
             onChange={this.handleRadioChange}>
             {_.map(actualPresets, preset =>
-              (<div style={{ lineHeight: '32px' }} key={preset.name}>
+              <div style={{ lineHeight: '32px' }} key={preset.name}>
                 <label>
                   <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
                   {preset.name}
                 </label>
-              </div>)
+              </div>
             )}
           </RadioGroup>
         </div>
