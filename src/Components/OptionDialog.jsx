@@ -23,26 +23,15 @@ export default class OptionDialog extends React.Component {
   handleTabChange = () => this.forceUpdate();
   render() {
     const { menuStore, activeType, open } = this.props;
-    const selectedIndex = Object.keys(menuStore.menu.toJS()).indexOf(
-      activeType
-    );
+    const selectedIndex = Object.keys(menuStore.menu.toJS()).indexOf(activeType);
 
     return (
-      <Dialog
-        bodyStyle={style.wrapper}
-        onRequestClose={this.props.handleRequestClose}
-        open={open}>
-        <Tabs
-          onChange={this.handleTabChange}
-          initialSelectedIndex={selectedIndex}>
+      <Dialog bodyStyle={style.wrapper} onRequestClose={this.props.handleRequestClose} open={open}>
+        <Tabs onChange={this.handleTabChange} initialSelectedIndex={selectedIndex}>
           {menuStore.menu
             .map((entries, type) =>
               <Tab key={type} label={_.capitalize(type)}>
-                <MenuEntries
-                  entries={entries}
-                  type={type}
-                  closeFn={this.props.handleRequestClose}
-                />
+                <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose} />
               </Tab>
             )
             .toList()}

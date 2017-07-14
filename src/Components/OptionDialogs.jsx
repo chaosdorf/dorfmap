@@ -77,11 +77,15 @@ export default class OptionDialogs extends React.Component {
             </FlatButton>
           </div>
           <div>
-            <FlatButton onClick={this.toMete}>{'Mete'}</FlatButton>
+            <FlatButton onClick={this.toMete}>
+              {'Mete'}
+            </FlatButton>
             <FlatButton onClick={this.toLabello}>
               {'Labello'}
             </FlatButton>
-            <FlatButton onClick={this.toMPD}>{'MPD'}</FlatButton>
+            <FlatButton onClick={this.toMPD}>
+              {'MPD'}
+            </FlatButton>
           </div>
         </div>
 

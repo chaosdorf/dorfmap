@@ -11,6 +11,8 @@ import ReactDOM from 'react-dom';
 injectTapEventPlugin();
 
 ReactDOM.render(
-  <MuiThemeProvider><App /></MuiThemeProvider>,
+  <MuiThemeProvider>
+    <App />
+  </MuiThemeProvider>,
   document.querySelector('#dorfmapWrapper')
 );

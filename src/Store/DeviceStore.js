@@ -49,10 +49,7 @@ export default class DeviceStore {
       updatedDevice.rate_delay = 0;
       // eslint-disable-next-line
     }
-    this.allDevices = this.allDevices.set(
-      device.name,
-      Object.assign({}, device, updatedDevice)
-    );
+    this.allDevices = this.allDevices.set(device.name, Object.assign({}, device, updatedDevice));
   }
   @action
   async updateDevice(deviceName: string) {
@@ -62,9 +59,7 @@ export default class DeviceStore {
   @action
   async fetchPresets(device: Lamp) {
     if (!this.presets.has(device.name)) {
-      const presets: Presets = await axios.get(
-        `/ajax/blinkencontrol?device=${device.name}`
-      );
+      const presets: Presets = await axios.get(`/ajax/blinkencontrol?device=${device.name}`);
       this.presets = this.presets.set(device.name, presets);
     }
   }

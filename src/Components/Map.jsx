@@ -29,9 +29,7 @@ export default class DMap extends React.Component {
     }
     return (
       <div style={DMap.style.wrapper}>
-        {deviceStore.devices
-          .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
-          .toArray()}
+        {deviceStore.devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toArray()}
       </div>
     );
   }

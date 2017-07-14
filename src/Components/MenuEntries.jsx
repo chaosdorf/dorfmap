@@ -39,10 +39,7 @@ export default class MenuEntries extends React.Component {
   }
   render() {
     const entries = _.map(this.props.entries, entry =>
-      <FlatButton
-        style={style.button}
-        key={entry}
-        onClick={this.handleClick(entry)}>
+      <FlatButton style={style.button} key={entry} onClick={this.handleClick(entry)}>
         {entry}
       </FlatButton>
     );

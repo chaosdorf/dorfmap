@@ -6,29 +6,25 @@ const AboutHeader = () =>
     <span>
       <a style={style.link} href="https://github.com/chaosdorf/dorfmap">
         {'dorfmap'}
-      </a>
-      {' '}
-      {'|'}
-      {' '}
+      </a>{' '}
+      {'|'}{' '}
     </span>
     <span>
       <a style={style.link} href="https://wiki.chaosdorf.de/Lichtsteuerung">
         {'about'}
-      </a>
-      {' '}
-      {'|'}
-      {' '}
+      </a>{' '}
+      {'|'}{' '}
     </span>
     <span>
       <a style={style.link} href="https://wiki.chaosdorf.de/Lichtsteuerung#API">
         {'API'}
-      </a>
-      {' '}
-      {'|'}
-      {' '}
+      </a>{' '}
+      {'|'}{' '}
     </span>
     <span>
-      <a style={style.link} href="/space_api.json">{'spaceAPI'}</a>
+      <a style={style.link} href="/space_api.json">
+        {'spaceAPI'}
+      </a>
     </span>
   </div>;
 

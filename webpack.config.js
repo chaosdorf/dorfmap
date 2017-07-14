@@ -15,11 +15,7 @@ const plugins = [
       NODE_ENV: JSON.stringify(nodeEnv),
     },
     __DEV__: JSON.stringify(__DEV__),
-    BASE_HOST: JSON.stringify(
-      process.env.BASE_HOST === undefined
-        ? 'http://localhost:3000'
-        : process.env.BASE_HOST
-    ),
+    BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
     PRIMUS: JSON.stringify(process.env.PRIMUS || 'http://localhost:3001'),
   }),
   new HtmlWebpackPlugin({
@@ -65,13 +61,6 @@ module.exports = {
   module: {
     rules: [
       {
-        enforce: 'pre',
-        test: /.jsx?$/,
-        loader: 'eslint-loader',
-        include: [path.resolve(__dirname, 'src')],
-        exclude: /(.*\.config.*|.*node_modules.*|.*inferno.*)/,
-      },
-      {
         test: /\.jsx?$/,
         exclude: /(node_modules|primusClient)/,
         loader: 'babel-loader',
@@ -88,11 +77,7 @@ module.exports = {
       { test: /\.json$/, loader: 'json-loader' },
       { test: /\.css$/, loader: 'style-loader!css-loader' },
     ],
-    noParse: [
-      /primusClient\.js/,
-      /.*primusClient.*/,
-      /react\\dist\\react(-with-addons)?\.js/,
-    ],
+    noParse: [/primusClient\.js/, /.*primusClient.*/, /react\\dist\\react(-with-addons)?\.js/],
   },
   plugins,
   devtool,

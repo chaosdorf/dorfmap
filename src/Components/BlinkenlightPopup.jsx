@@ -47,8 +47,12 @@ export default class BlinkenlightPopup extends React.PureComponent {
     const actualPresets = presets.presets;
     const actions = (
       <div>
-        <FlatButton key="c" onClick={onRequestClose}>{'Cancel'}</FlatButton>
-        <FlatButton key="s" onClick={this.save}>{'Save'}</FlatButton>
+        <FlatButton key="c" onClick={onRequestClose}>
+          {'Cancel'}
+        </FlatButton>
+        <FlatButton key="s" onClick={this.save}>
+          {'Save'}
+        </FlatButton>
       </div>
     );
     return (
