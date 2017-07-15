@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "webpack-dashboard -- webpack-dev-server --inline --content-base public/ --history-api-fallback --quiet",
     "build": "webpack --bail",
-    "test": "npm run build",
+    "test": "flow && npm run lint",
     "deploy": "npm run lint && BASE_HOST= PRIMUS=http://dorfmapserver.chaosdorf.space:3001 SENTRY_DSN= SENTRY_ENV=prod NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
     "lint": "eslint src/**/*.js*"
   },
@@ -25,7 +25,7 @@
     "axios": "^0.16.2",
     "babel-polyfill": "^6.23.0",
     "bluebird": "^3.5.0",
-    "caniuse-api": "^2.0.0",
+    "caniuse-api": "^1.5.2",
     "cxs": "^3.0.4",
     "immutable": "^3.8.1",
     "lodash": "^4.17.4",

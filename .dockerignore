@@ -1,0 +1,10 @@
+# .gitignore
+node_modules/
+npm-debug.log
+bower_components/
+css/
+.DS_Store
+tmp/
+
+# docker itself
+Dockerfile*
