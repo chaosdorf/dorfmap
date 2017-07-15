@@ -16,6 +16,7 @@
     "dev": "webpack-dashboard -- webpack-dev-server --inline --content-base public/ --history-api-fallback --quiet",
     "build": "webpack --bail",
     "test": "flow && npm run lint",
+    "test:travis": "npm run test && NODE_ENV=production npm run build",
     "deploy": "npm run lint && BASE_HOST= PRIMUS=http://dorfmapserver.chaosdorf.space:3001 SENTRY_DSN= SENTRY_ENV=prod NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
     "lint": "eslint src/**/*.js*"
   },

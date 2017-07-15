@@ -1,7 +1,19 @@
-sudo: required
+sudo: false
+language: node_js
+node_js:
+  - 6
+  - 8
 
-services:
-  - docker
+env:
+  global:
+    - CXX=g++-4.9
 
-script:
-  - scripts/build.sh
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.9
+
+cache: yarn
+script: yarn test:travis
