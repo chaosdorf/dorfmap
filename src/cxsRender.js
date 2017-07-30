@@ -1,7 +1,7 @@
 // @flow
 import { compact, flattenDeep, isEmpty } from 'lodash';
 import classnames from 'classnames';
-import cxs from 'cxs';
+import cxs from 'cxs/atomic';
 import Prefixer from 'inline-style-prefixer';
 import React from 'react';
 
