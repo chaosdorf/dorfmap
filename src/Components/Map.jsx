@@ -10,8 +10,7 @@ type Props = {
 
 @inject('deviceStore')
 @observer
-export default class DMap extends React.Component {
-  props: Props;
+export default class DMap extends React.Component<Props> {
   static style = {
     wrapper: {
       backgroundImage: 'url(/static/images/map.png)',

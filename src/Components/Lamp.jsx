@@ -1,8 +1,7 @@
 // @flow
+import * as React from 'react';
 import { inject } from 'mobx-react';
 import BlinkenlightPopup from './BlinkenlightPopup';
-import PropTypes from 'prop-types';
-import React from 'react';
 import Tooltip from 'rc-tooltip';
 import type DeviceStore from 'Store/DeviceStore';
 
@@ -49,11 +48,7 @@ type State = {
 };
 
 @inject('deviceStore')
-export default class LampComponent extends React.Component {
-  props: Props;
-  static propTypes = {
-    lamp: PropTypes.object.isRequired,
-  };
+export default class LampComponent extends React.Component<Props, State> {
   static style = {
     lamp: {
       writeable: {
@@ -71,7 +66,7 @@ export default class LampComponent extends React.Component {
   state: State = {
     dialogOpen: false,
   };
-  getTooltipText(lamp: Lamp): ?React.Element<*> {
+  getTooltipText(lamp: Lamp): ?React.Node {
     let text = lamp.status_text;
     if (!text) {
       return null;
@@ -83,7 +78,7 @@ export default class LampComponent extends React.Component {
     return <div dangerouslySetInnerHTML={{ __html: text }} />;
     /* eslint-enable react/no-danger */
   }
-  getDuplicate(lamp: Lamp, tooltipText: ?React.Element<*>) {
+  getDuplicate(lamp: Lamp, tooltipText: ?React.Node) {
     if (!lamp.duplicates || !lamp.duplicates.length) {
       return null;
     }
@@ -170,11 +165,7 @@ export default class LampComponent extends React.Component {
     const img = <img ref="normal" onClick={this.toggle} name={lamp.name} style={style} src={getImage(lamp)} />;
     return (
       <div>
-        {tooltipText
-          ? <Tooltip overlay={tooltipText}>
-              {img}
-            </Tooltip>
-          : img}
+        {tooltipText ? <Tooltip overlay={tooltipText}>{img}</Tooltip> : img}
         {this.getDuplicate(lamp, tooltipText)}
         {dialog}
       </div>

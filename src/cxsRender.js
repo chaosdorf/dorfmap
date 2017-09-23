@@ -1,9 +1,9 @@
 // @flow
+import * as React from 'react';
 import { compact, flattenDeep, isEmpty } from 'lodash';
 import classnames from 'classnames';
-import cxs from 'cxs/atomic';
+import cxs from 'cxs';
 import Prefixer from 'inline-style-prefixer';
-import React from 'react';
 
 const prefixer = new Prefixer();
 

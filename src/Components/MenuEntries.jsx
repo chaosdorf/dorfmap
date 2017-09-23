@@ -13,8 +13,7 @@ type Props = {
 };
 
 @inject('deviceStore')
-export default class MenuEntries extends React.Component {
-  props: Props;
+export default class MenuEntries extends React.Component<Props> {
   handleClick(entry: any) {
     return () => {
       const { deviceStore, type, closeFn } = this.props;
@@ -38,16 +37,12 @@ export default class MenuEntries extends React.Component {
     };
   }
   render() {
-    const entries = _.map(this.props.entries, entry =>
+    const entries = _.map(this.props.entries, entry => (
       <FlatButton style={style.button} key={entry} onClick={this.handleClick(entry)}>
         {entry}
       </FlatButton>
-    );
-    return (
-      <div style={style.wrapper}>
-        {entries}
-      </div>
-    );
+    ));
+    return <div style={style.wrapper}>{entries}</div>;
   }
 }
 

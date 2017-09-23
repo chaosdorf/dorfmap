@@ -10,7 +10,7 @@ type State = {
 };
 
 @inject('menuStore')
-export default class OptionDialogs extends React.Component {
+export default class OptionDialogs extends React.Component<{}, State> {
   actions: Object = {
     actions: 0,
     presets: 1,
@@ -18,6 +18,7 @@ export default class OptionDialogs extends React.Component {
   };
   state: State = {};
   componentWillMount() {
+    // $FlowFixMe
     this.props.menuStore.fetchMenues();
   }
   handleClick(action: number) {
@@ -66,26 +67,14 @@ export default class OptionDialogs extends React.Component {
       <div>
         <div style={style.dialogs} className="optionDialogs">
           <div>
-            <FlatButton onClick={this.handleActionsClick}>
-              {'Actions'}
-            </FlatButton>
-            <FlatButton onClick={this.handlePresetsClick}>
-              {'Presets'}
-            </FlatButton>
-            <FlatButton onClick={this.handleLayersClick}>
-              {'Layers'}
-            </FlatButton>
+            <FlatButton onClick={this.handleActionsClick}>{'Actions'}</FlatButton>
+            <FlatButton onClick={this.handlePresetsClick}>{'Presets'}</FlatButton>
+            <FlatButton onClick={this.handleLayersClick}>{'Layers'}</FlatButton>
           </div>
           <div>
-            <FlatButton onClick={this.toMete}>
-              {'Mete'}
-            </FlatButton>
-            <FlatButton onClick={this.toLabello}>
-              {'Labello'}
-            </FlatButton>
-            <FlatButton onClick={this.toMPD}>
-              {'MPD'}
-            </FlatButton>
+            <FlatButton onClick={this.toMete}>{'Mete'}</FlatButton>
+            <FlatButton onClick={this.toLabello}>{'Labello'}</FlatButton>
+            <FlatButton onClick={this.toMPD}>{'MPD'}</FlatButton>
           </div>
         </div>
 

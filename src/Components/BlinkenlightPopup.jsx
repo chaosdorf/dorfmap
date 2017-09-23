@@ -16,8 +16,7 @@ type Props = {
 
 @inject('deviceStore')
 @observer
-export default class BlinkenlightPopup extends React.PureComponent {
-  props: Props;
+export default class BlinkenlightPopup extends React.PureComponent<Props> {
   componentWillMount() {
     const { deviceStore } = this.props;
     if (deviceStore) {
@@ -62,14 +61,14 @@ export default class BlinkenlightPopup extends React.PureComponent {
             selectedValue={presets.active ? presets.active.raw_string : null}
             ref="radio"
             onChange={this.handleRadioChange}>
-            {_.map(actualPresets, preset =>
+            {_.map(actualPresets, preset => (
               <div style={{ lineHeight: '32px' }} key={preset.name}>
                 <label>
                   <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
                   {preset.name}
                 </label>
               </div>
-            )}
+            ))}
           </RadioGroup>
         </div>
       </Dialog>

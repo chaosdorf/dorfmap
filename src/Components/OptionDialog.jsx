@@ -10,30 +10,30 @@ import type MenuStore from 'Store/MenuStore';
 type Props = {
   activeType: ?string,
   handleRequestClose: Function,
-  menuStore: MenuStore,
+  menuStore?: MenuStore,
   open?: boolean,
 };
 @inject('menuStore')
-export default class OptionDialog extends React.Component {
-  // $FlowFixMe
-  props: Props;
+export default class OptionDialog extends React.Component<Props> {
   static defaultProps = {
     open: false,
   };
   handleTabChange = () => this.forceUpdate();
   render() {
     const { menuStore, activeType, open } = this.props;
+    // $FlowFixMe
     const selectedIndex = Object.keys(menuStore.menu.toJS()).indexOf(activeType);
 
     return (
       <Dialog bodyStyle={style.wrapper} onRequestClose={this.props.handleRequestClose} open={open}>
         <Tabs onChange={this.handleTabChange} initialSelectedIndex={selectedIndex}>
-          {menuStore.menu
-            .map((entries, type) =>
+          {/* $FlowFixMe*/
+          menuStore.menu
+            .map((entries, type) => (
               <Tab key={type} label={_.capitalize(type)}>
                 <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose} />
               </Tab>
-            )
+            ))
             .toList()}
         </Tabs>
       </Dialog>
