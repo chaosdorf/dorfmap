@@ -4,11 +4,12 @@ import Map from './Map';
 import OptionDialogs from './OptionDialogs';
 import React from 'react';
 
-const Dorfmap = () =>
+const Dorfmap = () => (
   <div>
     <OptionDialogs />
     <AboutHeader />
     <Map />
-  </div>;
+  </div>
+);
 
 export default Dorfmap;

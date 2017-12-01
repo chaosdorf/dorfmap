@@ -16,7 +16,7 @@ type Props = {
 
 @inject('deviceStore')
 @observer
-export default class BlinkenlightPopup extends React.PureComponent<Props> {
+export default class BlinkenlightPopup extends React.Component<Props> {
   componentWillMount() {
     const { deviceStore } = this.props;
 
@@ -43,10 +43,14 @@ export default class BlinkenlightPopup extends React.PureComponent<Props> {
   render() {
     const { onRequestClose, open, lamp, deviceStore } = this.props;
 
-    if (!deviceStore || !deviceStore.presets.has(lamp.name)) {
+    if (!deviceStore) {
       return null;
     }
     const presets = deviceStore.presets.get(lamp.name);
+
+    if (!presets) {
+      return null;
+    }
     const actualPresets = presets.presets;
     const actions = (
       <div>

@@ -1,4 +1,5 @@
 // @flow
+/* eslint import/no-webpack-loader-syntax: 0 */
 import 'imports-loader?this=>window&define=>false!./external/primusClient';
 import type DeviceStore from 'Store/DeviceStore';
 

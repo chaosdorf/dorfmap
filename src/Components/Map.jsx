@@ -23,12 +23,14 @@ export default class DMap extends React.Component<Props> {
   };
   render() {
     const { deviceStore } = this.props;
+
     if (!deviceStore) {
       return null;
     }
+
     return (
       <div style={DMap.style.wrapper}>
-        {deviceStore.devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toArray()}
+        {deviceStore.devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toList()}
       </div>
     );
   }

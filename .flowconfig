@@ -2,6 +2,7 @@
 .*/node_modules/fbjs/.*
 .*/node_modules/babel.*
 .*/node_modules/radium/.*
+.*/node_modules/rc-util/.*
 .*/node_modules/react/.*
 .*/node_modules/lodash/.*
 .*/node_modules/flow-typed/.*

@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeEnv = (process.env.NODE_ENV || 'development').trim();
 const DashboardPlugin = require('webpack-dashboard/plugin');
 
+// eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
 
 const devtool = __DEV__ ? '#source-map' : '';
@@ -45,14 +46,14 @@ if (__DEV__) {
 module.exports = {
   context: __dirname,
   resolve: {
-    //Extension die wir weglassen können
+    // Extension die wir weglassen können
     extensions: ['.js', '.jsx'],
     modules: [path.resolve('src'), 'node_modules'],
     alias: {
       bluebird: 'bluebird/js/browser/bluebird.min.js',
     },
   },
-  entry: './src/main.js',
+  entry: ['babel-polyfill', './src/main.js'],
   output: {
     path: path.resolve('public'),
     filename: 'dorfmap-[hash].js',

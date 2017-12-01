@@ -69,7 +69,7 @@ export default class LampComponent extends React.Component<Props, State> {
     }
 
     return (
-      <Tooltip destroyTooltipOnHide overlay={tooltipText}>
+      <Tooltip overlay={tooltipText}>
         <img onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
       </Tooltip>
     );
@@ -139,9 +139,6 @@ export default class LampComponent extends React.Component<Props, State> {
 
     if (lamp.type === 'blinkenlight') {
       dialog = <BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp} />;
-      // Toggle me to enable beamer Popup!
-      // } else if (lamp.type === 'beamer') {
-      // dialog = (<BeamerPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
 
     return (

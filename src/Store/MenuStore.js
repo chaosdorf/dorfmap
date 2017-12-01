@@ -8,6 +8,7 @@ export default class MenuStore {
   @action
   async fetchMenues() {
     const rawMenues = (await axios.get('/ajax/menu.json')).data;
+
     for (const m of rawMenues) {
       this.menu = this.menu.set(m.name, m.entries);
     }

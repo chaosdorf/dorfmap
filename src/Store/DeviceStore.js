@@ -26,6 +26,7 @@ export default class DeviceStore {
   @action
   async fetchDevices() {
     const devices = (await axios.get('/status/devices.json')).data;
+
     this.allDevices = Map();
     _.forEach(devices, d => {
       this.allDevices = this.allDevices.set(d.name, d);
@@ -43,6 +44,7 @@ export default class DeviceStore {
       action: 'toggle',
       device: device.name,
     })).data;
+
     socketUpdate(device.name);
     if (updatedDevice.status === 1) {
       // eslint-disable-next-line
@@ -54,6 +56,7 @@ export default class DeviceStore {
   @action
   async updateDevice(deviceName: string) {
     const { status } = (await axios.get(`/get/${deviceName}.json`)).data;
+
     this.allDevices = this.allDevices.set(deviceName, status);
   }
   @action
@@ -61,21 +64,25 @@ export default class DeviceStore {
     if (!this.presets.has(device.name)) {
       // $FlowFixMe
       const presets: Presets = await axios.get(`/ajax/blinkencontrol?device=${device.name}`);
+
       this.presets = this.presets.set(device.name, presets);
     }
   }
   @action
   setActivePreset(deviceName: string, active: string) {
     const presets = this.presets.get(deviceName);
+
     if (!presets) {
       return;
     }
     const activePreset = presets.presets.find(c => c.raw_string === active);
+
     presets.active = activePreset;
     this.presets = this.presets.set(deviceName, presets);
   }
   async savePreset(deviceName: string) {
     const presets = this.presets.get(deviceName);
+
     if (!presets || !presets.active) {
       return;
     }

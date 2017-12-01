@@ -17,6 +17,7 @@ export default class MenuEntries extends React.Component<Props> {
   handleClick(entry: any) {
     return () => {
       const { deviceStore, type, closeFn } = this.props;
+
       if (!deviceStore) {
         return;
       }
@@ -42,6 +43,7 @@ export default class MenuEntries extends React.Component<Props> {
         {entry}
       </FlatButton>
     ));
+
     return <div style={style.wrapper}>{entries}</div>;
   }
 }

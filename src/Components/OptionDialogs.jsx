@@ -23,6 +23,7 @@ export default class OptionDialogs extends React.Component<{}, State> {
   }
   handleClick(action: number) {
     let title;
+
     switch (action) {
       case this.actions.actions:
         title = 'actions';
