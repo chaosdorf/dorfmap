@@ -35,6 +35,7 @@ export default class LampComponent extends React.Component<Props, State> {
   };
   getTooltipText(lamp: Lamp): ?React.Node {
     let text = lamp.status_text;
+
     if (!text) {
       return null;
     }
@@ -42,7 +43,9 @@ export default class LampComponent extends React.Component<Props, State> {
       text = `${text} (${lamp.rate_delay}s)`;
     }
     /* eslint-disable react/no-danger */
+
     return <div dangerouslySetInnerHTML={{ __html: text }} />;
+
     /* eslint-enable react/no-danger */
   }
   getDuplicate(lamp: Lamp, tooltipText: ?React.Node) {
@@ -60,9 +63,11 @@ export default class LampComponent extends React.Component<Props, State> {
         height: lamp.y2,
       },
     ];
+
     if (lamp.is_writable && lamp.rate_delay <= 0) {
       dupStyle.push(LampComponent.style.lamp.writeable);
     }
+
     return (
       <Tooltip destroyTooltipOnHide overlay={tooltipText}>
         <img onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
@@ -71,6 +76,7 @@ export default class LampComponent extends React.Component<Props, State> {
   }
   toggle = () => {
     const { lamp, deviceStore } = this.props;
+
     if (!lamp.is_writable) {
       return;
     }
@@ -91,6 +97,7 @@ export default class LampComponent extends React.Component<Props, State> {
   doesReduce: boolean = false;
   componentWillReceiveProps(props: Props) {
     const { lamp } = props;
+
     if (lamp.status === 1) {
       /* eslint-disable camelcase */
       lamp.rate_delay = 0;
@@ -121,6 +128,7 @@ export default class LampComponent extends React.Component<Props, State> {
         height: lamp.y2,
       },
     ];
+
     if (lamp.is_writable && lamp.rate_delay <= 0) {
       style.push(LampComponent.style.lamp.writeable);
     }
@@ -128,12 +136,14 @@ export default class LampComponent extends React.Component<Props, State> {
     const img = <img onClick={this.toggle} name={lamp.name} style={style} src={lamp.image} />;
 
     let dialog;
+
     if (lamp.type === 'blinkenlight') {
       dialog = <BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp} />;
       // Toggle me to enable beamer Popup!
       // } else if (lamp.type === 'beamer') {
       // dialog = (<BeamerPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
+
     return (
       <div>
         {tooltipText ? <Tooltip overlay={tooltipText}>{img}</Tooltip> : img}

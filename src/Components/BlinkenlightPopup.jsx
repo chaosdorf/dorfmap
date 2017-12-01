@@ -19,12 +19,14 @@ type Props = {
 export default class BlinkenlightPopup extends React.PureComponent<Props> {
   componentWillMount() {
     const { deviceStore } = this.props;
+
     if (deviceStore) {
       deviceStore.fetchPresets(this.props.lamp);
     }
   }
   save = () => {
     const { deviceStore, lamp } = this.props;
+
     if (deviceStore) {
       deviceStore.savePreset(lamp.name);
     }
@@ -32,6 +34,7 @@ export default class BlinkenlightPopup extends React.PureComponent<Props> {
   };
   handleRadioChange = (value: string) => {
     const { lamp, deviceStore } = this.props;
+
     if (deviceStore) {
       deviceStore.setActivePreset(lamp.name, value);
       this.forceUpdate();
@@ -39,6 +42,7 @@ export default class BlinkenlightPopup extends React.PureComponent<Props> {
   };
   render() {
     const { onRequestClose, open, lamp, deviceStore } = this.props;
+
     if (!deviceStore || !deviceStore.presets.has(lamp.name)) {
       return null;
     }
@@ -54,13 +58,14 @@ export default class BlinkenlightPopup extends React.PureComponent<Props> {
         </FlatButton>
       </div>
     );
+
     return (
       <Dialog actions={actions} onRequestClose={onRequestClose} open={open}>
         <div>
           <RadioGroup
             selectedValue={presets.active ? presets.active.raw_string : null}
-            ref="radio"
-            onChange={this.handleRadioChange}>
+            onChange={this.handleRadioChange}
+          >
             {_.map(actualPresets, preset => (
               <div style={{ lineHeight: '32px' }} key={preset.name}>
                 <label>

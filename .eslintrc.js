@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'marudor',
+  extends: 'joblift/2space',
   env: {
     browser: true,
     node: true,
@@ -10,6 +10,7 @@ module.exports = {
     PRIMUS: false,
     SENTRY: false,
   },
-  plugins: ['sort-imports-es6-autofix'],
-  rules: {},
+  rules: {
+    'no-use-before-define': 0,
+  },
 };
