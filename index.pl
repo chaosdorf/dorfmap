@@ -524,13 +524,14 @@ sub device_status {
 sub device_image {
 	my ($id) = @_;
 	my $type = $coordinates->{$id}->{type};
+	my $image = $coordinates->{$id}->{image};
 
 	if ( not $type ) {
 		return;
 	}
 
 	my $state  = device_status($id);
-	my $prefix = $type;
+	my $prefix = $image // $type;
 	my $suffix = q{};
 
 	if ( $type ~~ [qw[light_au light_ro]] ) {
@@ -556,7 +557,7 @@ sub device_image {
 	}
 
 	if ( $type eq 'light_au' ) {
-		$suffix .= ( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto';
+		$suffix = (( -e "/tmp/automatic_${id}" ) ? '_auto' : '_noauto') . $suffix;
 	}
 
 	return "static/images/${prefix}${suffix}.png";
@@ -585,11 +586,12 @@ sub status_devices {
 
 	for my $id ( keys %{$coordinates} ) {
 		my $type = $coordinates->{$id}->{type} // q{};
+		my $name = $coordinates->{$id}->{name} // $id;
 		if ( $coordinates->{$id}->{x1} == 0 and $coordinates->{$id}->{y1} == 0 )
 		{
 			next;
 		}
-		$devices->{$id}->{name}        = $id;
+		$devices->{$id}->{name}        = $name;
 		$devices->{$id}->{x1}          = $coordinates->{$id}->{x1};
 		$devices->{$id}->{y1}          = $coordinates->{$id}->{y1};
 		$devices->{$id}->{x2}          = $coordinates->{$id}->{x2};
@@ -601,7 +603,7 @@ sub status_devices {
 		$devices->{$id}->{area}        = $coordinates->{$id}->{area};
 		$devices->{$id}->{layer}       = $coordinates->{$id}->{layer};
 		$devices->{$id}->{duplicates}  = $coordinates->{$id}->{duplicates};
-		$devices->{$id}->{status_text} = status_text($id);
+		$devices->{$id}->{status_text} = status_text($id, $name);
 		$devices->{$id}->{rate_delay}  = get_ratelimit_delay($id);
 		$devices->{$id}->{image} = device_image($id);    # used only by /m
 
@@ -735,6 +737,7 @@ sub json_status {
 		status      => status_number($id),
 		status_text => status_text($id),
 		info        => status_info(),
+		image 			=> device_image($id),
 	};
 
 	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
@@ -762,7 +765,7 @@ sub status_number {
 }
 
 sub status_text {
-	my ($location) = @_;
+	my ($location, $name) = @_;
 
 	my $type = $coordinates->{$location}->{type};
 
@@ -774,7 +777,7 @@ sub status_text {
 		  . auto_text($location);
 	}
 	if ( $type eq 'server' or $type eq 'wifi' ) {
-		return $location;
+		return $name;
 	}
 	return $coordinates->{$location}->{text};
 }

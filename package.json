@@ -14,7 +14,8 @@
   "bugs": "https://github.com/chaosdorf/dorfmap/issues",
   "scripts": {
     "dev": "webpack-dashboard -- webpack-dev-server --inline --content-base public/ --history-api-fallback --quiet",
-    "build": "webpack --bail",
+    "cleanup": "rimraf public/*.js && rimraf public/*.js.map && rimraf public/index.html",
+    "build": "npm run cleanup && webpack --bail",
     "test": "flow && npm run lint",
     "test:travis": "npm run test && NODE_ENV=production npm run build",
     "deploy": "npm run lint && BASE_HOST= PRIMUS=http://dorfmapserver.chaosdorf.space:3001 SENTRY_DSN= SENTRY_ENV=prod NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
@@ -71,6 +72,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
     "prettier": "^1.7.0",
+    "rimraf": "^2.6.2",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.6.0",

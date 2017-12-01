@@ -59,6 +59,7 @@ export default class DeviceStore {
   @action
   async fetchPresets(device: Lamp) {
     if (!this.presets.has(device.name)) {
+      // $FlowFixMe
       const presets: Presets = await axios.get(`/ajax/blinkencontrol?device=${device.name}`);
       this.presets = this.presets.set(device.name, presets);
     }

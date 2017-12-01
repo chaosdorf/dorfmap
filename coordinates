@@ -118,6 +118,10 @@ amp3                 883  370    0    0 helios1/3 \
 [layer=control]
 dashpi                883  330    0    0 none \
   type=server area=Hackcenter
+172.22.27.147         883  290    0    0 none \
+  type=server area=Hackcenter name=Chromecast&nbsp;Hackcenter image=chromecast
+172.22.26.31          240   12    0    0 none \
+  type=server area=Lounge name=Chromecast&nbsp;Lounge image=chromecast
 donationprint          70  390    0    0 none \
   type=server area=Lounge dorfmap=donationprint
 door                   35  585    0    0 none \
@@ -132,6 +136,7 @@ helios               1232  370    0    0 none \
   type=server area=Serverraum dorfmap=amp
 selene               1232  410    0    0 none \
   type=server area=Serverraum
+
 
 ap-hackcenter         420  210    0    0 none \
   type=wifi

@@ -5,39 +5,6 @@ import BlinkenlightPopup from './BlinkenlightPopup';
 import Tooltip from 'rc-tooltip';
 import type DeviceStore from 'Store/DeviceStore';
 
-function getImage(lamp: Object) {
-  let status = '';
-  switch (lamp.status) {
-    case 0:
-    case '0':
-      status = '_off';
-      break;
-    case 1:
-    case '1':
-      status = '_on';
-      break;
-    default:
-      break;
-  }
-  let baseImage;
-  switch (lamp.type) {
-    case 'light':
-      baseImage = 'light';
-      break;
-    case 'light_au':
-      if (lamp.auto) {
-        baseImage = 'light_auto';
-      } else {
-        baseImage = 'light_noauto';
-      }
-      break;
-    default:
-      baseImage = lamp.type;
-      break;
-  }
-  return `static/images/${baseImage}${status}.png`;
-}
-
 type Props = {
   lamp: Lamp,
   deviceStore?: DeviceStore,
@@ -98,12 +65,15 @@ export default class LampComponent extends React.Component<Props, State> {
     }
     return (
       <Tooltip destroyTooltipOnHide overlay={tooltipText}>
-        <img ref="duplicate" onClick={this.toggle} name={lamp.name} style={dupStyle} src={getImage(lamp)} />
+        <img onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
       </Tooltip>
     );
   }
   toggle = () => {
     const { lamp, deviceStore } = this.props;
+    if (!lamp.is_writable) {
+      return;
+    }
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
       // if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight' || lamp.type === 'beamer') {
       this.setState({
@@ -154,6 +124,9 @@ export default class LampComponent extends React.Component<Props, State> {
     if (lamp.is_writable && lamp.rate_delay <= 0) {
       style.push(LampComponent.style.lamp.writeable);
     }
+    const tooltipText = this.getTooltipText(lamp);
+    const img = <img onClick={this.toggle} name={lamp.name} style={style} src={lamp.image} />;
+
     let dialog;
     if (lamp.type === 'blinkenlight') {
       dialog = <BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp} />;
@@ -161,8 +134,6 @@ export default class LampComponent extends React.Component<Props, State> {
       // } else if (lamp.type === 'beamer') {
       // dialog = (<BeamerPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp}/>);
     }
-    const tooltipText = this.getTooltipText(lamp);
-    const img = <img ref="normal" onClick={this.toggle} name={lamp.name} style={style} src={getImage(lamp)} />;
     return (
       <div>
         {tooltipText ? <Tooltip overlay={tooltipText}>{img}</Tooltip> : img}
