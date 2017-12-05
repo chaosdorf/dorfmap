@@ -43,6 +43,12 @@ export const transformProps = (
     combinedCss = style || {};
   }
 
+  Object.keys(combinedCss).forEach(key => {
+    if (Number.isInteger(combinedCss[key])) {
+      combinedCss[key] = `${combinedCss[key]}px`;
+    }
+  });
+
   const cx = classnames(cxs(prefixStyles(combinedCss)), className);
 
   return {

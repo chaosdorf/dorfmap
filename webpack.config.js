@@ -50,7 +50,7 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     modules: [path.resolve('src'), 'node_modules'],
     alias: {
-      bluebird: 'bluebird/js/browser/bluebird.min.js',
+      'react-radio-group': '@marudor/react-radio-group',
     },
   },
   entry: ['babel-polyfill', './src/main.js'],
