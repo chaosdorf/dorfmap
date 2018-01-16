@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeEnv = (process.env.NODE_ENV || 'development').trim();
 const DashboardPlugin = require('webpack-dashboard/plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 // eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
@@ -11,6 +12,7 @@ const __DEV__ = nodeEnv !== 'production';
 const devtool = __DEV__ ? '#source-map' : '';
 
 const plugins = [
+  new HardSourceWebpackPlugin(),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv),
@@ -66,11 +68,6 @@ module.exports = {
         exclude: /(node_modules|primusClient)/,
         loader: 'babel-loader',
         query: { cacheDirectory: true },
-      },
-      {
-        test: /\.(CSS|css)\.js$/,
-        exclude: /(node_modules)/,
-        loader: 'inline-css-loader',
       },
       { test: /\.pdf$/, loader: 'file-loader' },
       { test: /\.(eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file-loader' },

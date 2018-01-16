@@ -4,6 +4,7 @@ import { Map } from 'immutable';
 import { socketUpdate } from '../primus';
 import _ from 'lodash';
 import axios from 'axios';
+import type { Lamp } from 'Components/Lamp';
 
 type Color = { name: string, raw_string: string };
 type Presets = {
