@@ -730,14 +730,27 @@ sub json_blinkencontrol {
 
 sub json_status {
 	my ( $id, $embed ) = @_;
+	
+	my $type = $coordinates->{$id}->{type} // q{};
+	my $name = $coordinates->{$id}->{name} // $id;
 
 	my $ret = {
-		auto => ( -e "/tmp/automatic_${id}" ? 1 : 0 ),
+		auto 				=> ( -e "/tmp/automatic_${id}" ? 1 : 0 ),
 		rate_delay  => get_ratelimit_delay($id),
 		status      => status_number($id),
 		status_text => status_text($id),
 		info        => status_info(),
 		image 			=> device_image($id),
+		name				=> $name,
+		x1					=> $coordinates->{$id}->{x1},
+		y1					=> $coordinates->{$id}->{y1},
+		x2					=> $coordinates->{$id}->{x2},
+		y2					=> $coordinates->{$id}->{y2},
+		is_writable => $coordinates->{$id}->{is_writable},
+		area 				=> $coordinates->{$id}->{area},
+		layer 			=> $coordinates->{$id}->{layer},
+		duplicates 	=> $coordinates->{$id}->{duplicates},
+		type 				=> $coordinates->{$id}->{type},
 	};
 
 	if ( $coordinates->{$id}->{type} eq 'charwrite' ) {
