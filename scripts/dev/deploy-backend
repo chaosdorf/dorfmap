@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# Note: This script only updates the dorfmap backend. Frontend files already
+# present on the raspberry pi are left as-is. Use the copy-to-server script
+# to deploy the complete dorfmap web service.
+
 ssh root@feedback mount -o remount,rw /
 rsync -aP coordinates index.pl root@feedback:/root/dorfmap
 ssh root@feedback mount -o remount,ro /

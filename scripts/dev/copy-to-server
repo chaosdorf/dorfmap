@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Copies the entire dorfmap web service (frontend and backend) to the
+# Raspberry Pi and updates the running dorfmap instance
+
 ssh root@feedback mount -o remount,rw /
 rsync -aP coordinates index.pl public scripts templates root@feedback:/root/dorfmap
 ssh root@feedback mount -o remount,ro /
