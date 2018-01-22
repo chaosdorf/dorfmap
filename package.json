@@ -36,7 +36,6 @@
     "material-ui": "^0.20.0",
     "mobx": "^3.4.1",
     "mobx-react": "^4.3.2",
-    "nervjs": "^1.2.4",
     "prop-types": "^15.6.0",
     "rc-tooltip": "^3.7.0",
     "react": "^16.2.0",
