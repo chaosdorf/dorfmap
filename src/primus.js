@@ -1,13 +1,13 @@
 // @flow
 /* eslint import/no-webpack-loader-syntax: 0 */
 import 'imports-loader?this=>window&define=>false!./external/primusClient';
-import type DeviceStore from 'Store/DeviceStore';
+import { updateDevice } from 'actions/device';
 
 const primus = global.Primus.connect(PRIMUS);
 
-export function setupPrimus(deviceStore: DeviceStore) {
+export function setupPrimus(store: *) {
   primus.on('update', deviceId => {
-    deviceStore.updateDevice(deviceId);
+    store.dispatch(updateDevice(deviceId));
   });
 }
 

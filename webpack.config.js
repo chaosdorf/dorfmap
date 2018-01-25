@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeEnv = (process.env.NODE_ENV || 'development').trim();
-const DashboardPlugin = require('webpack-dashboard/plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 // eslint-disable-next-line
@@ -29,7 +28,9 @@ const plugins = [
 ];
 
 if (__DEV__) {
-  plugins.push(new DashboardPlugin());
+  const Jarvis = require('webpack-jarvis');
+
+  plugins.push(new Jarvis());
 } else {
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({

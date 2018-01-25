@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'joblift/2space',
+  extends: ['joblift/2space', 'joblift/flowtype', 'joblift/react'],
   env: {
     browser: true,
     node: true,
@@ -11,6 +11,6 @@ module.exports = {
     SENTRY: false,
   },
   rules: {
-    'no-use-before-define': 0,
+    'no-use-before-define': 0
   },
 };

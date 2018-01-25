@@ -1,34 +1,34 @@
 // @flow
-import { inject } from 'mobx-react';
+import { connect } from 'react-redux';
 import { Tab, Tabs } from 'material-ui/Tabs';
 import _ from 'lodash';
 import Dialog from 'material-ui/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
-import type MenuStore from 'Store/MenuStore';
+import type { AppState } from 'AppState';
 
-type Props = {
+type ReduxProps = {
+  menu: $PropertyType<$PropertyType<AppState, 'menu'>, 'menu'>,
+};
+type Props = ReduxProps & {
   activeType: ?string,
   handleRequestClose: Function,
-  menuStore?: MenuStore,
   open?: boolean,
 };
-@inject('menuStore')
-export default class OptionDialog extends React.Component<Props> {
+class OptionDialog extends React.Component<Props> {
   static defaultProps = {
     open: false,
   };
   handleTabChange = () => this.forceUpdate();
   render() {
-    const { menuStore, activeType, open } = this.props;
+    const { menu, activeType, open } = this.props;
     // $FlowFixMe
-    const selectedIndex = Object.keys(menuStore.menu.toJS()).indexOf(activeType);
+    const selectedIndex = Object.keys(menu.toJS()).indexOf(activeType);
 
     return (
       <Dialog bodyStyle={style.wrapper} onRequestClose={this.props.handleRequestClose} open={open}>
         <Tabs onChange={this.handleTabChange} initialSelectedIndex={selectedIndex}>
-          {/* $FlowFixMe*/
-          menuStore.menu
+          {menu
             .map((entries, type) => (
               <Tab key={type} label={_.capitalize(type)}>
                 <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose} />
@@ -40,6 +40,10 @@ export default class OptionDialog extends React.Component<Props> {
     );
   }
 }
+
+export default connect((state: AppState): ReduxProps => ({
+  menu: state.menu.menu,
+}))(OptionDialog);
 
 const style = {
   wrapper: {

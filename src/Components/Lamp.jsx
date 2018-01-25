@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { inject } from 'mobx-react';
+import { connect } from 'react-redux';
+import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import Tooltip from 'rc-tooltip';
-import type DeviceStore from 'Store/DeviceStore';
 
 export type Lamp = {
   status_text: ?string,
@@ -23,15 +23,14 @@ export type Lamp = {
 
 type Props = {
   lamp: Lamp,
-  deviceStore?: DeviceStore,
+  toggleDeviceProp: typeof toggleDevice,
 };
 
 type State = {
   dialogOpen: boolean,
 };
 
-@inject('deviceStore')
-export default class LampComponent extends React.Component<Props, State> {
+class LampComponent extends React.Component<Props, State> {
   static style = {
     lamp: {
       writeable: {
@@ -91,7 +90,7 @@ export default class LampComponent extends React.Component<Props, State> {
     );
   }
   toggle = () => {
-    const { lamp, deviceStore } = this.props;
+    const { lamp, toggleDeviceProp } = this.props;
 
     if (!lamp.is_writable) {
       return;
@@ -101,8 +100,8 @@ export default class LampComponent extends React.Component<Props, State> {
       this.setState({
         dialogOpen: true,
       });
-    } else if (lamp.rate_delay <= 0 && deviceStore) {
-      deviceStore.toggleDevice(lamp);
+    } else if (lamp.rate_delay <= 0) {
+      toggleDeviceProp(lamp);
     }
   };
   handleRequestClose = () => {
@@ -166,3 +165,7 @@ export default class LampComponent extends React.Component<Props, State> {
     );
   }
 }
+
+export default connect(null, {
+  toggleDeviceProp: toggleDevice,
+})(LampComponent);

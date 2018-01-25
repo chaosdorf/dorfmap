@@ -1,35 +1,33 @@
 // @flow
-import { inject } from 'mobx-react';
+import { connect } from 'react-redux';
+import { executePreset, executeShortcut, setLayer } from 'actions/device';
 import _ from 'lodash';
 import FlatButton from 'material-ui/FlatButton';
 import React from 'react';
-import type DeviceStore from 'Store/DeviceStore';
 
 type Props = {
   closeFn: Function,
   entries: ?(any[]),
   type: string,
-  deviceStore?: DeviceStore,
+  setLayerProp: typeof setLayer,
+  executePresetProp: typeof executePreset,
+  executeShortcutProp: typeof executeShortcut,
 };
 
-@inject('deviceStore')
-export default class MenuEntries extends React.Component<Props> {
+class MenuEntries extends React.Component<Props> {
   handleClick(entry: any) {
     return () => {
-      const { deviceStore, type, closeFn } = this.props;
+      const { executePresetProp, executeShortcutProp, setLayerProp, type, closeFn } = this.props;
 
-      if (!deviceStore) {
-        return;
-      }
       switch (type) {
         case 'layers':
-          deviceStore.changeLayer(entry);
+          setLayerProp(entry);
           break;
         case 'presets':
-          deviceStore.executePreset(entry);
+          executePresetProp(entry);
           break;
         case 'actions':
-          deviceStore.executeShortcut(entry);
+          executeShortcutProp(entry);
           break;
         default:
           break;
@@ -47,6 +45,12 @@ export default class MenuEntries extends React.Component<Props> {
     return <div style={style.wrapper}>{entries}</div>;
   }
 }
+
+export default connect(null, {
+  setLayerProp: setLayer,
+  executeShortcutProp: executeShortcut,
+  executePresetProp: executePreset,
+})(MenuEntries);
 
 const style = {
   wrapper: {

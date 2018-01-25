@@ -1,20 +1,17 @@
 // @flow
-import { Provider } from 'mobx-react';
 import { setupPrimus } from '../primus';
-import DeviceStore from 'Store/DeviceStore';
 import Dorfmap from './Dorfmap';
-import MenuStore from 'Store/MenuStore';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-const menuStore = new MenuStore();
-const deviceStore = new DeviceStore();
-
-setupPrimus(deviceStore);
-
-const App = () => (
-  <Provider deviceStore={deviceStore} menuStore={menuStore}>
-    <Dorfmap />
-  </Provider>
-);
-
-export default App;
+export default class App extends React.PureComponent<{}> {
+  static contextTypes = {
+    store: PropTypes.object.isRequired,
+  };
+  componentWillMount() {
+    setupPrimus(this.context.store);
+  }
+  render() {
+    return <Dorfmap />;
+  }
+}

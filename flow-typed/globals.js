@@ -7,3 +7,4 @@ declare var PRIMUS: string;
 declare module 'ModuleStub' {
   declare module.exports: any;
 }
+  

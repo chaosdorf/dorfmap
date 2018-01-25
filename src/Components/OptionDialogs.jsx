@@ -1,5 +1,6 @@
 // @flow
-import { inject } from 'mobx-react';
+import { connect } from 'react-redux';
+import { fetchMenues } from 'actions/menu';
 import FlatButton from 'material-ui/FlatButton';
 import OptionDialog from './OptionDialog';
 import React from 'react';
@@ -9,8 +10,11 @@ type State = {
   title?: string,
 };
 
-@inject('menuStore')
-export default class OptionDialogs extends React.Component<{}, State> {
+type Props = {
+  fetchMenues: typeof fetchMenues,
+};
+
+class OptionDialogs extends React.Component<Props, State> {
   actions: Object = {
     actions: 0,
     presets: 1,
@@ -18,8 +22,7 @@ export default class OptionDialogs extends React.Component<{}, State> {
   };
   state: State = {};
   componentWillMount() {
-    // $FlowFixMe
-    this.props.menuStore.fetchMenues();
+    this.props.fetchMenues();
   }
   handleClick(action: number) {
     let title;
@@ -88,6 +91,10 @@ export default class OptionDialogs extends React.Component<{}, State> {
     );
   }
 }
+
+export default connect(null, {
+  fetchMenues,
+})(OptionDialogs);
 
 const style = {
   dialogs: {

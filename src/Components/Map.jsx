@@ -1,16 +1,20 @@
 // @flow
-import { inject, observer } from 'mobx-react';
+import { connect } from 'react-redux';
+import { fetchDevices } from 'actions/device';
+import { filteredDevices } from 'selector/device';
 import LampComponent from './Lamp';
 import React from 'react';
-import type DeviceStore from 'Store/DeviceStore';
+import type { AppState } from 'AppState';
 
-type Props = {
-  deviceStore?: DeviceStore,
+type ReduxProps = {
+  devices: $PropertyType<$PropertyType<AppState, 'device'>, 'devices'>,
 };
 
-@inject('deviceStore')
-@observer
-export default class DMap extends React.Component<Props> {
+type Props = ReduxProps & {
+  fetchDevicesProp: typeof fetchDevices,
+};
+
+class DMap extends React.Component<Props> {
   static style = {
     wrapper: {
       backgroundImage: 'url(/static/images/map.png)',
@@ -21,17 +25,25 @@ export default class DMap extends React.Component<Props> {
       position: 'relative',
     },
   };
+  componentWillMount() {
+    this.props.fetchDevicesProp();
+  }
   render() {
-    const { deviceStore } = this.props;
-
-    if (!deviceStore) {
-      return null;
-    }
+    const { devices } = this.props;
 
     return (
       <div style={DMap.style.wrapper}>
-        {deviceStore.devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toList()}
+        {devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toList()}
       </div>
     );
   }
 }
+
+export default connect(
+  (state: AppState): ReduxProps => ({
+    devices: filteredDevices(state),
+  }),
+  {
+    fetchDevicesProp: fetchDevices,
+  }
+)(DMap);
