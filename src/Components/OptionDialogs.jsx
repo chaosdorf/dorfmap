@@ -66,6 +66,9 @@ class OptionDialogs extends React.Component<Props, State> {
   toMPD() {
     window.open('https://mpd.chaosdorf.space');
   }
+  toPulseWeb() {
+    window.open('https://pulseweb.chaosdorf.space');
+  }
   render() {
     return (
       <div>
@@ -79,6 +82,7 @@ class OptionDialogs extends React.Component<Props, State> {
             <FlatButton onClick={this.toMete}>{'Mete'}</FlatButton>
             <FlatButton onClick={this.toLabello}>{'Labello'}</FlatButton>
             <FlatButton onClick={this.toMPD}>{'MPD'}</FlatButton>
+            <FlatButton onClick={this.toPulseWeb}>{'PulseWeb'}</FlatButton>
           </div>
         </div>
 
