@@ -27,11 +27,9 @@
     "@marudor/react-radio-group": "^4.0.1",
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",
-    "caniuse-api": "^2.0.0",
     "classnames": "^2.2.5",
     "cxs": "^6.1.0",
     "immutable": "^4.0.0-rc.9",
-    "inline-style-prefixer": "^4.0.0",
     "lodash": "^4.17.4",
     "material-ui": "^0.20.0",
     "mobx": "^3.4.1",
@@ -40,7 +38,6 @@
     "rc-tooltip": "^3.7.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-portal-tooltip": "^2.3.0",
     "react-radio-group": "^3.0.2",
     "react-redux": "^5.0.6",
     "react-tap-event-plugin": "^3.0.2",
@@ -89,7 +86,6 @@
     "style-loader": "^0.19.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.11.1",
-    "webpack-jarvis": "^0.2.2"
+    "webpack-dev-server": "^2.11.1"
   }
 }

@@ -27,11 +27,7 @@ const plugins = [
   }),
 ];
 
-if (__DEV__) {
-  const Jarvis = require('webpack-jarvis');
-
-  plugins.push(new Jarvis());
-} else {
+if (!__DEV__) {
   plugins.push(
     new webpack.optimize.UglifyJsPlugin({
       compress: {

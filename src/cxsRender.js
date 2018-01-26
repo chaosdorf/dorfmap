@@ -3,7 +3,6 @@ import * as React from 'react';
 import { compact, flattenDeep, isEmpty } from 'lodash';
 import classnames from 'classnames';
 import cxs from 'cxs';
-import prefixAll from 'inline-style-prefixer/static';
 
 const transformProps = ({
   style,

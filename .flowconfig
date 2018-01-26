@@ -25,6 +25,7 @@ module.name_mapper='imports-loader\?.*' -> 'ModuleStub'
 module.name_mapper='.*\.css$' -> 'ModuleStub'
 module.name_mapper='.*\.less$' -> 'ModuleStub'
 module.name_mapper='config$' -> 'config.development.js'
+module.name_mapper='react-radio-group' -> '@marudor/react-radio-group'
 module.system=haste
 
 module.system.node.resolve_dirname=src
