@@ -5,6 +5,6 @@
 # to deploy the complete dorfmap web service.
 
 ssh root@feedback mount -o remount,rw /
-rsync -aP coordinates index.pl root@feedback:/root/dorfmap
+rsync -aP coordinates root@feedback:/root/dorfmap
 ssh root@feedback mount -o remount,ro /
 ssh root@feedback dorfmap_pull
