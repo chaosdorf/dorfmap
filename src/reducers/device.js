@@ -27,8 +27,11 @@ export default handleActions(
   {
     [combineActions(Actions.fetchDevices, Actions.executePreset, Actions.executeShortcut)]: (
       state: State,
-      { payload }
+      { payload, error }
     ) => {
+      if (error) {
+        return state;
+      }
       let devices = Map();
 
       Object.keys(payload).forEach(key => {

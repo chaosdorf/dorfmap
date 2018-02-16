@@ -22,7 +22,7 @@
     "build": "npm run build:webpack && npm run build:perf",
     "test": "flow && npm run lint",
     "test:travis": "npm run test && NODE_ENV=production npm run build",
-    "deploy": "npm run lint && BASE_HOST= PRIMUS=http://dorfmapserver.chaosdorf.space:3001 SENTRY_DSN= SENTRY_ENV=prod NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
+    "deploy": "npm run lint && PRIMUS=http://dorfmapserver.chaosdorf.space:3001 SENTRY_DSN= SENTRY_ENV=prod NODE_ENV=production npm run build; sh scripts/dev/copy-to-server",
     "lint": "eslint src/**/*.js*"
   },
   "author": "marudor",

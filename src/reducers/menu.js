@@ -21,7 +21,10 @@ const defaultState: State = {
 
 export default handleActions(
   {
-    [String(Actions.fetchMenues)]: (state: State, { payload }) => {
+    [String(Actions.fetchMenues)]: (state: State, { payload, error }) => {
+      if (error) {
+        return state;
+      }
       let menu = Map();
 
       for (const m of payload) {

@@ -1,5 +1,4 @@
 // @flow
-import './axiosDefaults';
 import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
