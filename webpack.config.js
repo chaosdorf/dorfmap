@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeEnv = (process.env.NODE_ENV || 'development').trim();
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
@@ -28,18 +29,49 @@ const plugins = [
 ];
 
 if (!__DEV__) {
+  const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
   plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
-      output: {
-        comments: false,
-      },
-      screwIe8: true,
-      sourceMap: false,
-    })
+    ...[
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          output: {
+            comments: false,
+          },
+        },
+      }),
+      new ExtractTextPlugin('[name]-[contenthash].css'),
+    ]
   );
+}
+
+function StyleLoader(prod, scss) {
+  const loader = [
+    'style-loader',
+    {
+      loader: 'css-loader',
+      options: {
+        modules: true,
+        importLoaders: scss ? 2 : 1,
+      },
+    },
+    'postcss-loader',
+  ];
+
+  if (scss) {
+    loader.push('sass-loader');
+  }
+
+  if (prod) {
+    loader.shift();
+
+    return ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      use: loader,
+    });
+  }
+
+  return loader;
 }
 
 module.exports = {
@@ -52,7 +84,7 @@ module.exports = {
       'react-radio-group': '@marudor/react-radio-group',
     },
   },
-  entry: ['babel-polyfill', './src/main.js'],
+  entry: ['./src/main.js'],
   output: {
     path: path.resolve('public'),
     filename: 'dorfmap-[hash].js',
@@ -70,7 +102,14 @@ module.exports = {
       { test: /\.(eot|ttf|otf|svg|woff2?)(\?.*)?$/, loader: 'file-loader' },
       { test: /\.(jpg|png|gif|jpeg|ico)$/, loader: 'url-loader' },
       { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      {
+        test: /\.css$/,
+        use: StyleLoader(!__DEV__, false),
+      },
+      {
+        test: /\.scss/,
+        use: StyleLoader(!__DEV__, true),
+      },
     ],
     noParse: [/primusClient\.js/, /.*primusClient.*/, /react\\dist\\react(-with-addons)?\.js/],
   },

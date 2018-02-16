@@ -1,12 +1,9 @@
 // @flow
 import './axiosDefaults';
-import './cxsRender';
 import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './Components/App';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import promiseMiddleware from 'redux-promise';
 import ReactDOM from 'react-dom';
 import reducer from './reducers';
@@ -39,16 +36,10 @@ if (module.hot) {
   });
 }
 
-require('rc-tooltip/assets/bootstrap.css');
-
-injectTapEventPlugin();
-
 ReactDOM.render(
-  <MuiThemeProvider>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </MuiThemeProvider>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   // $FlowFixMe
   document.querySelector('#dorfmapWrapper')
 );

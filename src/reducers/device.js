@@ -1,7 +1,6 @@
 // @flow
 import * as Actions from 'actions/device';
 import { combineActions, handleActions } from 'redux-actions';
-import { forEach } from 'lodash';
 import { Map } from 'immutable';
 import type { Lamp } from 'Components/Lamp';
 
@@ -32,11 +31,13 @@ export default handleActions(
     ) => {
       let devices = Map();
 
-      forEach(payload, d => {
+      Object.keys(payload).forEach(key => {
+        const d = payload[key];
+
         devices = devices.set(d.name, d);
         if (d.status === 1) {
           // eslint-disable-next-line
-        d.rate_delay = 0;
+          d.rate_delay = 0;
         }
       });
 

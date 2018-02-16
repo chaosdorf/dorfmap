@@ -17,14 +17,12 @@ interfaces/
 
 
 [options]
-module.name_mapper='babel-polyfill$' -> 'ModuleStub'
-module.name_mapper='radium$' -> 'ModuleStub'
 module.name_mapper='react-hot-loader$' -> 'ModuleStub'
 module.name_mapper='react-hot-loader/patch$' -> 'ModuleStub'
 module.name_mapper='imports-loader\?.*' -> 'ModuleStub'
-module.name_mapper='.*\.css$' -> 'ModuleStub'
-module.name_mapper='.*\.less$' -> 'ModuleStub'
-module.name_mapper='config$' -> 'config.development.js'
+module.name_mapper='.*\.css$' -> 'CSSFile'
+module.name_mapper='.*\.less$' -> 'CSSFile'
+module.name_mapper='.*\.scss$' -> 'CSSFile'
 module.name_mapper='react-radio-group' -> '@marudor/react-radio-group'
 module.system=haste
 

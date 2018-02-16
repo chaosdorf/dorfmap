@@ -4,6 +4,7 @@ import { fetchDevices } from 'actions/device';
 import { filteredDevices } from 'selector/device';
 import LampComponent from './Lamp';
 import React from 'react';
+import styles from './Map.scss';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {
@@ -15,16 +16,6 @@ type Props = ReduxProps & {
 };
 
 class DMap extends React.Component<Props> {
-  static style = {
-    wrapper: {
-      backgroundImage: 'url(/static/images/map.png)',
-      width: 2202,
-      height: 648,
-      marginLeft: 5,
-      marginRight: 5,
-      position: 'relative',
-    },
-  };
   componentWillMount() {
     this.props.fetchDevicesProp();
   }
@@ -32,8 +23,11 @@ class DMap extends React.Component<Props> {
     const { devices } = this.props;
 
     return (
-      <div style={DMap.style.wrapper}>
-        {devices.map((lamp, key) => <LampComponent key={key} lamp={lamp} />).toList()}
+      <div className={styles.wrapper}>
+        {devices
+          .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
+          .toList()
+          .toArray()}
       </div>
     );
   }

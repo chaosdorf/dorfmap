@@ -1,33 +1,36 @@
 {
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
         "loose": true,
-        "useBuiltIns": true
+        "useBuiltIns": "usage"
       }
     ],
-    "react",
-    "flow"
+    "@babel/preset-react",
+    "@babel/preset-flow",
+    "@babel/preset-stage-1"
   ],
   "plugins": [
-    ["transform-react-jsx", { "pragma": "cxsReact", "useBuiltIns": true }],
     "transform-decorators-legacy",
-    "lodash",
-    "transform-class-properties",
-    "transform-object-rest-spread"
+    ["module-resolver", {
+      "root": "./src",
+      "alias": {
+        "react-radio-group": "@marudor/react-radio-group"
+      }
+    }]
   ],
   "env": {
     "development": {
       "plugins": [
-        "transform-react-jsx-source",
+        "@babel/plugin-transform-react-jsx-source",
         "flow-react-proptypes",
         "transform-dev-warning"
       ]
     },
     "production": {
       "compact": true,
-      "plugins": ["transform-react-constant-elements"]
+      "plugins": ["@babel/plugin-transform-react-constant-elements"]
     }
   }
 }

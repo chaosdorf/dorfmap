@@ -4,11 +4,19 @@ import { handleActions } from 'redux-actions';
 import { Map } from 'immutable';
 
 export type State = {
-  menu: Map<string, any>,
+  menu: Map<?string, any>,
+  services: Map<string, string>,
 };
 
 const defaultState: State = {
   menu: Map(),
+  services: Map({
+    mete: 'https://mete.chaosdorf.space',
+    labello: 'http://labello.chaosdorf.space',
+    mpd: 'https://mpd.chaosdorf.space',
+    pulseWeb: 'https://pulseweb.chaosdorf.space',
+    pizza: 'https://pizza.chaosdorf.space',
+  }),
 };
 
 export default handleActions(

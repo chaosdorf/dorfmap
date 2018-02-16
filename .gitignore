@@ -34,6 +34,12 @@ public/app.js
 public/app-*.js
 public/dorfmap-*.js
 public/dorfmap.js
+public/*.css
 .DS_Store
 www
 /cache/
+dist
+.cache
+yarn-error.log
+.fusebox/
+reports/

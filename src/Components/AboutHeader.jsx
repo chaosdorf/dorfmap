@@ -1,28 +1,29 @@
 // @flow
 import React from 'react';
+import styles from './AboutHeader.scss';
 
 const AboutHeader = () => (
-  <div style={style.wrapper}>
+  <div className={styles.wrapper}>
     <span>
-      <a style={style.link} href="https://github.com/chaosdorf/dorfmap">
+      <a className={styles.link} href="https://github.com/chaosdorf/dorfmap">
         {'dorfmap'}
       </a>{' '}
       {'|'}{' '}
     </span>
     <span>
-      <a style={style.link} href="https://wiki.chaosdorf.de/Lichtsteuerung">
+      <a className={styles.link} href="https://wiki.chaosdorf.de/Lichtsteuerung">
         {'about'}
       </a>{' '}
       {'|'}{' '}
     </span>
     <span>
-      <a style={style.link} href="https://wiki.chaosdorf.de/Lichtsteuerung#API">
+      <a className={styles.link} href="https://wiki.chaosdorf.de/Lichtsteuerung#API">
         {'API'}
       </a>{' '}
       {'|'}{' '}
     </span>
     <span>
-      <a style={style.link} href="/space_api.json">
+      <a className={styles.link} href="/space_api.json">
         {'spaceAPI'}
       </a>
     </span>
@@ -30,18 +31,3 @@ const AboutHeader = () => (
 );
 
 export default AboutHeader;
-
-const style = {
-  wrapper: {
-    position: 'fixed',
-    top: 5,
-    right: 15,
-    fontFamily: 'Monospace',
-    fontSize: 'smaller',
-  },
-  link: {
-    color: '#006',
-    textDecoration: 'none',
-    margin: 5,
-  },
-};

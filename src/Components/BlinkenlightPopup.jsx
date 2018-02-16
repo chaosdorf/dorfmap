@@ -2,9 +2,8 @@
 import { connect } from 'react-redux';
 import { fetchPresets, savePreset, setActivePreset } from 'actions/device';
 import { Radio, RadioGroup } from 'react-radio-group';
-import _ from 'lodash';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Button from 'material-ui/Button';
+import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
 import React from 'react';
 import type { AppState } from 'AppState';
 import type { Lamp } from 'Components/Lamp';
@@ -54,25 +53,15 @@ class BlinkenlightPopup extends React.Component<Props> {
       return null;
     }
     const actualPresets = presets.presets;
-    const actions = (
-      <div>
-        <FlatButton key="c" onClick={onRequestClose}>
-          {'Cancel'}
-        </FlatButton>
-        <FlatButton key="s" onClick={this.save}>
-          {'Save'}
-        </FlatButton>
-      </div>
-    );
 
     return (
-      <Dialog actions={actions} onRequestClose={onRequestClose} open={open}>
-        <div>
+      <Dialog fullscreen onClose={onRequestClose} open={open}>
+        <DialogContent>
           <RadioGroup
             selectedValue={presets.active ? presets.active.raw_string : null}
             onChange={this.handleRadioChange}
           >
-            {_.map(actualPresets, preset => (
+            {actualPresets.map(preset => (
               <div style={{ lineHeight: '32px' }} key={preset.name}>
                 <label>
                   <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
@@ -81,7 +70,15 @@ class BlinkenlightPopup extends React.Component<Props> {
               </div>
             ))}
           </RadioGroup>
-        </div>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="flat" key="c" onClick={onRequestClose}>
+            {'Cancel'}
+          </Button>
+          <Button variant="flat" key="s" onClick={this.save}>
+            {'Save'}
+          </Button>
+        </DialogActions>
       </Dialog>
     );
   }

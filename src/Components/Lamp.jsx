@@ -3,6 +3,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
+import cc from 'classcat';
+import styles from './Lamp.scss';
 import Tooltip from 'rc-tooltip';
 
 export type Lamp = {
@@ -69,23 +71,18 @@ class LampComponent extends React.Component<Props, State> {
     }
 
     const dup = lamp.duplicates[0];
-    const dupStyle = [
-      LampComponent.style.lamp.normal,
-      {
-        left: dup.x1,
-        top: dup.y1,
-        width: lamp.x2,
-        height: lamp.y2,
-      },
-    ];
+    const dupStyle = {
+      left: dup.x1,
+      top: dup.y1,
+      width: lamp.x2,
+      height: lamp.y2,
+    };
 
-    if (lamp.is_writable && lamp.rate_delay <= 0) {
-      dupStyle.push(LampComponent.style.lamp.writeable);
-    }
+    const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
 
     return (
       <Tooltip overlay={tooltipText}>
-        <img onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
+        <img className={cssClass} onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
       </Tooltip>
     );
   }
@@ -134,21 +131,16 @@ class LampComponent extends React.Component<Props, State> {
   render() {
     const { lamp } = this.props;
     const { dialogOpen } = this.state;
-    const style = [
-      LampComponent.style.lamp.normal,
-      {
-        left: lamp.x1,
-        top: lamp.y1,
-        width: lamp.x2,
-        height: lamp.y2,
-      },
-    ];
+    const style = {
+      left: lamp.x1,
+      top: lamp.y1,
+      width: lamp.x2,
+      height: lamp.y2,
+    };
+    const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
 
-    if (lamp.is_writable && lamp.rate_delay <= 0) {
-      style.push(LampComponent.style.lamp.writeable);
-    }
     const tooltipText = this.getTooltipText(lamp);
-    const img = <img onClick={this.toggle} name={lamp.name} style={style} src={lamp.image} />;
+    const img = <img className={cssClass} onClick={this.toggle} name={lamp.name} style={style} src={lamp.image} />;
 
     let dialog;
 

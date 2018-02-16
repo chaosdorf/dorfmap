@@ -1,9 +1,9 @@
 // @flow
 import { connect } from 'react-redux';
 import { executePreset, executeShortcut, setLayer } from 'actions/device';
-import _ from 'lodash';
-import FlatButton from 'material-ui/FlatButton';
+import Button from 'material-ui/Button';
 import React from 'react';
+import styles from './MenuEntries.scss';
 
 type Props = {
   closeFn: Function,
@@ -36,13 +36,15 @@ class MenuEntries extends React.Component<Props> {
     };
   }
   render() {
-    const entries = _.map(this.props.entries, entry => (
-      <FlatButton style={style.button} key={entry} onClick={this.handleClick(entry)}>
-        {entry}
-      </FlatButton>
-    ));
+    const entries = this.props.entries
+      ? this.props.entries.map(entry => (
+          <Button variant="flat" className={styles.button} key={entry} onClick={this.handleClick(entry)}>
+            {entry}
+          </Button>
+        ))
+      : null;
 
-    return <div style={style.wrapper}>{entries}</div>;
+    return <div className={styles.wrapper}>{entries}</div>;
   }
 }
 
@@ -51,14 +53,3 @@ export default connect(null, {
   executeShortcutProp: executeShortcut,
   executePresetProp: executePreset,
 })(MenuEntries);
-
-const style = {
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  button: {
-    marginTop: 2,
-    marginBottom: 2,
-  },
-};

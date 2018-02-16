@@ -1,10 +1,9 @@
 // @flow
 import { connect } from 'react-redux';
-import { Tab, Tabs } from 'material-ui/Tabs';
-import _ from 'lodash';
 import Dialog from 'material-ui/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
+import Tabs, { Tab } from 'material-ui/Tabs';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {
@@ -15,27 +14,40 @@ type Props = ReduxProps & {
   handleRequestClose: Function,
   open?: boolean,
 };
-class OptionDialog extends React.Component<Props> {
+type State = {
+  selected: ?string,
+};
+class OptionDialog extends React.Component<Props, State> {
   static defaultProps = {
     open: false,
   };
-  handleTabChange = () => this.forceUpdate();
+  state = {
+    selected: this.props.activeType,
+  };
+  componentWillReceiveProps(props) {
+    this.setState({
+      selected: props.activeType,
+    });
+  }
+  handleTabChange = (e, selected) => {
+    this.setState({
+      selected,
+    });
+  };
   render() {
-    const { menu, activeType, open } = this.props;
-    // $FlowFixMe
-    const selectedIndex = Object.keys(menu.toJS()).indexOf(activeType);
+    const { menu, open } = this.props;
+    const { selected } = this.state;
+    const selectedEntries = menu.get(selected);
 
     return (
-      <Dialog bodyStyle={style.wrapper} onRequestClose={this.props.handleRequestClose} open={open}>
-        <Tabs onChange={this.handleTabChange} initialSelectedIndex={selectedIndex}>
+      <Dialog fullscreen onClose={this.props.handleRequestClose} open={open}>
+        <Tabs onChange={this.handleTabChange} value={selected}>
           {menu
-            .map((entries, type) => (
-              <Tab key={type} label={_.capitalize(type)}>
-                <MenuEntries entries={entries} type={type} closeFn={this.props.handleRequestClose} />
-              </Tab>
-            ))
-            .toList()}
+            .map((entries, type) => <Tab key={type} value={type} label={type} />)
+            .toList()
+            .toArray()}
         </Tabs>
+        <MenuEntries entries={selectedEntries} type={selected} closeFn={this.props.handleRequestClose} />
       </Dialog>
     );
   }
@@ -44,9 +56,3 @@ class OptionDialog extends React.Component<Props> {
 export default connect((state: AppState): ReduxProps => ({
   menu: state.menu.menu,
 }))(OptionDialog);
-
-const style = {
-  wrapper: {
-    padding: 0,
-  },
-};

@@ -1,16 +1,24 @@
 // @flow
 import { connect } from 'react-redux';
 import { fetchMenues } from 'actions/menu';
-import FlatButton from 'material-ui/FlatButton';
+import { internalServices } from 'selector/menu';
+import Button from 'material-ui/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
+import styles from './OptionDialogs.scss';
+import type { AppState } from 'AppState';
+import type { Map } from 'immutable';
 
 type State = {
   open?: boolean,
   title?: string,
 };
 
-type Props = {
+type ReduxProps = {
+  services: Map<string, Function>,
+};
+
+type Props = ReduxProps & {
   fetchMenues: typeof fetchMenues,
 };
 
@@ -57,32 +65,31 @@ class OptionDialogs extends React.Component<Props, State> {
   handleRequestClose = () => {
     this.setState({ open: false });
   };
-  toMete() {
-    window.open('https://mete.chaosdorf.space');
-  }
-  toLabello() {
-    window.open('http://labello.chaosdorf.space');
-  }
-  toMPD() {
-    window.open('https://mpd.chaosdorf.space');
-  }
-  toPulseWeb() {
-    window.open('https://pulseweb.chaosdorf.space');
-  }
   render() {
+    const { services } = this.props;
+
     return (
       <div>
-        <div style={style.dialogs} className="optionDialogs">
+        <div className={styles.dialogs}>
           <div>
-            <FlatButton onClick={this.handleActionsClick}>{'Actions'}</FlatButton>
-            <FlatButton onClick={this.handlePresetsClick}>{'Presets'}</FlatButton>
-            <FlatButton onClick={this.handleLayersClick}>{'Layers'}</FlatButton>
+            <Button variant="flat" onClick={this.handleActionsClick}>
+              {'Actions'}
+            </Button>
+            <Button variant="flat" onClick={this.handlePresetsClick}>
+              {'Presets'}
+            </Button>
+            <Button variant="flat" onClick={this.handleLayersClick}>
+              {'Layers'}
+            </Button>
           </div>
           <div>
-            <FlatButton onClick={this.toMete}>{'Mete'}</FlatButton>
-            <FlatButton onClick={this.toLabello}>{'Labello'}</FlatButton>
-            <FlatButton onClick={this.toMPD}>{'MPD'}</FlatButton>
-            <FlatButton onClick={this.toPulseWeb}>{'PulseWeb'}</FlatButton>
+            {services
+              .map((onClick, name) => (
+                <Button key={name} variant="flat" onClick={onClick}>
+                  {name}
+                </Button>
+              ))
+              .toList()}
           </div>
         </div>
 
@@ -96,16 +103,11 @@ class OptionDialogs extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, {
-  fetchMenues,
-})(OptionDialogs);
-
-const style = {
-  dialogs: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    marginTop: 5,
-    marginLeft: 10,
-    width: '70%',
-  },
-};
+export default connect(
+  (state: AppState) => ({
+    services: internalServices(state),
+  }),
+  {
+    fetchMenues,
+  }
+)(OptionDialogs);
