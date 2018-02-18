@@ -5,7 +5,15 @@ import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classcat';
 import styles from './Lamp.scss';
-import Tooltip from 'rc-tooltip';
+import Tooltip from 'react-toolbox/lib/tooltip';
+
+const Img = ({ children, ...props }: any) => (
+  <React.Fragment>
+    {children}
+    <img {...props} />
+  </React.Fragment>
+);
+const TooltipImg = Tooltip(Img);
 
 export type Lamp = {
   status_text: ?string,
@@ -79,12 +87,19 @@ class LampComponent extends React.Component<Props, State> {
     };
 
     const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
+    const imgProps = {
+      className: cssClass,
+      onClick: this.toggle,
+      name: lamp.name,
+      style: dupStyle,
+      src: lamp.image,
+    };
 
-    return (
-      <Tooltip overlay={tooltipText}>
-        <img className={cssClass} onClick={this.toggle} name={lamp.name} style={dupStyle} src={lamp.image} />
-      </Tooltip>
-    );
+    if (tooltipText) {
+      return <TooltipImg tooltipHideOnClick={false} {...imgProps} tooltip={tooltipText} />;
+    }
+
+    return <Img {...imgProps} />;
   }
   toggle = () => {
     const { lamp, toggleDeviceProp } = this.props;
@@ -140,7 +155,20 @@ class LampComponent extends React.Component<Props, State> {
     const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
 
     const tooltipText = this.getTooltipText(lamp);
-    const img = <img className={cssClass} onClick={this.toggle} name={lamp.name} style={style} src={lamp.image} />;
+    const imgProps = {
+      className: cssClass,
+      onClick: this.toggle,
+      name: lamp.name,
+      style,
+      src: lamp.image,
+    };
+    let img;
+
+    if (tooltipText) {
+      img = <TooltipImg tooltipHideOnClick={false} {...imgProps} tooltip={tooltipText} />;
+    } else {
+      img = <img {...imgProps} />;
+    }
 
     let dialog;
 
@@ -150,7 +178,7 @@ class LampComponent extends React.Component<Props, State> {
 
     return (
       <div>
-        {tooltipText ? <Tooltip overlay={tooltipText}>{img}</Tooltip> : img}
+        {img}
         {this.getDuplicate(lamp, tooltipText)}
         {dialog}
       </div>

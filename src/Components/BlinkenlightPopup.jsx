@@ -1,9 +1,8 @@
 // @flow
 import { connect } from 'react-redux';
 import { fetchPresets, savePreset, setActivePreset } from 'actions/device';
-import { Radio, RadioGroup } from 'react-radio-group';
-import Button from 'material-ui/Button';
-import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
+import { RadioButton, RadioGroup } from 'react-toolbox/lib/radio';
+import Dialog from 'react-toolbox/lib/dialog';
 import React from 'react';
 import type { AppState } from 'AppState';
 import type { Lamp } from 'Components/Lamp';
@@ -54,31 +53,23 @@ class BlinkenlightPopup extends React.Component<Props> {
     }
     const actualPresets = presets.presets;
 
+    const dialogActions = [{ label: 'Cancel', onClick: onRequestClose }, { label: 'Save', onClick: this.save }];
+
     return (
-      <Dialog fullscreen onClose={onRequestClose} open={open}>
-        <DialogContent>
-          <RadioGroup
-            selectedValue={presets.active ? presets.active.raw_string : null}
-            onChange={this.handleRadioChange}
-          >
-            {actualPresets.map(preset => (
-              <div style={{ lineHeight: '32px' }} key={preset.name}>
-                <label>
-                  <Radio style={{ marginRight: 5 }} value={preset.raw_string} />
-                  {preset.name}
-                </label>
-              </div>
-            ))}
-          </RadioGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="flat" key="c" onClick={onRequestClose}>
-            {'Cancel'}
-          </Button>
-          <Button variant="flat" key="s" onClick={this.save}>
-            {'Save'}
-          </Button>
-        </DialogActions>
+      <Dialog
+        type="small"
+        onOverlayClick={onRequestClose}
+        onEscKeyDown={onRequestClose}
+        active={open}
+        actions={dialogActions}
+      >
+        <RadioGroup
+          name="blinken"
+          value={presets.active ? presets.active.raw_string : null}
+          onChange={this.handleRadioChange}
+        >
+          {actualPresets.map(preset => <RadioButton key={preset.name} value={preset.raw_string} label={preset.name} />)}
+        </RadioGroup>
       </Dialog>
     );
   }

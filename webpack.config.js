@@ -28,7 +28,17 @@ const plugins = [
   }),
 ];
 
-if (!__DEV__) {
+if (__DEV__) {
+  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  const DashboardPlugin = require('webpack-dashboard/plugin');
+
+  plugins.push(
+    new BundleAnalyzerPlugin({
+      openAnalyzer: false,
+    }),
+    new DashboardPlugin()
+  );
+} else {
   const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
   plugins.push(
@@ -53,6 +63,7 @@ function StyleLoader(prod, scss) {
       options: {
         modules: true,
         importLoaders: scss ? 2 : 1,
+        localIdentName: prod ? undefined : '[path][name]__[local]',
       },
     },
     'postcss-loader',

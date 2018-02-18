@@ -3,7 +3,7 @@ not android < 50
 not op_mini all
 not ie 10
 not ie_mob > 9
-not dead
 not baidu > 1
 not samsung 5
 not and_qq 1.2
+not bb > 1

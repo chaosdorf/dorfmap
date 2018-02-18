@@ -1,8 +1,8 @@
 // @flow
+import { Button } from 'react-toolbox/lib/button';
 import { connect } from 'react-redux';
-import { fetchMenues } from 'actions/menu';
+import { fetchMenues, setSelectedTab } from 'actions/menu';
 import { internalServices } from 'selector/menu';
-import Button from 'material-ui/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 import styles from './OptionDialogs.scss';
@@ -11,7 +11,6 @@ import type { Map } from 'immutable';
 
 type State = {
   open?: boolean,
-  title?: string,
 };
 
 type ReduxProps = {
@@ -20,47 +19,28 @@ type ReduxProps = {
 
 type Props = ReduxProps & {
   fetchMenues: typeof fetchMenues,
+  setSelectedTab: typeof setSelectedTab,
 };
 
 class OptionDialogs extends React.Component<Props, State> {
-  actions: Object = {
-    actions: 0,
-    presets: 1,
-    layers: 2,
-  };
   state: State = {};
   componentWillMount() {
     this.props.fetchMenues();
   }
   handleClick(action: number) {
-    let title;
-
-    switch (action) {
-      case this.actions.actions:
-        title = 'actions';
-        break;
-      case this.actions.presets:
-        title = 'presets';
-        break;
-      case this.actions.layers:
-        title = 'layers';
-        break;
-      default:
-        break;
-    }
+    this.props.setSelectedTab(action);
     this.setState({
-      title,
       open: true,
     });
   }
   handleActionsClick = () => {
-    this.handleClick(this.actions.actions);
+    this.handleClick(0);
   };
   handlePresetsClick = () => {
-    this.handleClick(this.actions.presets);
+    this.handleClick(1);
   };
   handleLayersClick = () => {
-    this.handleClick(this.actions.layers);
+    this.handleClick(2);
   };
   handleRequestClose = () => {
     this.setState({ open: false });
@@ -72,20 +52,20 @@ class OptionDialogs extends React.Component<Props, State> {
       <div>
         <div className={styles.dialogs}>
           <div>
-            <Button variant="flat" onClick={this.handleActionsClick}>
-              {'Actions'}
+            <Button flat onClick={this.handleActionsClick}>
+              Actions
             </Button>
-            <Button variant="flat" onClick={this.handlePresetsClick}>
-              {'Presets'}
+            <Button flat onClick={this.handlePresetsClick}>
+              Presets
             </Button>
-            <Button variant="flat" onClick={this.handleLayersClick}>
-              {'Layers'}
+            <Button flat onClick={this.handleLayersClick}>
+              Layers
             </Button>
           </div>
           <div>
             {services
               .map((onClick, name) => (
-                <Button key={name} variant="flat" onClick={onClick}>
+                <Button key={name} flat onClick={onClick}>
                   {name}
                 </Button>
               ))
@@ -93,11 +73,7 @@ class OptionDialogs extends React.Component<Props, State> {
           </div>
         </div>
 
-        <OptionDialog
-          activeType={this.state.title}
-          handleRequestClose={this.handleRequestClose}
-          open={this.state.open}
-        />
+        <OptionDialog handleRequestClose={this.handleRequestClose} open={this.state.open} />
       </div>
     );
   }
@@ -109,5 +85,6 @@ export default connect(
   }),
   {
     fetchMenues,
+    setSelectedTab,
   }
 )(OptionDialogs);

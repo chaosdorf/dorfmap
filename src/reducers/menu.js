@@ -6,6 +6,7 @@ import { Map } from 'immutable';
 export type State = {
   menu: Map<?string, any>,
   services: Map<string, string>,
+  selectedTab: number,
 };
 
 const defaultState: State = {
@@ -17,10 +18,15 @@ const defaultState: State = {
     pulseWeb: 'https://pulseweb.chaosdorf.space',
     pizza: 'https://pizza.chaosdorf.space',
   }),
+  selectedTab: 0,
 };
 
 export default handleActions(
   {
+    [String(Actions.setSelectedTab)]: (state: State, { payload }) => ({
+      ...state,
+      selectedTab: payload,
+    }),
     [String(Actions.fetchMenues)]: (state: State, { payload, error }) => {
       if (error) {
         return state;
