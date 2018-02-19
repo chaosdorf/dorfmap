@@ -13,7 +13,7 @@ const defaultState: State = {
   services: Map({
     mete: 'https://mete.chaosdorf.space',
     labello: 'http://labello.chaosdorf.space',
-    mpd: 'https://mpd.chaosdorf.space',
+    mpd: 'https://ympd.chaosdorf.space',
     pulseWeb: 'https://pulseweb.chaosdorf.space',
     pizza: 'https://pizza.chaosdorf.space',
   }),
