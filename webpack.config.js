@@ -12,7 +12,11 @@ const __DEV__ = nodeEnv !== 'production';
 const devtool = __DEV__ ? '#source-map' : '';
 
 const plugins = [
-  new HardSourceWebpackPlugin(),
+  new HardSourceWebpackPlugin({
+    environmentHash: {
+      files: ['yarn.lock', 'package.json', '.babelrc', 'postcss.config.js', 'webpack.config.js'],
+    },
+  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv),

@@ -29,7 +29,6 @@
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.0.0-beta.40",
-    "@marudor/react-radio-group": "^4.0.1",
     "axios": "^0.18.0",
     "classcat": "^3.0.1",
     "immutable": "^4.0.0-rc.9",
@@ -42,8 +41,7 @@
     "redux-actions": "^2.2.1",
     "redux-promise": "^0.5.3",
     "reselect": "^3.0.1",
-    "webpack-bundle-analyzer": "^2.10.0",
-    "ws": "^4.0.0"
+    "webpack-bundle-analyzer": "^2.10.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.40",

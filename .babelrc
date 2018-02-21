@@ -16,7 +16,6 @@
     ["module-resolver", {
       "root": "./src",
       "alias": {
-        "react-radio-group": "@marudor/react-radio-group"
       }
     }]
   ],

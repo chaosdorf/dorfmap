@@ -681,12 +681,6 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@marudor/react-radio-group@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@marudor/react-radio-group/-/react-radio-group-4.0.1.tgz#bb49b14628abb5ac87cfac60a7b3a2119c2ad1ab"
-  dependencies:
-    prop-types "^15.5.8"
-
 "@most/multicast@^1.2.5":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@most/multicast/-/multicast-1.3.0.tgz#e01574840df634478ac3fabd164c6e830fb3b966"
@@ -6221,7 +6215,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.8, prop-types@^15.6.0:
+prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
