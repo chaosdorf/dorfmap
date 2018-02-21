@@ -2,7 +2,6 @@
 import { Button } from 'react-toolbox/lib/button';
 import { connect } from 'react-redux';
 import { fetchMenues, setSelectedTab } from 'actions/menu';
-import { internalServices } from 'selector/menu';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 import styles from './OptionDialogs.scss';
@@ -14,7 +13,7 @@ type State = {
 };
 
 type ReduxProps = {
-  services: Map<string, Function>,
+  services: Map<string, string>,
 };
 
 type Props = ReduxProps & {
@@ -33,15 +32,6 @@ class OptionDialogs extends React.Component<Props, State> {
       open: true,
     });
   }
-  handleActionsClick = () => {
-    this.handleClick(0);
-  };
-  handlePresetsClick = () => {
-    this.handleClick(1);
-  };
-  handleLayersClick = () => {
-    this.handleClick(2);
-  };
   handleRequestClose = () => {
     this.setState({ open: false });
   };
@@ -52,22 +42,22 @@ class OptionDialogs extends React.Component<Props, State> {
       <div>
         <div className={styles.dialogs}>
           <div>
-            <Button flat onClick={this.handleActionsClick}>
+            <Button flat onClick={() => this.handleClick(0)}>
               Actions
             </Button>
-            <Button flat onClick={this.handlePresetsClick}>
+            <Button flat onClick={() => this.handleClick(1)}>
               Presets
             </Button>
-            <Button flat onClick={this.handleLayersClick}>
+            <Button flat onClick={() => this.handleClick(2)}>
               Layers
             </Button>
           </div>
           <div>
             {services
-              .map((onClick, name) => (
-                <Button key={name} flat onClick={onClick}>
-                  {name}
-                </Button>
+              .map((href, name) => (
+                <a key={name} href={href} target="_blank">
+                  <Button flat>{name}</Button>
+                </a>
               ))
               .toList()}
           </div>
@@ -81,7 +71,7 @@ class OptionDialogs extends React.Component<Props, State> {
 
 export default connect(
   (state: AppState) => ({
-    services: internalServices(state),
+    services: state.menu.services,
   }),
   {
     fetchMenues,

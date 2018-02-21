@@ -92,7 +92,7 @@ module.exports = {
     extensions: ['.js', '.jsx'],
     modules: [path.resolve('src'), 'node_modules'],
     alias: {
-      'react-radio-group': '@marudor/react-radio-group',
+      'lodash-es': 'lodash',
     },
   },
   entry: ['./src/main.js'],
@@ -122,7 +122,6 @@ module.exports = {
         use: StyleLoader(!__DEV__, true),
       },
     ],
-    noParse: [/primusClient\.js/, /.*primusClient.*/, /react\\dist\\react(-with-addons)?\.js/],
   },
   plugins,
   devtool,

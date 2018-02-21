@@ -6,11 +6,11 @@ import Primus from './external/primusClient';
 const primus = Primus.connect(PRIMUS);
 
 export function setupPrimus(store: *) {
-  primus.on('update', deviceId => {
+  primus.on('data', deviceId => {
     store.dispatch(updateDevice(deviceId));
   });
 }
 
 export const socketUpdate = (deviceId: any) => {
-  primus.emit('update', deviceId);
+  primus.write(deviceId);
 };
