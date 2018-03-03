@@ -121,21 +121,24 @@ class LampComponent extends React.Component<Props, State> {
       dialogOpen: false,
     });
   };
-  doesReduce: boolean = false;
+  componentWillMount() {
+    this.delayCheck(this.props);
+  }
   componentWillReceiveProps(props: Props) {
+    this.delayCheck(props);
+  }
+  doesReduce: boolean = false;
+  delayCheck = (props: Props) => {
     const { lamp } = props;
 
-    if (lamp.status === 1) {
-      /* eslint-disable camelcase */
-      lamp.rate_delay = 0;
-      this.doesReduce = false;
-    } else if (lamp.rate_delay > 0 && !this.doesReduce) {
+    if (lamp.status !== 1 && lamp.rate_delay > 0 && !this.doesReduce) {
       this.reduceDelay(lamp);
     }
-  }
+  };
   reduceDelay(lamp: Lamp) {
     this.doesReduce = true;
     setTimeout(() => {
+      this.doesReduce = false;
       lamp.rate_delay -= 1;
       this.forceUpdate();
       if (lamp.rate_delay > 0) {
