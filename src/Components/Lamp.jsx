@@ -121,7 +121,7 @@ class LampComponent extends React.Component<Props, State> {
       dialogOpen: false,
     });
   };
-  componentWillMount() {
+  componentDidMount() {
     this.delayCheck(this.props);
   }
   componentWillReceiveProps(props: Props) {

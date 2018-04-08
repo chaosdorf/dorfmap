@@ -2,11 +2,11 @@
 import { Button } from 'react-toolbox/lib/button';
 import { connect } from 'react-redux';
 import { fetchMenues, setSelectedTab } from 'actions/menu';
+import { Map } from 'immutable';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 import styles from './OptionDialogs.scss';
 import type { AppState } from 'AppState';
-import type { Map } from 'immutable';
 
 type State = {
   open?: boolean,
@@ -23,7 +23,7 @@ type Props = ReduxProps & {
 
 class OptionDialogs extends React.Component<Props, State> {
   state: State = {};
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchMenues();
   }
   handleClick(action: number) {

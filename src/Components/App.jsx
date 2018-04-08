@@ -8,7 +8,7 @@ export default class App extends React.PureComponent<{}> {
   static contextTypes = {
     store: PropTypes.object.isRequired,
   };
-  componentWillMount() {
+  componentDidMount() {
     setupPrimus(this.context.store);
   }
   render() {

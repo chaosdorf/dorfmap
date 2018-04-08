@@ -16,7 +16,7 @@ type Props = ReduxProps & {
 };
 
 class DMap extends React.Component<Props> {
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchDevicesProp();
   }
   render() {

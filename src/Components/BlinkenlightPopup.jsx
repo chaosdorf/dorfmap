@@ -26,7 +26,7 @@ type Props = ReduxProps &
   };
 
 class BlinkenlightPopup extends React.Component<Props> {
-  componentWillMount() {
+  componentDidMount() {
     const { fetchPresetsProp, lamp } = this.props;
 
     fetchPresetsProp(lamp);
