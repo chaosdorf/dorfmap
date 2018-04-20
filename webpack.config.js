@@ -3,8 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeEnv = (process.env.NODE_ENV || 'development').trim();
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // eslint-disable-next-line
 const __DEV__ = nodeEnv !== 'production';
@@ -12,11 +10,6 @@ const __DEV__ = nodeEnv !== 'production';
 const devtool = __DEV__ ? '#source-map' : '';
 
 const plugins = [
-  new HardSourceWebpackPlugin({
-    environmentHash: {
-      files: ['yarn.lock', 'package.json', '.babelrc', 'postcss.config.js', 'webpack.config.js'],
-    },
-  }),
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: JSON.stringify(nodeEnv),
@@ -32,15 +25,7 @@ const plugins = [
   }),
 ];
 
-if (__DEV__) {
-  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-
-  plugins.push(
-    new BundleAnalyzerPlugin({
-      openAnalyzer: false,
-    })
-  );
-} else {
+if (!__DEV__) {
   const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
   plugins.push(
@@ -52,7 +37,6 @@ if (__DEV__) {
           },
         },
       }),
-      new ExtractTextPlugin('[name]-[contenthash].css'),
     ]
   );
 }
@@ -73,15 +57,6 @@ function StyleLoader(prod, scss) {
 
   if (scss) {
     loader.push('sass-loader');
-  }
-
-  if (prod) {
-    loader.shift();
-
-    return ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: loader,
-    });
   }
 
   return loader;
