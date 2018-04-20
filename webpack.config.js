@@ -34,13 +34,11 @@ const plugins = [
 
 if (__DEV__) {
   const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-  const DashboardPlugin = require('webpack-dashboard/plugin');
 
   plugins.push(
     new BundleAnalyzerPlugin({
       openAnalyzer: false,
-    }),
-    new DashboardPlugin()
+    })
   );
 } else {
   const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -90,6 +88,7 @@ function StyleLoader(prod, scss) {
 }
 
 module.exports = {
+  mode: __DEV__ ? 'development' : 'production',
   context: __dirname,
   resolve: {
     // Extension die wir weglassen können

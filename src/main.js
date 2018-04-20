@@ -29,7 +29,7 @@ const store = createStore(
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers
   // $FlowFixMe
-  module.hot.accept('./reducer', () => {
+  module.hot.accept('./reducers', () => {
     const nextRootReducer = require('./reducers/index').default;
 
     store.replaceReducer(nextRootReducer);
