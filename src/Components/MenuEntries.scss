@@ -1,9 +1,9 @@
-.wrapper {
+.MenuEntries {
   display: flex;
   flex-direction: column;
-}
 
-.button {
-  margin-top: 2px;
-  margin-bottom: 2px;
+  &__button {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
 }

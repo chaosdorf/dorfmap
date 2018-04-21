@@ -1,8 +1,10 @@
 // @flow
 import { connect } from 'react-redux';
 import { fetchPresets, savePreset, setActivePreset } from 'actions/device';
-import { RadioButton, RadioGroup } from 'react-toolbox/lib/radio';
-import Dialog from 'react-toolbox/lib/dialog';
+import { FormControlLabel } from 'material-ui/Form';
+import Button from 'material-ui/Button';
+import Dialog, { DialogActions } from 'material-ui/Dialog';
+import Radio, { RadioGroup } from 'material-ui/Radio';
 import React from 'react';
 import type { AppState } from 'AppState';
 import type { Lamp } from 'Components/Lamp';
@@ -36,13 +38,13 @@ class BlinkenlightPopup extends React.Component<Props> {
 
     if (presets && presets.active) {
       savePresetProp(lamp.name, presets.active.raw_string);
-      this.props.onRequestClose();
     }
+    this.props.onRequestClose();
   };
-  handleRadioChange = (value: string) => {
+  handleRadioChange = event => {
     const { lamp, setActivePresetProp } = this.props;
 
-    setActivePresetProp(lamp.name, value);
+    setActivePresetProp(lamp.name, event.target.value);
     this.forceUpdate();
   };
   render() {
@@ -53,23 +55,23 @@ class BlinkenlightPopup extends React.Component<Props> {
     }
     const actualPresets = presets.presets;
 
-    const dialogActions = [{ label: 'Cancel', onClick: onRequestClose }, { label: 'Save', onClick: this.save }];
-
     return (
-      <Dialog
-        type="small"
-        onOverlayClick={onRequestClose}
-        onEscKeyDown={onRequestClose}
-        active={open}
-        actions={dialogActions}
-      >
+      <Dialog onClose={onRequestClose} onBackdropClick={onRequestClose} open={open}>
         <RadioGroup
           name="blinken"
-          value={presets.active ? presets.active.raw_string : null}
+          value={presets.active ? presets.active.raw_string : '32,0,0,0'}
           onChange={this.handleRadioChange}
         >
-          {actualPresets.map(preset => <RadioButton key={preset.name} value={preset.raw_string} label={preset.name} />)}
+          {actualPresets.map(preset => (
+            <FormControlLabel value={preset.raw_string} label={preset.name} key={preset.name} control={<Radio />} />
+          ))}
         </RadioGroup>
+        <DialogActions>
+          <Button label="Cancel" onClick={onRequestClose}>
+            Cancel
+          </Button>
+          <Button onClick={this.save}>Save</Button>
+        </DialogActions>
       </Dialog>
     );
   }

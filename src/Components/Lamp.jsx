@@ -1,19 +1,17 @@
 // @flow
+import './Lamp.scss';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classcat';
-import styles from './Lamp.scss';
-import Tooltip from 'react-toolbox/lib/tooltip';
+import Tooltip from 'material-ui/Tooltip';
 
-const Img = ({ children, ...props }: any) => (
-  <React.Fragment>
-    {children}
+const TooltipImg = ({ tooltip, ...props }) => (
+  <Tooltip placement="top" title={tooltip}>
     <img {...props} />
-  </React.Fragment>
+  </Tooltip>
 );
-const TooltipImg = Tooltip(Img);
 
 export type Lamp = {
   status_text: ?string,
@@ -86,7 +84,7 @@ class LampComponent extends React.Component<Props, State> {
       height: lamp.y2,
     };
 
-    const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
+    const cssClass = cc(['Lamp', { Lamp__writeable: lamp.is_writable && lamp.rate_delay <= 0 }]);
     const imgProps = {
       className: cssClass,
       onClick: this.toggle,
@@ -96,10 +94,10 @@ class LampComponent extends React.Component<Props, State> {
     };
 
     if (tooltipText) {
-      return <TooltipImg tooltipHideOnClick={false} {...imgProps} tooltip={tooltipText} />;
+      return <TooltipImg {...imgProps} tooltip={tooltipText} />;
     }
 
-    return <Img {...imgProps} />;
+    return <img {...imgProps} />;
   }
   toggle = () => {
     const { lamp, toggleDeviceProp } = this.props;
@@ -155,7 +153,7 @@ class LampComponent extends React.Component<Props, State> {
       width: lamp.x2,
       height: lamp.y2,
     };
-    const cssClass = cc([styles.normal, { [styles.writeable]: lamp.is_writable && lamp.rate_delay <= 0 }]);
+    const cssClass = cc(['Lamp', { 'Lamp--writeable': lamp.is_writable && lamp.rate_delay <= 0 }]);
 
     const tooltipText = this.getTooltipText(lamp);
     const imgProps = {
@@ -165,12 +163,12 @@ class LampComponent extends React.Component<Props, State> {
       style,
       src: lamp.image,
     };
-    let img;
+    let image;
 
     if (tooltipText) {
-      img = <TooltipImg tooltipHideOnClick={false} {...imgProps} tooltip={tooltipText} />;
+      image = <TooltipImg {...imgProps} tooltip={tooltipText} />;
     } else {
-      img = <img {...imgProps} />;
+      image = <img {...imgProps} />;
     }
 
     let dialog;
@@ -181,7 +179,7 @@ class LampComponent extends React.Component<Props, State> {
 
     return (
       <div>
-        {img}
+        {image}
         {this.getDuplicate(lamp, tooltipText)}
         {dialog}
       </div>

@@ -1,10 +1,10 @@
 // @flow
+import './Map.scss';
 import { connect } from 'react-redux';
 import { fetchDevices } from 'actions/device';
 import { filteredDevices } from 'selector/device';
 import LampComponent from './Lamp';
 import React from 'react';
-import styles from './Map.scss';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {
@@ -23,7 +23,7 @@ class DMap extends React.Component<Props> {
     const { devices } = this.props;
 
     return (
-      <div className={styles.wrapper}>
+      <div className="Map">
         {devices
           .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
           .toList()

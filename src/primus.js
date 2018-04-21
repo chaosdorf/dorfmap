@@ -3,7 +3,7 @@
 import { updateDevice } from 'actions/device';
 import Primus from './external/primusClient';
 
-const primus = Primus.connect(PRIMUS);
+const primus = Primus.connect(process.env.PRIMUS || 'http://localhost:3001');
 
 export function setupPrimus(store: *) {
   primus.on('data', deviceId => {

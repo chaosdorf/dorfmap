@@ -1,11 +1,11 @@
 // @flow
-import { Button } from 'react-toolbox/lib/button';
+import './OptionDialogs.scss';
 import { connect } from 'react-redux';
 import { fetchMenues, setSelectedTab } from 'actions/menu';
 import { Map } from 'immutable';
+import Button from 'material-ui/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
-import styles from './OptionDialogs.scss';
 import type { AppState } from 'AppState';
 
 type State = {
@@ -26,8 +26,8 @@ class OptionDialogs extends React.Component<Props, State> {
   componentDidMount() {
     this.props.fetchMenues();
   }
-  handleClick(action: number) {
-    this.props.setSelectedTab(action);
+  handleClick(action: string) {
+    this.props.setSelectedTab(null, action);
     this.setState({
       open: true,
     });
@@ -40,23 +40,17 @@ class OptionDialogs extends React.Component<Props, State> {
 
     return (
       <div>
-        <div className={styles.dialogs}>
+        <div className="OptionDialogs">
           <div>
-            <Button flat onClick={() => this.handleClick(0)}>
-              Actions
-            </Button>
-            <Button flat onClick={() => this.handleClick(1)}>
-              Presets
-            </Button>
-            <Button flat onClick={() => this.handleClick(2)}>
-              Layers
-            </Button>
+            <Button onClick={() => this.handleClick('actions')}>Actions</Button>
+            <Button onClick={() => this.handleClick('presets')}>Presets</Button>
+            <Button onClick={() => this.handleClick('layers')}>Layers</Button>
           </div>
           <div>
             {services
               .map((href, name) => (
                 <a key={name} href={href} target="_blank">
-                  <Button flat>{name}</Button>
+                  <Button>{name}</Button>
                 </a>
               ))
               .toList()}

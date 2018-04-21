@@ -1,13 +1,13 @@
 [ignore]
-.*/node_modules/fbjs/.*
-.*/node_modules/babel.*
-.*/node_modules/rc-util/.*
-.*/node_modules/react/.*
+<PROJECT_ROOT>/node_modules/fbjs/.*
+<PROJECT_ROOT>/node_modules/rc-util/.*
+<PROJECT_ROOT>/node_modules/react/.*
 <PROJECT_ROOT>/node_modules/lodash/.*
 <PROJECT_ROOT>/node_modules/flow-typed/.*
 <PROJECT_ROOT>/node_modules/most/.*
 <PROJECT_ROOT>/node_modules/react-event-listener/.*
 <PROJECT_ROOT>/reports/.*
+<PROJECT_ROOT>/node_modules/config-chain/.*
 
 [include]
 src/

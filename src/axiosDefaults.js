@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 axios.interceptors.request.use(config => {
-  config.url = `${BASE_HOST}${config.url}`;
+  // $FlowFixMe
+  config.url = `${process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST}${config.url}`;
 
   return config;
 });

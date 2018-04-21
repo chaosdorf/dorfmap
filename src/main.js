@@ -1,4 +1,7 @@
 // @flow
+import './main.scss';
+import 'babel-polyfill';
+
 import './axiosDefaults';
 import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
@@ -26,6 +29,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(...middlewares))
 );
 
+// $FlowFixMe
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers
   // $FlowFixMe
@@ -37,11 +41,9 @@ if (module.hot) {
 }
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   // $FlowFixMe
   document.querySelector('#dorfmapWrapper')
 );

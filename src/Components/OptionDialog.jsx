@@ -1,10 +1,10 @@
 // @flow
 import { connect } from 'react-redux';
 import { setSelectedTab } from 'actions/menu';
-import { Tab, Tabs } from 'react-toolbox/lib/tabs';
-import Dialog from 'react-toolbox/lib/dialog';
+import Dialog from 'material-ui/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
+import Tabs, { Tab } from 'material-ui/Tabs';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {
@@ -25,17 +25,17 @@ class OptionDialog extends React.Component<Props> {
   };
   render() {
     const { menu, open, handleRequestClose, selectedTab, setSelectedTab } = this.props;
-    const selectedEntries = menu.get(OptionDialog.actions[selectedTab]);
+    const selectedEntries = menu.get(selectedTab);
 
     return (
-      <Dialog onOverlayClick={handleRequestClose} onEscKeyDown={handleRequestClose} active={open}>
-        <Tabs fixed index={selectedTab} onChange={setSelectedTab}>
+      <Dialog onClose={handleRequestClose} onBackdropClick={handleRequestClose} open={open}>
+        <Tabs value={selectedTab} onChange={setSelectedTab}>
           {menu
             .map((entries, type) => <Tab key={type} value={type} label={type} />)
             .toList()
             .toArray()}
         </Tabs>
-        <MenuEntries entries={selectedEntries} type={OptionDialog.actions[selectedTab]} closeFn={handleRequestClose} />
+        <MenuEntries entries={selectedEntries} type={selectedTab} closeFn={handleRequestClose} />
       </Dialog>
     );
   }

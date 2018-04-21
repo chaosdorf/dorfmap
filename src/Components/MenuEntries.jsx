@@ -1,9 +1,9 @@
 // @flow
-import { Button } from 'react-toolbox/lib/button';
+import './MenuEntries.scss';
 import { connect } from 'react-redux';
 import { executePreset, executeShortcut, setLayer } from 'actions/device';
+import Button from 'material-ui/Button';
 import React from 'react';
-import styles from './MenuEntries.scss';
 
 type Props = {
   closeFn: Function,
@@ -38,13 +38,13 @@ class MenuEntries extends React.Component<Props> {
   render() {
     const entries = this.props.entries
       ? this.props.entries.map(entry => (
-          <Button flat className={styles.button} key={entry} onClick={this.handleClick(entry)}>
+          <Button className="MenuEntries__button" key={entry} onClick={this.handleClick(entry)}>
             {entry}
           </Button>
         ))
       : null;
 
-    return <div className={styles.wrapper}>{entries}</div>;
+    return <div className="MenuEntries">{entries}</div>;
   }
 }
 

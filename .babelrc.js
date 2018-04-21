@@ -1,17 +1,18 @@
-{
+module.exports = {
   "presets": [
     [
-      "@babel/preset-env",
+      "env",
       {
         "loose": true,
         "useBuiltIns": "usage"
       }
     ],
-    "@babel/preset-react",
-    "@babel/preset-flow",
-    "@babel/preset-stage-1"
+    "react",
+    "flow",
+    "stage-1"
   ],
   "plugins": [
+    "transform-class-properties",
     "transform-decorators-legacy",
     ["module-resolver", {
       "root": "./src",
@@ -22,14 +23,14 @@
   "env": {
     "development": {
       "plugins": [
-        "@babel/plugin-transform-react-jsx-source",
+        "transform-react-jsx-source",
         "flow-react-proptypes",
         "transform-dev-warning"
       ]
     },
     "production": {
       "compact": true,
-      "plugins": ["@babel/plugin-transform-react-constant-elements"]
+      "plugins": ["transform-react-constant-elements"]
     }
   }
 }

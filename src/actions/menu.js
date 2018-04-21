@@ -4,4 +4,4 @@ import axios from 'axios';
 
 export const fetchMenues = createAction('FETCH_MENUES', async () => (await axios.get('/ajax/menu.json')).data);
 
-export const setSelectedTab = createAction('SET_SELECTED_TAB');
+export const setSelectedTab = createAction('SET_SELECTED_TAB', (e, value) => value);
