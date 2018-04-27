@@ -13,8 +13,8 @@ obj/
 si2c/bitwrite/si2c-bitwrite
 si2c/bytewrite/si2c-bytewrite
 si2c/charwrite/si2c-charwrite
-dist/index.html
-dist/templates/*.html
+public/index.html
+public/templates/*.html
 node_modules/
 src/css/*.css
 src/css/libs/bower/*
@@ -23,9 +23,9 @@ bower_components
 index.pl.bak
 .vendor
 npm-debug.log
-dist/**/Templates/*
-dist/*.css
-dist/index.html
+public/**/Templates/*
+public/*.css
+public/index.html
 .DS_Store
 www
 /cache/
@@ -33,5 +33,6 @@ www
 yarn-error.log
 .fusebox/
 reports/
-dist/main-*.js
-dist/main-*.css
+public/main.*.js
+public/main.*.css
+dist/
