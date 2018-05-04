@@ -84,7 +84,7 @@ class LampComponent extends React.Component<Props, State> {
       height: lamp.y2,
     };
 
-    const cssClass = cc(['Lamp', { Lamp__writeable: lamp.is_writable && lamp.rate_delay <= 0 }]);
+    const cssClass = cc(['Lamp', { 'Lamp--writeable': lamp.is_writable && lamp.rate_delay <= 0 }]);
     const imgProps = {
       className: cssClass,
       onClick: this.toggle,
