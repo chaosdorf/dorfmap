@@ -3,7 +3,7 @@ import './OptionDialogs.scss';
 import { connect } from 'react-redux';
 import { fetchMenues, setSelectedTab } from 'actions/menu';
 import { Map } from 'immutable';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
 import type { AppState } from 'AppState';

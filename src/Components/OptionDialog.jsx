@@ -1,10 +1,11 @@
 // @flow
 import { connect } from 'react-redux';
 import { setSelectedTab } from 'actions/menu';
-import Dialog from 'material-ui/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
-import Tabs, { Tab } from 'material-ui/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {

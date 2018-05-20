@@ -1,10 +1,13 @@
 // @flow
 import { connect } from 'react-redux';
 import { fetchPresets, savePreset, setActivePreset } from 'actions/device';
-import { FormControlLabel } from 'material-ui/Form';
-import Button from 'material-ui/Button';
-import Dialog, { DialogActions } from 'material-ui/Dialog';
-import Radio, { RadioGroup } from 'material-ui/Radio';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import React from 'react';
 import type { AppState } from 'AppState';
 import type { Lamp } from 'Components/Lamp';
@@ -57,15 +60,17 @@ class BlinkenlightPopup extends React.Component<Props> {
 
     return (
       <Dialog onClose={onRequestClose} onBackdropClick={onRequestClose} open={open}>
-        <RadioGroup
-          name="blinken"
-          value={presets.active ? presets.active.raw_string : '32,0,0,0'}
-          onChange={this.handleRadioChange}
-        >
-          {actualPresets.map(preset => (
-            <FormControlLabel value={preset.raw_string} label={preset.name} key={preset.name} control={<Radio />} />
-          ))}
-        </RadioGroup>
+        <DialogContent>
+          <RadioGroup
+            name="blinken"
+            value={presets.active ? presets.active.raw_string : '32,0,0,0'}
+            onChange={this.handleRadioChange}
+          >
+            {actualPresets.map(preset => (
+              <FormControlLabel value={preset.raw_string} label={preset.name} key={preset.name} control={<Radio />} />
+            ))}
+          </RadioGroup>
+        </DialogContent>
         <DialogActions>
           <Button label="Cancel" onClick={onRequestClose}>
             Cancel

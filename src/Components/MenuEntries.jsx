@@ -2,7 +2,7 @@
 import './MenuEntries.scss';
 import { connect } from 'react-redux';
 import { executePreset, executeShortcut, setLayer } from 'actions/device';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import React from 'react';
 
 type Props = {

@@ -35,4 +35,7 @@ yarn-error.log
 reports/
 public/main.*.js
 public/main.*.css
+public/dorfmap-*.js
+public/dorfmap-*.css
 dist/
+.cache-loader/

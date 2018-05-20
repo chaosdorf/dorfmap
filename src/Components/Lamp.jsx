@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classcat';
-import Tooltip from 'material-ui/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const TooltipImg = ({ tooltip, ...props }) => (
   <Tooltip placement="top" title={tooltip}>
