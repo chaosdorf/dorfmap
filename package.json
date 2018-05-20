@@ -31,7 +31,6 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "classcat": "^3.1.2",
-    "classnames": "^2.2.0",
     "immutable": "^4.0.0-rc.9",
     "prop-types": "^15.5.7",
     "react": "^16.3.2",

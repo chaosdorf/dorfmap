@@ -2685,7 +2685,7 @@ classcat@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/classcat/-/classcat-3.1.2.tgz#e3bc6010378de82efb40573be9add74ee3cfd594"
 
-classnames@^2.2.0, classnames@^2.2.5:
+classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
