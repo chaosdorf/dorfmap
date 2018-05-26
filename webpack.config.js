@@ -13,12 +13,45 @@ const plugins = [
     template: path.resolve(__dirname, 'src/index.html'),
     minifiy: !isDev,
   }),
+  new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+    },
+    __DEV__: JSON.stringify(isDev),
+    BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
+    PRIMUS: JSON.stringify(process.env.PRIMUS || 'http://localhost:3001'),
+  }),
 ];
 
 const optimization = {};
 
+const rules = [
+  {
+    test: /\.jsx?$/,
+    use: ['babel-loader'],
+  },
+  {
+    test: /\.s?css$/,
+    use: [
+      {
+        loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+      },
+      { loader: 'css-loader' },
+      { loader: 'postcss-loader' },
+      { loader: 'sass-loader' },
+    ],
+  },
+];
+
 if (isDev) {
   plugins.push(...[new webpack.HotModuleReplacementPlugin()]);
+  rules.forEach(r => {
+    if (r.use && Array.isArray(r.use)) {
+      r.use.unshift({
+        loader: 'cache-loader',
+      });
+    }
+  });
 } else {
   plugins.push(
     ...[
@@ -42,7 +75,9 @@ module.exports = {
   plugins,
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'source-map' : false,
-  entry: './src/main.jsx',
+  entry: {
+    dorfmap: './src/main.jsx',
+  },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'src')],
     extensions: ['.js', '.json', '.jsx'],
@@ -57,24 +92,7 @@ module.exports = {
     publicPath: '/',
   },
   module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        use: ['cache-loader', 'babel-loader'],
-      },
-      {
-        test: /\.s?css$/,
-        use: [
-          { loader: 'cache-loader' },
-          {
-            loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-          },
-          { loader: 'css-loader' },
-          { loader: 'postcss-loader' },
-          { loader: 'sass-loader' },
-        ],
-      },
-    ],
+    rules,
   },
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
