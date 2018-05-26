@@ -122,7 +122,7 @@ class LampComponent extends React.Component<Props, State> {
   componentDidMount() {
     this.delayCheck(this.props);
   }
-  componentWillReceiveProps(props: Props) {
+  UNSAFE_componentWillReceiveProps(props: Props) {
     this.delayCheck(props);
   }
   doesReduce: boolean = false;
