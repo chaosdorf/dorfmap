@@ -1,5 +1,6 @@
 // @flow
 import { connect } from 'react-redux';
+import { map } from 'lodash';
 import { setSelectedTab } from 'actions/menu';
 import Dialog from '@material-ui/core/Dialog';
 import MenuEntries from './MenuEntries';
@@ -26,15 +27,12 @@ class OptionDialog extends React.Component<Props> {
   };
   render() {
     const { menu, open, handleRequestClose, selectedTab, setSelectedTab } = this.props;
-    const selectedEntries = menu.get(selectedTab);
+    const selectedEntries = menu[selectedTab];
 
     return (
       <Dialog onClose={handleRequestClose} onBackdropClick={handleRequestClose} open={open}>
         <Tabs value={selectedTab} onChange={setSelectedTab}>
-          {menu
-            .map((entries, type) => <Tab key={type} value={type} label={type} />)
-            .toList()
-            .toArray()}
+          {map(menu, (entries, type) => <Tab key={type} value={type} label={type} />)}
         </Tabs>
         <MenuEntries entries={selectedEntries} type={selectedTab} closeFn={handleRequestClose} />
       </Dialog>

@@ -1,23 +1,22 @@
 // @flow
 import * as Actions from 'actions/menu';
 import { handleActions } from 'redux-actions';
-import { Map } from 'immutable';
 
 export type State = {
-  menu: Map<?string, any>,
-  services: Map<string, string>,
+  menu: Object,
+  services: { [key: string]: string },
   selectedTab: string,
 };
 
 const defaultState: State = {
-  menu: Map(),
-  services: Map({
+  menu: {},
+  services: {
     mete: 'https://mete.chaosdorf.space',
     labello: 'http://labello.chaosdorf.space',
     mpd: 'https://ympd.chaosdorf.space',
     pulseWeb: 'https://pulseweb.chaosdorf.space',
     pizza: 'https://pizza.chaosdorf.space',
-  }),
+  },
   selectedTab: 'actions',
 };
 
@@ -31,10 +30,10 @@ export default handleActions(
       if (error) {
         return state;
       }
-      let menu = Map();
+      const menu = {};
 
       for (const m of payload) {
-        menu = menu.set(m.name, m.entries);
+        menu[m.name] = m.entries;
       }
 
       return {

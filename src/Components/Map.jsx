@@ -3,12 +3,12 @@ import './Map.scss';
 import { connect } from 'react-redux';
 import { fetchDevices } from 'actions/device';
 import { filteredDevices } from 'selector/device';
-import LampComponent from './Lamp';
+import LampComponent, { type Lamp } from './Lamp';
 import React from 'react';
 import type { AppState } from 'AppState';
 
 type ReduxProps = {
-  devices: $PropertyType<$PropertyType<AppState, 'device'>, 'devices'>,
+  devices: Lamp[],
 };
 
 type Props = ReduxProps & {
@@ -22,14 +22,7 @@ class DMap extends React.Component<Props> {
   render() {
     const { devices } = this.props;
 
-    return (
-      <div className="Map">
-        {devices
-          .map((lamp, key) => <LampComponent key={key} lamp={lamp} />)
-          .toList()
-          .toArray()}
-      </div>
-    );
+    return <div className="Map">{devices.map(lamp => <LampComponent key={lamp.name} lamp={lamp} />)}</div>;
   }
 }
 

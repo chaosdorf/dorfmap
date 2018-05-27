@@ -2,7 +2,7 @@
 import './OptionDialogs.scss';
 import { connect } from 'react-redux';
 import { fetchMenues, setSelectedTab } from 'actions/menu';
-import { Map } from 'immutable';
+import { map } from 'lodash';
 import Button from '@material-ui/core/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
@@ -13,7 +13,7 @@ type State = {
 };
 
 type ReduxProps = {
-  services: Map<string, string>,
+  services: $PropertyType<$PropertyType<AppState, 'menu'>, 'services'>,
 };
 
 type Props = ReduxProps & {
@@ -47,13 +47,11 @@ class OptionDialogs extends React.Component<Props, State> {
             <Button onClick={() => this.handleClick('layers')}>Layers</Button>
           </div>
           <div>
-            {services
-              .map((href, name) => (
-                <a key={name} href={href} target="_blank">
-                  <Button>{name}</Button>
-                </a>
-              ))
-              .toList()}
+            {map(services, (href, name) => (
+              <a key={name} href={href} target="_blank">
+                <Button>{name}</Button>
+              </a>
+            ))}
           </div>
         </div>
 

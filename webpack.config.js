@@ -65,6 +65,7 @@ if (isDev) {
     new UglifyJsPlugin({
       cache: true,
       parallel: true,
+      extractComments: true,
     }),
     new OptimizeCSSAssetsPlugin({}),
   ];

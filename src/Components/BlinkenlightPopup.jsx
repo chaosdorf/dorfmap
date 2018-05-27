@@ -84,7 +84,7 @@ class BlinkenlightPopup extends React.Component<Props> {
 
 export default connect(
   (state: AppState, ownProps: OwnProps): ReduxProps => ({
-    presets: state.device.presets.get(ownProps.lamp.name),
+    presets: state.device.presets[ownProps.lamp.name],
   }),
   {
     fetchPresetsProp: fetchPresets,
