@@ -187,6 +187,9 @@ class LampComponent extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, {
-  toggleDeviceProp: toggleDevice,
-})(LampComponent);
+export default connect(
+  null,
+  {
+    toggleDeviceProp: toggleDevice,
+  }
+)(LampComponent);

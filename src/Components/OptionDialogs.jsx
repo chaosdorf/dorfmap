@@ -48,7 +48,7 @@ class OptionDialogs extends React.Component<Props, State> {
           </div>
           <div>
             {map(services, (href, name) => (
-              <a key={name} href={href} target="_blank">
+              <a key={name} href={href} target="_blank" rel="noopener noreferrer">
                 <Button>{name}</Button>
               </a>
             ))}

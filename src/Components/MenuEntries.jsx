@@ -48,8 +48,11 @@ class MenuEntries extends React.Component<Props> {
   }
 }
 
-export default connect(null, {
-  setLayer,
-  executeShortcut,
-  executePreset,
-})(MenuEntries);
+export default connect(
+  null,
+  {
+    setLayer,
+    executeShortcut,
+    executePreset,
+  }
+)(MenuEntries);
