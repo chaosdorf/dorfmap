@@ -53,7 +53,7 @@ int main(int argc, char **argv)
 	int sdapin = 0, sclpin = 0;
 
 	if (argc < 2)
-		errx(1, "usage: blinkenconrold <sdapin> <sclpin>");
+		errx(1, "usage: si2c-bytewrite <sdapin> <sclpin>");
 
 	sdapin = atoi(argv[1]);
 	sclpin = atoi(argv[2]);

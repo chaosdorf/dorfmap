@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 	char sclstr[64];
 
 	if (argc < 2)
-		errx(1, "usage: avrshiftd <sdapin> <sclpin>");
+		errx(1, "usage: si2c-bitwrite <sdapin> <sclpin>");
 
 	sdapin = atoi(argv[1]);
 	sclpin = atoi(argv[2]);
