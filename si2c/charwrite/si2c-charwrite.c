@@ -129,8 +129,8 @@ int main(int argc, char **argv)
 
 	unsigned int sdapin = 0, sclpin = 0, addrhi = 0, addrlo = 0, i;
 
-	if (argc < 2)
-		errx(1, "usage: si2c-charwrite <sdapin> <sclpin>");
+	if (argc < 4)
+		errx(1, "usage: si2c-charwrite <sdapin> <sclpin> <addrhi> <addrlo>");
 
 	sdapin = atoi(argv[1]);
 	sclpin = atoi(argv[2]);
