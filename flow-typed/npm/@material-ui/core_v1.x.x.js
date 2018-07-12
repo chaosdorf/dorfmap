@@ -1,5 +1,5 @@
-// flow-typed signature: 0149f50b337fe3796ca66a735f013a47
-// flow-typed version: 943690aefc/@material-ui/core_v1.x.x/flow_>=v0.58.x
+// flow-typed signature: acb22200b3bf5b15bf7e627f36c19123
+// flow-typed version: 6de4ffcf55/@material-ui/core_v1.x.x/flow_>=v0.58.x
 
 declare module "@material-ui/core/AppBar/AppBar" {
   declare type Color = "inherit" | "primary" | "secondary" | "default";
@@ -38,7 +38,7 @@ declare module "@material-ui/core/Avatar" {
 }
 
 declare module "@material-ui/core/Badge/Badge" {
-  declare type Color = "default" | "primary" | "accent";
+  declare type Color = "default" | "primary" | "secondary" | "error";
 
   declare module.exports: React$ComponentType<{
     badgeContent: React$Node,
@@ -476,8 +476,14 @@ declare module "@material-ui/core/withMobileDialog" {
 
 declare module "@material-ui/core/withWidth" {
   import type { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
-  declare export var isWidthUp: (matchWidth: Breakpoint, currentWidth: Breakpoint) => boolean;
-  declare export var isWidthDown: (matchWidth: Breakpoint, currentWidth: Breakpoint) => boolean;
+  declare export var isWidthUp: (
+    matchWidth: Breakpoint,
+    currentWidth: Breakpoint
+  ) => boolean;
+  declare export var isWidthDown: (
+    matchWidth: Breakpoint,
+    currentWidth: Breakpoint
+  ) => boolean;
   declare export default $Exports<"@material-ui/core/withWidth/withWidth">;
 }
 
@@ -1296,7 +1302,7 @@ declare module "@material-ui/core/Modal/Modal" {
     disableBackdrop?: boolean,
     ignoreBackdropClick?: boolean,
     ignoreEscapeKeyUp?: boolean,
-    modalManager: Object,
+    modalManager?: Object,
     onBackdropClick?: Function,
     onEnter?: TransitionCallback,
     onEntering?: TransitionCallback,
@@ -2499,14 +2505,12 @@ declare module "@material-ui/core/utils/requirePropFactory" {
 
 declare module "@material-ui/core/withWidth/withWidth" {
   import type { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
-  declare module.exports: (
-    options?: {|
-      withTheme?: boolean,
-      noSSR?: boolean,
-      initialWidth?: Breakpoint,
-      resizeInterval?: number
-    |}
-  ) => <Props: {}>(
+  declare module.exports: (options?: {|
+    withTheme?: boolean,
+    noSSR?: boolean,
+    initialWidth?: Breakpoint,
+    resizeInterval?: number
+  |}) => <Props: {}>(
     Component: React$ComponentType<Props>
   ) => React$ComponentType<$Diff<Props, { width: Breakpoint }>>;
 }
