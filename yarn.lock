@@ -918,9 +918,9 @@
     lodash "^4.17.5"
     to-fast-properties "^2.0.0"
 
-"@material-ui/core@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-1.3.1.tgz#8b4e6db9ed4536e8ccbea0eeff3da0d524e6af2c"
+"@material-ui/core@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-1.4.0.tgz#e535fef84576b096c46e1fb7d6c4c61895155fd3"
   dependencies:
     "@babel/runtime" "^7.0.0-beta.42"
     "@types/jss" "^9.5.3"
@@ -932,6 +932,7 @@
     deepmerge "^2.0.1"
     dom-helpers "^3.2.1"
     hoist-non-react-statics "^2.5.0"
+    is-plain-object "^2.0.4"
     jss "^9.3.3"
     jss-camel-case "^6.0.0"
     jss-default-unit "^8.0.2"
@@ -941,10 +942,10 @@
     jss-vendor-prefixer "^7.0.0"
     keycode "^2.1.9"
     normalize-scroll-left "^0.1.2"
+    popper.js "^1.0.0"
     prop-types "^15.6.0"
     react-event-listener "^0.6.0"
     react-jss "^8.1.0"
-    react-popper "^0.10.0"
     react-transition-group "^2.2.1"
     recompose "^0.27.0"
     scroll "^2.0.3"
@@ -1440,15 +1441,15 @@ babel-core@^6.25.0, babel-core@^6.26.0:
     slash "^1.0.0"
     source-map "^0.5.7"
 
-babel-eslint@8.2.5:
-  version "8.2.5"
-  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-8.2.5.tgz#dc2331c259d36782aa189da510c43dedd5adc7a3"
+babel-eslint@8.2.6:
+  version "8.2.6"
+  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-8.2.6.tgz#6270d0c73205628067c0f7ae1693a9e797acefd9"
   dependencies:
     "@babel/code-frame" "7.0.0-beta.44"
     "@babel/traverse" "7.0.0-beta.44"
     "@babel/types" "7.0.0-beta.44"
     babylon "7.0.0-beta.44"
-    eslint-scope "~3.7.1"
+    eslint-scope "3.7.1"
     eslint-visitor-keys "^1.0.0"
 
 babel-generator@^6.26.0:
@@ -2987,7 +2988,7 @@ eslint-plugin-sort-imports-es6-autofix@^0.3.0:
   dependencies:
     eslint "^4.15.0"
 
-eslint-scope@^3.7.1, eslint-scope@~3.7.1:
+eslint-scope@3.7.1, eslint-scope@^3.7.1:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-3.7.1.tgz#3d63c3edfda02e06e01a452ad88caacc7cdcb6e8"
   dependencies:
@@ -5318,9 +5319,9 @@ node-sass@^4.9.2:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
-nodemon@^1.18.1:
-  version "1.18.1"
-  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.18.1.tgz#873d2f7799662c549f7ea557db6934d5cbf665d6"
+nodemon@^1.18.2:
+  version "1.18.2"
+  resolved "https://registry.yarnpkg.com/nodemon/-/nodemon-1.18.2.tgz#36b89c790da70c4f270e2cc0718723131bc04abb"
   dependencies:
     chokidar "^2.0.2"
     debug "^3.1.0"
@@ -5806,7 +5807,7 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
-popper.js@^1.14.1:
+popper.js@^1.0.0:
   version "1.14.3"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.3.tgz#1438f98d046acf7b4d78cd502bf418ac64d4f095"
 
@@ -6370,7 +6371,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2:
+prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   dependencies:
@@ -6555,13 +6556,6 @@ react-jss@^8.1.0:
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
-
-react-popper@^0.10.0:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/react-popper/-/react-popper-0.10.4.tgz#af2a415ea22291edd504678d7afda8a6ee3295aa"
-  dependencies:
-    popper.js "^1.14.1"
-    prop-types "^15.6.1"
 
 react-redux@^5.0.7:
   version "5.0.7"
