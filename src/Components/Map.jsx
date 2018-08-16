@@ -22,7 +22,13 @@ class DMap extends React.Component<Props> {
   render() {
     const { devices } = this.props;
 
-    return <div className="Map">{devices.map(lamp => <LampComponent key={lamp.name} lamp={lamp} />)}</div>;
+    return (
+      <div className="Map">
+        {devices.map(lamp => (
+          <LampComponent key={lamp.name} lamp={lamp} />
+        ))}
+      </div>
+    );
   }
 }
 

@@ -10,12 +10,7 @@ module.exports = {
     ],
     '@babel/preset-react',
     '@babel/preset-flow',
-    [
-      '@babel/preset-stage-2',
-      {
-        decoratorsLegacy: true,
-      },
-    ],
+    'babel-preset-joblift',
   ],
   plugins: [
     'lodash',

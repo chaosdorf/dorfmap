@@ -14,7 +14,6 @@ type ReduxProps = {
   selectedTab: $PropertyType<$PropertyType<AppState, 'menu'>, 'selectedTab'>,
 };
 type Props = ReduxProps & {
-  activeType: ?string,
   handleRequestClose: Function,
   open?: boolean,
   setSelectedTab: typeof setSelectedTab,
@@ -25,14 +24,19 @@ class OptionDialog extends React.Component<Props> {
   static defaultProps = {
     open: false,
   };
+  setSelectedTab = (e, value) => {
+    this.props.setSelectedTab(e, value);
+  };
   render() {
-    const { menu, open, handleRequestClose, selectedTab, setSelectedTab } = this.props;
+    const { menu, open, handleRequestClose, selectedTab } = this.props;
     const selectedEntries = menu[selectedTab];
 
     return (
       <Dialog onClose={handleRequestClose} onBackdropClick={handleRequestClose} open={open}>
-        <Tabs value={selectedTab} onChange={setSelectedTab}>
-          {map(menu, (entries, type) => <Tab key={type} value={type} label={type} />)}
+        <Tabs value={selectedTab} onChange={this.setSelectedTab}>
+          {map(menu, (entries, type) => (
+            <Tab key={type} value={type} label={type} />
+          ))}
         </Tabs>
         <MenuEntries entries={selectedEntries} type={selectedTab} closeFn={handleRequestClose} />
       </Dialog>
