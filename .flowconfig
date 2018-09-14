@@ -10,10 +10,8 @@
 <PROJECT_ROOT>/node_modules/config-chain/.*
 
 [include]
-src/
 
 [libs]
-interfaces/
 
 
 [options]

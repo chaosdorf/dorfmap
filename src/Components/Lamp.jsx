@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
-import cc from 'classcat';
+import cc from 'classnames';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const TooltipImg = ({ tooltip, ...props }) => (
