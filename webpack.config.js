@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -62,8 +62,7 @@ if (isDev) {
     ]
   );
   optimization.minimizer = [
-    new UglifyJsPlugin({
-      cache: true,
+    new TerserPlugin({
       parallel: true,
       extractComments: true,
     }),

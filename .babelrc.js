@@ -26,7 +26,6 @@ module.exports = {
       plugins: ['@babel/plugin-transform-react-jsx-source'],
     },
     production: {
-      compact: true,
       plugins: ['@babel/plugin-transform-react-constant-elements'],
     },
   },
