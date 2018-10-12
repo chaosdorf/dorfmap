@@ -7,7 +7,7 @@ module.exports = {
   globals: {
     __DEV__: false,
     BASE_HOST: false,
-    PRIMUS: false,
+    SOCKET_URL: false,
     SENTRY: false,
   },
   rules: {

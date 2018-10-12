@@ -129,18 +129,20 @@ class LampComponent extends React.Component<Props, State> {
   delayCheck = (props: Props) => {
     const { lamp } = props;
 
-    if (lamp.status !== 1 && lamp.rate_delay > 0 && !this.doesReduce) {
-      this.reduceDelay(lamp);
+    if (lamp.rate_delay > 0 && !this.doesReduce) {
+      this.reduceDelay();
     }
   };
-  reduceDelay(lamp: Lamp) {
+  reduceDelay() {
     this.doesReduce = true;
     setTimeout(() => {
+      const { lamp } = this.props;
+
       this.doesReduce = false;
       lamp.rate_delay -= 1;
       this.forceUpdate();
       if (lamp.rate_delay > 0) {
-        this.reduceDelay(lamp);
+        this.reduceDelay();
       }
     }, 1000);
   }

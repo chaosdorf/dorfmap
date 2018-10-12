@@ -21,7 +21,7 @@
     "build:perf": "npm run cleanup && NODE_ENV=production webpack --profile --json > ./webpack-stats.json && webpack-bundle-analyzer ./webpack-stats.json public/ --mode static -s gzip --report ./BundleReport.html --no-open",
     "test": "flow && npm run lint",
     "test:travis": "npm run test && NODE_ENV=production npm run build",
-    "deploy": "npm run lint && PRIMUS='http://dorfmapserver.chaosdorf.space:3001' BASE_HOST='' NODE_ENV=production npm run build && sh scripts/dev/copy-to-server",
+    "deploy": "npm run lint && SOCKET_URL='http://dorfmapserver.chaosdorf.space:3001' BASE_HOST='' NODE_ENV=production npm run build && sh scripts/dev/copy-to-server",
     "lint": "eslint src/**/*.js*"
   },
   "author": "marudor",
@@ -40,7 +40,8 @@
     "redux": "^4.0.0",
     "redux-actions": "^2.6.1",
     "redux-promise": "^0.6.0",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",

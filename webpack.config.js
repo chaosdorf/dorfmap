@@ -19,7 +19,7 @@ const plugins = [
     },
     __DEV__: JSON.stringify(isDev),
     BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
-    PRIMUS: JSON.stringify(process.env.PRIMUS || 'http://localhost:3001'),
+    SOCKET_URL: JSON.stringify(process.env.SOCKET_URL || 'http://localhost:3001'),
   }),
 ];
 

@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: 0 */
 // @flow
 import { createAction } from 'redux-actions';
-import { socketUpdate } from '../primus';
+import { socketUpdate } from '../socket';
 import axios from 'axios';
 
 async function _fetchDevices() {
