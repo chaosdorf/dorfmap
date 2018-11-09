@@ -16,6 +16,8 @@ export const executePreset = createAction('EXECUTE_PRESET', async (preset: strin
     preset,
   });
 
+  socketUpdate('__all__');
+
   return _fetchDevices();
 });
 
@@ -24,6 +26,8 @@ export const executeShortcut = createAction('EXECUTE_SHORTCUT', async (shortcut:
     action: 'shortcut',
     shortcut,
   });
+
+  socketUpdate('__all__');
 
   return _fetchDevices();
 });
