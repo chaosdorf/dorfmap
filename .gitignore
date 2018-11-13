@@ -33,9 +33,10 @@ www
 yarn-error.log
 .fusebox/
 reports/
-public/dorfmap-*.js
-public/dorfmap-*.LICENSE
-public/dorfmap-*.css
+public/*dorfmap-*.js
+public/*dorfmap-*.LICENSE
+public/*dorfmap-*.css
+
 dist/
 .cache-loader/
 BundleReport.html

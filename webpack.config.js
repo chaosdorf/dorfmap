@@ -76,7 +76,7 @@ module.exports = {
   mode: isDev ? 'development' : 'production',
   devtool: isDev ? 'source-map' : false,
   entry: {
-    dorfmap: './src/main.jsx',
+    dorfmap: './src/index.js',
   },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'src')],
