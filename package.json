@@ -41,7 +41,6 @@
     "react-transition-group": "^2.5.0",
     "redux": "^4.0.1",
     "redux-actions": "^2.6.4",
-    "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "whatwg-fetch": "^3.0.0"

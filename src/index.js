@@ -3,6 +3,10 @@ import 'babel-polyfill';
 
 const polyfills = [];
 
+if (!window.console) {
+  polyfills.push(import('./consolePolyfill'));
+}
+
 if (!window.fetch) {
   polyfills.push(import('whatwg-fetch'));
 }

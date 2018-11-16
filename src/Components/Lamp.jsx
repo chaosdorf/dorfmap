@@ -6,7 +6,6 @@ import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classnames';
 import Tooltip from '@material-ui/core/Tooltip';
-import type { AppState } from 'AppState';
 
 const TooltipImg = ({ tooltip, ...props }) => (
   <Tooltip placement="top" title={tooltip}>

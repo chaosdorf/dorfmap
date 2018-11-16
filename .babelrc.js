@@ -1,6 +1,6 @@
 module.exports = {
   parserOpts: {
-    plugins: [['flow', { all: true }]]
+    plugins: [['flow', { all: true }]],
   },
   presets: [
     [

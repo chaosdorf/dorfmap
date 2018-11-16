@@ -5,12 +5,11 @@ import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import App from './Components/App';
-import promiseMiddleware from 'redux-promise';
 import ReactDOM from 'react-dom';
 import reducer from './reducers';
 import thunkMiddleware from 'redux-thunk';
 
-const middlewares = [thunkMiddleware, promiseMiddleware];
+const middlewares = [thunkMiddleware];
 
 if (process.env.NODE_ENV !== 'production') {
   const reduxUnhandledAction = require('redux-unhandled-action').default;
