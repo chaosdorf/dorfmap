@@ -1,5 +1,6 @@
 module.exports = {
-  extends: ['joblift', 'joblift/2space'],
+  extends: ['joblift/base', 'joblift/flowtype', 'joblift/react'],
+  parser: 'babel-eslint',
   env: {
     browser: true,
     node: true,

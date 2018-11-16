@@ -1,7 +1,7 @@
 // @flow
+import { Actions } from 'actions/menu';
 import { connect } from 'react-redux';
 import { map } from 'lodash';
-import { setSelectedTab } from 'actions/menu';
 import Dialog from '@material-ui/core/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
@@ -9,15 +9,22 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import type { AppState } from 'AppState';
 
-type ReduxProps = {
+type StateProps = {|
   menu: $PropertyType<$PropertyType<AppState, 'menu'>, 'menu'>,
   selectedTab: $PropertyType<$PropertyType<AppState, 'menu'>, 'selectedTab'>,
-};
-type Props = ReduxProps & {
+|};
+type DispatchProps = {|
+  setSelectedTab: typeof Actions.setSelectedTab,
+|};
+type OwnProps = {|
   handleRequestClose: Function,
   open?: boolean,
-  setSelectedTab: typeof setSelectedTab,
-};
+|};
+type Props = {|
+  ...StateProps,
+  ...DispatchProps,
+  ...OwnProps,
+|};
 
 class OptionDialog extends React.Component<Props> {
   static actions = ['actions', 'presets', 'layers'];
@@ -45,11 +52,11 @@ class OptionDialog extends React.Component<Props> {
 }
 
 export default connect(
-  (state: AppState): ReduxProps => ({
+  (state: AppState): StateProps => ({
     menu: state.menu.menu,
     selectedTab: state.menu.selectedTab,
   }),
   {
-    setSelectedTab,
+    setSelectedTab: Actions.setSelectedTab,
   }
 )(OptionDialog);

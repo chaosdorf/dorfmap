@@ -1,7 +1,20 @@
 // @flow
 import { createAction } from 'redux-actions';
 import axios from 'axios';
+import type { ThunkAction } from 'AppState';
 
-export const fetchMenues = createAction('FETCH_MENUES', async () => (await axios.get('/ajax/menu.json')).data);
+export type MenuItem = {|
+  name: string,
+  entries: string[],
+|};
 
-export const setSelectedTab = createAction('SET_SELECTED_TAB', (e, value) => value);
+export const Actions = {
+  fetchedMenues: createAction<string, MenuItem[]>('FETCHED_MENUES'),
+  setSelectedTab: createAction<string, [?SyntheticEvent<>, string], string>('SET_SELECTED_TAB', (e, value) => value),
+};
+
+export const fetchMenues: ThunkAction<> = () => async dispatch => {
+  const menues = (await axios.get('/ajax/menu.json')).data;
+
+  dispatch(Actions.fetchedMenues(menues));
+};

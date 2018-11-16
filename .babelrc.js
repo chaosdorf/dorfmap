@@ -1,4 +1,7 @@
 module.exports = {
+  parserOpts: {
+    plugins: [['flow', { all: true }]]
+  },
   presets: [
     [
       '@babel/preset-env',

@@ -7,17 +7,21 @@ import LampComponent, { type Lamp } from './Lamp';
 import React from 'react';
 import type { AppState } from 'AppState';
 
-type ReduxProps = {
+type StateProps = {|
   devices: Lamp[],
-};
+|};
+type DispatchProps = {|
+  fetchDevices: typeof fetchDevices,
+|};
 
-type Props = ReduxProps & {
-  fetchDevicesProp: typeof fetchDevices,
-};
+type Props = {|
+  ...StateProps,
+  ...DispatchProps,
+|};
 
 class DMap extends React.Component<Props> {
   componentDidMount() {
-    this.props.fetchDevicesProp();
+    this.props.fetchDevices();
   }
   render() {
     const { devices } = this.props;
@@ -33,10 +37,10 @@ class DMap extends React.Component<Props> {
 }
 
 export default connect(
-  (state: AppState): ReduxProps => ({
+  (state: AppState) => ({
     devices: filteredDevices(state),
   }),
   {
-    fetchDevicesProp: fetchDevices,
+    fetchDevices,
   }
 )(DMap);

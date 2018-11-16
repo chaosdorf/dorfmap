@@ -8,8 +8,9 @@ import App from './Components/App';
 import promiseMiddleware from 'redux-promise';
 import ReactDOM from 'react-dom';
 import reducer from './reducers';
+import thunkMiddleware from 'redux-thunk';
 
-const middlewares = [promiseMiddleware];
+const middlewares = [thunkMiddleware, promiseMiddleware];
 
 if (process.env.NODE_ENV !== 'production') {
   const reduxUnhandledAction = require('redux-unhandled-action').default;

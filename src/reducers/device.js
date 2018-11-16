@@ -1,6 +1,6 @@
 // @flow
-import * as Actions from 'actions/device';
-import { combineActions, handleActions } from 'redux-actions';
+import { Actions } from 'actions/device';
+import { type ActionType, handleActions } from 'redux-actions';
 import type { Lamp } from 'Components/Lamp';
 
 type Color = { name: string, raw_string: string };
@@ -22,15 +22,9 @@ export type State = {
   layer: string,
 };
 
-export default handleActions(
+export default handleActions<State, *>(
   {
-    [combineActions(Actions.fetchDevices, Actions.executePreset, Actions.executeShortcut)]: (
-      state: State,
-      { payload, error }
-    ) => {
-      if (error) {
-        return state;
-      }
+    [String(Actions.fetchedDevices)]: (state: State, { payload }: ActionType<typeof Actions.fetchedDevices>) => {
       const devices = {};
 
       Object.keys(payload).forEach(key => {
@@ -48,25 +42,25 @@ export default handleActions(
         devices,
       };
     },
-    [String(Actions.setLayer)]: (state: State, { payload }) => ({
+    [String(Actions.setLayer)]: (state: State, { payload }: ActionType<typeof Actions.setLayer>) => ({
       ...state,
       layer: payload,
     }),
-    [combineActions(Actions.toggleDevice, Actions.updateDevice)]: (state: State, { payload }: { payload: Lamp }) => ({
+    [String(Actions.toggledDevice)]: (state: State, { payload }: ActionType<typeof Actions.toggledDevice>) => ({
       ...state,
       devices: {
         ...state.devices,
         [payload.name]: payload,
       },
     }),
-    [String(Actions.fetchPresets)]: (state: State, { payload }) => ({
+    [String(Actions.fetchedPresets)]: (state: State, { payload }: ActionType<typeof Actions.fetchedPresets>) => ({
       ...state,
       presets: {
         ...state.presets,
         [payload.deviceName]: payload.presets,
       },
     }),
-    [String(Actions.setActivePreset)]: (state: State, { payload }) => {
+    [String(Actions.setActivePreset)]: (state: State, { payload }: ActionType<typeof Actions.setActivePreset>) => {
       const presets = state.presets[payload.deviceName];
 
       if (presets) {

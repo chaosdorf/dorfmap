@@ -1,12 +1,12 @@
 // @flow
-import * as Actions from 'actions/menu';
-import { handleActions } from 'redux-actions';
+import { Actions } from 'actions/menu';
+import { type ActionType, handleActions } from 'redux-actions';
 
-export type State = {
-  menu: Object,
+export type State = {|
+  menu: { [key: string]: string[] },
   services: { [key: string]: string },
   selectedTab: string,
-};
+|};
 
 const defaultState: State = {
   menu: {},
@@ -20,16 +20,13 @@ const defaultState: State = {
   selectedTab: 'actions',
 };
 
-export default handleActions(
+export default handleActions<State, *>(
   {
-    [String(Actions.setSelectedTab)]: (state: State, { payload }) => ({
+    [String(Actions.setSelectedTab)]: (state, { payload }: ActionType<typeof Actions.setSelectedTab>) => ({
       ...state,
       selectedTab: payload,
     }),
-    [String(Actions.fetchMenues)]: (state: State, { payload, error }) => {
-      if (error) {
-        return state;
-      }
+    [String(Actions.fetchedMenues)]: (state: State, { payload }: ActionType<typeof Actions.fetchedMenues>) => {
       const menu = {};
 
       for (const m of payload) {

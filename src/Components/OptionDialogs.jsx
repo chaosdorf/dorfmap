@@ -1,7 +1,7 @@
 // @flow
 import './OptionDialogs.scss';
+import { Actions, fetchMenues } from 'actions/menu';
 import { connect } from 'react-redux';
-import { fetchMenues, setSelectedTab } from 'actions/menu';
 import { map } from 'lodash';
 import Button from '@material-ui/core/Button';
 import OptionDialog from './OptionDialog';
@@ -12,14 +12,19 @@ type State = {
   open?: boolean,
 };
 
-type ReduxProps = {
+type StateProps = {|
   services: $PropertyType<$PropertyType<AppState, 'menu'>, 'services'>,
-};
+|};
 
-type Props = ReduxProps & {
+type DispatchProps = {|
   fetchMenues: typeof fetchMenues,
-  setSelectedTab: typeof setSelectedTab,
-};
+  setSelectedTab: typeof Actions.setSelectedTab,
+|};
+
+type Props = {|
+  ...StateProps,
+  ...DispatchProps,
+|};
 
 class OptionDialogs extends React.Component<Props, State> {
   state: State = {};
@@ -27,7 +32,7 @@ class OptionDialogs extends React.Component<Props, State> {
     this.props.fetchMenues();
   }
   handleClick(action: string) {
-    this.props.setSelectedTab(null, action);
+    this.props.setSelectedTab(undefined, action);
     this.setState({
       open: true,
     });
@@ -67,6 +72,6 @@ export default connect(
   }),
   {
     fetchMenues,
-    setSelectedTab,
+    setSelectedTab: Actions.setSelectedTab,
   }
 )(OptionDialogs);

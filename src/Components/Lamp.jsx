@@ -6,6 +6,7 @@ import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classnames';
 import Tooltip from '@material-ui/core/Tooltip';
+import type { AppState } from 'AppState';
 
 const TooltipImg = ({ tooltip, ...props }) => (
   <Tooltip placement="top" title={tooltip}>
@@ -29,10 +30,16 @@ export type Lamp = {
   is_writable: number,
 };
 
-type Props = {
+type DispatchProps = {|
+  toggleDevice: typeof toggleDevice,
+|};
+type OwnProps = {|
   lamp: Lamp,
-  toggleDeviceProp: typeof toggleDevice,
-};
+|};
+type Props = {|
+  ...DispatchProps,
+  ...OwnProps,
+|};
 
 type State = {
   dialogOpen: boolean,
@@ -100,7 +107,7 @@ class LampComponent extends React.Component<Props, State> {
     return <img {...imgProps} />;
   }
   toggle = () => {
-    const { lamp, toggleDeviceProp } = this.props;
+    const { lamp, toggleDevice } = this.props;
 
     if (!lamp.is_writable) {
       return;
@@ -111,7 +118,7 @@ class LampComponent extends React.Component<Props, State> {
         dialogOpen: true,
       });
     } else if (lamp.rate_delay <= 0) {
-      toggleDeviceProp(lamp);
+      toggleDevice(lamp);
     }
   };
   handleRequestClose = () => {
@@ -190,8 +197,8 @@ class LampComponent extends React.Component<Props, State> {
 }
 
 export default connect(
-  null,
+  undefined,
   {
-    toggleDeviceProp: toggleDevice,
+    toggleDevice,
   }
 )(LampComponent);
