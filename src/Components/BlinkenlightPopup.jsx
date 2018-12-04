@@ -90,8 +90,8 @@ class BlinkenlightPopup extends React.Component<Props> {
   }
 }
 
-export default connect(
-  (state: AppState, ownProps: OwnProps) => ({
+export default connect<AppState, Function, OwnProps, StateProps, DispatchProps>(
+  (state, ownProps) => ({
     presets: state.device.presets[ownProps.lamp.name],
   }),
   {

@@ -1,5 +1,5 @@
 // @ƒlow
-import 'babel-polyfill';
+import '@babel/polyfill';
 
 const polyfills = [];
 

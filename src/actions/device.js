@@ -6,18 +6,6 @@ import axios from 'axios';
 import type { AppState, ThunkAction } from 'AppState';
 import type { Lamp } from 'Components/Lamp';
 
-// const createAction = <PL>(
-//   type: string
-// ): (PL => {
-//   toString: () => string,
-//   type: string,
-//   payload: PL,
-// }) => payload => ({
-//   toString: () => type,
-//   type,
-//   payload,
-// });
-
 type Devices = $PropertyType<$PropertyType<AppState, 'device'>, 'devices'>;
 
 const _fetchDevices = async (dispatch: Function) => {
@@ -60,7 +48,7 @@ export const executeShortcut: ThunkAction<string> = shortcut => async dispatch =
 };
 
 export const toggleDevice: ThunkAction<Lamp> = device => async dispatch => {
-  const updatedDevice = (await axios.post('/action', {
+  const updatedDevice: Lamp = (await axios.post('/action', {
     action: 'toggle',
     device: device.name,
   })).data;
@@ -74,13 +62,13 @@ export const toggleDevice: ThunkAction<Lamp> = device => async dispatch => {
 };
 
 export const updateDevice: ThunkAction<string> = deviceName => async dispatch => {
-  const updatedDevice = (await axios.get(`/get/${deviceName}.json`)).data;
+  const updatedDevice: Lamp = (await axios.get(`/get/${deviceName}.json`)).data;
 
   dispatch(Actions.toggledDevice(updatedDevice));
 };
 
 export const fetchPresets: ThunkAction<Lamp> = device => async dispatch => {
-  const presets = (await axios.get(`/ajax/blinkencontrol?device=${device.name}`)).data;
+  const presets: Object = (await axios.get(`/ajax/blinkencontrol?device=${device.name}`)).data;
 
   dispatch(
     Actions.fetchedPresets({

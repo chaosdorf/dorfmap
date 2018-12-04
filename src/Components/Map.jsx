@@ -36,7 +36,7 @@ class DMap extends React.Component<Props> {
   }
 }
 
-export default connect(
+export default connect<AppState, Function, {||}, StateProps, DispatchProps>(
   (state: AppState) => ({
     devices: filteredDevices(state),
   }),

@@ -4,6 +4,7 @@ import { Actions, executePreset, executeShortcut } from 'actions/device';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import React from 'react';
+import type { AppState } from 'AppState';
 
 type OwnProps = {|
   closeFn: Function,
@@ -56,7 +57,7 @@ class MenuEntries extends React.Component<Props> {
   }
 }
 
-export default connect(
+export default connect<AppState, Function, OwnProps, void, DispatchProps>(
   undefined,
   {
     setLayer: Actions.setLayer,

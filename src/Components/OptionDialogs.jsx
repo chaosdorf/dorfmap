@@ -66,8 +66,8 @@ class OptionDialogs extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  (state: AppState) => ({
+export default connect<AppState, Function, {||}, StateProps, DispatchProps>(
+  state => ({
     services: state.menu.services,
   }),
   {

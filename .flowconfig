@@ -8,6 +8,7 @@
 <PROJECT_ROOT>/node_modules/react-event-listener/.*
 <PROJECT_ROOT>/reports/.*
 <PROJECT_ROOT>/node_modules/config-chain/.*
+<PROJECT_ROOT>/webpack-stats.json
 
 [include]
 

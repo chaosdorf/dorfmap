@@ -4,7 +4,8 @@ import './main.scss';
 import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';
-import App from './Components/App';
+import { setupSocket } from './socket';
+import Dorfmap from './Components/Dorfmap';
 import ReactDOM from 'react-dom';
 import reducer from './reducers';
 import thunkMiddleware from 'redux-thunk';
@@ -40,8 +41,9 @@ if (module.hot) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Dorfmap />
   </Provider>,
   // $FlowFixMe
   document.querySelector('#dorfmapWrapper')
 );
+setupSocket(store);
