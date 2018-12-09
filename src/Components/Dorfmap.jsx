@@ -1,4 +1,5 @@
 // @flow
+import { hot } from 'react-hot-loader';
 import AboutHeader from './AboutHeader';
 import Map from './Map';
 import OptionDialogs from './OptionDialogs';
@@ -12,4 +13,4 @@ const Dorfmap = () => (
   </>
 );
 
-export default Dorfmap;
+export default hot(module)(Dorfmap);
