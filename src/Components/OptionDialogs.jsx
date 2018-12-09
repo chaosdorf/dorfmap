@@ -44,7 +44,7 @@ class OptionDialogs extends React.Component<Props, State> {
     const { services } = this.props;
 
     return (
-      <div>
+      <>
         <div className="OptionDialogs">
           <div>
             <Button onClick={() => this.handleClick('actions')}>Actions</Button>
@@ -60,8 +60,13 @@ class OptionDialogs extends React.Component<Props, State> {
           </div>
         </div>
 
-        <OptionDialog handleRequestClose={this.handleRequestClose} open={this.state.open} />
-      </div>
+        {this.state.open && (
+          // $FlowFixMe
+          <React.Suspense fallback={null}>
+            <OptionDialog handleRequestClose={this.handleRequestClose} />
+          </React.Suspense>
+        )}
+      </>
     );
   }
 }

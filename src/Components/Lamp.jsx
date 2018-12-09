@@ -183,15 +183,20 @@ class LampComponent extends React.Component<Props, State> {
     let dialog;
 
     if (lamp.type === 'blinkenlight') {
-      dialog = <BlinkenlightPopup onRequestClose={this.handleRequestClose} open={dialogOpen} lamp={lamp} />;
+      dialog = dialogOpen && (
+        // $FlowFixMe
+        <React.Suspense fallback={null}>
+          <BlinkenlightPopup onRequestClose={this.handleRequestClose} lamp={lamp} />
+        </React.Suspense>
+      );
     }
 
     return (
-      <div>
+      <>
         {image}
         {this.getDuplicate(lamp, tooltipText)}
         {dialog}
-      </div>
+      </>
     );
   }
 }

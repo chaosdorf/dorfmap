@@ -5,11 +5,11 @@ import OptionDialogs from './OptionDialogs';
 import React from 'react';
 
 const Dorfmap = () => (
-  <div>
+  <>
     <OptionDialogs />
     <AboutHeader />
     <Map />
-  </div>
+  </>
 );
 
 export default Dorfmap;
