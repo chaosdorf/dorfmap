@@ -59,10 +59,11 @@ export const toggleDevice: ThunkAction<Lamp> = device => async dispatch => {
   }
   socketUpdate(device.name);
   dispatch(Actions.toggledDevice(updatedDevice));
+  await _fetchDevices(dispatch);
 };
 
 export const updateDevice: ThunkAction<string> = deviceName => async dispatch => {
-  const updatedDevice: Lamp = (await axios.get(`/get/${deviceName}.json`)).data;
+  const updatedDevice: Lamp = (await axios.get(`/get/${deviceName}.json`)).data.status;
 
   dispatch(Actions.toggledDevice(updatedDevice));
 };
