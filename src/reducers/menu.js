@@ -12,10 +12,10 @@ const defaultState: State = {
   menu: {},
   services: {
     mete: 'https://mete.chaosdorf.space',
+    prittstift: 'https://prittstift.chaosdorf.space',
     labello: 'http://labello.chaosdorf.space',
     mpd: 'https://ympd.chaosdorf.space',
     pulseWeb: 'https://pulseweb.chaosdorf.space',
-    pizza: 'https://pizza.chaosdorf.space',
   },
   selectedTab: 'actions',
 };

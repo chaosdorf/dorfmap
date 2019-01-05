@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const postcssPresetEnv = require('postcss-preset-env');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -36,8 +37,18 @@ const rules = [
       {
         loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
       },
-      { loader: 'css-loader' },
-      { loader: 'postcss-loader' },
+      { loader: 'css-loader', options: { importLoaders: 1 } },
+      {
+        loader: 'postcss-loader',
+        options: {
+          ident: 'postcss',
+          plugins: () => [
+            postcssPresetEnv({
+              stage: 1,
+            }),
+          ],
+        },
+      },
       { loader: 'sass-loader' },
     ],
   },
