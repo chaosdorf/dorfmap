@@ -8,7 +8,7 @@ import cc from 'classnames';
 import Tooltip from '@material-ui/core/Tooltip';
 import type { AppState } from 'AppState';
 
-const TooltipImg = ({ tooltip, ...props }) => (
+const TooltipImg = ({ tooltip, ...props }: any) => (
   <Tooltip placement="top" title={tooltip}>
     <img {...props} />
   </Tooltip>
@@ -183,12 +183,7 @@ class LampComponent extends React.Component<Props, State> {
     let dialog;
 
     if (lamp.type === 'blinkenlight') {
-      dialog = dialogOpen && (
-        // $FlowFixMe
-        <React.Suspense fallback={null}>
-          <BlinkenlightPopup onRequestClose={this.handleRequestClose} lamp={lamp} />
-        </React.Suspense>
-      );
+      dialog = dialogOpen && <BlinkenlightPopup onRequestClose={this.handleRequestClose} lamp={lamp} />;
     }
 
     return (
@@ -201,7 +196,7 @@ class LampComponent extends React.Component<Props, State> {
   }
 }
 
-export default connect<AppState, Function, OwnProps, void, DispatchProps>(
+export default connect<Props, OwnProps, _, DispatchProps, AppState, _>(
   undefined,
   {
     toggleDevice,

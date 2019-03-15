@@ -57,7 +57,7 @@ class MenuEntries extends React.Component<Props> {
   }
 }
 
-export default connect<AppState, Function, OwnProps, void, DispatchProps>(
+export default connect<Props, OwnProps, _, DispatchProps, AppState, _>(
   undefined,
   {
     setLayer: Actions.setLayer,

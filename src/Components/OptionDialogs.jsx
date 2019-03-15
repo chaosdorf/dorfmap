@@ -60,18 +60,13 @@ class OptionDialogs extends React.Component<Props, State> {
           </div>
         </div>
 
-        {this.state.open && (
-          // $FlowFixMe
-          <React.Suspense fallback={null}>
-            <OptionDialog handleRequestClose={this.handleRequestClose} />
-          </React.Suspense>
-        )}
+        {this.state.open && <OptionDialog handleRequestClose={this.handleRequestClose} />}
       </>
     );
   }
 }
 
-export default connect<AppState, Function, {||}, StateProps, DispatchProps>(
+export default connect<Props, *, StateProps, DispatchProps, AppState, _>(
   state => ({
     services: state.menu.services,
   }),
