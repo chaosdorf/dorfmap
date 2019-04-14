@@ -47,7 +47,8 @@ cpan Mojolicious::Plugin::BrowserDetect
 ``` bash
 yarn
 ```
+
 6. Start development server
-```
+``` bash
 yarn dev:server
 ```
