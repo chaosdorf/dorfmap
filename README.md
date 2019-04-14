@@ -36,13 +36,15 @@ cd dorfmap
 ./backend/dorfmap-debug
 ````
 5. Install perl dependencies
-```
+``` bash
 cpan DateTime
 cpan IO::Compress:Gzip
 cpan Astro::Sunrise
 cpan File::Slurp
 cpan Mojolicious::Lite
 cpan Mojolicious::Plugin::BrowserDetect
+```
+
 6. Install nodejs dependencies
 ``` bash
 yarn
