@@ -5,3 +5,13 @@ a {
 html {
     font-family: Roboto, sans-serif;
 }
+
+#wrapperWrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+#dorfmapWrapper {
+    position: relative;
+    overflow: auto;
+}
