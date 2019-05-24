@@ -1,4 +1,3 @@
-// @flow
 import AboutHeader from './AboutHeader';
 import Map from './Map';
 import OptionDialogs from './OptionDialogs';

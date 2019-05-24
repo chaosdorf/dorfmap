@@ -1,11 +1,9 @@
-// @flow
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const postcssPresetEnv = require('postcss-preset-env');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -16,66 +14,58 @@ const plugins = [
   }),
   new webpack.DefinePlugin({
     'process.env': {
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV || ''),
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     },
     __DEV__: JSON.stringify(isDev),
     BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
     SOCKET_URL: JSON.stringify(process.env.SOCKET_URL || 'http://localhost:3001'),
   }),
+  new MiniCssExtractPlugin({
+    filename: isDev ? '[name].css' : '[name]-[contenthash].css',
+    chunkFilename: isDev ? '[id].css' : '[id]-[hash].css',
+  }),
 ];
-
-const optimization = {};
 
 const rules = [
   {
-    test: /\.jsx?$/,
+    test: /\.(t|j)sx?$/,
     use: ['babel-loader'],
   },
   {
     test: /\.s?css$/,
     use: [
       {
-        loader: isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
-      },
-      { loader: 'css-loader', options: { importLoaders: 1 } },
-      {
-        loader: 'postcss-loader',
+        loader: MiniCssExtractPlugin.loader,
         options: {
-          ident: 'postcss',
-          plugins: () => [
-            postcssPresetEnv({
-              stage: 1,
-            }),
-          ],
+          hmr: isDev,
+          reloadAll: true,
         },
       },
-      { loader: 'sass-loader' },
+      { loader: 'css-loader' },
+      { loader: 'postcss-loader' },
+      {
+        loader: 'sass-loader',
+      },
     ],
+  },
+  {
+    test: /\.(jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/,
+    loader: 'url-loader?limit=8192',
   },
 ];
 
+const optimization = {};
+
 if (isDev) {
-  plugins.push(...[new webpack.HotModuleReplacementPlugin()]);
-  rules.forEach(r => {
-    if (r.use && Array.isArray(r.use)) {
-      r.use.unshift({
-        loader: 'cache-loader',
-      });
-    }
-  });
+  rules[0].use.unshift('cache-loader');
 } else {
-  plugins.push(
-    ...[
-      new MiniCssExtractPlugin({
-        filename: '[name]-[hash].css',
-        chunkFilename: '[id]-[hash].css',
-      }),
-    ]
-  );
   optimization.minimizer = [
     new TerserPlugin({
       parallel: true,
-      extractComments: true,
+      extractComments: {
+        condition: 'all',
+        banner: () => '',
+      },
     }),
     new OptimizeCSSAssetsPlugin({}),
   ];
@@ -85,16 +75,15 @@ module.exports = {
   optimization,
   plugins,
   mode: isDev ? 'development' : 'production',
-  devtool: isDev ? 'source-map' : false,
+  devtool: isDev ? 'cheap-module-eval-source-map' : false,
   entry: {
-    dorfmap: './src/index.js',
+    dorfmap: ['./src/index.ts'],
   },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'src')],
-    extensions: ['.js', '.json', '.jsx'],
-    symlinks: true,
+    extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
     alias: {
-      'lodash-es': 'lodash',
+      'lodash-es$': 'lodash',
     },
   },
   output: {

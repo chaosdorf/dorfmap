@@ -1,12 +1,11 @@
-// @flow
 import './Lamp.scss';
-import * as React from 'react';
+import { AppState } from 'AppState';
 import { connect } from 'react-redux';
 import { toggleDevice } from 'actions/device';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classnames';
+import React, { ReactNode } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
-import type { AppState } from 'AppState';
 
 const TooltipImg = ({ tooltip, ...props }: any) => (
   <Tooltip placement="top" title={tooltip}>
@@ -15,7 +14,7 @@ const TooltipImg = ({ tooltip, ...props }: any) => (
 );
 
 export type Lamp = {
-  status_text: ?string,
+  status_text?: string,
   rate_delay: number,
   x1: number,
   y1: number,
@@ -30,16 +29,13 @@ export type Lamp = {
   is_writable: number,
 };
 
-type DispatchProps = {|
+type DispatchProps = {
   toggleDevice: typeof toggleDevice,
-|};
-type OwnProps = {|
+};
+type OwnProps = {
   lamp: Lamp,
-|};
-type Props = {|
-  ...DispatchProps,
-  ...OwnProps,
-|};
+};
+type Props = DispatchProps & OwnProps;
 
 type State = {
   dialogOpen: boolean,
@@ -63,7 +59,7 @@ class LampComponent extends React.Component<Props, State> {
   state: State = {
     dialogOpen: false,
   };
-  getTooltipText(lamp: Lamp): ?React.Node {
+  getTooltipText(lamp: Lamp) {
     let text = lamp.status_text;
 
     if (!text) {
@@ -78,7 +74,7 @@ class LampComponent extends React.Component<Props, State> {
 
     /* eslint-enable react/no-danger */
   }
-  getDuplicate(lamp: Lamp, tooltipText: ?React.Node) {
+  getDuplicate(lamp: Lamp, tooltipText?: ReactNode) {
     if (!lamp.duplicates || !lamp.duplicates.length) {
       return null;
     }
@@ -196,7 +192,7 @@ class LampComponent extends React.Component<Props, State> {
   }
 }
 
-export default connect<Props, OwnProps, _, DispatchProps, AppState, _>(
+export default connect<{}, DispatchProps, OwnProps, AppState>(
   undefined,
   {
     toggleDevice,

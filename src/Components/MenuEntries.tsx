@@ -1,27 +1,23 @@
-// @flow
 import './MenuEntries.scss';
-import { Actions, executePreset, executeShortcut } from 'actions/device';
-import { connect } from 'react-redux';
+import { AppState } from 'AppState';
+import { connect, ResolveThunks } from 'react-redux';
+import Actions, { executePreset, executeShortcut } from 'actions/device';
 import Button from '@material-ui/core/Button';
 import React from 'react';
-import type { AppState } from 'AppState';
 
-type OwnProps = {|
+type OwnProps = {
   closeFn: Function,
-  entries: ?(any[]),
+  entries?: any[],
   type: string,
-|};
+};
 
-type DispatchProps = {|
+type DispatchProps = ResolveThunks<{
   setLayer: typeof Actions.setLayer,
   executePreset: typeof executePreset,
   executeShortcut: typeof executeShortcut,
-|};
+}>;
 
-type Props = {|
-  ...OwnProps,
-  ...DispatchProps,
-|};
+type Props = OwnProps & DispatchProps;
 
 class MenuEntries extends React.Component<Props> {
   handleClick(entry: any) {
@@ -57,7 +53,7 @@ class MenuEntries extends React.Component<Props> {
   }
 }
 
-export default connect<Props, OwnProps, _, DispatchProps, AppState, _>(
+export default connect<{}, DispatchProps, OwnProps, AppState>(
   undefined,
   {
     setLayer: Actions.setLayer,

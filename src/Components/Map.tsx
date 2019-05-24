@@ -1,23 +1,19 @@
-// @flow
 import './Map.scss';
-import { connect } from 'react-redux';
+import { AppState } from 'AppState';
+import { connect, ResolveThunks } from 'react-redux';
 import { fetchDevices } from 'actions/device';
 import { filteredDevices } from 'selector/device';
-import LampComponent, { type Lamp } from './Lamp';
+import LampComponent, { Lamp } from './Lamp';
 import React from 'react';
-import type { AppState } from 'AppState';
 
-type StateProps = {|
+type StateProps = {
   devices: Lamp[],
-|};
-type DispatchProps = {|
+};
+type DispatchProps = ResolveThunks<{
   fetchDevices: typeof fetchDevices,
-|};
+}>;
 
-type Props = {|
-  ...StateProps,
-  ...DispatchProps,
-|};
+type Props = StateProps & DispatchProps;
 
 class DMap extends React.Component<Props> {
   componentDidMount() {
@@ -36,8 +32,8 @@ class DMap extends React.Component<Props> {
   }
 }
 
-export default connect<Props, *, StateProps, DispatchProps, AppState, _>(
-  (state: AppState) => ({
+export default connect<StateProps, DispatchProps, {}, AppState>(
+  state => ({
     devices: filteredDevices(state),
   }),
   {

@@ -1,15 +1,17 @@
-// @flow
 /* eslint import/no-webpack-loader-syntax: 0 */
 import { fetchDevices } from 'actions/device';
 
+// @ts-ignore
+// eslint-disable-next-line no-undef
 const url = SOCKET_URL || 'http://localhost:3001';
 
-export function setupSocket(store: *) {
+export function setupSocket(store: any) {
+  // @ts-ignore
   if (global.EventSource) {
     try {
-      const stream = new global.EventSource(`${url}/events`);
+      const stream = new EventSource(`${url}/events`);
 
-      stream.onmessage = e => {
+      stream.onmessage = (e: any) => {
         if (e.data !== 'PING') {
           // We update all because we have hackcenter_weiß and hackcenter_blau - same lamp, different setting
           // if (e.data === '__all__') {

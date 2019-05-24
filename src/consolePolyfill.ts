@@ -1,5 +1,4 @@
-// @flow
-
+// @ts-ignore
 window.console = window.console || {};
 const methods = [
   'debug',
@@ -31,5 +30,6 @@ const methods = [
 const noop = () => {};
 
 for (const m of methods) {
+  // @ts-ignore
   window.console[m] = window.console[m] || noop;
 }

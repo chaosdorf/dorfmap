@@ -1,30 +1,26 @@
-// @flow
 import './OptionDialogs.scss';
-import { Actions, fetchMenues } from 'actions/menu';
-import { connect } from 'react-redux';
+import { AppState } from 'AppState';
+import { connect, ResolveThunks } from 'react-redux';
 import { map } from 'lodash';
+import Actions, { fetchMenues } from 'actions/menu';
 import Button from '@material-ui/core/Button';
 import OptionDialog from './OptionDialog';
 import React from 'react';
-import type { AppState } from 'AppState';
 
 type State = {
   open?: boolean,
 };
 
-type StateProps = {|
-  services: $PropertyType<$PropertyType<AppState, 'menu'>, 'services'>,
-|};
+type StateProps = {
+  services: AppState['menu']['services'],
+};
 
-type DispatchProps = {|
+type DispatchProps = ResolveThunks<{
   fetchMenues: typeof fetchMenues,
   setSelectedTab: typeof Actions.setSelectedTab,
-|};
+}>;
 
-type Props = {|
-  ...StateProps,
-  ...DispatchProps,
-|};
+type Props = StateProps & DispatchProps;
 
 class OptionDialogs extends React.Component<Props, State> {
   state: State = {};
@@ -66,7 +62,7 @@ class OptionDialogs extends React.Component<Props, State> {
   }
 }
 
-export default connect<Props, *, StateProps, DispatchProps, AppState, _>(
+export default connect<StateProps, DispatchProps, {}, AppState>(
   state => ({
     services: state.menu.services,
   }),

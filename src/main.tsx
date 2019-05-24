@@ -1,4 +1,3 @@
-// @flow
 import './axiosDefaults';
 import './main.scss';
 import * as React from 'react';
@@ -18,6 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
   middlewares.push(reduxUnhandledAction());
 }
 
+// @ts-ignore
 // eslint-disable-next-line
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -28,10 +28,10 @@ const store = createStore(
   composeEnhancers(applyMiddleware(...middlewares))
 );
 
-// $FlowFixMe
+// @ts-ignore
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers
-  // $FlowFixMe
+  // @ts-ignore
   module.hot.accept('./reducers', () => {
     const nextRootReducer = require('./reducers/index').default;
 
@@ -43,7 +43,6 @@ ReactDOM.render(
   <Provider store={store}>
     <Dorfmap />
   </Provider>,
-  // $FlowFixMe
   document.querySelector('#dorfmapWrapper')
 );
 setupSocket(store);

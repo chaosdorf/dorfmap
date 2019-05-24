@@ -1,6 +1,8 @@
-// @flow
-import { Actions, fetchPresets, savePreset } from 'actions/device';
-import { connect } from 'react-redux';
+import { AppState } from 'AppState';
+import { connect, ResolveThunks } from 'react-redux';
+import { Lamp } from 'Components/Lamp';
+import { Presets } from 'reducers/device';
+import Actions, { fetchPresets, savePreset } from 'actions/device';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -9,30 +11,23 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import React from 'react';
-import type { AppState } from 'AppState';
-import type { Lamp } from 'Components/Lamp';
-import type { Presets } from 'reducers/device';
 
-type StateProps = {|
-  +presets: ?Presets,
-|};
+type StateProps = {
+  presets?: Presets,
+};
 
-type OwnProps = {|
-  +lamp: Lamp,
-  +onRequestClose: Function,
-|};
+type OwnProps = {
+  lamp: Lamp,
+  onRequestClose: () => void,
+};
 
-type DispatchProps = {|
-  +fetchPresets: typeof fetchPresets,
-  +setActivePreset: *,
-  +savePreset: typeof savePreset,
-|};
+type DispatchProps = ResolveThunks<{
+  fetchPresets: typeof fetchPresets,
+  setActivePreset: typeof Actions.setActivePreset,
+  savePreset: typeof savePreset,
+}>;
 
-type Props = {|
-  ...StateProps,
-  ...OwnProps,
-  ...DispatchProps,
-|};
+type Props = StateProps & OwnProps & DispatchProps;
 
 class BlinkenlightPopup extends React.Component<Props> {
   componentDidMount() {
@@ -48,12 +43,12 @@ class BlinkenlightPopup extends React.Component<Props> {
     }
     this.props.onRequestClose();
   };
-  handleRadioChange = (event: *) => {
+  handleRadioChange = (_: React.ChangeEvent<{}>, value: string) => {
     const { lamp, setActivePreset } = this.props;
 
     setActivePreset({
       deviceName: lamp.name,
-      value: event.target.value,
+      value,
     });
     this.forceUpdate();
   };
@@ -87,7 +82,7 @@ class BlinkenlightPopup extends React.Component<Props> {
   }
 }
 
-export default connect<Props, OwnProps, StateProps, DispatchProps, AppState, _>(
+export default connect<StateProps, DispatchProps, OwnProps, AppState>(
   (state, ownProps) => ({
     presets: state.device.presets[ownProps.lamp.name],
   }),

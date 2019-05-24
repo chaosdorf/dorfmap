@@ -1,34 +1,29 @@
-// @flow
-import { Actions } from 'actions/menu';
-import { connect } from 'react-redux';
+import { AppState } from 'AppState';
+import { connect, ResolveThunks } from 'react-redux';
 import { map } from 'lodash';
+import Actions from 'actions/menu';
 import Dialog from '@material-ui/core/Dialog';
 import MenuEntries from './MenuEntries';
 import React from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import type { AppState } from 'AppState';
 
-type StateProps = {|
-  menu: $PropertyType<$PropertyType<AppState, 'menu'>, 'menu'>,
-  selectedTab: $PropertyType<$PropertyType<AppState, 'menu'>, 'selectedTab'>,
-|};
-type DispatchProps = {|
+type StateProps = {
+  menu: AppState['menu']['menu'];
+  selectedTab: AppState['menu']['selectedTab'];
+};
+type DispatchProps = ResolveThunks<{
   setSelectedTab: typeof Actions.setSelectedTab,
-|};
-type OwnProps = {|
+}>;
+type OwnProps = {
   handleRequestClose: () => any,
-|};
-type Props = {|
-  ...StateProps,
-  ...DispatchProps,
-  ...OwnProps,
-|};
+};
+type Props = StateProps & DispatchProps & OwnProps;
 
 class OptionDialog extends React.Component<Props> {
   static actions = ['actions', 'presets', 'layers'];
-  setSelectedTab = (e: ?SyntheticEvent<>, value: string) => {
-    this.props.setSelectedTab(e, value);
+  setSelectedTab = (_: any, value: string) => {
+    this.props.setSelectedTab(_, value);
   };
   render() {
     const { menu, handleRequestClose, selectedTab } = this.props;
@@ -37,7 +32,7 @@ class OptionDialog extends React.Component<Props> {
     return (
       <Dialog onClose={handleRequestClose} onBackdropClick={handleRequestClose} open>
         <Tabs value={selectedTab} onChange={this.setSelectedTab}>
-          {map(menu, (entries, type) => (
+          {map(menu, (_, type) => (
             <Tab key={type} value={type} label={type} />
           ))}
         </Tabs>
@@ -47,7 +42,7 @@ class OptionDialog extends React.Component<Props> {
   }
 }
 
-export default connect<Props, OwnProps, StateProps, DispatchProps, AppState, _>(
+export default connect<StateProps, DispatchProps, OwnProps, AppState>(
   state => ({
     menu: state.menu.menu,
     selectedTab: state.menu.selectedTab,

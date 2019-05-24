@@ -1,4 +1,3 @@
-// @flow
 import './AboutHeader.scss';
 import React from 'react';
 

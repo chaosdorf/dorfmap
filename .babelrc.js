@@ -1,35 +1,33 @@
 module.exports = {
-  parserOpts: {
-    plugins: [['flow', { all: true }]],
-  },
   presets: [
+    '@babel/preset-typescript',
     [
       '@babel/preset-env',
       {
         loose: false,
         useBuiltIns: 'entry',
         modules: false,
+        corejs: 3,
       },
     ],
     '@babel/preset-react',
-    '@babel/preset-flow',
     'babel-preset-joblift',
   ],
   plugins: [
+    'babel-plugin-idx',
     'lodash',
     [
       'module-resolver',
       {
-        root: 'app',
+        root: 'src',
       },
     ],
   ],
   env: {
-    development: {
-      plugins: ['@babel/plugin-transform-react-jsx-source'],
-    },
     production: {
+      compact: true,
       plugins: ['@babel/plugin-transform-react-constant-elements'],
     },
+    // test: TestConfig,
   },
 };
