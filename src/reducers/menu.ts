@@ -2,9 +2,9 @@ import { createReducer } from 'deox';
 import Actions from 'actions/menu';
 
 export type State = {
-  menu: { [key: string]: string[] },
-  services: { [key: string]: string },
-  selectedTab: string,
+  menu: { [key: string]: string[] };
+  services: { [key: string]: string };
+  selectedTab: string;
 };
 
 const defaultState: State = {

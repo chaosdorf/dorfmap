@@ -4,8 +4,8 @@ import { Store } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 export type AppState = {
-  menu: MenuState,
-  device: DeviceState,
+  menu: MenuState;
+  device: DeviceState;
 };
 
 type StateThunkAction<R, State> = ThunkAction<R, State, undefined, any>;

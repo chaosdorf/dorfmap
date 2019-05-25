@@ -1,5 +1,4 @@
 import './axiosDefaults';
-import './main.scss';
 import * as React from 'react';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { Provider } from 'react-redux';

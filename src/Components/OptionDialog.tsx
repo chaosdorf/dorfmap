@@ -13,34 +13,40 @@ type StateProps = {
   selectedTab: AppState['menu']['selectedTab'];
 };
 type DispatchProps = ResolveThunks<{
-  setSelectedTab: typeof Actions.setSelectedTab,
+  setSelectedTab: typeof Actions.setSelectedTab;
 }>;
 type OwnProps = {
-  handleRequestClose: () => any,
+  handleRequestClose: () => any;
 };
 type Props = StateProps & DispatchProps & OwnProps;
 
-class OptionDialog extends React.Component<Props> {
-  static actions = ['actions', 'presets', 'layers'];
-  setSelectedTab = (_: any, value: string) => {
-    this.props.setSelectedTab(_, value);
-  };
-  render() {
-    const { menu, handleRequestClose, selectedTab } = this.props;
-    const selectedEntries = menu[selectedTab];
+const OptionDialog = ({
+  menu,
+  handleRequestClose,
+  selectedTab,
+  setSelectedTab,
+}: Props) => {
+  const selectedEntries = menu[selectedTab];
 
-    return (
-      <Dialog onClose={handleRequestClose} onBackdropClick={handleRequestClose} open>
-        <Tabs value={selectedTab} onChange={this.setSelectedTab}>
-          {map(menu, (_, type) => (
-            <Tab key={type} value={type} label={type} />
-          ))}
-        </Tabs>
-        <MenuEntries entries={selectedEntries} type={selectedTab} closeFn={handleRequestClose} />
-      </Dialog>
-    );
-  }
-}
+  return (
+    <Dialog
+      onClose={handleRequestClose}
+      onBackdropClick={handleRequestClose}
+      open
+    >
+      <Tabs value={selectedTab} onChange={setSelectedTab}>
+        {map(menu, (_, type) => (
+          <Tab key={type} value={type} label={type} />
+        ))}
+      </Tabs>
+      <MenuEntries
+        entries={selectedEntries}
+        type={selectedTab}
+        closeFn={handleRequestClose}
+      />
+    </Dialog>
+  );
+};
 
 export default connect<StateProps, DispatchProps, OwnProps, AppState>(
   state => ({

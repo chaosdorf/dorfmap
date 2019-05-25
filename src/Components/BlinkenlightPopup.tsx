@@ -13,18 +13,18 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import React from 'react';
 
 type StateProps = {
-  presets?: Presets,
+  presets?: Presets;
 };
 
 type OwnProps = {
-  lamp: Lamp,
-  onRequestClose: () => void,
+  lamp: Lamp;
+  onRequestClose: () => void;
 };
 
 type DispatchProps = ResolveThunks<{
-  fetchPresets: typeof fetchPresets,
-  setActivePreset: typeof Actions.setActivePreset,
-  savePreset: typeof savePreset,
+  fetchPresets: typeof fetchPresets;
+  setActivePreset: typeof Actions.setActivePreset;
+  savePreset: typeof savePreset;
 }>;
 
 type Props = StateProps & OwnProps & DispatchProps;
@@ -69,7 +69,12 @@ class BlinkenlightPopup extends React.Component<Props> {
             onChange={this.handleRadioChange}
           >
             {actualPresets.map(preset => (
-              <FormControlLabel value={preset.raw_string} label={preset.name} key={preset.name} control={<Radio />} />
+              <FormControlLabel
+                value={preset.raw_string}
+                label={preset.name}
+                key={preset.name}
+                control={<Radio />}
+              />
             ))}
           </RadioGroup>
         </DialogContent>

@@ -2,11 +2,11 @@ import { createReducer } from 'deox';
 import { Lamp } from 'Components/Lamp';
 import Actions from 'actions/device';
 
-type Color = { name: string, raw_string: string };
+type Color = { name: string; raw_string: string };
 export type Presets = {
-  active?: Color,
-  colors: Color[],
-  presets: Color[],
+  active?: Color;
+  colors: Color[];
+  presets: Color[];
 };
 
 const defaultState: State = {
@@ -16,9 +16,9 @@ const defaultState: State = {
 };
 
 export type State = {
-  devices: { [key: string]: Lamp },
-  presets: { [key: string]: Presets },
-  layer: string,
+  devices: { [key: string]: Lamp };
+  presets: { [key: string]: Presets };
+  layer: string;
 };
 
 export default createReducer(defaultState, handle => [
@@ -62,7 +62,9 @@ export default createReducer(defaultState, handle => [
     const presets = state.presets[payload.deviceName];
 
     if (presets) {
-      const activePreset = presets.presets.find(c => c.raw_string === payload.value);
+      const activePreset = presets.presets.find(
+        c => c.raw_string === payload.value
+      );
 
       // @ts-ignore
       presets.active = activePreset;

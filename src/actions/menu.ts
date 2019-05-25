@@ -3,13 +3,18 @@ import { ThunkResult } from 'AppState';
 import axios from 'axios';
 
 export type MenuItem = {
-  name: string,
-  entries: string[],
+  name: string;
+  entries: string[];
 };
 
 const Actions = {
-  fetchedMenues: createAction('FETCHED_MENUES', resolve => (p: MenuItem[]) => resolve(p)),
-  setSelectedTab: createAction('SET_SELECTED_TAB', resolve => (_, value: string) => resolve(value)),
+  fetchedMenues: createAction('FETCHED_MENUES', resolve => (p: MenuItem[]) =>
+    resolve(p)
+  ),
+  setSelectedTab: createAction(
+    'SET_SELECTED_TAB',
+    resolve => (_, value: string) => resolve(value)
+  ),
 };
 
 export default Actions;
