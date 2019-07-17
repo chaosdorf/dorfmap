@@ -4,6 +4,7 @@
 # Raspberry Pi and updates the running dorfmap instance
 
 ssh root@feedback mount -o remount,rw /
-rsync -aP public scripts templates root@feedback:/root/dorfmap
+rsync -aP scripts templates root@feedback:/root/dorfmap
+rsync -aP dist/ root@feedback:/root/dorfmap/public
 ssh root@feedback mount -o remount,ro /
 ssh root@feedback dorfmap-pull

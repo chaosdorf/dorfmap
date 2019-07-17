@@ -1,49 +1,14 @@
 module.exports = {
-  extends: [
-    'joblift/base',
-    'joblift/react',
-    'joblift/sort-imports',
-    'plugin:import/typescript',
-  ],
-  parser: 'babel-eslint',
+  root: true,
   env: {
-    browser: true,
     node: true,
-    es6: true,
   },
-  globals: {
-    PROD: false,
-    SERVER: false,
-  },
+  extends: ['@vue/prettier', '@vue/typescript', 'plugin:vue/essential'],
   rules: {
-    'no-use-before-define': 0,
-    'no-shadow': 0,
-    'import/no-unresolved': 2,
-    'import/prefer-default-export': 0,
-    'default-case': 0,
-    'no-nested-ternary': 0,
-    complexity: 0,
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
-  settings: {
-    'import/resolver': 'webpack',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
   },
-  overrides: [
-    {
-      rules: {
-        'no-unused-vars': 0,
-      },
-      files: ['**/*.ts', '**/*.tsx'],
-      parser: '@typescript-eslint/parser',
-      settings: {
-        'import/resolver': {
-          typescript: {},
-        },
-      },
-      parserOptions: {
-        sourceType: 'module',
-        project: './tsconfig.json',
-        tsconfigRootDir: './',
-      },
-    },
-  ],
 };

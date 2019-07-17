@@ -1,56 +1,29 @@
-# dorfmap
-[![David](https://img.shields.io/david/chaosdorf/dorfmap.svg?style=flat-square)](https://david-dm.org/chaosdorf/dorfmap)
-[![Travis](https://img.shields.io/travis/chaosdorf/dorfmap/master.svg?style=flat-square)](https://travis-ci.org/chaosdorf/dorfmap)
+# dorfmap-vue
 
-# Setup
-
-## Development setup
-
-### Prerequisites
-
-- perl (5.x)
-- cpan (latest)
-- nodejs (10.x)
-- yarn (latest)
-
-### Step by step
-
-Setup your own dorfmap for local development.
-
-1. Clone repository and pull submodules
-``` bash
-git clone git@github.com/chaosdorf/dorfmap.git
-git submodule update --init
+## Project setup
 ```
-2. Create log dir and set permissions
-``` bash
-sudo mkdir -p /var/log/dorfmap
-sudo chown $USER /var/log/dorfmap
-```
-3. Change into newly cloned repository
-``` bash
-cd dorfmap
-```
-4. Set dorfmap variables for development
-``` bash
-./backend/dorfmap-debug
-````
-5. Install perl dependencies
-``` bash
-cpan DateTime
-cpan IO::Compress:Gzip
-cpan Astro::Sunrise
-cpan File::Slurp
-cpan Mojolicious::Lite
-cpan Mojolicious::Plugin::BrowserDetect
+yarn install
 ```
 
-6. Install nodejs dependencies
-``` bash
-yarn
+### Compiles and hot-reloads for development
+```
+yarn run serve
 ```
 
-6. Start development server
-``` bash
-yarn dev:server
+### Compiles and minifies for production
 ```
+yarn run build
+```
+
+### Run your tests
+```
+yarn run test
+```
+
+### Lints and fixes files
+```
+yarn run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
