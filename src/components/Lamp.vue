@@ -11,11 +11,11 @@
         width: `${lampC.x2}px`,
         height: `${lampC.y2}px`,
       }"
-      class="lamp"
+      :class="$style.lamp"
     >
       <img
         @click="toggle"
-        :class="{ writeable: writeable }"
+        :class="{ [$style.writeable]: writeable }"
         :src="lamp.image"
       />
     </b-tooltip>
@@ -103,9 +103,9 @@ export default class Lamp extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .lamp {
-  position: absolute;
+  position: absolute !important;
 }
 .writeable {
   cursor: pointer;

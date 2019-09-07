@@ -50,7 +50,6 @@ export default class Dorfmap extends Vue {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style module>
 .dorfmap {
   background-image: url('../assets/map.png');

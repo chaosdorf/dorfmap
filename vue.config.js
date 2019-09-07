@@ -2,7 +2,7 @@ const webpack = require('webpack');
 
 module.exports = {
   productionSourceMap: false,
-  publicPath: '/static',
+  publicPath: process.env.NODE_ENV === 'production' ? '/static' : '/',
   devServer: {
     proxy: {
       '^/ajax': {
