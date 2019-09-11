@@ -1,14 +1,13 @@
+import { Vue, Component } from 'vue-property-decorator';
 import axios from 'axios';
-import { Module, VuexModule, MutationAction } from 'vuex-module-decorators';
-import store from '.';
 
 export interface MenuItem {
   name: string;
   entries: string[];
 }
 
-@Module({ dynamic: true, store, name: 'optionDialogs' })
-export default class OptionDialogs extends VuexModule {
+@Component
+export default class OptionDialogsModel extends Vue {
   menues: MenuItem[] = [];
   services = {
     mete: 'https://mete.chaosdorf.space',
@@ -18,10 +17,7 @@ export default class OptionDialogs extends VuexModule {
     pulseWeb: 'https://pulseweb.chaosdorf.space',
   };
 
-  @MutationAction({ mutate: ['menues'] })
-  async fetchMenues() {
-    return {
-      menues: (await axios.get('/ajax/menu.json')).data,
-    };
+  async created() {
+    this.menues = (await axios.get('/ajax/menu.json')).data;
   }
 }

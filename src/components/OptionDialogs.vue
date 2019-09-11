@@ -16,7 +16,7 @@
     </b-modal>
     <div>
       <a
-        v-for="(href, name) in services"
+        v-for="(href, name) in OptionDialogs.services"
         :key="name"
         :href="href"
         target="_blank"
@@ -30,17 +30,21 @@
 
 <script lang="ts">
 import { Vue, Provide, Component } from 'vue-property-decorator';
-import OptionDialogsStore from '@/store/OptionDialogs';
-import { getModule } from 'vuex-module-decorators';
 import OptionDialog from './OptionDialog.vue';
+import OptionDialogsModel from '@/models/OptionDialogsModel';
 
 @Component({
   components: {
     OptionDialog,
   },
+  models() {
+    return {
+      OptionDialogs: OptionDialogsModel,
+    };
+  },
 })
 export default class OptionDialogs extends Vue {
-  optionDialogsState = getModule(OptionDialogsStore);
+  OptionDialogs!: OptionDialogsModel;
   openTab = 0;
   get dialogOpen() {
     return Boolean(this.openTab);
@@ -51,10 +55,7 @@ export default class OptionDialogs extends Vue {
   }
 
   get services() {
-    return this.optionDialogsState.services;
-  }
-  mounted() {
-    this.optionDialogsState.fetchMenues();
+    return this.OptionDialogs.services;
   }
 }
 </script>

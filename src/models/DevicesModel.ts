@@ -1,12 +1,5 @@
+import { Vue, Component } from 'vue-property-decorator';
 import axios from 'axios';
-import {
-  Module,
-  VuexModule,
-  MutationAction,
-  Mutation,
-  Action,
-} from 'vuex-module-decorators';
-import store from '.';
 
 export interface Lamp {
   status_text?: string;
@@ -35,13 +28,12 @@ export interface BlinkenlightOptions {
   presets: Color[];
 }
 
-@Module({ dynamic: true, store, name: 'devices' })
-export default class Devices extends VuexModule {
+@Component
+export default class DevicesModel extends Vue {
   devices: Lamp[] = [];
   currentLayer = 'control';
   blinkenlightOptions: { [key: string]: BlinkenlightOptions } = {};
 
-  @Action
   private socketUpdate() {
     try {
       // @ts-ignore
@@ -52,22 +44,29 @@ export default class Devices extends VuexModule {
     }
   }
 
-  @MutationAction({ mutate: ['devices'] })
-  async fetchDevices() {
-    return {
-      devices: Object.values((await axios.get('/status/devices.json')).data),
-    };
+  get filteredDevices() {
+    return this.devices.filter(d => d.layer === this.currentLayer);
   }
-  @Action
+
+  created() {
+    this.fetchDevices();
+  }
+
+  async fetchDevices() {
+    this.devices = Object.values(
+      (await axios.get('/status/devices.json')).data
+    );
+  }
+
   async toggleDevice(device: string) {
     await axios.post('/action', {
       action: 'toggle',
       device,
     });
     this.socketUpdate();
-    return this.fetchDevices();
+    await this.fetchDevices();
   }
-  @Action
+
   async executeShortcut(shortcut: string) {
     await axios.post('/action', {
       action: 'shortcut',
@@ -76,7 +75,7 @@ export default class Devices extends VuexModule {
     this.socketUpdate();
     return this.fetchDevices();
   }
-  @Action
+
   async executePreset(preset: string) {
     await axios.post('/action', {
       action: 'preset',
@@ -85,25 +84,24 @@ export default class Devices extends VuexModule {
     this.socketUpdate();
     return this.fetchDevices();
   }
-  @Mutation
+
   setCurrentLayer(currentLayer: string) {
     this.currentLayer = currentLayer;
   }
-  @MutationAction({ mutate: ['blinkenlightOptions'] })
+
   async fetchBlinkenlightOptions(device: string) {
     const blinkenlightOptions = (await axios.get('/ajax/blinkencontrol', {
       params: {
         device,
       },
     })).data;
-    return {
-      blinkenlightOptions: {
-        ...this.blinkenlightOptions,
-        [device]: blinkenlightOptions,
-      },
+
+    this.blinkenlightOptions = {
+      ...this.blinkenlightOptions,
+      [device]: blinkenlightOptions,
     };
   }
-  @Action
+
   async saveBlinkenlightOption({
     device,
     raw_string,

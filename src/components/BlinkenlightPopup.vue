@@ -21,13 +21,15 @@
 
 <script lang="ts">
 import { Vue, Prop, Component } from 'vue-property-decorator';
-import Devices, { Lamp } from '@/store/Devices';
-import { getModule } from 'vuex-module-decorators';
+import Devices, { Lamp } from '@/models/DevicesModel';
+import { InjectModel } from '@sum.cumo/vue-states';
+import DevicesModel from '@/models/DevicesModel';
 
 @Component
 export default class BlinkenlightPopup extends Vue {
+  $parent: any;
+  @InjectModel Devices!: DevicesModel;
   @Prop() readonly lamp!: Lamp;
-  devicesStore = getModule(Devices);
   get selectedOptions() {
     return this.options && this.options.active
       ? this.options.active.raw_string
@@ -39,21 +41,19 @@ export default class BlinkenlightPopup extends Vue {
     );
   }
   get options() {
-    return this.devicesStore.blinkenlightOptions[this.lamp.name];
+    return this.Devices.blinkenlightOptions[this.lamp.name];
   }
   savePreset() {
-    this.devicesStore
-      .saveBlinkenlightOption({
-        device: this.lamp.name,
-        raw_string: this.selectedOptions,
-      })
-      .then(() => {
-        // @ts-ignore
-        this.$parent.close();
-      });
+    this.Devices.saveBlinkenlightOption({
+      device: this.lamp.name,
+      raw_string: this.selectedOptions,
+    }).then(() => {
+      // @ts-ignore
+      this.$parent.close();
+    });
   }
   mounted() {
-    this.devicesStore.fetchBlinkenlightOptions(this.lamp.name);
+    this.Devices.fetchBlinkenlightOptions(this.lamp.name);
   }
 }
 </script>

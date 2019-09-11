@@ -11,8 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import Dorfmap from './components/Dorfmap.vue';
 import AboutHeader from './components/AboutHeader.vue';
 import OptionDialogs from './components/OptionDialogs.vue';
-import Devices from '@/store/Devices';
-import { getModule } from 'vuex-module-decorators';
+import DevicesModel from '@/models/DevicesModel';
 
 @Component({
   components: {
@@ -20,12 +19,12 @@ import { getModule } from 'vuex-module-decorators';
     AboutHeader,
     OptionDialogs,
   },
+  models() {
+    return { Devices: DevicesModel };
+  },
 })
 export default class App extends Vue {
-  devicesStore = getModule(Devices);
-  created() {
-    this.devicesStore.fetchDevices();
-  }
+  Devices!: DevicesModel;
 }
 </script>
 

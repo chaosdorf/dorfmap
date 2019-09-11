@@ -6,9 +6,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Devices from '@/store/Devices';
-import { getModule } from 'vuex-module-decorators';
 import Lamp from './Lamp.vue';
+import DevicesModel from '@/models/DevicesModel';
+import { InjectModel } from '@sum.cumo/vue-states';
 
 let initialitedSocket = false;
 @Component({
@@ -17,11 +17,9 @@ let initialitedSocket = false;
   },
 })
 export default class Dorfmap extends Vue {
-  devicesStore = getModule(Devices);
+  @InjectModel Devices!: DevicesModel;
   get devices() {
-    return this.devicesStore.devices.filter(
-      d => d.layer === this.devicesStore.currentLayer
-    );
+    return this.Devices.filteredDevices;
   }
   created() {
     // @ts-ignore
@@ -34,7 +32,7 @@ export default class Dorfmap extends Vue {
 
         stream.onmessage = (e: any) => {
           if (e.data !== 'PING') {
-            this.devicesStore.fetchDevices();
+            this.Devices.fetchDevices();
           }
         };
         initialitedSocket = true;

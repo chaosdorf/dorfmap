@@ -31,11 +31,10 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { Lamp as LampType } from '@/store/Devices';
-import Devices from '@/store/Devices';
-import { getModule } from 'vuex-module-decorators';
 import he from 'he';
 import BlinkenlightPopup from './BlinkenlightPopup.vue';
+import { InjectModel } from '@sum.cumo/vue-states';
+import DevicesModel, { Lamp as LampType } from '../models/DevicesModel';
 
 @Component({
   components: {
@@ -43,8 +42,8 @@ import BlinkenlightPopup from './BlinkenlightPopup.vue';
   },
 })
 export default class Lamp extends Vue {
+  @InjectModel Devices!: DevicesModel;
   @Prop() readonly lamp!: LampType;
-  devicesStore = getModule(Devices);
   blinkenlightOpen = false;
   get isBlinkenlight() {
     return this.lamp.type === 'blinkenlight';
@@ -56,7 +55,7 @@ export default class Lamp extends Vue {
         break;
       default:
         if (this.writeable) {
-          this.devicesStore.toggleDevice(this.lamp.name);
+          this.Devices.toggleDevice(this.lamp.name);
         }
         break;
     }

@@ -27,15 +27,15 @@
 
 <script lang="ts">
 import { Vue, Prop, Component } from 'vue-property-decorator';
-import { getModule, Module } from 'vuex-module-decorators';
-import OptionDialogsStore from '@/store/OptionDialogs';
-import Devices from '@/store/Devices';
+import { InjectModel } from '@sum.cumo/vue-states';
+import DevicesModel from '@/models/DevicesModel';
+import OptionDialogsModel from '@/models/OptionDialogsModel';
 
 @Component
 export default class OptionDialog extends Vue {
+  @InjectModel OptionDialogs!: OptionDialogsModel;
   @Prop() openTab?: number;
-  devicesStore = getModule(Devices);
-  optionDialogsState = getModule(OptionDialogsStore);
+  @InjectModel Devices!: DevicesModel;
   selectedTab = 0;
 
   mounted() {
@@ -43,18 +43,18 @@ export default class OptionDialog extends Vue {
   }
 
   get menues() {
-    return this.optionDialogsState.menues;
+    return this.OptionDialogs.menues;
   }
   execute(type: string, entry: string) {
     switch (type) {
       case 'layers':
-        this.devicesStore.setCurrentLayer(entry);
+        this.Devices.setCurrentLayer(entry);
         break;
       case 'presets':
-        this.devicesStore.executePreset(entry);
+        this.Devices.executePreset(entry);
         break;
       case 'actions':
-        this.devicesStore.executeShortcut(entry);
+        this.Devices.executeShortcut(entry);
         break;
     }
     // @ts-ignore
