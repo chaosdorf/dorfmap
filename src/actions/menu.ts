@@ -11,9 +11,8 @@ const Actions = {
   fetchedMenues: createAction('FETCHED_MENUES', resolve => (p: MenuItem[]) =>
     resolve(p)
   ),
-  setSelectedTab: createAction(
-    'SET_SELECTED_TAB',
-    resolve => (_, value: string) => resolve(value)
+  setSelectedTab: createAction('SET_SELECTED_TAB', resolve => (value: string) =>
+    resolve(value)
   ),
 };
 

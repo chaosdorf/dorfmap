@@ -1,36 +1,29 @@
-import './MenuEntries.scss';
-import { AppState } from 'AppState';
-import { connect, ResolveThunks } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Actions, { executePreset, executeShortcut } from 'actions/device';
 import Button from '@material-ui/core/Button';
 import React, { useMemo } from 'react';
+import useStyles from './MenuEntries.style';
 
-type OwnProps = {
-  closeFn: Function,
-  entries?: any[],
-  type: string,
+type Props = {
+  closeFn: Function;
+  entries?: any[];
+  type: string;
 };
 
-type DispatchProps = ResolveThunks<{
-  setLayer: typeof Actions.setLayer,
-  executePreset: typeof executePreset,
-  executeShortcut: typeof executeShortcut,
-}>;
-
-type Props = OwnProps & DispatchProps;
-
-const MenuEntries = ({ entries, executePreset, executeShortcut, setLayer, type, closeFn }: Props) => {
+const MenuEntries = ({ entries, type, closeFn }: Props) => {
+  const dispatch = useDispatch();
+  const classes = useStyles();
   const entryButtons = useMemo(() => {
     const createHandleClick = (entry: any) => () => {
       switch (type) {
         case 'layers':
-          setLayer(entry);
+          dispatch(Actions.setLayer(entry));
           break;
         case 'presets':
-          executePreset(entry);
+          dispatch(executePreset(entry));
           break;
         case 'actions':
-          executeShortcut(entry);
+          dispatch(executeShortcut(entry));
           break;
         default:
           break;
@@ -40,21 +33,18 @@ const MenuEntries = ({ entries, executePreset, executeShortcut, setLayer, type, 
 
     return entries
       ? entries.map(entry => (
-          <Button className="MenuEntries__button" key={entry} onClick={createHandleClick(entry)}>
+          <Button
+            className={classes.button}
+            key={entry}
+            onClick={createHandleClick(entry)}
+          >
             {entry}
           </Button>
         ))
       : null;
-  }, [closeFn, entries, executePreset, executeShortcut, setLayer, type]);
+  }, [classes.button, closeFn, dispatch, entries, type]);
 
-  return <div className="MenuEntries">{entryButtons}</div>;
+  return <div className={classes.main}>{entryButtons}</div>;
 };
 
-export default connect<{}, DispatchProps, OwnProps, AppState>(
-  undefined,
-  {
-    setLayer: Actions.setLayer,
-    executeShortcut,
-    executePreset,
-  }
-)(MenuEntries);
+export default MenuEntries;

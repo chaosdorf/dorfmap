@@ -1,38 +1,33 @@
-import './OptionDialogs.scss';
-import { AppState } from 'AppState';
-import { connect, ResolveThunks } from 'react-redux';
 import { map } from 'lodash';
+import { useDispatch } from 'react-redux';
 import Actions, { fetchMenues } from 'actions/menu';
 import Button from '@material-ui/core/Button';
 import OptionDialog from './OptionDialog';
 import React, { useCallback, useEffect, useState } from 'react';
+import useReduxState from 'hooks/useReduxState';
+import useStyles from './OptionDialogs.style';
 
-type StateProps = {
-  services: AppState['menu']['services'];
-};
+const OptionDialogs = () => {
+  const dispatch = useDispatch();
+  const services = useReduxState(state => state.menu.services);
 
-type DispatchProps = ResolveThunks<{
-  fetchMenues: typeof fetchMenues;
-  setSelectedTab: typeof Actions.setSelectedTab;
-}>;
-
-type Props = StateProps & DispatchProps;
-
-const OptionDialogs = ({ fetchMenues, setSelectedTab, services }: Props) => {
-  useEffect(() => fetchMenues(), [fetchMenues]);
+  useEffect(() => {
+    dispatch(fetchMenues());
+  }, [dispatch]);
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const handleClick = useCallback(
     (action: string) => {
-      setSelectedTab(undefined, action);
+      dispatch(Actions.setSelectedTab(action));
       setOpen(true);
     },
-    [setSelectedTab]
+    [dispatch]
   );
   const handleRequestClose = useCallback(() => setOpen(false), []);
 
   return (
     <>
-      <div className="OptionDialogs">
+      <div className={classes.OptionDialogs}>
         <div>
           <Button onClick={() => handleClick('actions')}>Actions</Button>
           <Button onClick={() => handleClick('presets')}>Presets</Button>
@@ -52,12 +47,4 @@ const OptionDialogs = ({ fetchMenues, setSelectedTab, services }: Props) => {
   );
 };
 
-export default connect<StateProps, DispatchProps, {}, AppState>(
-  state => ({
-    services: state.menu.services,
-  }),
-  {
-    fetchMenues,
-    setSelectedTab: Actions.setSelectedTab,
-  }
-)(OptionDialogs);
+export default OptionDialogs;

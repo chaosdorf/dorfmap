@@ -1,7 +1,5 @@
-import { AppState } from 'AppState';
-import { connect, ResolveThunks } from 'react-redux';
 import { Lamp } from 'Components/Lamp';
-import { Presets } from 'reducers/device';
+import { useDispatch } from 'react-redux';
 import Actions, { fetchPresets, savePreset } from 'actions/device';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,90 +8,73 @@ import DialogContent from '@material-ui/core/DialogContent';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
+import useReduxState from 'hooks/useReduxState';
 
-type StateProps = {
-  presets?: Presets;
-};
-
-type OwnProps = {
+type Props = {
   lamp: Lamp;
   onRequestClose: () => void;
 };
 
-type DispatchProps = ResolveThunks<{
-  fetchPresets: typeof fetchPresets;
-  setActivePreset: typeof Actions.setActivePreset;
-  savePreset: typeof savePreset;
-}>;
+const BlinkenlightPopup = ({ lamp, onRequestClose }: Props) => {
+  const dispatch = useDispatch();
 
-type Props = StateProps & OwnProps & DispatchProps;
+  useEffect(() => {
+    dispatch(fetchPresets(lamp));
+  }, [dispatch, lamp]);
 
-class BlinkenlightPopup extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchPresets, lamp } = this.props;
+  const allPresets = useReduxState(state => state.device.presets);
+  const presets = allPresets[lamp.name];
 
-    fetchPresets(lamp);
-  }
-  save = () => {
-    const { lamp, savePreset, presets } = this.props;
-
+  const save = useCallback(() => {
     if (presets && presets.active) {
-      savePreset(lamp.name, presets.active.raw_string);
+      dispatch(savePreset(lamp.name, presets.active.raw_string));
     }
-    this.props.onRequestClose();
-  };
-  handleRadioChange = (_: React.ChangeEvent<{}>, value: string) => {
-    const { lamp, setActivePreset } = this.props;
+    onRequestClose();
+  }, [dispatch, lamp.name, onRequestClose, presets]);
 
-    setActivePreset({
-      deviceName: lamp.name,
-      value,
-    });
-    this.forceUpdate();
-  };
-  render() {
-    const { onRequestClose, presets } = this.props;
+  const handleRadioChange = useCallback(
+    (_: React.ChangeEvent<{}>, value: string) => {
+      dispatch(
+        Actions.setActivePreset({
+          deviceName: lamp.name,
+          value,
+        })
+      );
+    },
+    [dispatch, lamp.name]
+  );
 
-    if (!presets) {
-      return null;
-    }
-    const actualPresets = presets.presets;
-
-    return (
-      <Dialog onClose={onRequestClose} onBackdropClick={onRequestClose} open>
-        <DialogContent>
-          <RadioGroup
-            name="blinken"
-            value={presets.active ? presets.active.raw_string : '32,0,0,0'}
-            onChange={this.handleRadioChange}
-          >
-            {actualPresets.map(preset => (
-              <FormControlLabel
-                value={preset.raw_string}
-                label={preset.name}
-                key={preset.name}
-                control={<Radio />}
-              />
-            ))}
-          </RadioGroup>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={onRequestClose}>Cancel</Button>
-          <Button onClick={this.save}>Save</Button>
-        </DialogActions>
-      </Dialog>
-    );
+  if (!presets) {
+    return null;
   }
-}
 
-export default connect<StateProps, DispatchProps, OwnProps, AppState>(
-  (state, ownProps) => ({
-    presets: state.device.presets[ownProps.lamp.name],
-  }),
-  {
-    fetchPresets,
-    setActivePreset: Actions.setActivePreset,
-    savePreset,
-  }
-)(BlinkenlightPopup);
+  const actualPresets = presets.presets;
+
+  return (
+    <Dialog onClose={onRequestClose} onBackdropClick={onRequestClose} open>
+      <DialogContent>
+        <RadioGroup
+          name="blinken"
+          value={presets.active ? presets.active.raw_string : '32,0,0,0'}
+          onChange={handleRadioChange}
+        >
+          {actualPresets.map(preset => (
+            <FormControlLabel
+              value={preset.raw_string}
+              label={preset.name}
+              key={preset.name}
+              control={<Radio />}
+            />
+          ))}
+        </RadioGroup>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onRequestClose}>Cancel</Button>
+        <Button onClick={save}>Save</Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default BlinkenlightPopup;

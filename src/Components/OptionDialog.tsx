@@ -1,32 +1,29 @@
-import { AppState } from 'AppState';
-import { connect, ResolveThunks } from 'react-redux';
 import { map } from 'lodash';
+import { useDispatch } from 'react-redux';
 import Actions from 'actions/menu';
 import Dialog from '@material-ui/core/Dialog';
 import MenuEntries from './MenuEntries';
-import React from 'react';
+import React, { useCallback } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import useReduxState from 'hooks/useReduxState';
 
-type StateProps = {
-  menu: AppState['menu']['menu'];
-  selectedTab: AppState['menu']['selectedTab'];
-};
-type DispatchProps = ResolveThunks<{
-  setSelectedTab: typeof Actions.setSelectedTab;
-}>;
-type OwnProps = {
+type Props = {
   handleRequestClose: () => any;
 };
-type Props = StateProps & DispatchProps & OwnProps;
 
-const OptionDialog = ({
-  menu,
-  handleRequestClose,
-  selectedTab,
-  setSelectedTab,
-}: Props) => {
+const OptionDialog = ({ handleRequestClose }: Props) => {
+  const dispatch = useDispatch();
+  const menu = useReduxState(state => state.menu.menu);
+  const selectedTab = useReduxState(state => state.menu.selectedTab);
   const selectedEntries = menu[selectedTab];
+
+  const setSelectedTab = useCallback(
+    (_: any, value: string) => {
+      dispatch(Actions.setSelectedTab(value));
+    },
+    [dispatch]
+  );
 
   return (
     <Dialog
@@ -48,12 +45,4 @@ const OptionDialog = ({
   );
 };
 
-export default connect<StateProps, DispatchProps, OwnProps, AppState>(
-  state => ({
-    menu: state.menu.menu,
-    selectedTab: state.menu.selectedTab,
-  }),
-  {
-    setSelectedTab: Actions.setSelectedTab,
-  }
-)(OptionDialog);
+export default OptionDialog;

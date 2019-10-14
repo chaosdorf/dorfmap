@@ -1,22 +1,17 @@
-import { AppState } from 'AppState';
-import { connect, ResolveThunks } from 'react-redux';
 import { fetchDevices } from 'actions/device';
-import { filteredDevices } from 'selector/device';
-import LampComponent, { Lamp } from './Lamp';
+import { useDispatch } from 'react-redux';
+import LampComponent from './Lamp';
 import React, { useEffect } from 'react';
+import useFilteredDevices from 'hooks/useFilteredDevices';
 import useStyles from './Map.style';
 
-type StateProps = {
-  devices: Lamp[];
-};
-type DispatchProps = ResolveThunks<{
-  fetchDevices: typeof fetchDevices;
-}>;
+const DMap = () => {
+  const dispatch = useDispatch();
+  const devices = useFilteredDevices();
 
-type Props = StateProps & DispatchProps;
-
-const DMap = ({ devices, fetchDevices }: Props) => {
-  useEffect(() => fetchDevices(), [fetchDevices]);
+  useEffect(() => {
+    dispatch(fetchDevices());
+  }, [dispatch]);
   const classes = useStyles();
 
   return (
@@ -28,11 +23,4 @@ const DMap = ({ devices, fetchDevices }: Props) => {
   );
 };
 
-export default connect<StateProps, DispatchProps, {}, AppState>(
-  state => ({
-    devices: filteredDevices(state),
-  }),
-  {
-    fetchDevices,
-  }
-)(DMap);
+export default DMap;

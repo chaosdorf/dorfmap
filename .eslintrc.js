@@ -1,10 +1,5 @@
 module.exports = {
-  extends: [
-    'joblift/base',
-    'joblift/react',
-    'joblift/sort-imports',
-    'plugin:import/typescript',
-  ],
+  extends: ['marudor'],
   parser: 'babel-eslint',
   env: {
     browser: true,
@@ -12,17 +7,11 @@ module.exports = {
     es6: true,
   },
   globals: {
-    PROD: false,
     SERVER: false,
   },
   rules: {
-    'no-use-before-define': 0,
-    'no-shadow': 0,
-    'import/no-unresolved': 2,
-    'import/prefer-default-export': 0,
-    'default-case': 0,
-    'no-nested-ternary': 0,
-    complexity: 0,
+    'require-atomic-updates': 0,
+    'babel/object-curly-spacing': 0,
   },
   settings: {
     'import/resolver': 'webpack',
@@ -30,8 +19,12 @@ module.exports = {
   overrides: [
     {
       rules: {
+        'no-use-before-define': 0,
         'no-unused-vars': 0,
+        '@typescript-eslint/array-type': 2,
+        'spaced-comment': 0,
       },
+      plugins: ['@typescript-eslint'],
       files: ['**/*.ts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
       settings: {
@@ -41,8 +34,8 @@ module.exports = {
       },
       parserOptions: {
         sourceType: 'module',
-        project: './tsconfig.json',
-        tsconfigRootDir: './',
+        // project: './tsconfig.json',
+        createDefaultProgram: true,
       },
     },
   ],
