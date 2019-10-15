@@ -1,22 +1,24 @@
-import { fetchDevices } from 'actions/device';
-import { useDispatch } from 'react-redux';
+import { filter } from 'lodash';
+import DeviceContainer from 'container/DeviceContainer';
 import LampComponent from './Lamp';
-import React, { useEffect } from 'react';
-import useFilteredDevices from 'hooks/useFilteredDevices';
+import React, { useEffect, useMemo } from 'react';
 import useStyles from './Map.style';
 
 const DMap = () => {
-  const dispatch = useDispatch();
-  const devices = useFilteredDevices();
+  const { fetchDevices, devices, layer } = DeviceContainer.useContainer();
+  const filteredDevices = useMemo(
+    () => filter(devices, d => d.layer === layer),
+    [devices, layer]
+  );
 
   useEffect(() => {
-    dispatch(fetchDevices());
-  }, [dispatch]);
+    fetchDevices();
+  }, [fetchDevices]);
   const classes = useStyles();
 
   return (
     <div className={classes.main}>
-      {devices.map(lamp => (
+      {filteredDevices.map(lamp => (
         <LampComponent key={lamp.name} lamp={lamp} />
       ))}
     </div>

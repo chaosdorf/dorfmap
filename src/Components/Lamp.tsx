@@ -1,5 +1,4 @@
-import { toggleDevice } from 'actions/device';
-import { useDispatch } from 'react-redux';
+import { useExecuteAction } from 'container/DeviceContainer';
 import BlinkenlightPopup from './BlinkenlightPopup';
 import cc from 'classnames';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -33,10 +32,10 @@ type Props = {
 };
 
 const LampComponent = ({ lamp }: Props) => {
+  const executeAction = useExecuteAction();
   const classes = useStyles();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [forceRerender, setForceRerender] = useState(false);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | undefined;
@@ -84,9 +83,9 @@ const LampComponent = ({ lamp }: Props) => {
     if (lamp.type === 'charwrite' || lamp.type === 'blinkenlight') {
       setDialogOpen(true);
     } else if (lamp.rate_delay <= 0) {
-      dispatch(toggleDevice(lamp));
+      executeAction('toggle', lamp.name);
     }
-  }, [dispatch, lamp]);
+  }, [executeAction, lamp]);
 
   const imgProps = {
     className: cssClass,

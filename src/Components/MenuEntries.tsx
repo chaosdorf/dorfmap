@@ -1,6 +1,5 @@
-import { useDispatch } from 'react-redux';
-import Actions, { executePreset, executeShortcut } from 'actions/device';
 import Button from '@material-ui/core/Button';
+import DeviceContainer, { useExecuteAction } from 'container/DeviceContainer';
 import React, { useMemo } from 'react';
 import useStyles from './MenuEntries.style';
 
@@ -11,19 +10,20 @@ type Props = {
 };
 
 const MenuEntries = ({ entries, type, closeFn }: Props) => {
-  const dispatch = useDispatch();
+  const { setLayer } = DeviceContainer.useContainer();
+  const executeAction = useExecuteAction();
   const classes = useStyles();
   const entryButtons = useMemo(() => {
     const createHandleClick = (entry: any) => () => {
       switch (type) {
         case 'layers':
-          dispatch(Actions.setLayer(entry));
+          setLayer(entry);
           break;
         case 'presets':
-          dispatch(executePreset(entry));
+          executeAction('preset', entry);
           break;
         case 'actions':
-          dispatch(executeShortcut(entry));
+          executeAction('shortcut', entry);
           break;
         default:
           break;
@@ -42,7 +42,7 @@ const MenuEntries = ({ entries, type, closeFn }: Props) => {
           </Button>
         ))
       : null;
-  }, [classes.button, closeFn, dispatch, entries, type]);
+  }, [classes.button, closeFn, entries, executeAction, setLayer, type]);
 
   return <div className={classes.main}>{entryButtons}</div>;
 };
