@@ -37,6 +37,7 @@
     "redux-thunk": "^2.3.0",
     "regenerator-runtime": "^0.13.3",
     "reselect": "^4.0.0",
+    "unstated-next": "^1.1.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {

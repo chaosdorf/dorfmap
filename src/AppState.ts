@@ -1,10 +1,8 @@
 import { State as DeviceState } from 'reducers/device';
-import { State as MenuState } from 'reducers/menu';
 import { Store } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
 export type AppState = {
-  menu: MenuState;
   device: DeviceState;
 };
 

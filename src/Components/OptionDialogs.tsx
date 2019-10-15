@@ -1,27 +1,28 @@
 import { map } from 'lodash';
-import { useDispatch } from 'react-redux';
-import Actions, { fetchMenues } from 'actions/menu';
 import Button from '@material-ui/core/Button';
+import MenuContainer from 'container/MenuContainer';
 import OptionDialog from './OptionDialog';
-import React, { useCallback, useEffect, useState } from 'react';
-import useReduxState from 'hooks/useReduxState';
+import React, { useCallback, useState } from 'react';
 import useStyles from './OptionDialogs.style';
 
-const OptionDialogs = () => {
-  const dispatch = useDispatch();
-  const services = useReduxState(state => state.menu.services);
+const services = {
+  mete: 'https://mete.chaosdorf.space',
+  prittstift: 'https://prittstift.chaosdorf.space',
+  labello: 'http://labello.chaosdorf.space',
+  mpd: 'https://ympd.chaosdorf.space',
+  pulseWeb: 'https://pulseweb.chaosdorf.space',
+};
 
-  useEffect(() => {
-    dispatch(fetchMenues());
-  }, [dispatch]);
+const OptionDialogs = () => {
+  const { setSelectedTab } = MenuContainer.useContainer();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const handleClick = useCallback(
     (action: string) => {
-      dispatch(Actions.setSelectedTab(action));
+      setSelectedTab(action);
       setOpen(true);
     },
-    [dispatch]
+    [setSelectedTab]
   );
   const handleRequestClose = useCallback(() => setOpen(false), []);
 
@@ -47,4 +48,10 @@ const OptionDialogs = () => {
   );
 };
 
-export default OptionDialogs;
+const OptionDialogsWrap = () => (
+  <MenuContainer.Provider>
+    <OptionDialogs />
+  </MenuContainer.Provider>
+);
+
+export default OptionDialogsWrap;

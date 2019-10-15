@@ -1,28 +1,24 @@
 import { map } from 'lodash';
-import { useDispatch } from 'react-redux';
-import Actions from 'actions/menu';
 import Dialog from '@material-ui/core/Dialog';
+import MenuContainer from 'container/MenuContainer';
 import MenuEntries from './MenuEntries';
 import React, { useCallback } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import useReduxState from 'hooks/useReduxState';
 
 type Props = {
   handleRequestClose: () => any;
 };
 
 const OptionDialog = ({ handleRequestClose }: Props) => {
-  const dispatch = useDispatch();
-  const menu = useReduxState(state => state.menu.menu);
-  const selectedTab = useReduxState(state => state.menu.selectedTab);
-  const selectedEntries = menu[selectedTab];
+  const { menues, selectedTab, setSelectedTab } = MenuContainer.useContainer();
+  const selectedEntries = menues[selectedTab];
 
-  const setSelectedTab = useCallback(
+  const handleOnChange = useCallback(
     (_: any, value: string) => {
-      dispatch(Actions.setSelectedTab(value));
+      setSelectedTab(value);
     },
-    [dispatch]
+    [setSelectedTab]
   );
 
   return (
@@ -31,8 +27,8 @@ const OptionDialog = ({ handleRequestClose }: Props) => {
       onBackdropClick={handleRequestClose}
       open
     >
-      <Tabs value={selectedTab} onChange={setSelectedTab}>
-        {map(menu, (_, type) => (
+      <Tabs value={selectedTab} onChange={handleOnChange}>
+        {map(menues, (_, type) => (
           <Tab key={type} value={type} label={type} />
         ))}
       </Tabs>
