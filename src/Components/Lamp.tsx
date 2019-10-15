@@ -1,6 +1,5 @@
 import { useExecuteAction } from 'container/DeviceContainer';
 import BlinkenlightPopup from './BlinkenlightPopup';
-import cc from 'classnames';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Tooltip from '@material-ui/core/Tooltip';
 import useStyles from './Lamp.style';
@@ -59,10 +58,11 @@ const LampComponent = ({ lamp }: Props) => {
     height: lamp.y2,
   };
 
-  const cssClass = cc([
-    classes.lamp,
-    { [classes.writeable]: lamp.is_writable && lamp.rate_delay <= 0 },
-  ]);
+  let cssClass = classes.lamp;
+
+  if (lamp.is_writable && lamp.rate_delay <= 0) {
+    cssClass += ` ${classes.writeable}`;
+  }
 
   const tooltipText = useMemo(() => {
     let text = lamp.status_text;
@@ -128,10 +128,11 @@ const LampComponent = ({ lamp }: Props) => {
       height: lamp.y2,
     };
 
-    const cssClass = cc([
-      classes.lamp,
-      { [classes.writeable]: lamp.is_writable && lamp.rate_delay <= 0 },
-    ]);
+    let cssClass = classes.lamp;
+
+    if (lamp.is_writable && lamp.rate_delay <= 0) {
+      cssClass += ` ${classes.writeable}`;
+    }
     const imgProps = {
       className: cssClass,
       onClick: toggle,

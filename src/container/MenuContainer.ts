@@ -6,9 +6,7 @@ type Menu = {
   name: string;
   entries: string[];
 };
-type Menues = {
-  [key: string]: string[];
-};
+type Menues = Record<string, string[]>;
 const useMenu = () => {
   const [menues, setMenues] = useState<Menues>({});
   const [selectedTab, setSelectedTab] = useState<string>('action');

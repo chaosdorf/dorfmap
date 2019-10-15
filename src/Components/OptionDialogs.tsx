@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import Button from '@material-ui/core/Button';
 import MenuContainer from 'container/MenuContainer';
 import OptionDialog from './OptionDialog';
@@ -35,7 +34,7 @@ const OptionDialogs = () => {
           <Button onClick={() => handleClick('layers')}>Layers</Button>
         </div>
         <div>
-          {map(services, (href, name) => (
+          {Object.entries(services).map(([name, href]) => (
             <a key={name} href={href} target="_blank" rel="noopener noreferrer">
               <Button>{name}</Button>
             </a>

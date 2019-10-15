@@ -1,4 +1,3 @@
-import { filter } from 'lodash';
 import DeviceContainer from 'container/DeviceContainer';
 import LampComponent from './Lamp';
 import React, { useEffect, useMemo } from 'react';
@@ -7,7 +6,7 @@ import useStyles from './Map.style';
 const DMap = () => {
   const { fetchDevices, devices, layer } = DeviceContainer.useContainer();
   const filteredDevices = useMemo(
-    () => filter(devices, d => d.layer === layer),
+    () => Object.values(devices).filter(d => d.layer === layer),
     [devices, layer]
   );
 

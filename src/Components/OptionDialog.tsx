@@ -1,4 +1,3 @@
-import { map } from 'lodash';
 import Dialog from '@material-ui/core/Dialog';
 import MenuContainer from 'container/MenuContainer';
 import MenuEntries from './MenuEntries';
@@ -28,7 +27,7 @@ const OptionDialog = ({ handleRequestClose }: Props) => {
       open
     >
       <Tabs value={selectedTab} onChange={handleOnChange}>
-        {map(menues, (_, type) => (
+        {Object.keys(menues).map(type => (
           <Tab key={type} value={type} label={type} />
         ))}
       </Tabs>
