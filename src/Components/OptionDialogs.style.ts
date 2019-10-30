@@ -6,6 +6,8 @@ export default makeStyles({
     justifyContent: 'space-around',
     marginTop: '5px',
     marginLeft: '10px',
-    width: '70%',
+    '@media (min-width: 800px)': {
+      width: '70%',
+    },
   },
 });
