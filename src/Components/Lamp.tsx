@@ -10,7 +10,7 @@ const TooltipImg = ({ tooltip, ...props }: any) => (
   </Tooltip>
 );
 
-export type Lamp = {
+export interface Lamp {
   status_text?: string;
   rate_delay: number;
   x1: number;
@@ -24,11 +24,11 @@ export type Lamp = {
   layer: string;
   image: string;
   is_writable: number;
-};
+}
 
-type Props = {
+interface Props {
   lamp: Lamp;
-};
+}
 
 const LampComponent = ({ lamp }: Props) => {
   const executeAction = useExecuteAction();

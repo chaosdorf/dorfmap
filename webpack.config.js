@@ -1,8 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -17,12 +15,14 @@ const plugins = [
       NODE_ENV: JSON.stringify(process.env.NODE_ENV),
     },
     __DEV__: JSON.stringify(isDev),
-    BASE_HOST: JSON.stringify(process.env.BASE_HOST === undefined ? 'http://localhost:3000' : process.env.BASE_HOST),
-    SOCKET_URL: JSON.stringify(process.env.SOCKET_URL || 'http://localhost:3001'),
-  }),
-  new MiniCssExtractPlugin({
-    filename: isDev ? '[name].css' : '[name]-[contenthash].css',
-    chunkFilename: isDev ? '[id].css' : '[id]-[hash].css',
+    BASE_HOST: JSON.stringify(
+      process.env.BASE_HOST === undefined
+        ? 'http://localhost:3000'
+        : process.env.BASE_HOST
+    ),
+    SOCKET_URL: JSON.stringify(
+      process.env.SOCKET_URL || 'http://localhost:3001'
+    ),
   }),
 ];
 
@@ -32,25 +32,11 @@ const rules = [
     use: ['babel-loader'],
   },
   {
-    test: /\.s?css$/,
-    use: [
-      {
-        loader: MiniCssExtractPlugin.loader,
-        options: {
-          hmr: isDev,
-          reloadAll: true,
-        },
-      },
-      { loader: 'css-loader' },
-      { loader: 'postcss-loader' },
-      {
-        loader: 'sass-loader',
-      },
-    ],
-  },
-  {
     test: /\.(jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/,
-    loader: 'url-loader?limit=8192',
+    loader: 'url-loader',
+    options: {
+      limit: 8192,
+    },
   },
 ];
 
@@ -67,7 +53,6 @@ if (isDev) {
         banner: () => '',
       },
     }),
-    new OptimizeCSSAssetsPlugin({}),
   ];
 }
 

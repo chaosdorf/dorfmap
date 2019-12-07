@@ -5,9 +5,9 @@ import React, { useCallback } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
-type Props = {
+interface Props {
   handleRequestClose: () => any;
-};
+}
 
 const OptionDialog = ({ handleRequestClose }: Props) => {
   const { menues, selectedTab, setSelectedTab } = MenuContainer.useContainer();

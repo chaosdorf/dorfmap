@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import Axios from 'axios';
 
-type Color = { name: string; raw_string: string };
-export type Presets = {
+interface Color {
+  name: string;
+  raw_string: string;
+}
+export interface Presets {
   active?: Color;
   colors: Color[];
   presets: Color[];
-};
+}
 
 function savePreset(device: string, raw_string: string) {
   Axios.post('/ajax/blinkencontrol', {

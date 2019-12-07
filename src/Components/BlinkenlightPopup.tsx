@@ -9,10 +9,10 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import React, { useCallback } from 'react';
 import usePresets from 'hooks/usePresets';
 
-type Props = {
+interface Props {
   lamp: Lamp;
   onRequestClose: () => void;
-};
+}
 
 const BlinkenlightPopup = ({ lamp, onRequestClose }: Props) => {
   const { presets, savePreset, setActivePreset } = usePresets(lamp.name);

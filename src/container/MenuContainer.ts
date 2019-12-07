@@ -2,10 +2,10 @@ import { createContainer } from 'unstated-next';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 
-type Menu = {
+interface Menu {
   name: string;
   entries: string[];
-};
+}
 type Menues = Record<string, string[]>;
 const useMenu = () => {
   const [menues, setMenues] = useState<Menues>({});

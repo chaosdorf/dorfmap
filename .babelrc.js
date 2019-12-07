@@ -4,19 +4,16 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        loose: false,
+        loose: true,
         useBuiltIns: 'entry',
         modules: false,
         corejs: 3,
       },
     ],
     '@babel/preset-react',
-    'babel-preset-joblift',
   ],
   plugins: [
-    './scripts/debugStyleNames.js',
-    'babel-plugin-idx',
-    'lodash',
+    '@babel/plugin-transform-react-constant-elements',
     [
       'module-resolver',
       {
@@ -24,11 +21,4 @@ module.exports = {
       },
     ],
   ],
-  env: {
-    production: {
-      compact: true,
-      plugins: ['@babel/plugin-transform-react-constant-elements'],
-    },
-    // test: TestConfig,
-  },
 };

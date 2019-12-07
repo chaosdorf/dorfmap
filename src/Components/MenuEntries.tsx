@@ -3,11 +3,11 @@ import DeviceContainer, { useExecuteAction } from 'container/DeviceContainer';
 import React, { useMemo } from 'react';
 import useStyles from './MenuEntries.style';
 
-type Props = {
+interface Props {
   closeFn: Function;
   entries?: any[];
   type: string;
-};
+}
 
 const MenuEntries = ({ entries, type, closeFn }: Props) => {
   const { setLayer } = DeviceContainer.useContainer();
