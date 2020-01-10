@@ -7,6 +7,7 @@ import useStyles from './OptionDialogs.style';
 const services = {
   mete: 'https://mete.chaosdorf.space',
   prittstift: 'https://prittstift.chaosdorf.space',
+  fftalks: 'https://fftalks.chaosdorf.space',
   mpd: 'https://ympd.chaosdorf.space',
   pulseWeb: 'https://pulseweb.chaosdorf.space',
 };
