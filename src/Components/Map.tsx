@@ -6,7 +6,7 @@ import useStyles from './Map.style';
 const DMap = () => {
   const { fetchDevices, devices, layer } = DeviceContainer.useContainer();
   const filteredDevices = useMemo(
-    () => Object.values(devices).filter(d => d.layer === layer),
+    () => Object.values(devices).filter((d) => d.layer === layer),
     [devices, layer]
   );
 
@@ -17,7 +17,7 @@ const DMap = () => {
 
   return (
     <div className={classes.main}>
-      {filteredDevices.map(lamp => (
+      {filteredDevices.map((lamp) => (
         <LampComponent key={lamp.name} lamp={lamp} />
       ))}
     </div>

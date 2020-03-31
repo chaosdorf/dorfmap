@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.interceptors.request.use(config => {
+axios.interceptors.request.use((config) => {
   config.url = `${
     // @ts-ignore
     // eslint-disable-next-line no-undef

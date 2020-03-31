@@ -27,7 +27,7 @@ const OptionDialog = ({ handleRequestClose }: Props) => {
       open
     >
       <Tabs value={selectedTab} onChange={handleOnChange}>
-        {Object.keys(menues).map(type => (
+        {Object.keys(menues).map((type) => (
           <Tab key={type} value={type} label={type} />
         ))}
       </Tabs>

@@ -45,7 +45,7 @@ const BlinkenlightPopup = ({ lamp, onRequestClose }: Props) => {
           value={presets.active ? presets.active.raw_string : '32,0,0,0'}
           onChange={handleRadioChange}
         >
-          {actualPresets.map(preset => (
+          {actualPresets.map((preset) => (
             <FormControlLabel
               value={preset.raw_string}
               label={preset.name}

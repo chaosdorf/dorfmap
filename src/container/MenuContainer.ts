@@ -12,7 +12,7 @@ const useMenu = () => {
   const [selectedTab, setSelectedTab] = useState<string>('action');
 
   useEffect(() => {
-    Axios.get('/ajax/menu.json').then(r => {
+    Axios.get('/ajax/menu.json').then((r) => {
       const menu: Menues = r.data.reduce((menues: Menues, m: Menu) => {
         menues[m.name] = m.entries;
 

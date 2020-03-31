@@ -22,17 +22,17 @@ const usePresets = (deviceName: string) => {
   const [presets, setPresets] = useState<Presets>();
 
   useEffect(() => {
-    Axios.get(`/ajax/blinkencontrol?device=${deviceName}`).then(r => {
+    Axios.get(`/ajax/blinkencontrol?device=${deviceName}`).then((r) => {
       setPresets(r.data);
     });
   }, [deviceName]);
 
   const setActivePreset = useCallback((newPreset: string) => {
-    setPresets(oldPresets =>
+    setPresets((oldPresets) =>
       oldPresets
         ? {
             ...oldPresets,
-            active: oldPresets.presets.find(c => c.raw_string === newPreset),
+            active: oldPresets.presets.find((c) => c.raw_string === newPreset),
           }
         : oldPresets
     );

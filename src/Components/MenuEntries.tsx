@@ -32,7 +32,7 @@ const MenuEntries = ({ entries, type, closeFn }: Props) => {
     };
 
     return entries
-      ? entries.map(entry => (
+      ? entries.map((entry) => (
           <Button
             className={classes.button}
             key={entry}

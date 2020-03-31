@@ -42,7 +42,7 @@ const LampComponent = ({ lamp }: Props) => {
     if (lamp.rate_delay > 0) {
       timeoutId = setTimeout(() => {
         lamp.rate_delay -= 1;
-        setForceRerender(old => !old);
+        setForceRerender((old) => !old);
       }, 1000);
     }
 
