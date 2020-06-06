@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   extends: ['marudor'],
   parser: 'babel-eslint',
   env: {
@@ -15,6 +16,7 @@ module.exports = {
   },
   settings: {
     'import/resolver': 'webpack',
+    react: { version: 'detect' },
   },
   overrides: [
     {
